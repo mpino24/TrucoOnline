@@ -41,6 +41,15 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+
+		<developer>
+			<id>paugonpae67</id>
+			<name>Paula</name>
+			<email>paugonpae@alum.us.es</email>
+			<roles>
+			<role>leader</role>
+			</roles>
+	</developer>
 			<developer>
 			<id>Izshin</id>
 			<name>Ivancito</name>
@@ -51,7 +60,6 @@
 			</roles>
 			</developer>
 			 <!-- More developers ...-->
-		
 	</developers>
 
 	<dependencies>
