@@ -41,6 +41,14 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+		<developer>
+			<id>paugonpae67</id>
+			<name>Paula</name>
+			<email>paugonpae@alum.us.es</email>
+			<roles>
+			<role>leader</role>
+			</roles>
+	</developer>
 	</developers>
 
 	<dependencies>
