@@ -41,6 +41,7 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+
 		<developer>
 			<id>paugonpae67</id>
 			<name>Paula</name>
@@ -49,6 +50,16 @@
 			<role>leader</role>
 			</roles>
 	</developer>
+			<developer>
+			<id>Izshin</id>
+			<name>Ivancito</name>
+			<email>ivaferlim@alum.us.es</email>
+			<url>https://github.com/Izshin</url>
+			<roles>
+			<role>leader of leaders</role>
+			</roles>
+			</developer>
+			 <!-- More developers ...-->
 	</developers>
 
 	<dependencies>
