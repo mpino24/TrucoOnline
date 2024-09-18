@@ -3,7 +3,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.us.dp1</groupId>
-	<artifactId>lx-xy-2425-game-name</artifactId>
+	<artifactId>L6-05-truco</artifactId>
 	<version>0.1.0.BUILD-SNAPSHOT</version>
 
 	<parent>
@@ -11,7 +11,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.3</version>
 	</parent>
-	<name>DP1 Game Template</name>
+	<name>DP1-2024-2025--l6-5</name>
 
 	<properties>
 
@@ -37,6 +37,10 @@
 
 	<developers>
 		<developer>
+			<name>Eloy-SC</name>
+			<email>elosanceb@alum.us.es</email>
+    </developer>
+    <developer>
 			<name>Ivo</name>
 			<email>ivorai@alum.us.es</email>
 		</developer>
@@ -45,6 +49,25 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+
+		<developer>
+			<id>paugonpae67</id>
+			<name>Paula</name>
+			<email>paugonpae@alum.us.es</email>
+			<roles>
+			<role>leader</role>
+			</roles>
+	</developer>
+			<developer>
+			<id>Izshin</id>
+			<name>Ivancito</name>
+			<email>ivaferlim@alum.us.es</email>
+			<url>https://github.com/Izshin</url>
+			<roles>
+			<role>leader of leaders</role>
+			</roles>
+			</developer>
+			 <!-- More developers ...-->
 	</developers>
 
 	<dependencies>
