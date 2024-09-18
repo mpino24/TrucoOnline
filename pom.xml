@@ -41,6 +41,12 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+		<developer>
+			<id>davidvt04</id>
+			<name>David</name>
+			<email>davvaltos@alum.us.es</email>
+			<url>https://github.com/Davidvt04</url>
+		</developer>
 	</developers>
 
 	<dependencies>
