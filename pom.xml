@@ -35,13 +35,21 @@
 
 	</properties>
 
+
+
 	<developers>
 		<developer>
 			<name>JAParejo</name>
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+		<developer>
+			<id>mpino24</id>
+			<name>Maria del Pino</name>
+			<email>marperdom@alum.us.es</email>
+		</developer>
 	</developers>
+
 
 	<dependencies>
 
