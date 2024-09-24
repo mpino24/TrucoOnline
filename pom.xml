@@ -35,6 +35,8 @@
 
 	</properties>
 
+
+
 	<developers>
 		<developer>
 			<name>Eloy-SC</name>
@@ -49,7 +51,6 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
-		<developer>
 			<id>davidvt04</id>
 			<name>David</name>
 			<email>davvaltos@alum.us.es</email>
@@ -72,8 +73,13 @@
 			<role>leader of leaders</role>
 			</roles>
 			</developer>
-			 <!-- More developers ...-->
+			<developer>
+			<id>mpino24</id>
+			<name>Maria del Pino</name>
+			<email>marperdom@alum.us.es</email>
+		</developer>
 	</developers>
+
 
 	<dependencies>
 
