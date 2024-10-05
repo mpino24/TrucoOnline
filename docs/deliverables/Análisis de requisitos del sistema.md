@@ -86,7 +86,12 @@ _Si deseais usar esta herramienta para generar vuestro(s) diagramas con esta her
 
 ## Reglas de Negocio
 ### R-< X > < Nombre Regla de negocio >
-_< Descripción de la restricción a imponer >_
+Solo los jugadores estarán autorizados a crear o editar  partidas mediante la pulsación de un botón. 
+El sistema debe permitir al jugador modificar los campos: ‘flor’, ‘nº jugadores’ y ‘puntuación’ en la edición de la partida. 
+El jugador habrá de unirse a una partida privada mediante un código único. 
+
+En caso de no estar logado, solo serán visibles las partidas públicas (espectador) 
+Al meterte en una partida como espectador no podrás interactuar con la partida 
 
 _Ej:_ 
 ### R1 – Diagnósticos imposibles
