@@ -18,8 +18,6 @@ package es.us.dp1.lx_xy_24_25.your_game_name.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Simple JavaBean domain object representing an person.
@@ -27,8 +25,6 @@ import lombok.Setter;
  * @author Ken Krebs
  */
 @MappedSuperclass
-@Getter
-@Setter
 public class Person extends BaseEntity {
 
 	@Column(name = "first_name")
@@ -46,5 +42,36 @@ public class Person extends BaseEntity {
 	@Column(name = "photo")
 	@NotEmpty
 	protected String photo;
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoto() {
+		return this.email;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 }
