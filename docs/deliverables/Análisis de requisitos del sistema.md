@@ -13,7 +13,8 @@ El juego se divide en varias manos y cada mano está dividida en tres rondas. Al
 
 Cada jugador irá tirando una de sus cartas (la que crea más conveniente) y de entre las cartas que hay en la mesa se conoce el ganador teniendo en cuenta los valores de las cartas:
 
-<img width="400" alt="valores_cartas" src="src/main/resources/static/resources/images/valores_cartas.png">
+![valores_cartas](https://github.com/user-attachments/assets/0f9b73cc-efe1-4782-b37e-d4fd382dc4d3)
+
 
 _No existe orden vertical, las cartas colocadas encima de otras tienen el mismo valor._
 
