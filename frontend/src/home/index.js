@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
 import '../static/css/home/home.css'; 
-import logo from '../static/images/logodp.png';
+import logo from '../static/images/Logo_juego.png';
 
 export default function Home(){
     return(
