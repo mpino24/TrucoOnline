@@ -2,12 +2,12 @@
 <img width="800" alt="truco beasts logo" src="src/main/resources/static/resources/images/Logo Juego.png">
 
 ### Desarrollado por: 
-    - Eloy Sancho Cebrero
-    - Maria del Pino Peréz Dominguéz
-    - David Valencia Toscano
-    - Paula Rosa Gonzaléz Páez
-    - Iván Fernandéz Limarquéz 
-    - Ivo Raimondi
+  - Eloy Sancho Cebrero
+  - Maria del Pino Peréz Dominguéz
+  - David Valencia Toscano
+  - Paula Rosa Gonzaléz Páez
+  - Iván Fernandéz Limarquéz 
+  - Ivo Raimondi
 
 Proyecto de un juego llamado Truco para la asignatura de DP1 de la Universidad de Sevilla. La idea de este proyecto es aplicar lo aprendido sobre arquitectura SPA con React, Java y Spring.  
 
