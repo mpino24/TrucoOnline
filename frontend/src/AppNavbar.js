@@ -1,16 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, Router } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
+import logoChico from './/static/images/logoChico.png';
+//import fotoPerfil from './/static/images/fotoPerfil.jpg';
 
 function AppNavbar() {
     const [roles, setRoles] = useState([]);
     const [username, setUsername] = useState("");
     const jwt = tokenService.getLocalAccessToken();
     const [collapsed, setCollapsed] = useState(true);
+    const [showAccountMenu, setShowAccountMenu] = useState(false);
+    const [photoUrl,setPhotoUrl] = useState('/fotoPerfil.jpg')
+    
+
 
     const toggleNavbar = () => setCollapsed(!collapsed);
+
+    const toggleAccountMenu = useCallback(() => {
+        setShowAccountMenu((current) => !current);
+    }, []);
 
     useEffect(() => {
         if (jwt) {
@@ -20,86 +30,46 @@ function AppNavbar() {
     }, [jwt])
 
     let adminLinks = <></>;
-    let ownerLinks = <></>;
     let userLinks = <></>;
-    let userLogout = <></>;
-    let publicLinks = <></>;
-
     roles.forEach((role) => {
         if (role === "ADMIN") {
             adminLinks = (
-                <>                    
+                <>
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/users">Users</NavLink>
                     </NavItem>
                 </>
             )
-        }        
+        }
     })
 
-    if (!jwt) {
-        publicLinks = (
-            <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="docs" tag={Link} to="/docs">Docs</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="plans" tag={Link} to="/plans">Pricing Plans</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="register" tag={Link} to="/register">Register</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="login" tag={Link} to="/login">Login</NavLink>
-                </NavItem>
-            </>
-        )
-    } else {
-        userLinks = (
-            <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to="/dashboard">Dashboard</NavLink>
-                </NavItem>
-            </>
-        )
-        userLogout = (
-            <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="docs" tag={Link} to="/docs">Docs</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="plans" tag={Link} to="/plans">Pricing Plans</NavLink>
-                </NavItem>
-                <NavbarText style={{ color: "white" }} className="justify-content-end">{username}</NavbarText>
-                <NavItem className="d-flex">
-                    <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
-                </NavItem>
-            </>
-        )
-
-    }
 
     return (
         <div>
-            <Navbar expand="md" dark color="dark">
+            <Navbar expand="md" dark >
                 <NavbarBrand href="/">
-                    <img alt="logo" src="/logo1-recortado.png" style={{ height: 40, width: 40 }} />
-                    Your Game
+                    <img alt="logo" src={logoChico} style={{ height: 80, width: 80, borderRadius: 500 }} />
                 </NavbarBrand>
-                <NavbarToggler onClick={toggleNavbar} className="ms-2" />
-                <Collapse isOpen={!collapsed} navbar>
-                    <Nav className="me-auto mb-2 mb-lg-0" navbar>
-                        {userLinks}
-                        {adminLinks}
-                        {ownerLinks}
-                    </Nav>
-                    <Nav className="ms-auto mb-2 mb-lg-0" navbar>
-                        {publicLinks}
-                        {userLogout}
-                    </Nav>
-                </Collapse>
+                <Nav className="ms-auto mb-2 mb-lg-0" navbar>
+                    <div style={{ display: 'flex', alignItems: 'center', cursor:'pointer' }} onClick={toggleAccountMenu}>
+                        <p style={{ color: "white", marginRight: 20, fontSize: 20 }} >{username}</p>
+                        <img style={{ height: 60, width: 60, borderRadius: 500 }} src={photoUrl} alt='Foto de perfil del usuario'></img>
+                    </div>
+                </Nav>
             </Navbar>
+            {showAccountMenu &&
+                <div style={{ backgroundColor: 'black', borderRadius: 5, height: 70, width: 200, float: 'right', marginRight: 5 }}>
+                    <NavItem className="d-flex">
+                        <NavLink style={{ color: "white", marginTop: 8, marginLeft: 5 }} id="perfil" tag={Link} to="/profile/">Mi Perfil</NavLink>
+                    </NavItem>
+
+                    <NavItem className="d-flex">
+                        <NavLink style={{ color: "red", marginBottom: 2, marginLeft: 5 }} id="logout" tag={Link} to="/logout">Cerrar Sesión</NavLink>
+                    </NavItem>
+                </div>
+            }
         </div>
+
     );
 }
 
