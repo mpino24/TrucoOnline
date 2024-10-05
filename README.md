@@ -31,6 +31,21 @@ Or you can run it from Maven directly using the Spring Boot Maven plugin. If you
 ```
 ./mvnw spring-boot:run
 ```
+
+## ¿Qué hacer en Truco Beasts: Bardo en la Jungla®?
+
+### Como usuario
+
+* Primero puedes registrarte. Crea tu propio perfil y personalízalo como quieras.
+* Juega una partida creando una nueva (con tus preferencias) o uniéndote a una ya existente.
+* Consultar tus estadísticas, tus logros y los que aún te quedan por conseguir.
+
+### Como administrador
+
+* Gestionar las cuentas de los usuarios registrados.
+* Observar una lista de partidas en juego.
+* Crear logros nuevos o editar los ya existentes
+
 ## Database configuration
 
 In its default configuration, Petclinic uses an in-memory database (H2) which
@@ -86,11 +101,11 @@ Visit [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagge
 |Properties Files | [application.properties](https://github.com/gii-is-DP1/spring-petclinic/blob/master/src/main/resources) |
 
 
-## Starting the frontend
+## Inicializar el frontend
 
-The Spring Petclinic is implemented with a React frontend in the folder named "frontend".
-You can start the development server to see frontend using the command (maybe you should use the command npm insall prior to this):
+Truco Beasts: Bardo en la Jungla® está implementado con un frontend React en la carpeta llamada "frontend".
+Puedes iniciar el servidor de desarrollo para ver el frontend usando el comando (quizás antes deberías usar el comando `npm install`): 
 ```
 npm start
 ```
-You can then access the PetClinic frontend at [http://localhost:3000](http://localhost:3000)
+Puedes acceder al frontend de Truco Beasts: Bardo en la Jungla® en [http://localhost:3000](http://localhost:3000)
