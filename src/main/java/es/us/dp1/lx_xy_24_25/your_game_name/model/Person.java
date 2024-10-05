@@ -18,8 +18,6 @@ package es.us.dp1.lx_xy_24_25.your_game_name.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Simple JavaBean domain object representing an person.
