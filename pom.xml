@@ -35,12 +35,15 @@
 
 	</properties>
 
+
+
 	<developers>
 		<developer>
 			<name>Eloy-SC</name>
 			<email>elosanceb@alum.us.es</email>
-    </developer>
-    <developer>
+    	</developer>
+    	<developer>
+			<id>HMF2475</id>
 			<name>Ivo</name>
 			<email>ivorai@alum.us.es</email>
 		</developer>
@@ -62,7 +65,7 @@
 			<roles>
 			<role>leader</role>
 			</roles>
-	</developer>
+		</developer>
 			<developer>
 			<id>Izshin</id>
 			<name>Ivancito</name>
@@ -72,8 +75,13 @@
 			<role>leader of leaders</role>
 			</roles>
 			</developer>
-			 <!-- More developers ...-->
+			<developer>
+			<id>mpino24</id>
+			<name>Maria del Pino</name>
+			<email>marperdom@alum.us.es</email>
+		</developer>
 	</developers>
+
 
 	<dependencies>
 
