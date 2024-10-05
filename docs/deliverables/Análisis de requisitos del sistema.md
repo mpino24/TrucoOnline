@@ -85,16 +85,15 @@ _Puede usar la herramienta de modelado que desee para generar sus diagramas de c
 _Si deseais usar esta herramienta para generar vuestro(s) diagramas con esta herramienta os proporcionamos un [enlace a la documentación oficial de la sintaxis de diagramas de clases de _ermaid](https://mermaid.js.org/syntax/classDiagram.html)_
 
 ## Reglas de Negocio
-### R-<1> <Condicion para la creacion y edicion de partidas>
+### R1-Condicion para la creacion y edicion de partidas
 Solo los jugadores estarán autorizados a crear o editar  partidas mediante la pulsación de un botón. 
-### R-<2> <Edicion de partidas>
+### R2-Edicion de partidas
 El sistema debe permitir al jugador modificar los campos: ‘flor’, ‘nº jugadores’ y ‘puntuación’ en la edición de la partida. 
-### R-<3> <Unión a partidas privadas>
+### R3-Unión a partidas privadas
 El jugador habrá de unirse a una partida privada mediante un código único. 
-
-### R-<4> <Visibilidad para de las partidas>
+### R4-Visibilidad para de las partidas
 En caso de no estar logado, solo serán visibles las partidas públicas (espectador) 
-### R-<5> <Espectación de la partida>
+### R5-Espectación de la partida
 Al meterte en una partida como espectador no podrás interactuar con la partida 
 
 _Ej:_ 
