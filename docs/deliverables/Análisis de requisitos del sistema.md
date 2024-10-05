@@ -12,7 +12,9 @@ El juego se divide en varias manos y cada mano está dividida en tres rondas. Al
 ### Dinámica de juego
 
 Cada jugador irá tirando una de sus cartas (la que crea más conveniente) y de entre las cartas que hay en la mesa se conoce el ganador teniendo en cuenta los valores de las cartas:
+
 <img width="400" alt="valores_cartas" src="src/main/resources/static/resources/images/valores_cartas.png">
+
 _No existe orden vertical, las cartas colocadas encima de otras tienen el mismo valor._
 
 El equipo que gane dos de las tres rondas de la mano sumará 1 punto. En caso de empate en una ronda se guardará el ganador para la siguiente (es decir, el que gane la siguiente ganará también la ronda en la que hubo empate). Lo mismo ocurrirá si vuelve a haber un empate. En caso de empates en las tres rondas, ganará el equipo al que pertenezca el jugador mano.
