@@ -1,6 +1,5 @@
-package es.us.dp1.lx_xy_24_25.your_game_name.game;
+package es.us.dp1.lx_xy_24_25.your_game_name.partida;
 
-import java.lang.reflect.Type;
 
 import es.us.dp1.lx_xy_24_25.your_game_name.model.BaseEntity;
 import jakarta.persistence.Column;
@@ -13,13 +12,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Game extends BaseEntity{
+public class Partida extends BaseEntity{
     
     @NotNull
-    Status estado;
+    Estado estado;
 
     @NotNull
-    Type tipo;
+    Tipo tipo;
 
     @Column(name = "conFlor")
 	@NotEmpty
