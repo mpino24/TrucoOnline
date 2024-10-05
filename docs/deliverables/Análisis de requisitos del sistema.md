@@ -4,9 +4,27 @@ _Esta es una plantilla que sirve como guía para realizar este entregable. Por f
 
 ## Introducción
 
-_En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
+Truco Beasts: Bardo en la Jungla® está basado en el juego del truco y pretendemos implementar todo lo que explicaremos a continuación (a excepción de las partidas de a 3 y a 8 jugadores).
 
-[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](http://youtube.com)
+El truco es un juego de cartas que se juega usando la baraja española de 40 naipes y su objetivo es llegar a 15 o 30 puntos utilizando engaño, estrategia y astucia. Es un juego para 2, 3, 4, 6 e incluso 8 jugadores en el que hay 2 equipos. La duración de una partida puede variar bastante, pero lo normal oscila entra 15 y 30 minutos.
+El juego se divide en varias manos y cada mano está dividida en tres rondas. Al comienzo de cada mano cada jugador tiene tres cartas y comenzará jugando el jugador que está a la derecha del que repartió las cartas (llamado "mano").
+
+### Dinámica de juego
+
+Cada jugador irá tirando una de sus cartas (la que crea más conveniente) y de entre las cartas que hay en la mesa se conoce el ganador teniendo en cuenta los valores de las cartas:
+<img width="400" alt="valores_cartas" src="src/main/resources/static/resources/images/valores_cartas.png">
+_No existe orden vertical, las cartas colocadas encima de otras tienen el mismo valor._
+
+El equipo que gane dos de las tres rondas de la mano sumará 1 punto. En caso de empate en una ronda se guardará el ganador para la siguiente (es decir, el que gane la siguiente ganará también la ronda en la que hubo empate). Lo mismo ocurrirá si vuelve a haber un empate. En caso de empates en las tres rondas, ganará el equipo al que pertenezca el jugador mano.
+Además, existen tres cantos con los que ganar puntos adicionales. Estos son el truco (el canto más importante), el envido y la flor.
+
+El truco: se puede cantar en cualquier momento de la mano. Si es aceptado (diciendo "quiero") la mano se jugará a 2 puntos, aunque también puede ser rechazado (diciendo "no quiero") dando por finalizada la mano y llevándose el equipo del jugador que lo cantó 1 punto o los puntos acumulados por subidas de la apuesta. Estas subidas se pueden realizar cantando "retruco" (a modo de respuesta al equipo que cantó "truco" inicialmente) siguiéndose la misma dinámica del "quiero" y el "no quiero". A su vez, este puede aumentar la apuesta aún más diciendo "vale cuatro".
+El envido: sólo puede cantarse en la primera ronda y lo harán los últimos jugadores de cada equipo (cualquier jugador en caso de que sean sólo 2). Éste puede ser aceptado o rechazado de igual manera que el truco (aunque no se finaliza la mano en caso de ser rechazado). También puede subirse la apuesta con cantos como "envido" (otra vez), "real envido" y "falta envido". En el vídeo se muestra la puntuación de este canto de manera más detallada.
+La flor: es un regalo del mazo y antes de crear la partida se puede elegir si jugar con ella o no. Consiste en tener tres cartas del mismo palo. Sólo podrán cantarla si la tienen realmente. En caso de que otro jugador también tenga flor puede responder a esta diciendo "contraflor" o "contraflor al resto". Se comparan los puntos de la misma forma que en el envido. Nuevamente, en el vídeo hay más detalle sobre este canto.
+
+Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a que no pueden ver las cartas de sus compañeros) relacionadas con las distintas cartas que hay. Estas señas también se suelen utilizar muy a menudo para engañar al equipo contrario.
+
+[Para una noción más detallada del juego, este vídeo explicativo es de gran ayuda](https://www.youtube.com/watch?v=IAKDghOqNaM)
 
 ## Tipos de Usuarios / Roles
 
