@@ -27,8 +27,6 @@ import lombok.Setter;
  * @author Ken Krebs
  */
 @MappedSuperclass
-@Getter
-@Setter
 public class Person extends BaseEntity {
 
 	@Column(name = "first_name")
@@ -42,9 +40,40 @@ public class Person extends BaseEntity {
 	@Column(name = "email")
 	@NotEmpty
 	protected String email;
-
+  
 	@Column(name = "photo")
 	@NotEmpty
 	protected String photo;
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoto() {
+		return this.email;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 }
