@@ -1,5 +1,5 @@
 # Truco Beasts: Bardo en la Jungla®
-<img width="200" alt="truco beasts logo" src="src/main/resources/static/resources/images/Logo Juego.png">>
+<img width="200" alt="truco beasts logo" src="src/main/resources/static/resources/images/Logo Juego.png">
 
 ### Desarrollado por: 
     - Eloy Sancho Cebrero
