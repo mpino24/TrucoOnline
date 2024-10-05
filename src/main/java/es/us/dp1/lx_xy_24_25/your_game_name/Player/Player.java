@@ -1,4 +1,4 @@
-package es.us.dp1.lx_xy_24_25.your_game_name.player;
+package es.us.dp1.lx_xy_24_25.your_game_name.Player;
 
 import java.util.List;
 
