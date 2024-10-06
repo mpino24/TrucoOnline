@@ -8,6 +8,7 @@ import PrivateRoute from "./privateRoute";
 import Register from "./auth/register";
 import Login from "./auth/login";
 import Logout from "./auth/logout";
+import Profile from "./profile";
 import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
@@ -60,7 +61,7 @@ function App() {
     publicRoutes = (
       <>        
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" exact={true} element={<Login />} />
       </>
     )
   } else {
@@ -69,6 +70,8 @@ function App() {
         {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/" exact={true} element={<Home />} />
+        <Route path="/profile" exact={true} element={<Profile />} />
       </>
     )
   }
@@ -78,10 +81,8 @@ function App() {
       <ErrorBoundary FallbackComponent={ErrorFallback} >
         <AppNavbar />
         <Routes>
-          <Route path="/home" exact={true} element={<Home />} />
           <Route path="/plans" element={<PlanList />} />
           <Route path="/docs" element={<SwaggerDocs />} />
-          <Route path="/" exact={true} element={<Login />} />
           {publicRoutes}
           {userRoutes}
           {adminRoutes}

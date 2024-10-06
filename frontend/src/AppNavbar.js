@@ -44,18 +44,10 @@ function AppNavbar() {
         }
     })
 
-    function getURL(){
-        let url = "/";
-        if(jwt){
-            url = "/home";
-        }
-        return url;
-    }
-
     return (
         <div>
             <Navbar expand="md" dark >
-                <NavbarBrand href= {getURL()}>
+                <NavbarBrand href="/">
                     <img alt="logo" src={logoChico} style={{ height: 80, width: 80, borderRadius: 500 }} />
                 </NavbarBrand>
                 <Nav className="ms-auto mb-2 mb-lg-0" navbar>
@@ -68,7 +60,7 @@ function AppNavbar() {
             {showAccountMenu &&
                 <div style={{ backgroundColor: 'black', borderRadius: 5, height: 70, width: 200, float: 'right', marginRight: 5 }}>
                     <NavItem className="d-flex">
-                        <NavLink style={{ color: "white", marginTop: 8, marginLeft: 5 }} id="perfil" tag={Link} to="/profile/">Mi Perfil</NavLink>
+                        <NavLink style={{ color: "white", marginTop: 8, marginLeft: 5 }} id="perfil" tag={Link} to="/profile">Mi Perfil</NavLink>
                     </NavItem>
 
                     <NavItem className="d-flex">
