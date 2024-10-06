@@ -78,9 +78,10 @@ function App() {
       <ErrorBoundary FallbackComponent={ErrorFallback} >
         <AppNavbar />
         <Routes>
-          <Route path="/" exact={true} element={<Home />} />
+          <Route path="/home" exact={true} element={<Home />} />
           <Route path="/plans" element={<PlanList />} />
           <Route path="/docs" element={<SwaggerDocs />} />
+          <Route path="/" exact={true} element={<Login />} />
           {publicRoutes}
           {userRoutes}
           {adminRoutes}

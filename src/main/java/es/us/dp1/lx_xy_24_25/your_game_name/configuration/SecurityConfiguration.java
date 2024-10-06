@@ -44,6 +44,7 @@ public class SecurityConfiguration {
 
 	private static final String ADMIN = "ADMIN";
 	private static final String CLINIC_OWNER = "CLINIC_OWNER";
+	private static final String USER = "USER";
 	
 
 	@Bean
@@ -58,6 +59,7 @@ public class SecurityConfiguration {
 			
 			.authorizeHttpRequests(authorizeRequests ->	authorizeRequests
 			.requestMatchers("/api/v1/developers").permitAll()
+			.requestMatchers("/home").hasAuthority(USER)
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/resources/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/static/**")).permitAll() 

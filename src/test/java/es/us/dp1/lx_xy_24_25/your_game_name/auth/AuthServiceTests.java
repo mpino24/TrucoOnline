@@ -1,15 +1,13 @@
 package es.us.dp1.lx_xy_24_25.your_game_name.auth;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Collection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.your_game_name.auth.AuthService;
 import es.us.dp1.lx_xy_24_25.your_game_name.auth.payload.request.SignupRequest;
 import es.us.dp1.lx_xy_24_25.your_game_name.user.AuthoritiesService;
 import es.us.dp1.lx_xy_24_25.your_game_name.user.User;
