@@ -43,8 +43,7 @@ public class SecurityConfiguration {
 	DataSource dataSource;
 
 	private static final String ADMIN = "ADMIN";
-	private static final String CLINIC_OWNER = "CLINIC_OWNER";
-	private static final String USER = "USER";
+	private static final String PLAYER = "PLAYER";
 	
 
 	@Bean
@@ -59,7 +58,6 @@ public class SecurityConfiguration {
 			
 			.authorizeHttpRequests(authorizeRequests ->	authorizeRequests
 			.requestMatchers("/api/v1/developers").permitAll()
-			.requestMatchers("/home").hasAuthority(USER)
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/resources/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/static/**")).permitAll() 
@@ -74,6 +72,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/plan")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/**")).hasAuthority(ADMIN)
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+			.requestMatchers("/api/v1/profile").authenticated()
 			.anyRequest().authenticated())					
 			
 			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);		
