@@ -38,16 +38,24 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/users">Users</NavLink>
                     </NavItem>
+                    
                 </>
             )
         }
     })
 
+    function getURL(){
+        let url = "/";
+        if(jwt){
+            url = "/home";
+        }
+        return url;
+    }
 
     return (
         <div>
             <Navbar expand="md" dark >
-                <NavbarBrand href="/">
+                <NavbarBrand href= {getURL()}>
                     <img alt="logo" src={logoChico} style={{ height: 80, width: 80, borderRadius: 500 }} />
                 </NavbarBrand>
                 <Nav className="ms-auto mb-2 mb-lg-0" navbar>
