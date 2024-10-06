@@ -45,8 +45,22 @@ _Ej3: Administrador: Dueño de la clínica que se encarga de dar de alta veterin
 
 A continuación se definen  todas las historias de usuario a implementar:
 _Os recomentamos usar la siguiente plantilla de contenidos que usa un formato tabular:_
- ### HU-(ISSUE#ID): Nombre ([Enlace a la Issue asociada a la historia de usuario]()
-|Descripción de la historia siguiendo el esquema:  "Como <rol> quiero que el sistema <funcionalidad>  para poder <objetivo/beneficio>."| 
+ ## Historia de Usuario Creación y configuración partidas:
+ ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
+Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
+ ### HU-(ISSUE#60): Editar los puntos de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/60])
+Como jugador quiero que el sistema me permita poder editar las partidas para decidir la puntuación (15 o 30)  
+ ### HU-(ISSUE#61): Editar la flor en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/61])
+Como jugador quiero que el sistema me permita editar las partidas para decidir si se juega con flor 
+ ### HU-(ISSUE#62): Editar numero de jugadores de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/62])
+Como jugador quiero que el sistema me permita editar las paridas para decidir de cuantos jugadores será 
+ ### HU-(ISSUE#63): Poder unirse a las partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/63])
+Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
+ ## Historia de Usuario Jugar partidas:
+ ## Historia de Usuario Aspecto social:
+ ## Historia de Usuario Aspectos especificos del usuario:
+
+|Descripción de la historia siguiendo el esquema:  "Como <rol> quiero que el sistema  <funcionalidad>  para poder <objetivo/beneficio>."| 
 |-----|
 |Mockups (prototipos en formato imagen de baja fidelidad) de la interfaz de usuario del sistema|
 |Decripción de las interacciones concretas a realizar con la interfaz de usuario del sistema para lleva a cabo la historia. |

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-native-web": "^0.19.12"
+  }
+}
