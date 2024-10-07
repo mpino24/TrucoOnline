@@ -3,10 +3,9 @@ import React, { useState, useCallback } from 'react';
 import { Link, Router } from 'react-router-dom';
 import 'frontend/src/components/css/joinModal.css';
 import { IoCloseCircle } from "react-icons/io5";
-import useGameList from "../hooks/useGameList";
+import GameList from "./GameList";
 
 export default function getJoinModal(setModalVisible, modalVisible = false) {
-    const games= useGameList();
     
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
@@ -30,7 +29,7 @@ export default function getJoinModal(setModalVisible, modalVisible = false) {
                 </div>
                 <h1 style={{ fontSize: 24 }}>
                     Partidas públicas:
-                    {games}
+                    <GameList/>
                 </h1>
 
 

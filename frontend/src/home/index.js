@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import '../static/css/home/homeButton.css';
@@ -12,23 +12,29 @@ import JoinModal from "frontend/src/components/getJoinModal.js"
 
 export default function Home() {
     const [joinModalView, setJoinModalView]= useState(false);
-    const backgrounds= [
-        'url(/fondos/fondo0.jpg)',
-        'url(/fondos/fondo1.jpg)',
-        'url(/fondos/fondo2.jpg)',
-        'url(/fondos/fondo3.jpg)',
-        'url(/fondos/fondo4.jpg)',
-        'url(/fondos/fondo5.jpg)',
-        'url(/fondos/fondo6.jpg)',
-        'url(/fondos/fondo7.jpg)',
-        'url(/fondos/fondo8.jpg)',
-        'url(/fondos/fondo9.jpg)',
-    ];
 
-    const getRandomBackground = () => { //Generado por IA
-        const randomIndex = Math.floor(Math.random() * backgrounds.length);
-        return backgrounds[randomIndex];
-    }
+    const [backgroundUrl, setBackgroundUrl] = useState()
+
+    useEffect(()=>{
+        const backgrounds= [
+            'url(/fondos/fondo0.jpg)',
+            'url(/fondos/fondo1.jpg)',
+            'url(/fondos/fondo2.jpg)',
+            'url(/fondos/fondo3.jpg)',
+            'url(/fondos/fondo4.jpg)',
+            'url(/fondos/fondo5.jpg)',
+            'url(/fondos/fondo6.jpg)',
+            'url(/fondos/fondo7.jpg)',
+            'url(/fondos/fondo8.jpg)',
+            'url(/fondos/fondo9.jpg)',
+        ];
+        const randomIndex = Math.floor(Math.random() * backgrounds.length)
+        setBackgroundUrl(backgrounds[randomIndex])
+    },[]);
+    
+
+
+
 
     const toggleJoinModal = useCallback(() => {
         setJoinModalView((current) => !current);
@@ -37,7 +43,7 @@ export default function Home() {
 
 
     return (
-        <div className="home-page-container" style={{background: getRandomBackground(), backgroundSize:'cover'}}>
+        <div className="home-page-container" style={{background: backgroundUrl, backgroundSize:'cover'}}>
             <div style={{width:'36%' }}>
                 <div style={{cursor:'pointer'}}>
                 <IoTrophy style={{ width: 80, height: 80, float: 'left',color:'white' }} />
