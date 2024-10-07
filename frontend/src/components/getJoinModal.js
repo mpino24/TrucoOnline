@@ -6,7 +6,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import useGameList from "../hooks/useGameList";
 
 export default function getJoinModal(setModalVisible, modalVisible = false) {
-    const users= useGameList;
+    const games= useGameList();
     
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
@@ -30,6 +30,7 @@ export default function getJoinModal(setModalVisible, modalVisible = false) {
                 </div>
                 <h1 style={{ fontSize: 24 }}>
                     Partidas públicas:
+                    {games}
                 </h1>
 
 

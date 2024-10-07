@@ -4,7 +4,7 @@ const jwt = tokenService.getLocalAccessToken();
 export default function useGameList(){
 const [message, setMessage] = useState(null);
 const [visible, setVisible] = useState(false);
-const [users, setUsers] = useFetchState(
+const [games, setGames] = useFetchState(
     [],
     `/api/v1/users`,
     jwt,
@@ -12,6 +12,6 @@ const [users, setUsers] = useFetchState(
     setVisible
 );
 return(
-    users
-)
+    games
+);
 }
