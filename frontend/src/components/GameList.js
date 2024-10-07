@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import tokenService from 'frontend/src/services/token.service.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
-
+import { TbFlower } from "react-icons/tb";
+import { TbFlowerOff } from "react-icons/tb";
 
 const jwt = tokenService.getLocalAccessToken();
 export default function GameList() {
@@ -18,7 +19,32 @@ export default function GameList() {
     const gamesList = games.map((game) => {
         return (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <p>{game.codigo}</p>
+                <p>Partida {game.codigo}: {game.puntosMaximos} puntos</p>
+                {game.conFlor && <TbFlower />}
+                {!game.conFlor && <TbFlowerOff />}
+                
+                
+                
+                
+                
+                {
+                    game.estado === 'WAITING' &&
+                    <>
+                    <button class="button">
+                        Unirse
+                    </button>
+                    <button class="button" style={{ color: 'blue' }}>
+                    Ver
+                </button>
+                    </>
+                }
+                {
+                    game.estado === 'ACTIVE' &&
+                    <button class="button" style={{ color: 'blue' }}>
+                    Ver
+                </button>
+                 }
+
 
             </div>
         )
