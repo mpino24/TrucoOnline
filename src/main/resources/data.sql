@@ -20,3 +20,4 @@ INSERT INTO appusers(id,username,password,authority) VALUES (15,'SJJ8308','$2a$1
 INSERT INTO appusers(id,username,password,authority) VALUES (16,'PHB1628','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (17,'TBP9161','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (18,'MVS9857','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO Partida(id,Estado,Tipo,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (1,'WAITING','A_DOS','ABCDE',FALSE,FALSE,1,2,'PUBLICA');
