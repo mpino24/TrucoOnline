@@ -35,7 +35,7 @@
     font-size: 16px;
     border-radius: 9999px;
     box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
-    color: #fff;
+    color: 'darkgreen';
   }
 
   .button {
@@ -43,13 +43,14 @@
     position: relative;
     padding: 10px 24px;
     font-size: 18px;
-    color: rgb(193, 163, 98);
-    border: 2px solid rgb(193, 163, 98);
+    color: 'rgb(193, 163, 98);';
+    border: 2px solid darkgreen;
     border-radius: 34px;
     background-color: transparent;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
     overflow: hidden;
+    margin:10
   }
   
   .button::before {
@@ -62,7 +63,7 @@
     border-radius: inherit;
     scale: 0;
     z-index: -1;
-    background-color: rgb(193, 163, 98);
+    background-color: rgb(154, 211, 118);
     transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
   }
   

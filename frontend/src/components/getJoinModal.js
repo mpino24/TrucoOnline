@@ -19,11 +19,11 @@ export default function getJoinModal(setModalVisible, modalVisible = false) {
                     <h1 style={{ fontSize: 24 }}>
                         Partida privada:
                     </h1>
-                    <input placeholder="código de partida" class="input" name="text" type="text"></input>
-                    <button class="button">
+                    <input style={{color:"black"}} placeholder="código de partida" class="input" name="text" type="text"></input>
+                    <button class="button" style={{margin:10, color:'brown'}}>
                         Unirse
                     </button>
-                    <button class="button" style={{ color: 'blue' }}>
+                    <button class="button" style={{ color: 'darkgreen' }}>
                         Ver
                     </button>
                 </div>

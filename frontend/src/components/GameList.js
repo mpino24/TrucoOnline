@@ -3,6 +3,7 @@ import tokenService from 'frontend/src/services/token.service.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
 import { TbFlower } from "react-icons/tb";
 import { TbFlowerOff } from "react-icons/tb";
+import { Link } from 'react-router-dom';
 
 const jwt = tokenService.getLocalAccessToken();
 export default function GameList() {
@@ -20,30 +21,45 @@ export default function GameList() {
         return (
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <p>Partida {game.codigo}: {game.puntosMaximos} puntos</p>
-                {game.conFlor && <TbFlower />}
-                {!game.conFlor && <TbFlowerOff />}
-                
-                
-                
-                
-                
+                {game.conFlor && <TbFlower style={{ margin: 10 }} />}
+                {!game.conFlor && <TbFlowerOff style={{ margin: 10 }} />}
                 {
-                    game.estado === 'WAITING' &&
-                    <>
-                    <button class="button">
-                        Unirse
-                    </button>
-                    <button class="button" style={{ color: 'blue' }}>
-                    Ver
-                </button>
-                    </>
+                        game.estado === 'WAITING' &&
+                        
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <p>N/{game.numJugadores} jugadores</p>
+                            <Link
+                                to={`/partidas/${game.codigo}`}
+                                style={{ textDecoration: "none" }}
+                            ><button class="button" style={{ margin: 10, color: 'brown' }} >
+                                    Unirse
+                                </button>
+                            </Link>
+
+                            <Link
+                                to={`/partidas/${game.codigo}`}
+                                style={{ textDecoration: "none" }}
+                            ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
+                                    Ver
+                                </button>
+                            </Link>
+                        </div>
                 }
                 {
                     game.estado === 'ACTIVE' &&
-                    <button class="button" style={{ color: 'blue' }}>
-                    Ver
-                </button>
-                 }
+                    <>
+                        <p>{game.numJugadores}/{game.numJugadores} jugadores</p>
+                        <Link
+                            to={`/partidas/${game.codigo}`}
+                            style={{ textDecoration: "none" }}
+                        ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
+                                Ver
+                            </button>
+                        </Link>
+                    </>
+                }
+
+
 
 
             </div>
