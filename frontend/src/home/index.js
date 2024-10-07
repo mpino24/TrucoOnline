@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import '../static/css/home/homeButton.css';
@@ -6,10 +6,12 @@ import { FaUserFriends } from "react-icons/fa";
 import { RiArrowRightDoubleLine } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { IoTrophy } from "react-icons/io5";
+import JoinModal from "frontend/src/components/getJoinModal.js"
 
 
 
 export default function Home() {
+    const [joinModalView, setJoinModalView]= useState(false);
     const backgrounds= [
         'url(/fondos/fondo0.jpg)',
         'url(/fondos/fondo1.jpg)',
@@ -27,6 +29,10 @@ export default function Home() {
         const randomIndex = Math.floor(Math.random() * backgrounds.length);
         return backgrounds[randomIndex];
     }
+
+    const toggleJoinModal = useCallback(() => {
+        setJoinModalView((current) => !current);
+    }, []);
        
 
 
@@ -39,13 +45,17 @@ export default function Home() {
                 <div/>
             </div>
             </div>
-
+            {joinModalView && 
+            JoinModal(setJoinModalView, joinModalView)
+                
+            }
+            { !joinModalView &&
             <div className="hero-div">
                 <h1>¿Un truco?</h1>
                 <button className="home-button">Crear</button>
-                <button className="home-button">Unirte</button>
+                <button className="home-button" onClick={toggleJoinModal}>Unirte</button> 
             </div>
-
+            }
             <div style={{ width:'36%' }}>
                 <div style={{cursor:'pointer'}} >
                 <FaUserFriends style={{ width: 80, height: 80, float: 'right',color:'white' }} />
@@ -56,6 +66,7 @@ export default function Home() {
             <div style={{ backgroundColor: 'black', position: 'fixed', bottom: 0, width: '100%', height: 41 }}>
                 <center style={{ color: 'white', marginTop: 5 }}>© MIDPIE</center>
             </div>
+
         </div>
     );
 
