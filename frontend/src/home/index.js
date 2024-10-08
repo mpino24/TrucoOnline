@@ -2,12 +2,10 @@ import React, { useState, useCallback } from 'react';
 import '../App.css';
 import '../static/css/home/home.css';
 import '../static/css/home/homeButton.css';
-import { Form, Label, Input } from "reactstrap";
 import { FaUserFriends } from "react-icons/fa";
 import { RiArrowRightDoubleLine } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { IoTrophy } from "react-icons/io5";
-import {DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
 
 export default function Home() {
     const backgrounds= [
@@ -22,7 +20,8 @@ export default function Home() {
         'url(/fondos/fondo8.jpg)',
         'url(/fondos/fondo9.jpg)',
     ];
-    const [creationModal, setCreationModalView] = useState(false);
+    const [creationModalView, setCreationModalView] = useState(false);
+    const [backgroundUrl, setBackgroundUrl] = useState()
 
     const getRandomBackground = () => { //Generado por IA
         const randomIndex = Math.floor(Math.random() * backgrounds.length);
@@ -43,53 +42,14 @@ export default function Home() {
                 <div/>
             </div>
             </div>
-
+            {creationModalView && CreationModal(setCreationModalView, creationModalView)}
             
-          {creationModal &&  <div className="hero-div">
+           {!creationModalView && 
+           <div className="hero-div">
                 <h1>¿Un truco?</h1>
-                <button onPress={()=>toggleCreationModal()} className="home-button">Crear</button>
+                <button className="home-button" onClick={toggleCreationModal}>Crear</button>
                 <button className="home-button">Unirte</button>
             </div> }
-
-
-             { !creationModal && <div className= 'cuadro-creacion'>
-             <Form>
-                <h3> Ajuste de la partida: </h3>
-                        <div>
-                            <Label>Numero de jugadores: 
-                            </Label>
-                            <DropdownItem>
-                            <DropdownToggle> . </DropdownToggle>             
-                            <DropdownMenu>
-                                <DropdownItem >2</DropdownItem>
-                                <DropdownItem >4</DropdownItem>
-                                <DropdownItem >6</DropdownItem>
-                            </DropdownMenu>
-                            </DropdownItem>
-
-                        </div>
-                        
-                        <Input type="checkbox" id="checkboxInput">
-                            <Label for="checkboxInput" class="toggleSwitch"> Numero de puntos para ganar:
-                            </Label>
-                        </Input>
-                        <div>
-                            <Label>
-                                Con Flor:
-                            </Label>
-                            </div>
-                            <div>
-                            <Label>
-                                Partida privada:
-                            </Label>
-                            </div>
-                            
-                            <div className="botones">
-                            <button onPress={()=>toggleCreationModal()} className="recuadro">Crear</button>
-                            <button className="recuadro">Volver</button>
-                            </div>
-                    </Form>
-            </div>}
 
             <div style={{ width:'36%' }}>
                 <div style={{cursor:'pointer'}} >
