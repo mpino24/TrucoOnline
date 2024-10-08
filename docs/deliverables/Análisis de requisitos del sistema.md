@@ -111,3 +111,5 @@ En caso de no estar logado, solo serán visibles las partidas públicas (especta
 Al meterte en una partida como espectador no podrás interactuar con la partida 
 ### R6-Partidas concurrentes
 Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
+### R7-Cuenta atrás en un turno
+Cuando es el turno de un jugador en la ronda, este tiene un tiempo límite para actuar, pasado este tiempo comienza una cuenta atrás en pantalla que termina dando la victoria al equipo contrario si el jugador no reacciona a tiempo.
