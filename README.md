@@ -6,7 +6,7 @@
   - Maria del Pino Peréz Dominguéz
   - David Valencia Toscano
   - Paula Rosa Gonzaléz Páez
-  - Iván Fernandéz Limarquéz 
+  - Iván Fernández Limarquéz 
   - Ivo Raimondi
 
 Proyecto de un juego llamado Truco para la asignatura de DP1 de la Universidad de Sevilla. La idea de este proyecto es aplicar lo aprendido sobre arquitectura SPA con React, Java y Spring.  
