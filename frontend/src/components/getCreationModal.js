@@ -2,18 +2,69 @@ import { Form, Label} from "reactstrap";
 import { IoCloseCircle } from "react-icons/io5";
 
 
+// const jwt = tokenService.getLocalAccessToken();
+
 export default function getCreationModal(setModalVisible, modalVisible=false){
+
+    // const emptyItem = {
+    //     nJugadores: "",
+    //     puntosMaximos: "",
+    //     conFlor: "",
+    //     privada: "",
+    //   };
+
+    // const [message, setMessage] = useState(null);
+    // const [visible, setVisible] = useState(false);
+    // const [partida, setPartida] = useFetchState(
+    //     emptyItem,
+    //     '/',
+    //     jwt,
+    //     setMessage,
+    //     setVisible
+    // );
 
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
     }
 
+    // function handleSubmit(event){
+    //     changes(event)
+
+    //     fetch("/", {
+    //         method: "POST",
+    //         headers: {
+    //             Authorization: `Bearer ${jwt}`,
+    //             Accept: "application/json",
+    //             "Content-Type": "application/json",
+    //           },
+    //           body: JSON.stringify(partida),
+    //         })
+    //         .then((response) => response.json())
+    //         .then((json) => {
+    //             if (json.message) {
+    //             setMessage(json.message);
+    //             setVisible(true);
+    //             } else window.location.href = "/";
+    //         })
+    //         .catch((message) => alert(message));
+    // }
+    // const modal = getErrorModal(setVisible, visible, message);
+
+    // function changes(event) {
+    //     const target = event.target;
+    //     const nJugadores = target
+    //     console.log(target)
+    // }
+
+
     return (
+
         <div >
             <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: "absolute" }} onClick={() => handleModalVisible(setModalVisible, modalVisible)} />
             <div className= 'cuadro-creacion'>
                 <div style={{marginTop:"20px"}}>
-             <Form>
+             <Form >
+                
                 <h3> Ajuste de la partida: </h3>
                 <div className='contenedor'>
                     <Label> Numero de jugadores: </Label>
