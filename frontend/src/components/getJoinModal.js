@@ -4,6 +4,7 @@ import { Link, Router } from 'react-router-dom';
 import 'frontend/src/components/css/joinModal.css';
 import { IoCloseCircle } from "react-icons/io5";
 import GameList from "./GameList";
+import { ScrollView } from "react-native";
 
 export default function getJoinModal(setModalVisible, modalVisible = false) {
     

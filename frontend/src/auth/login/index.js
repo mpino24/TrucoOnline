@@ -4,11 +4,13 @@ import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import "../../static/css/auth/authButton.css";
 import { loginFormInputs } from "./form/loginFormInputs";
+import logo from 'frontend/src/static/images/Logo_juego.png'
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const [message, setMessage] = useState(null)
-  const loginFormRef = React.createRef();      
-  
+  const loginFormRef = React.createRef();
+
 
   async function handleSubmit({ values }) {
 
@@ -28,23 +30,23 @@ export default function Login() {
         tokenService.updateLocalAccessToken(data.token);
         window.location.href = "/";
       })
-      .catch((error) => {         
+      .catch((error) => {
         setMessage(error);
-      });            
+      });
   }
 
-  
-    return (
+
+  return (
+    <div style={{ backgroundImage: 'url(/fondos/fondologin.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
       <div className="auth-page-container">
         {message ? (
           <Alert color="primary">{message}</Alert>
         ) : (
           <></>
         )}
-
-        <h1>Login</h1>
-
+        <img src={logo} alt='Logo del juego' style={{ height: '130%' }} />
         <div className="auth-form-container">
+          <h1 style={{fontSize:49}}>Login</h1>
           <FormGenerator
             ref={loginFormRef}
             inputs={loginFormInputs}
@@ -54,7 +56,19 @@ export default function Login() {
             buttonText="Login"
             buttonClassName="auth-button"
           />
+          <div style={{ marginLeft: '35%' }}>
+            <p style={{ marginTop: 60, color: '#212529' }}> ¿No tienes cuenta?</p>
+            <Link
+              to={`/register`}
+              style={{ textDecoration: "none" }}
+            >
+              <button onClick={handleSubmit} className={'auth-button'}>
+                Sign up
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
-    );  
+    </div>
+  );
 }

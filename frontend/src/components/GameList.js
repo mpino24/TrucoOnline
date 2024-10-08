@@ -4,6 +4,7 @@ import useFetchState from "frontend/src/util/useFetchState.js";
 import { TbFlower } from "react-icons/tb";
 import { TbFlowerOff } from "react-icons/tb";
 import { Link } from 'react-router-dom';
+import { ScrollView } from 'react-native-web';
 
 const jwt = tokenService.getLocalAccessToken();
 export default function GameList() {
@@ -70,5 +71,6 @@ export default function GameList() {
         <>
             <p>{gamesList}</p>
         </>
+        
     )
 }
