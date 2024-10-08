@@ -47,7 +47,7 @@ A continuación se definen  todas las historias de usuario a implementar:
  ## Historia de Usuario Creación y configuración partidas:
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
-<img src="docs\mockups\Mockup_creacion.jpg" alt="Creacion de partida" width="300"/>
+<img src="docs/mockups/Mockup_creacion.jpg" alt="Creacion de partida" width="300"/>
 
  ### HU-(ISSUE#60): Editar los puntos de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/60])
 Como jugador quiero que el sistema me permita poder editar las partidas para decidir la puntuación (15 o 30)  
