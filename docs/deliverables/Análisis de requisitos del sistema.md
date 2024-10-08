@@ -33,9 +33,9 @@ Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a q
 
 Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
 
-Jugador:Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
+Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
 
-Espectador:Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
+Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
 
 
 ## Historias de Usuario
