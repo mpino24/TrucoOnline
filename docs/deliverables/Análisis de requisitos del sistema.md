@@ -109,3 +109,5 @@ El jugador habrá de unirse a una partida privada mediante un código único.
 En caso de no estar logado, solo serán visibles las partidas públicas (espectador) 
 ### R5-Espectación de la partida
 Al meterte en una partida como espectador no podrás interactuar con la partida 
+### R6-Partidas concurrentes
+Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
