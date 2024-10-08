@@ -35,3 +35,190 @@
 .hero-div h3{
     text-align: center;
 }
+
+.hero-div h3 {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.cuadro-creacion{
+    display: flex;
+    width:60vb;
+    border: 2px solid darkgreen; 
+    background-color: rgba(235, 255, 226, 0.678);
+    border-radius: 10px;
+    color: rgb(73, 65, 65);
+    height: 60vh;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.recuadro{
+    border: 2px solid white;
+    padding: 10px 20px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-color: darkgreen;
+    border-radius: 50px;
+}
+.botones{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px
+  ;
+}
+
+.contenedor{
+  display:flex;
+  align: center;
+  flex-direction: 'row';
+  margin-top: 10px;
+
+}
+
+  /* From Uiverse.io by PriyanshuGupta28 */ 
+.checkbox-wrapper-51 input[type="checkbox"] {
+  visibility: flex;
+  display: none;
+}
+
+.checkbox-wrapper-51 .toggle {
+  position: relative;
+  flex-direction: row;
+  display: block;
+  width: 42px;
+  height: 24px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(0, 0, 0);
+}
+
+.checkbox-wrapper-51 .toggle:before {
+  content: "";
+  position: relative;
+  flex-direction: row;
+  top: 1px;
+  left: 1px;
+  width: 40px;
+  height: 22px;
+  display: block;
+  background: #c8ccd4;
+  border-radius: 12px;
+  transition: 0.2s ease;
+}
+
+.checkbox-wrapper-51 .toggle span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  display: block;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(154,153,153,0.75);
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper-51 .toggle span svg {
+  margin: 7px;
+  fill: none;
+}
+
+.checkbox-wrapper-51 .toggle span svg path {
+  stroke: #c8ccd4;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 0;
+  transition: all 0.5s linear;
+}
+
+.checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle:before {
+  background: #00ff77ae;
+}
+
+.checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span {
+  transform: translateX(18px);
+}
+
+.checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span path {
+  stroke: #000000;
+  stroke-dasharray: 25;
+  stroke-dashoffset: 25;
+}
+
+.paste-button {
+  position: relative;
+  display: block;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.button {
+  background-color: #4CAF50;
+  color: #212121;
+  padding: 3px 11px;
+  font-size: 10px;
+  font-weight: bold;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  cursor: pointer;
+  position: relative;
+  left: 87px;
+  
+}
+
+.dropdown-content {
+  display: none;
+  font-size: 13px;
+  position: absolute;
+  left: 87px;
+  z-index: 1;
+  min-width: 50px;
+  background-color: #212121;
+  border: 2px solid #4CAF50;
+  border-radius: 0px 15px 15px 15px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+  color: #4CAF50;
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+  transition: 0.1s;
+}
+
+.dropdown-content a:hover {
+  background-color: #4CAF50;
+  color: #212121;
+}
+
+.dropdown-content a:focus {
+  background-color: #212121;
+  color: #4CAF50;
+}
+
+.dropdown-content #top:hover {
+  border-radius: 0px 13px 0px 0px;
+}
+
+.dropdown-content #bottom:hover {
+  border-radius: 0px 0px 13px 13px;
+}
+
+.paste-button:hover button {
+  border-radius: 15px 15px 0px 0px;
+}
+
+.paste-button:hover .dropdown-content {
+  display: block;
+}
+
+
+

@@ -10,11 +10,13 @@ import { IoTrophy } from "react-icons/io5";
 import tokenService from "frontend/src/services/token.service.js";
 import jwt_decode from "jwt-decode";
 import JoinModal from "frontend/src/components/getJoinModal.js"
+import CreationModal from "frontend/src/components/getCreationModal.js"
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
 
 
 export default function Home() {
     const [joinModalView, setJoinModalView] = useState(false);
+    const [creationModalView, setCreationModalView] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
     const [backgroundUrl, setBackgroundUrl] = useState()
     const [username, setUsername] = useState("");
@@ -48,6 +50,11 @@ export default function Home() {
     const toggleJoinModal = useCallback(() => {
         setJoinModalView((current) => !current);
     }, []);
+  
+      const toggleCreationModal = useCallback(() => {
+        setCreationModalView((current) => !current);
+    }, []);
+  
     useEffect(() => {
         if (jwt) {
             setUsername(jwt_decode(jwt).sub);
@@ -89,13 +96,15 @@ export default function Home() {
             </div>
         </div>
         {joinModalView &&
-            JoinModal(setJoinModalView, joinModalView)
-
+            JoinModal(setJoinModalView, joinModalView)         
         }
-        {!joinModalView &&
+        {creationModalView &&
+            CreationModal(setCreationModalView, creationModalView)         
+        }
+        {!(joinModalView || creationModalView) &&
             <div className="hero-div">
                 <h1>¿Un truco?</h1>
-                <button className="home-button">Crear</button>
+                <button className="home-button" onClick={toggleCreationModal}>Crear</button>
                 <button className="home-button" onClick={toggleJoinModal}>Unirte</button>
             </div>
         }
@@ -105,7 +114,6 @@ export default function Home() {
                 <RiArrowLeftDoubleLine style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
             </div>
         </div>
-
         <div style={{ backgroundColor: 'black', position: 'fixed', bottom: 0, width: '100%', height: 41 }}>
             <center style={{ color: 'white', marginTop: 5 }}>© MIDPIE</center>
         </div>
