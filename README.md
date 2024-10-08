@@ -100,7 +100,7 @@ Entre a [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swag
 
 | Configuracion Spring Boot | Clase o archivo de propiedades Java  |
 |--------------------------|---|
-|Clase Main | [GameApplication](src/main/java/es/us/dp1/lx_xy_24_25/your_game_name/GameApplication.java) |
+|Clase Main | [GameApplication](src/main/java/es/us/dp1/lx_xy_24_25/truco_beasts/GameApplication.java) |
 |Archivos de propiedades | [application.properties](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/src/main/resources) |
 
 
