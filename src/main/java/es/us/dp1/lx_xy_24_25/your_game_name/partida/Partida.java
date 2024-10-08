@@ -20,9 +20,9 @@ public class Partida extends BaseEntity{
     @NotNull
     Estado estado;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    Tipo tipo;
+    @Column(name= "NUMJUGADORES")
+    @NotEmpty
+    Integer numJugadores;
 
     @Column(name= "CODIGO")
     @NotEmpty
@@ -34,7 +34,7 @@ public class Partida extends BaseEntity{
     
     @Column(name = "PUNTOSMAXIMOS")
 	@NotNull
-    Puntos puntosMaximos; // a 15 es false y a 30 true
+    Integer puntosMaximos;
 
     @Column(name = "PUNTOSEQUIPO1")
     @NotNull

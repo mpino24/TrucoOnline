@@ -46,28 +46,11 @@ function AppNavbar() {
 
     return (
         <div>
-            <Navbar expand="md" dark >
+            <Navbar expand="md" dark style={{float:'left'}} >
                 <NavbarBrand href="/">
                     <img alt="logo" src={logoChico} style={{ height: 80, width: 80, borderRadius: 500 }} />
                 </NavbarBrand>
-                <Nav className="ms-auto mb-2 mb-lg-0" navbar>
-                    <div style={{ display: 'flex', alignItems: 'center', cursor:'pointer' }} onClick={toggleAccountMenu}>
-                        <p style={{ color: "white", marginRight: 20, fontSize: 20 }} >{username}</p>
-                        <img style={{ height: 60, width: 60, borderRadius: 500 }} src={photoUrl} alt='Foto de perfil del usuario'></img>
-                    </div>
-                </Nav>
-            </Navbar>
-            {showAccountMenu &&
-                <div style={{ backgroundColor: 'black', borderRadius: 5, height: 70, width: 200, float: 'right', marginRight: 5 }}>
-                    <NavItem className="d-flex">
-                        <NavLink style={{ color: "white", marginTop: 8, marginLeft: 5 }} id="perfil" tag={Link} to="/profile">Mi Perfil</NavLink>
-                    </NavItem>
-
-                    <NavItem className="d-flex">
-                        <NavLink style={{ color: "red", marginBottom: 2, marginLeft: 5 }} id="logout" tag={Link} to="/logout">Cerrar Sesión</NavLink>
-                    </NavItem>
-                </div>
-            }
+             </Navbar>
         </div>
 
     );

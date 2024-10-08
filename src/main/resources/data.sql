@@ -20,4 +20,8 @@ INSERT INTO appusers(id,username,password,authority) VALUES (15,'SJJ8308','$2a$1
 INSERT INTO appusers(id,username,password,authority) VALUES (16,'PHB1628','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (17,'TBP9161','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (18,'MVS9857','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO Partida(id,Estado,Tipo,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (1,'WAITING','A_DOS','ABCDE',FALSE,FALSE,1,2,'PUBLICA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (1,'WAITING',2,'ABCDE',FALSE,15,1,2,'PUBLICA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (2,'ACTIVE',4,'BCDEF',TRUE,30,1,2,'PUBLICA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (3,'FINISHED',2,'QWERT',FALSE,15,1,2,'PUBLICA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (4,'WAITING',6,'YHGDT',FALSE,15,1,2,'PRIVADA');
+

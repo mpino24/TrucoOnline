@@ -1,6 +1,6 @@
 :root{
-  --color-input: #303030;
-  --color-label: #5e5e5e;
+  --color-input: #fff;
+  --color-label:#ffffff;
   --color-btn-disabled: #5757577e;
   --color-error: #cc0033;
   --color-error-background: #fce4e4;

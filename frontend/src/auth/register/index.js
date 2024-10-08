@@ -76,7 +76,7 @@ export default function Register() {
 
   if (type) {
     return (
-      <div className="auth-page-container">
+      <div className="auth-page-container"  >
         <h1>Register</h1>
         <div className="auth-form-container">
           <FormGenerator
