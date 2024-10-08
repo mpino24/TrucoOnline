@@ -6,6 +6,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { RiArrowRightDoubleLine } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { IoTrophy } from "react-icons/io5";
+import CreationModal from "frontend/src/components/getCreationModal.js"
 
 export default function Home() {
     const backgrounds= [
@@ -21,7 +22,7 @@ export default function Home() {
         'url(/fondos/fondo9.jpg)',
     ];
     const [creationModalView, setCreationModalView] = useState(false);
-    const [backgroundUrl, setBackgroundUrl] = useState()
+
 
     const getRandomBackground = () => { //Generado por IA
         const randomIndex = Math.floor(Math.random() * backgrounds.length);
@@ -47,7 +48,7 @@ export default function Home() {
            {!creationModalView && 
            <div className="hero-div">
                 <h1>¿Un truco?</h1>
-                <button className="home-button" onClick={toggleCreationModal}>Crear</button>
+                <button onClick={toggleCreationModal} className="home-button">Crear</button>
                 <button className="home-button">Unirte</button>
             </div> }
 
