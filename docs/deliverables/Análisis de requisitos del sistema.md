@@ -33,18 +33,17 @@ Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a q
 
 < Nombre Rol >: < Breve descripción del rol >
 
-_Ej1: Propietario: Dueño de una o varias mascota que viene a la clínica para mantenerla sana y cuidar de su salud._
+_Ej1: Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
 
-_Ej2: Veterinario: Profesional de la salud animal con titulación universitaria homologada, está registrado en la clínica y se encarga de realizar diagnósticos y recetar tratamientos. Además mantiene actualizado el vademécum._
+_Ej2: Jugador:Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
 
-_Ej3: Administrador: Dueño de la clínica que se encarga de dar de alta veterinarios y gestionar la información registrada en la aplicación de la clínica._
+_Ej3: Espectador:Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
 
 
 
 ## Historias de Usuario
 
 A continuación se definen  todas las historias de usuario a implementar:
-_Os recomentamos usar la siguiente plantilla de contenidos que usa un formato tabular:_
  ## Historia de Usuario Creación y configuración partidas:
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
@@ -110,13 +109,3 @@ El jugador habrá de unirse a una partida privada mediante un código único.
 En caso de no estar logado, solo serán visibles las partidas públicas (espectador) 
 ### R5-Espectación de la partida
 Al meterte en una partida como espectador no podrás interactuar con la partida 
-
-_Ej:_ 
-### R1 – Diagnósticos imposibles
-El diagnóstico debe estar asociado a una enfermedad que es compatible con el tipo de mascota de su visita relacionada. Por ejemplo, no podemos establecer como enfermedad diagnosticada una otitis cuando la visita está asociada a una mascota que es un pez, porque éstos no tienen orejas ni oídos (y por tanto no será uno de los tipos de mascota asociados a la enfermedad otitis en el vademecum).
-
-…
-
-_Muchas de las reglas del juego se transformarán en nuestro caso en reglas de negocio, por ejemplo, “la carta X solo podrá jugarse en la ronda Y si en la ronda anterior se jugó la carta Z”, o “en caso de que un jugador quede eliminado el turno cambia de sentido”_
-
-
