@@ -66,7 +66,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/**")).hasAuthority(ADMIN)
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partida/**")).permitAll() //Cambiar a authenticated ????
-			.requestMatchers("/api/v1/profile").authenticated()
+			.requestMatchers("/api/v1/profile/edit").authenticated()
 			.anyRequest().authenticated())					
 			
 			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);		
