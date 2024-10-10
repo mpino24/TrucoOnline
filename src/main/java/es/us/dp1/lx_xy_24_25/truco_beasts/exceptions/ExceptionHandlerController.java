@@ -75,4 +75,13 @@ public class ExceptionHandlerController {
 		return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
 	}
 
+	@ExceptionHandler(value = NameDuplicatedException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<ErrorMessage> handleNameDuplicated(NameDuplicatedException ex, WebRequest request) {
+		ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage(),
+				request.getDescription(false));
+
+		return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+	}
+
 }

@@ -43,8 +43,10 @@ export default function Profile() {
           navigate("/login");
         } else{
           let json = JSON.parse(data);
+          
           if(json.message){
-            setMessage(data);
+            let mensaje = "Status Code: " + json.statusCode + " -> " + json.message
+            setMessage(mensaje);
             setVisible(true);
           }else
             navigate("/"); }
