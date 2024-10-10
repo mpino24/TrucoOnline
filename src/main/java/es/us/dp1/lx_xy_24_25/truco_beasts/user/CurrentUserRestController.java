@@ -11,13 +11,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.services.UserDetailsImpl;
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NameDuplicatedException;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/profile")
@@ -39,17 +43,21 @@ public class CurrentUserRestController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<?> updateProfile(@RequestBody User user, Principal principal) {
+    @Transactional(rollbackFor = {AccessDeniedException.class, NameDuplicatedException.class})
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid User user, Principal principal) {
         User currentUser = userService.findCurrentUser();
         if(currentUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            throw new AccessDeniedException("Tu usuario no ha sido encontrado");
         }
-        currentUser.setUsername(user.getUsername());
-        if(!(user.getPassword()==null)) {
-            currentUser.setPassword(encoder.encode(user.getPassword()));
-        }
-        userService.saveUser(currentUser);
-
-        return ResponseEntity.ok("Perfil editado con exito");
+        if(!userService.existsUser(user.getUsername())){
+            currentUser.setUsername(user.getUsername());
+            if(!(user.getPassword()==null)) {
+                currentUser.setPassword(encoder.encode(user.getPassword()));
+            }
+            userService.saveUser(currentUser);
+            return ResponseEntity.ok("Perfil editado con exito");
+        }else{
+            throw new NameDuplicatedException("Ese nombre está en uso");
+        } 
     }
 }
