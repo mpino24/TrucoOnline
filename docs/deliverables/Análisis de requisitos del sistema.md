@@ -71,7 +71,7 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 
 _Recuerde que este es un diagrama conceptual, y por tanto no se incluyen los tipos de los atributos, ni clases específicas de librerías o frameworks, solamente los conceptos del dominio/juego que pretendemos implementar_
 
-![modelo_conceptual](docs/diagrams/ModeloConceptual.drawio.png)
+![modelo_conceptual](https://github.com/user-attachments/assets/c6f18a6a-d067-453d-9b87-15f83203038a)
 
 _Si vuestro diagrama se vuelve demasiado complejo, siempre podéis crear varios diagramas para ilustrar todos los conceptos del dominio. Por ejemplo podríais crear un diagrama para cada uno de los módulos que quereis abordar. La única limitación es que hay que ser coherente entre unos diagramas y otros si nos referimos a las mismas clases_
 
