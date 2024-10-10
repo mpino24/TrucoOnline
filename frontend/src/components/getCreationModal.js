@@ -2,59 +2,15 @@ import { Form, Label} from "reactstrap";
 import { IoCloseCircle } from "react-icons/io5";
 
 
-// const jwt = tokenService.getLocalAccessToken();
 
 export default function getCreationModal(setModalVisible, modalVisible=false){
 
-    // const emptyItem = {
-    //     nJugadores: "",
-    //     puntosMaximos: "",
-    //     conFlor: "",
-    //     privada: "",
-    //   };
 
-    // const [message, setMessage] = useState(null);
-    // const [visible, setVisible] = useState(false);
-    // const [partida, setPartida] = useFetchState(
-    //     emptyItem,
-    //     '/',
-    //     jwt,
-    //     setMessage,
-    //     setVisible
-    // );
 
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
     }
 
-    // function handleSubmit(event){
-    //     changes(event)
-
-    //     fetch("/", {
-    //         method: "POST",
-    //         headers: {
-    //             Authorization: `Bearer ${jwt}`,
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json",
-    //           },
-    //           body: JSON.stringify(partida),
-    //         })
-    //         .then((response) => response.json())
-    //         .then((json) => {
-    //             if (json.message) {
-    //             setMessage(json.message);
-    //             setVisible(true);
-    //             } else window.location.href = "/";
-    //         })
-    //         .catch((message) => alert(message));
-    // }
-    // const modal = getErrorModal(setVisible, visible, message);
-
-    // function changes(event) {
-    //     const target = event.target;
-    //     const nJugadores = target
-    //     console.log(target)
-    // }
 
 
     return (

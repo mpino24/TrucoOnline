@@ -1,7 +1,5 @@
 # Documento de análisis de requisitos del sistema
 
-_Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
-
 ## Introducción
 
 Truco Beasts: Bardo en la Jungla® está basado en el juego del truco y pretendemos implementar todo lo que explicaremos a continuación (a excepción de las partidas de a 3 y a 8 jugadores).
@@ -33,28 +31,34 @@ Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a q
 
 < Nombre Rol >: < Breve descripción del rol >
 
-_Ej1: Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
+Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
 
-_Ej2: Jugador:Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
+Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
 
-_Ej3: Espectador:Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
-
+Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
 
 
 ## Historias de Usuario
 
 A continuación se definen  todas las historias de usuario a implementar:
  ## Historia de Usuario Creación y configuración partidas:
+ ### HU-(NOISSUE): Poder loggearme
+Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
+ ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
+![Mockup_home](https://github.com/user-attachments/assets/fb8b849a-f27e-4e48-92ec-5b402253ecdf)
+![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ### HU-(ISSUE#60): Editar los puntos de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/60])
 Como jugador quiero que el sistema me permita poder editar las partidas para decidir la puntuación (15 o 30)  
  ### HU-(ISSUE#61): Editar la flor en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/61])
 Como jugador quiero que el sistema me permita editar las partidas para decidir si se juega con flor 
  ### HU-(ISSUE#62): Editar numero de jugadores de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/62])
 Como jugador quiero que el sistema me permita editar las paridas para decidir de cuantos jugadores será 
+![Mockup_creacion](https://github.com/user-attachments/assets/f3682b2c-34ac-427d-96c6-7d473526d422)
  ### HU-(ISSUE#63): Poder unirse a las partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/63])
 Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
+![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
  ## Historia de Usuario Jugar partidas:
  ## Historia de Usuario Aspecto social:
  ## Historia de Usuario Aspectos especificos del usuario:
@@ -71,7 +75,9 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 
 _Recuerde que este es un diagrama conceptual, y por tanto no se incluyen los tipos de los atributos, ni clases específicas de librerías o frameworks, solamente los conceptos del dominio/juego que pretendemos implementar_
 
+
 ![modelo_conceptual](https://github.com/user-attachments/assets/c6f18a6a-d067-453d-9b87-15f83203038a)
+
 
 _Si vuestro diagrama se vuelve demasiado complejo, siempre podéis crear varios diagramas para ilustrar todos los conceptos del dominio. Por ejemplo podríais crear un diagrama para cada uno de los módulos que quereis abordar. La única limitación es que hay que ser coherente entre unos diagramas y otros si nos referimos a las mismas clases_
 
@@ -90,3 +96,7 @@ El jugador habrá de unirse a una partida privada mediante un código único.
 En caso de no estar logado, solo serán visibles las partidas públicas (espectador) 
 ### R5-Espectación de la partida
 Al meterte en una partida como espectador no podrás interactuar con la partida 
+### R6-Partidas concurrentes
+Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
+### R7-Cuenta atrás en un turno
+Cuando es el turno de un jugador en la ronda, este tiene un tiempo límite para actuar, pasado este tiempo comienza una cuenta atrás en pantalla que termina dando la victoria al equipo contrario si el jugador no reacciona a tiempo.

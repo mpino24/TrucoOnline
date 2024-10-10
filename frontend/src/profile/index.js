@@ -11,6 +11,7 @@ export default function Profile() {
 
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
   const [user, setUser] = useFetchState(
     [], "/api/v1/profile", jwt, setMessage, setVisible
   )
@@ -19,8 +20,12 @@ export default function Profile() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    const updatedUser = {
+      ...user,
+      password: newPassword ? newPassword : undefined
+    };
       fetch(
-        "/api/v1/users/" + user.id,
+        "/api/v1/profile/edit",
         {
           method: "PUT",
           headers: {
@@ -28,22 +33,23 @@ export default function Profile() {
           Accept: "application/json",
           "Content-Type": "application/json",
           },
-          body: JSON.stringify(user),
+          body: JSON.stringify(updatedUser),
         }
       )
         .then((response) => response.text())
         .then((data) => {
-        if(data==="")
-          navigate("/");
-        else{
+        if(data==="Perfil editado con exito") {
+          tokenService.removeUser();
+          navigate("/login");
+        } else{
           let json = JSON.parse(data);
           if(json.message){
-            setMessage(JSON.parse(data).message);
+            setMessage(data);
             setVisible(true);
           }else
             navigate("/"); }
           })
-      .catch((message) => alert(message));
+      .catch((error) => alert(error.message));
   }
 
   function handleChange(event) {
@@ -53,53 +59,61 @@ export default function Profile() {
     setUser({ ...user, [name]: value });
   }
 
+  function handlePasswordChange(event) {
+    setNewPassword(event.target.value);
+  }
+
   return(
-    <div className="auth-page-container">
-      <h1 className="text-center">
-        Editar perfil
-      </h1>
-      <div className="auth-form-container">
-        {modal}
-          <Form onSubmit={handleSubmit}>
-            <div className="custom-form-input">
-              <Label for="username" className="custom-form-input-label">
-                Nombre de usuario
-              </Label>
-              <Input
-                type="text"
-                required
-                name="username"
-                id="username"
-                value={user.username || ""}
-                onChange={handleChange}
-                className="custom-input"
-              />
-            </div>
-            <div className="custom-form-input">
-              <Label for="password" className="custom-form-input-label">
-                Contraseña
-              </Label>
-              <Input
-                type="password"
-                required
-                name="password"
-                id="password"
-                value={user.password || ""}
-                onChange={handleChange}
-                className="custom-input"
-              />
-            </div>
-            <div className="custom-button-row">
-            <button className="auth-button">Guardar</button>
-              <Link
-              to={`/`}
-              className="auth-button"
-              style={{ textDecoration: "none" }}
-              >
-              Volver
-              </Link>
-            </div>
-          </Form>
+    <div style={{ backgroundImage: 'url(/fondos/fondologin.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
+      <div className="auth-page-container">
+        <div className="hero-div">
+          <h1 className="text-center">
+            Editar perfil
+          </h1>
+          <div className="auth-form-container">
+            {modal}
+              <Form onSubmit={handleSubmit}>
+                <div className="custom-form-input">
+                  <Label for="username" className="custom-form-input-label">
+                    Nombre de usuario
+                  </Label>
+                  <Input
+                    type="text"
+                    required
+                    name="username"
+                    id="username"
+                    value={user.username || ""}
+                    onChange={handleChange}
+                    className="custom-input"
+                  />
+                </div>
+                <div className="custom-form-input">
+                  <Label for="password" className="custom-form-input-label">
+                    Contraseña
+                  </Label>
+                  <Input
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={newPassword}
+                    onChange={handlePasswordChange}
+                    className="custom-input"
+                    placeholder="Deja este campo vacío si no deseas cambiar la contraseña"
+                  />
+                </div>
+                <div className="custom-button-row">
+                <button className="auth-button">Guardar</button>
+                  <Link
+                  to={`/`}
+                  className="auth-button"
+                  style={{ textDecoration: "none" }}
+                  >
+                  Volver
+                  </Link>
+                </div>
+              </Form>
+          </div>
+          </div>
       </div>
     </div>
   );  
