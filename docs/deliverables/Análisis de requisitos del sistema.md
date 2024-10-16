@@ -44,14 +44,12 @@ A continuación se definen  todas las historias de usuario a implementar:
  ## Historia de Usuario Creación y configuración partidas:
  ### HU-(NOISSUE): Poder loggearme
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
+ ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-(NOISSUE): Poder borrar la cuenta ([])
  Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso
-
- ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
 ![Mockup_home](https://github.com/user-attachments/assets/fb8b849a-f27e-4e48-92ec-5b402253ecdf)
-![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ### HU-(ISSUE#60): Editar los puntos de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/60])
 Como jugador quiero que el sistema me permita poder editar las partidas para decidir la puntuación (15 o 30)  
  ### HU-(ISSUE#61): Editar la flor en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/61])
@@ -61,9 +59,10 @@ Como jugador quiero que el sistema me permita editar las paridas para decidir de
 ![Mockup_creacion](https://github.com/user-attachments/assets/f3682b2c-34ac-427d-96c6-7d473526d422)
  ### HU-(ISSUE#63): Poder unirse a las partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/63])
 Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
+![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
  ### HU-(NOISSUE): Poder cerrar sesion ([])
  Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
-![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
+ ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ## Historia de Usuario Jugar partidas:
  ## Historia de Usuario Aspecto social:
  ## Historia de Usuario Aspectos especificos del usuario:
