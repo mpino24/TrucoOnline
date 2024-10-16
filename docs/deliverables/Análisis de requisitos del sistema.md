@@ -45,6 +45,7 @@ A continuación se definen  todas las historias de usuario a implementar:
  ### HU-(NOISSUE): Poder loggearme
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
  ### HU-(NOISSUE): Poder borrar la cuenta ([])
+ Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso
 
  ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
@@ -61,6 +62,7 @@ Como jugador quiero que el sistema me permita editar las paridas para decidir de
  ### HU-(ISSUE#63): Poder unirse a las partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/63])
 Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
  ### HU-(NOISSUE): Poder cerrar sesion ([])
+ Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
 ![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
  ## Historia de Usuario Jugar partidas:
  ## Historia de Usuario Aspecto social:
