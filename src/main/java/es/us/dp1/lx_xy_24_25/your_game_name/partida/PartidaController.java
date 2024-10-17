@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +53,17 @@ public class PartidaController {
 		BeanUtils.copyProperties(Partida, newPartida, "id");
 		newPartida.setCodigo(generateRandomCode());
 		return new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
+	}
+
+	
+	@GetMapping("/{codigo}")
+	public ResponseEntity<Partida> findPartidaByCodigo(@PathVariable String codigo) {
+		ResponseEntity<Partida> res= new ResponseEntity<>(partidaService.findPartidaByCodigo(codigo), HttpStatus.OK);
+		if(res.hasBody()){
+			return res;
+		}else{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 }
