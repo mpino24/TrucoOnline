@@ -1,11 +1,11 @@
 :root{
-  --color-input: #fff;
-  --color-label:#ffffff;
+  --color-input: #000000;
+  --color-label:#000000;
   --color-btn-disabled: #5757577e;
   --color-error: #cc0033;
   --color-error-background: #fce4e4;
   --color-border-disabled: #706c6c;
-  --main-button-hover-dark-color: #23c483;
+  --main-button-hover-dark-color: #000000;
   --main-button-hover-light-color: #23c483;
   --main-button-shadow-hover-color: rgba(0,0,0,0.4);
   --main-black: #111;
@@ -59,9 +59,11 @@ select.class-form-input {
   color: var(--color-input);
   padding: 0.6em 0.3em;
   border: none;
+  border-radius: 15%;
   outline: none;
   border-bottom: 1px solid var(--main-button-hover-dark-color);
-  background-color: transparent;
+  background-color:rgba(169, 169, 169, 0.647) ;
+  
 }
 
 textarea.class-form-input {

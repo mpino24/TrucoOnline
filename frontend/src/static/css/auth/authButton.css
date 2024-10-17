@@ -17,7 +17,7 @@
 .auth-button:hover {
   background-color: var(--main-green-color);
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
-  color: #fff;
+  color: #000;
   transform: translateY(-7px);
 }
 
