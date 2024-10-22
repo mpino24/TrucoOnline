@@ -9,10 +9,13 @@ const PartidaView =forwardRef((props, ref)  => {
 
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-                <p>Partida {game.codigo}: {game.puntosMaximos} puntos</p>
-                {game.conFlor && <TbFlower style={{ margin: 10 }} />}
-                {!game.conFlor && <TbFlowerOff style={{ margin: 10 }} />}
+        <div style={{ display: 'flex', alignItems: 'center',gap:'10px' }}>
+                <p style={{fontSize:18, textDecoration:'underline'}}>Partida {game.codigo}:</p>
+                <p style={{ marginLeft: 10 }}>{game.puntosMaximos} puntos</p>
+                <p>
+                {game.conFlor && <TbFlower style={{  verticalAlign:'middle' }} />}
+                {!game.conFlor && <TbFlowerOff  />}
+                </p>
                 {
                         game.estado === 'WAITING' &&
                         

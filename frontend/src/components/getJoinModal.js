@@ -7,6 +7,7 @@ import GameList from "./GameList";
 import { ScrollView } from "react-native";
 import { IoIosSearch } from "react-icons/io";
 import PartidaView from "./PartidaView";
+import { ImageBackground } from "react-native-web";
 
 const GetJoinModal = forwardRef((props, ref) => {
 
@@ -30,7 +31,7 @@ const GetJoinModal = forwardRef((props, ref) => {
         )
             .then((response) => response.text())
             .then((data) => {
-                if (data) {
+                if (data&& codigo) {
                     setPartida(data)
                 }
                 else {
@@ -52,14 +53,15 @@ const GetJoinModal = forwardRef((props, ref) => {
     return (
         <>
             <div className='cuadro-union'>
-                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: "absolute" }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
-                <Form onSubmit={handleSubmit}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <h1 style={{ fontSize: 24 }}>
-                            Partida privada:
+                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position:'absolute' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
+                
+                <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display:'flex', alignItems: 'center' }}>
+                        <h1 style={{ fontSize: 24 , whiteSpace: "nowrap"}}>
+                            Buscar Partida:
                         </h1>
-                        <Input onChange={handleChange} style={{ color: "black" }} placeholder="código de partida" class="input" name="text" type="text" />
-                        <button>
+                        <input onChange={handleChange} style={{ color: "black" }} placeholder="código de partida" class="input" name="text" pattern="[A-Z]{0,5}"  type="text" required />
+                        <button style={{background: 'transparent', border:'transparent'}}>
                             <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
                         </button>
                     </div>
@@ -71,10 +73,10 @@ const GetJoinModal = forwardRef((props, ref) => {
                 }
                 <h1 style={{ fontSize: 24 }}>
                     Partidas públicas:
-                    <GameList />
                 </h1>
-
-
+                <div style={{overflowY:'auto'}}>
+                <GameList />
+                </div>
             </div>
 
         </>

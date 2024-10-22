@@ -91,7 +91,7 @@ export default function Home() {
         </Nav>
         
 
-    <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: 'cover' }}>
+    <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%' }}>
         <div style={{ width: '36%' }}>
             <div style={{ cursor: 'pointer' }}>
                 <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />

@@ -27,9 +27,9 @@ export default function GameList() {
         )
     });
     return (
-        <>
-            <p>{gamesList}</p>
-        </>
+        <div>
+            <p style={{overflowY:true}}>{gamesList}</p>
+        </div>
         
     )
 }
