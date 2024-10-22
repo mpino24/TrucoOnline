@@ -28,12 +28,12 @@ import jakarta.validation.Valid;
 public class CurrentUserRestController {
     
     private final UserService userService;
-    private final PasswordEncoder encoder;
+    
 
 	@Autowired
-	public CurrentUserRestController(UserService userService, PasswordEncoder encoder) {
+	public CurrentUserRestController(UserService userService) {
 		this.userService = userService;
-        this.encoder = encoder;
+
 	}
 
     @GetMapping
@@ -43,21 +43,14 @@ public class CurrentUserRestController {
     }
 
     @PutMapping("/edit")
-    @Transactional(rollbackFor = {AccessDeniedException.class, NameDuplicatedException.class})
     public ResponseEntity<?> updateProfile(@RequestBody @Valid User user, Principal principal) {
-        User currentUser = userService.findCurrentUser();
-        if(currentUser == null) {
-            throw new AccessDeniedException("Tu usuario no ha sido encontrado");
-        }
-        if(!userService.existsUser(user.getUsername())){
-            currentUser.setUsername(user.getUsername());
-            if(!(user.getPassword()==null)) {
-                currentUser.setPassword(encoder.encode(user.getPassword()));
-            }
-            userService.saveUser(currentUser);
-            return ResponseEntity.ok("Perfil editado con exito");
+        
+        User cambiado = userService.updateCurrentUser(user);
+        if(cambiado.getUsername().equals(user.getUsername()) && user.getPassword()==null){
+            return ResponseEntity.ok("Nada cambiado");
         }else{
-            throw new NameDuplicatedException("Ese nombre está en uso");
-        } 
+            return ResponseEntity.ok("Perfil editado con exito");
+        }
+        
     }
 }

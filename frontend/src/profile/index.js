@@ -41,7 +41,10 @@ export default function Profile() {
         if(data==="Perfil editado con exito") {
           tokenService.removeUser();
           navigate("/login");
-        } else{
+        } else if(data === "Nada cambiado"){
+            navigate("/");
+        } 
+        else{
           let json = JSON.parse(data);
           
           if(json.message){

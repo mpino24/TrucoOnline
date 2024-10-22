@@ -22,21 +22,27 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NameDuplicatedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
 
 	private UserRepository userRepository;	
+	private final PasswordEncoder encoder;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, PasswordEncoder encoder) {
 		this.userRepository = userRepository;
+		this.encoder=encoder;
 		
 	}
 
@@ -67,6 +73,7 @@ public class UserService {
 					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
 	}
 
+	@Transactional(readOnly =true)
 	public Boolean existsUser(String username) {
 		return userRepository.existsByUsername(username);
 	}
@@ -83,10 +90,29 @@ public class UserService {
 	@Transactional
 	public User updateUser(@Valid User user, Integer idToUpdate) {
 		User toUpdate = findUser(idToUpdate);
-		BeanUtils.copyProperties(user, toUpdate, "id");
-		userRepository.save(toUpdate);
-
-		return toUpdate;
+	
+			BeanUtils.copyProperties(user, toUpdate, "id");
+			userRepository.save(toUpdate);
+			return toUpdate;
+			
+	}
+	@Transactional(rollbackFor = {AccessDeniedException.class,NameDuplicatedException.class})
+	public User updateCurrentUser(@Valid User user){
+		User currentUser = findCurrentUser();
+		if(currentUser == null) {
+            throw new AccessDeniedException("Tu usuario no ha sido encontrado");
+        }
+		
+        if(!existsUser(user.getUsername()) || (existsUser(user.getUsername()) && (user.getUsername().equals(currentUser.getUsername())))){
+            currentUser.setUsername(user.getUsername());
+            if(!(user.getPassword()==null)) {
+                currentUser.setPassword(encoder.encode(user.getPassword()));
+            }
+            saveUser(currentUser);
+            return currentUser;
+        }else{
+            throw new NameDuplicatedException("Ese nombre está en uso");
+        } 
 	}
 
 	@Transactional
