@@ -44,11 +44,12 @@ public class CurrentUserRestController {
 
     @PutMapping("/edit")
     public ResponseEntity<?> updateProfile(@RequestBody @Valid User user, Principal principal) {
-        
-        User cambiado = userService.updateCurrentUser(user);
-        if(cambiado.getUsername().equals(user.getUsername()) && user.getPassword()==null){
+        User currentUser = userService.findCurrentUser(); 
+        if(currentUser.getUsername().equals(user.getUsername()) && user.getPassword()==null){
             return ResponseEntity.ok("Nada cambiado");
-        }else{
+        }
+        else{
+            userService.updateCurrentUser(user);
             return ResponseEntity.ok("Perfil editado con exito");
         }
         
