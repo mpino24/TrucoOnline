@@ -9,9 +9,9 @@ import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { IoTrophy } from "react-icons/io5";
 import tokenService from "frontend/src/services/token.service.js";
 import jwt_decode from "jwt-decode";
-import JoinModal from "frontend/src/components/getJoinModal.js"
 import CreationModal from "frontend/src/components/getCreationModal.js"
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
+import GetJoinModal from 'frontend/src/components/getJoinModal.js';
 
 
 export default function Home() {
@@ -21,6 +21,10 @@ export default function Home() {
     const [backgroundUrl, setBackgroundUrl] = useState()
     const [username, setUsername] = useState("");
     const [photoUrl,setPhotoUrl] = useState('/fotoPerfil.jpg')
+
+
+
+
     const jwt = tokenService.getLocalAccessToken();
 
     const toggleAccountMenu = useCallback(() => {
@@ -87,7 +91,7 @@ export default function Home() {
         </Nav>
         
 
-    <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: 'cover' }}>
+    <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%' }}>
         <div style={{ width: '36%' }}>
             <div style={{ cursor: 'pointer' }}>
                 <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
@@ -96,7 +100,10 @@ export default function Home() {
             </div>
         </div>
         {joinModalView &&
-            JoinModal(setJoinModalView, joinModalView)         
+            <GetJoinModal 
+            setModalVisible={setJoinModalView}
+            modalVisible={joinModalView}/>
+        //    JoinModal(setJoinModalView, joinModalView,setCodigo,codigo,setMessage,message)         
         }
         {creationModalView &&
             CreationModal(setCreationModalView, creationModalView)         

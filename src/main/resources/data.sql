@@ -24,4 +24,7 @@ INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEq
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (2,'ACTIVE',4,'BCDEF',TRUE,30,1,2,'PUBLICA');
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (3,'FINISHED',2,'QWERT',FALSE,15,1,2,'PUBLICA');
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (4,'WAITING',6,'YHGDT',FALSE,15,1,2,'PRIVADA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (5,'WAITING',2,'APCDE',FALSE,15,1,2,'PUBLICA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (6,'ACTIVE',4,'PCDEF',TRUE,30,1,2,'PUBLICA');
+INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (7,'ACTIVE',2,'PWERT',FALSE,15,1,2,'PUBLICA');
 
