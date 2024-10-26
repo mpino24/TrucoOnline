@@ -2,18 +2,25 @@ import { Form, Label} from "reactstrap";
 import { IoCloseCircle } from "react-icons/io5";
 
 
+
 export default function getCreationModal(setModalVisible, modalVisible=false){
+
+
 
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
     }
 
+
+
     return (
+
         <div >
             <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: "absolute" }} onClick={() => handleModalVisible(setModalVisible, modalVisible)} />
             <div className= 'cuadro-creacion'>
                 <div style={{marginTop:"20px"}}>
-             <Form>
+             <Form >
+                
                 <h3> Ajuste de la partida: </h3>
                 <div className='contenedor'>
                     <Label> Numero de jugadores: </Label>

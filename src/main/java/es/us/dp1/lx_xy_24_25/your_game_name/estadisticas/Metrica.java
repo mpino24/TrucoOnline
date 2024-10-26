@@ -1,5 +1,0 @@
-package es.us.dp1.lx_xy_24_25.your_game_name.estadisticas;
-
-public enum Metrica {
-    PARTIDAS_JUGADAS, TIEMPO_JUGADO, VICTORIAS, PARTIDAS_A_2, PARTIDAS_A_4, PARTIDAS_A_6, NUMERO_FLORES, NUMERO_ENGANOS, QUIEROS, NO_QUIEROS
-}

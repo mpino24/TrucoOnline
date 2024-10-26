@@ -1,7 +1,5 @@
 # Documento de análisis de requisitos del sistema
 
-_Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
-
 ## Introducción
 
 Truco Beasts: Bardo en la Jungla® está basado en el juego del truco y pretendemos implementar todo lo que explicaremos a continuación (a excepción de las partidas de a 3 y a 8 jugadores).
@@ -33,29 +31,38 @@ Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a q
 
 < Nombre Rol >: < Breve descripción del rol >
 
-_Ej1: Propietario: Dueño de una o varias mascota que viene a la clínica para mantenerla sana y cuidar de su salud._
+Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
 
-_Ej2: Veterinario: Profesional de la salud animal con titulación universitaria homologada, está registrado en la clínica y se encarga de realizar diagnósticos y recetar tratamientos. Además mantiene actualizado el vademécum._
+Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
 
-_Ej3: Administrador: Dueño de la clínica que se encarga de dar de alta veterinarios y gestionar la información registrada en la aplicación de la clínica._
-
+Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
 
 
 ## Historias de Usuario
 
 A continuación se definen  todas las historias de usuario a implementar:
-_Os recomentamos usar la siguiente plantilla de contenidos que usa un formato tabular:_
  ## Historia de Usuario Creación y configuración partidas:
+ ### HU-(NOISSUE): Poder loggearme
+Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
+ ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
+ ### HU-(NOISSUE): Poder borrar la cuenta ([])
+ Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
+![Mockup_home](https://github.com/user-attachments/assets/fb8b849a-f27e-4e48-92ec-5b402253ecdf)
  ### HU-(ISSUE#60): Editar los puntos de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/60])
 Como jugador quiero que el sistema me permita poder editar las partidas para decidir la puntuación (15 o 30)  
  ### HU-(ISSUE#61): Editar la flor en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/61])
 Como jugador quiero que el sistema me permita editar las partidas para decidir si se juega con flor 
  ### HU-(ISSUE#62): Editar numero de jugadores de la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/62])
 Como jugador quiero que el sistema me permita editar las paridas para decidir de cuantos jugadores será 
+![Mockup_creacion](https://github.com/user-attachments/assets/f3682b2c-34ac-427d-96c6-7d473526d422)
  ### HU-(ISSUE#63): Poder unirse a las partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/63])
 Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
+![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
+ ### HU-(NOISSUE): Poder cerrar sesion ([])
+ Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
+ ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ## Historia de Usuario Jugar partidas:
  ## Historia de Usuario Aspecto social:
  ## Historia de Usuario Aspectos especificos del usuario:
@@ -71,28 +78,11 @@ Como jugador quiero que el sistema me permita poder unirme a partidas para jugar
 _En esta sección debe proporcionar un diagrama UML de clases que describa el modelo de datos a implementar en la aplicación. Este diagrama estará anotado con las restricciones simples (de formato/patrón, unicidad, obligatoriedad, o valores máximos y mínimos) de los datos a gestionar por la aplicación. _
 
 _Recuerde que este es un diagrama conceptual, y por tanto no se incluyen los tipos de los atributos, ni clases específicas de librerías o frameworks, solamente los conceptos del dominio/juego que pretendemos implementar_
-Ej:
 
-```mermaid
-classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
-    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : age
-    Animal : gender
-    class Duck{
-        beakColor        
-    }
-    class Fish{
-       sizeInFeet
-    }
-    class Zebra{
-        is_wild
-        
-    }
-```
+
+![modelo_conceptual](https://github.com/user-attachments/assets/c6f18a6a-d067-453d-9b87-15f83203038a)
+
+
 _Si vuestro diagrama se vuelve demasiado complejo, siempre podéis crear varios diagramas para ilustrar todos los conceptos del dominio. Por ejemplo podríais crear un diagrama para cada uno de los módulos que quereis abordar. La única limitación es que hay que ser coherente entre unos diagramas y otros si nos referimos a las mismas clases_
 
 _Puede usar la herramienta de modelado que desee para generar sus diagramas de clases. Para crear el diagrama anterior nosotros hemos usado un lenguaje textual y librería para la generación de diagramas llamada Mermaid_
@@ -110,13 +100,7 @@ El jugador habrá de unirse a una partida privada mediante un código único.
 En caso de no estar logado, solo serán visibles las partidas públicas (espectador) 
 ### R5-Espectación de la partida
 Al meterte en una partida como espectador no podrás interactuar con la partida 
-
-_Ej:_ 
-### R1 – Diagnósticos imposibles
-El diagnóstico debe estar asociado a una enfermedad que es compatible con el tipo de mascota de su visita relacionada. Por ejemplo, no podemos establecer como enfermedad diagnosticada una otitis cuando la visita está asociada a una mascota que es un pez, porque éstos no tienen orejas ni oídos (y por tanto no será uno de los tipos de mascota asociados a la enfermedad otitis en el vademecum).
-
-…
-
-_Muchas de las reglas del juego se transformarán en nuestro caso en reglas de negocio, por ejemplo, “la carta X solo podrá jugarse en la ronda Y si en la ronda anterior se jugó la carta Z”, o “en caso de que un jugador quede eliminado el turno cambia de sentido”_
-
-
+### R6-Partidas concurrentes
+Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
+### R7-Cuenta atrás en un turno
+Cuando es el turno de un jugador en la ronda, este tiene un tiempo límite para actuar, pasado este tiempo comienza una cuenta atrás en pantalla que termina dando la victoria al equipo contrario si el jugador no reacciona a tiempo.

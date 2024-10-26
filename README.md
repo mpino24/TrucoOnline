@@ -6,7 +6,7 @@
   - Maria del Pino Peréz Dominguéz
   - David Valencia Toscano
   - Paula Rosa Gonzaléz Páez
-  - Iván Fernandéz Limarquéz 
+  - Iván Fernández Limarquéz 
   - Ivo Raimondi
 
 Proyecto de un juego llamado Truco para la asignatura de DP1 de la Universidad de Sevilla. La idea de este proyecto es aplicar lo aprendido sobre arquitectura SPA con React, Java y Spring.  
@@ -100,7 +100,7 @@ Entre a [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swag
 
 | Configuracion Spring Boot | Clase o archivo de propiedades Java  |
 |--------------------------|---|
-|Clase Main | [GameApplication](src/main/java/es/us/dp1/lx_xy_24_25/your_game_name/GameApplication.java) |
+|Clase Main | [GameApplication](src/main/java/es/us/dp1/lx_xy_24_25/truco_beasts/GameApplication.java) |
 |Archivos de propiedades | [application.properties](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/src/main/resources) |
 
 
