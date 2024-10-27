@@ -27,4 +27,5 @@ INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEq
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (5,'WAITING',2,'APCDE',FALSE,15,1,2,'PUBLICA');
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (6,'ACTIVE',4,'PCDEF',TRUE,30,1,2,'PUBLICA');
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (7,'ACTIVE',2,'PWERT',FALSE,15,1,2,'PUBLICA');
+INSERT INTO Jugador(id,user_id,email,first_name,last_name,photo) VALUES (1,4,'player1@gmail.com','Player','Numero1','https://e7.pngegg.com/pngimages/400/997/png-clipart-emoji-doing-thumbs-up-illustration-emoji-emoticon-smiley-like-button-thumb-signal-double-happiness-computer-icons-text-messaging-thumbnail.png');
 

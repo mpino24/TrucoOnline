@@ -68,7 +68,7 @@ public class Person extends BaseEntity {
 	}
 
 	public String getPhoto() {
-		return this.email;
+		return this.photo;
 	}
 
 	public void setPhoto(String photo) {
