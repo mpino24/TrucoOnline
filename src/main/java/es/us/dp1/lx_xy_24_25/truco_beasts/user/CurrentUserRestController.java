@@ -44,6 +44,7 @@ public class CurrentUserRestController {
 
     
     @PutMapping("/edit")
+
 public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
     User user = perfil.getUser();
     Jugador jugador = perfil.getJugador();
@@ -60,6 +61,7 @@ public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario 
     } else {
         jugadorService.updateJugador(jugador, currentUser);
         return ResponseEntity.ok("Nada cambiado");
+
     }
 }
 

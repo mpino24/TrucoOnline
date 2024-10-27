@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 
 @Service
 public class JugadorService {
-    private JugadorRepository jugadorRepository;
+    JugadorRepository jugadorRepository;
 
     @Autowired
     public JugadorService(JugadorRepository jugadorRepository){
@@ -52,14 +52,7 @@ public class JugadorService {
 		
         Jugador savedJugador = jugadorRepository.save(jugador);
     
-       
-        // if (jugador.getAmigos() != null) {
-        //     for (Jugador amigo : jugador.getAmigos()) {
-                
-        //         amigo.getAmigos().add(savedJugador);  
-        //         jugadorRepository.save(amigo);         
-        //     }
-        // }
+     
 		return savedJugador;
     }
 

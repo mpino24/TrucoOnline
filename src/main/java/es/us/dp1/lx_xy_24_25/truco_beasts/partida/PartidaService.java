@@ -7,11 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class PartidaService{
+public class PartidaService {
 
+    @Autowired
+    PartidaRepository partidaRepository;
 
-	@Autowired
-	 PartidaRepository partidaRepository;
+    @Transactional(readOnly = true)
+    public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
+        return partidaRepository.findPartidaByCodigo(codigo);
+    }
 
 	@Transactional(readOnly = true)
 	public List<Partida> findAllPartidasActivas() throws DataAccessException {

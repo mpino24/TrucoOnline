@@ -1,6 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
 
+import java.util.List;
+import java.util.Optional;
+
 
 import java.util.Optional;
 
@@ -12,5 +15,8 @@ public interface JugadorRepository extends CrudRepository<Jugador,Integer>{
 
     Optional<Jugador> findByUserId(Integer id);
     
+    List<Jugador> findAll();
+    Optional<Jugador> findById(Integer id);
 
 }
+
