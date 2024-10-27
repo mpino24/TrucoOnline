@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import tokenService from "../services/token.service";
 import getErrorModal from "./../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
@@ -8,118 +8,172 @@ import { useNavigate, Link } from "react-router-dom";
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Profile() {
-
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
-  const [user, setUser] = useFetchState(
-    [], "/api/v1/profile", jwt, setMessage, setVisible
-  )
+  const [newPassword, setNewPassword] = useState();
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [perfil, setPerfil] = useFetchState(
+    {}, "/api/v1/profile", jwt, setMessage, setVisible
+  );
+
+  
   const modal = getErrorModal(setVisible, visible, message);
   const navigate = useNavigate();
 
+
+
+function handleFileChange(event) {
+    setSelectedFile(event.target.files[0]); 
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
-    const updatedUser = {
-      ...user,
-      password: newPassword ? newPassword : undefined
+    const updatedPerfil = {
+        ...perfil,
+        password: newPassword ? newPassword : undefined // Solo incluir si hay una nueva contraseña
+        
     };
-      fetch(
-        "/api/v1/profile/edit",
-        {
-          method: "PUT",
-          headers: {
-          Authorization: `Bearer ${jwt}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedUser),
+    
+    fetch("/api/v1/profile/edit", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedPerfil),
+    })
+    .then((response) => response.text())
+    .then((data) => {
+      if (data === "Perfil editado con exito") {
+        tokenService.removeUser()
+        navigate("/login");
+      } else if (data === "Nada cambiado") {
+        console.log(data)
+        navigate("/");
+      } else {
+        let json = JSON.parse(data);
+        if (json.message) {
+          let mensaje = "Status Code: " + json.statusCode + " -> " + json.message;
+          setMessage(mensaje);
+          setVisible(true);
+        } else {
+          navigate("/");
         }
-      )
-        .then((response) => response.text())
-        .then((data) => {
-        if(data==="Perfil editado con exito") {
-          tokenService.removeUser();
-          navigate("/login");
-        } else if(data === "Nada cambiado"){
-            navigate("/");
-        } 
-        else{
-          let json = JSON.parse(data);
-          
-          if(json.message){
-            let mensaje = "Status Code: " + json.statusCode + " -> " + json.message
-            setMessage(mensaje);
-            setVisible(true);
-          }else
-            navigate("/"); }
-          })
-      .catch((error) => alert(error.message));
+      }
+    })
+    .catch((error) => alert(error.message));
   }
 
   function handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    setUser({ ...user, [name]: value });
+    setPerfil({ ...perfil, [name]: value });
   }
 
   function handlePasswordChange(event) {
     setNewPassword(event.target.value);
   }
 
-  return(
+  return (
     <div style={{ backgroundImage: 'url(/fondos/fondologin.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
       <div className="auth-page-container">
         <div className="hero-div">
-          <h1 className="text-center">
-            Editar perfil
-          </h1>
+          <h1 className="text-center">Editar perfil</h1>
           <div className="auth-form-container">
             {modal}
-              <Form onSubmit={handleSubmit}>
-                <div className="custom-form-input">
-                  <Label for="username" className="custom-form-input-label">
-                    Nombre de usuario
-                  </Label>
-                  <Input
-                    type="text"
-                    required
-                    name="username"
-                    id="username"
-                    value={user.username || ""}
-                    onChange={handleChange}
-                    className="custom-input"
+            <Form onSubmit={handleSubmit}>
+              {/* Datos del Usuario */}
+              <div className="custom-form-input">
+                <Label for="username" className="custom-form-input-label">Nombre de usuario</Label>
+                <Input
+                  type="text"
+                  required
+                  name="username"
+                  id="username"
+                  value={perfil.username || ""}
+                  onChange={handleChange}
+                  className="custom-input"
+                />
+              </div>
+              <div className="custom-form-input">
+                <Label for="password" className="custom-form-input-label">Contraseña</Label>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={newPassword}
+                  onChange={handlePasswordChange}
+                  className="custom-input"
+                  placeholder="Deja este campo vacío si no deseas cambiar la contraseña"
+                />
+              </div>
+
+              {/* Datos del Jugador */}
+              <div className="custom-form-input">
+                <Label for="firstName" className="custom-form-input-label">Nombre</Label>
+                <Input
+                  type="text"
+                  name="firstName"
+                  id="firstName"
+                  value={perfil.firstName || ""}
+                  onChange={handleChange}
+                  className="custom-input"
+                />
+              </div>
+              <div className="custom-form-input">
+                <Label for="lastName" className="custom-form-input-label">Apellido</Label>
+                <Input
+                  type="text"
+                  name="lastName"
+                  id="lastName"
+                  value={perfil.lastName || ""}
+                  onChange={handleChange}
+                  className="custom-input"
+                />
+              </div>
+              <div className="custom-form-input">
+                <Label for="email" className="custom-form-input-label">Email</Label>
+                <Input
+                  type="email"
+                  name="email"
+                  id="email"
+                  value={perfil.email || ""}
+                  onChange={handleChange}
+                  className="custom-input"
+                />
+              </div>
+              {/* Mostrar la foto actual */}
+              <div className="custom-form-input">
+                <Label for="photo" className="custom-form-input-label">Foto</Label>
+                {perfil.photo && (
+                  <img
+                    src={perfil.photo}
+                    alt="Foto del perfil"
+                    style={{ width: '100px', height: '100px', borderRadius: '50%' }}
                   />
-                </div>
-                <div className="custom-form-input">
-                  <Label for="password" className="custom-form-input-label">
-                    Contraseña
-                  </Label>
-                  <Input
-                    type="password"
-                    name="password"
-                    id="password"
-                    value={newPassword}
-                    onChange={handlePasswordChange}
-                    className="custom-input"
-                    placeholder="Deja este campo vacío si no deseas cambiar la contraseña"
-                  />
-                </div>
-                <div className="custom-button-row">
+                )}
+                <Input
+                  type="file"
+                  name="photo"
+                  id="photo"
+                  onChange={handleFileChange} 
+                  className="custom-input"
+                />
+              </div>
+              
+              <div className="custom-button-row">
                 <button className="auth-button">Guardar</button>
-                  <Link
-                  to={`/`}
-                  className="auth-button"
-                  style={{ textDecoration: "none" }}
-                  >
+                <Link to={`/`} className="auth-button" style={{ textDecoration: "none" }}>
                   Volver
-                  </Link>
-                </div>
-              </Form>
+                </Link>
+              </div>
+            </Form>
           </div>
-          </div>
+        </div>
       </div>
     </div>
-  );  
+  );
 }
