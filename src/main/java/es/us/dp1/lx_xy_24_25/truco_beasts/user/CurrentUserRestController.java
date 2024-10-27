@@ -42,23 +42,6 @@ public class CurrentUserRestController {
         return ResponseEntity.ok(perfil);
     }
 
-    // @PutMapping("/edit")
-    // public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
-    //     User user = perfil.getUser();
-    //     Jugador jugador =perfil.getJugador();
-        
-    //     User userCambiado = userService.updateCurrentUser(user);
-    //     Integer userId = userService.findCurrentUser().getId();
-        
-    //     jugadorService.updateJugador(jugador, userId);
-        
-    //     if(userCambiado.getUsername().equals(user.getUsername()) && user.getPassword()==null){
-    //         return ResponseEntity.ok("Nada cambiado");
-    //     }else{
-    //         return ResponseEntity.ok("Perfil editado con exito");
-    //     }
-        
-    // }
     
     @PutMapping("/edit")
 public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
