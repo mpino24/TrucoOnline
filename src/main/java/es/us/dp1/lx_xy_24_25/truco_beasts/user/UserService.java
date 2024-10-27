@@ -15,19 +15,17 @@
  */
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
-import java.util.Optional;
-
 import jakarta.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NameDuplicatedException;
@@ -39,12 +37,15 @@ public class UserService {
 	private UserRepository userRepository;	
 	private final PasswordEncoder encoder;
 
+
 	@Autowired
 	public UserService(UserRepository userRepository, PasswordEncoder encoder) {
+
 		this.userRepository = userRepository;
 		this.encoder=encoder;
-		
 	}
+
+    
 
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {
@@ -69,14 +70,24 @@ public class UserService {
 		if (auth == null)
 			throw new ResourceNotFoundException("Nobody authenticated!");
 		else
+			
 			return userRepository.findByUsername(auth.getName())
 					.orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
+		
 	}
+
+	
+
+
+   
+
 
 	@Transactional(readOnly =true)
 	public Boolean existsUser(String username) {
 		return userRepository.existsByUsername(username);
 	}
+
+
 
 	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
