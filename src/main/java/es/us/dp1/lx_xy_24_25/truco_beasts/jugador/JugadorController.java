@@ -22,7 +22,7 @@ public class JugadorController {
 
     @GetMapping
 	public ResponseEntity<Jugador> findJugadorByUserId(@RequestParam(required=true) String userId) {
-		return new ResponseEntity<>(jugadorService.encontrarJugadorPorUserId(Integer.valueOf(userId)), HttpStatus.OK);
+		return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
 	}
     
 }
