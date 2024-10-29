@@ -19,18 +19,15 @@ public class SignupRequest {
 	@NotBlank
 	private String password;
 	
-	//Both
 	@NotBlank
 	private String firstName;
 	
 	@NotBlank
 	private String lastName;
-		
 	
-	//Owner
-	private String city;
-	private String address;
-	private String telephone;
+	@NotBlank
+	private String email;
 
-
+	@NotBlank
+	private String photo;
 }

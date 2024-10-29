@@ -23,6 +23,8 @@ public class CurrentUserRestController {
     
     private final UserService userService;
     private final JugadorService jugadorService;
+    private final static String relog = "RELOG";
+    private final static String home = "HOME";
 
 	@Autowired
 	public CurrentUserRestController(UserService userService, JugadorService jugadorService)   {
@@ -51,17 +53,16 @@ public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario 
     
     User currentUser = userService.findCurrentUser();
     
-
     Boolean mismoUsername = user.getUsername().equals(currentUser.getUsername());
     Boolean mismaContraseña = (user.getPassword()==null || user.getPassword().isEmpty());
-  
-     if(!mismoUsername || !mismaContraseña) {
-        userService.updateCurrentUser(user);
-        return ResponseEntity.ok("Perfil editado con exito");
-    } else {
-        jugadorService.updateJugador(jugador, currentUser);
-        return ResponseEntity.ok("Nada cambiado");
+    
+    jugadorService.updateJugador(jugador, currentUser);
+    userService.updateCurrentUser(user);
 
+    if(!mismoUsername || !mismaContraseña) {    
+        return ResponseEntity.ok(relog);
+    } else {
+        return ResponseEntity.ok(home);
     }
 }
 
