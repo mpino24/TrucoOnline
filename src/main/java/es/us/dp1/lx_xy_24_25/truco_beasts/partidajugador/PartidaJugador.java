@@ -5,7 +5,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +21,10 @@ public class PartidaJugador extends BaseEntity{
     @NotNull
     private Integer posicion;
     
-    @OneToOne
+    @ManyToOne
     private Jugador player;
 
-    @OneToOne
+    @ManyToOne
     private Partida game;
 
 }
