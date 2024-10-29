@@ -24,5 +24,10 @@ public class JugadorController {
 	public ResponseEntity<Jugador> findJugadorByUserId(@RequestParam(required=true) String userId) {
 		return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
 	}
+
+    @GetMapping("/amigos")
+    public ResponseEntity<Jugador> findAmigosByUserId(@RequestParam(required=true) String userId) {
+		return new ResponseEntity<>(jugadorService.findAmigosByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+	}
     
 }

@@ -80,5 +80,9 @@ public class JugadorService {
         }  
     }
 
+    public Jugador findAmigosByUserId(int userId){
+        return jugadorRepository.findAmigosByUserId(userId);
+    }
+
 }
 
