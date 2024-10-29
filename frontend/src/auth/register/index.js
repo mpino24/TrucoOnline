@@ -2,9 +2,7 @@ import "../../static/css/auth/authButton.css";
 import "../../static/css/auth/authPage.css";
 import tokenService from "../../services/token.service";
 import FormGenerator from "../../components/formGenerator/formGenerator";
-import { registerFormOwnerInputs } from "./form/registerFormOwnerInputs";
-import { registerFormVetInputs } from "./form/registerFormVetInputs";
-import { registerFormClinicOwnerInputs } from "./form/registerFormClinicOwnerInputs";
+import { registerFormInputs } from "./form/registerForm";
 import { useEffect, useRef, useState } from "react";
 
 export default function Register() {
@@ -61,7 +59,7 @@ export default function Register() {
               else {
                 tokenService.setUser(data);
                 tokenService.updateLocalAccessToken(data.token);
-                window.location.href = "/dashboard";
+                window.location.href = "/";
               }
             })
             .catch((message) => {
@@ -77,13 +75,12 @@ export default function Register() {
   if (type) {
     return (
       <div className="auth-page-container"  >
-        <h1>Register</h1>
+        <h1>Registrarse</h1>
         <div className="auth-form-container">
           <FormGenerator
             ref={registerFormRef}
             inputs={
-              type === "Player" ? registerFormOwnerInputs               
-              : registerFormClinicOwnerInputs
+              registerFormInputs
             }
             onSubmit={handleSubmit}
             numberOfColumns={1}
@@ -98,9 +95,9 @@ export default function Register() {
     return (
       <div className="auth-page-container">
         <div className="auth-form-container">
-          <h1>Register</h1>
+          <h1>Registrarse</h1>
           <h2 className="text-center text-md">
-            What type of user will you be?
+            ¿Cuál será la autoridad de tu usuario?
           </h2>
           <div className="options-row">
             <button
@@ -108,14 +105,14 @@ export default function Register() {
               value="Owner"
               onClick={handleButtonClick}
             >
-              Player
+              Usuario
             </button>
             <button
               className="auth-button"
               value="Vet"
               onClick={handleButtonClick}
             >
-              Admin
+              Administrador
             </button>            
           </div>
         </div>

@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.request.SignupRequest;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.AuthoritiesService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
@@ -21,17 +23,17 @@ public class AuthService {
 	private final PasswordEncoder encoder;
 	private final AuthoritiesService authoritiesService;
 	private final UserService userService;
-	//private final PlayerService playerService;
+	private final JugadorService jugadorService;
 	
 
 	@Autowired
-	public AuthService(PasswordEncoder encoder, AuthoritiesService authoritiesService, UserService userService
-			// PlayerService playerService
+	public AuthService(PasswordEncoder encoder, AuthoritiesService authoritiesService, UserService userService,
+			JugadorService jugadorService
 			) {
 		this.encoder = encoder;
 		this.authoritiesService = authoritiesService;
 		this.userService = userService;
-		//this.playerService = ownerService;		
+		this.jugadorService = jugadorService;
 	}
 
 	@Transactional
@@ -52,16 +54,16 @@ public class AuthService {
 			role = authoritiesService.findByAuthority("PLAYER");
 			user.setAuthority(role);
 			userService.saveUser(user);
-			/*Player player = new Player();
-			player.setFirstName(request.getFirstName());
-			player.setLastName(request.getLastName());
-			player.setAddress(request.getAddress());
-			player.setCity(request.getCity());
-			player.setTelephone(request.getTelephone());
-			player.setUser(user);
-			playerService.savePlayer(player);
-			*/
 		}
+		
+		Jugador jugador = new Jugador();
+		jugador.setFirstName(request.getFirstName());
+		jugador.setLastName(request.getLastName());
+		jugador.setEmail(request.getEmail());
+		jugador.setPhoto(request.getPhoto());
+		jugador.setUser(user);
+
+		jugadorService.saveJugador(jugador);
 	}
 
 }

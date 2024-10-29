@@ -46,10 +46,10 @@ function handleFileChange(event) {
     })
     .then((response) => response.text())
     .then((data) => {
-      if (data === "Perfil editado con exito") {
+      if (data === "RELOG") {
         tokenService.removeUser()
         navigate("/login");
-      } else if (data === "Nada cambiado") {
+      } else if (data === "HOME") {
         console.log(data)
         navigate("/");
       } else {
