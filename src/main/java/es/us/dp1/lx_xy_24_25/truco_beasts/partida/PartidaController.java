@@ -51,7 +51,7 @@ public class PartidaController {
 		
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");
-		newPartida.setCodigo(generateRandomCode());
+		// newPartida.setCodigo(generateRandomCode());
 		return new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
 	}
 
