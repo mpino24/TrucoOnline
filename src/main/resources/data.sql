@@ -61,25 +61,25 @@ INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (15, 'ESPADAS', 12, 7, '
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (16, 'BASTOS', 12, 7, 'http://localhost:8080/resources/images/cartas/12bastos.jpg');
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (17, 'COPAS', 12, 7, 'http://localhost:8080/resources/images/cartas/12copas.jpg');
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (18, 'OROS', 12, 7, 'http://localhost:8080/resources/images/cartas/12oros.jpg');
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (19, 'ESPADAS', 11, 6, 'http://localhost:8080/resources/images/cartas/11espadas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (20, 'BASTOS', 11, 6, 'http://localhost:8080/resources/images/cartas/11bastos.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (21, 'COPAS', 11, 6, 'http://localhost:8080/resources/images/cartas/11copas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (22, 'OROS', 11, 6, 'http://localhost:8080/resources/images/cartas/11oros.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (23, 'ESPADAS', 10, 5, 'http://localhost:8080/resources/images/cartas/10espadas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (24, 'BASTOS', 10, 5, 'http://localhost:8080/resources/images/cartas/10bastos.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (25, 'COPAS', 10, 5, 'http://localhost:8080/resources/images/cartas/10copas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (26, 'OROS', 10, 5, 'http://localhost:8080/resources/images/cartas/10oros.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (27, 'ESPADAS', 6, 3, 'http://localhost:8080/resources/images/cartas/6espadas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (28, 'BASTOS', 6, 3, 'http://localhost:8080/resources/images/cartas/6bastos.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (29, 'COPAS', 6, 3, 'http://localhost:8080/resources/images/cartas/6copas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (30, 'OROS', 6, 3, 'http://localhost:8080/resources/images/cartas/6oros.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (31, 'ESPADAS', 5, 2, 'http://localhost:8080/resources/images/cartas/5espadas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (32, 'BASTOS', 5, 2, 'http://localhost:8080/resources/images/cartas/5bastos.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (33, 'COPAS', 5, 2, 'http://localhost:8080/resources/images/cartas/5copas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (34, 'OROS', 5, 2, 'http://localhost:8080/resources/images/cartas/5oros.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (35, 'ESPADAS', 4, 1, 'http://localhost:8080/resources/images/cartas/4espadas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (36, 'BASTOS', 4, 1, 'http://localhost:8080/resources/images/cartas/4bastos.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (37, 'COPAS', 4, 1, 'http://localhost:8080/resources/images/cartas/4copas.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (38, 'OROS', 4, 1, 'http://localhost:8080/resources/images/cartas/4oros.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (39, 'BASTOS', 7, 4, 'http://localhost:8080/resources/images/cartas/7bastos.jpg')
-INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (40, 'COPAS', 7, 4, 'http://localhost:8080/resources/images/cartas/7copas.jpg')
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (19, 'ESPADAS', 11, 6, 'http://localhost:8080/resources/images/cartas/11espadas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (20, 'BASTOS', 11, 6, 'http://localhost:8080/resources/images/cartas/11bastos.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (21, 'COPAS', 11, 6, 'http://localhost:8080/resources/images/cartas/11copas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (22, 'OROS', 11, 6, 'http://localhost:8080/resources/images/cartas/11oros.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (23, 'ESPADAS', 10, 5, 'http://localhost:8080/resources/images/cartas/10espadas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (24, 'BASTOS', 10, 5, 'http://localhost:8080/resources/images/cartas/10bastos.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (25, 'COPAS', 10, 5, 'http://localhost:8080/resources/images/cartas/10copas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (26, 'OROS', 10, 5, 'http://localhost:8080/resources/images/cartas/10oros.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (27, 'ESPADAS', 6, 3, 'http://localhost:8080/resources/images/cartas/6espadas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (28, 'BASTOS', 6, 3, 'http://localhost:8080/resources/images/cartas/6bastos.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (29, 'COPAS', 6, 3, 'http://localhost:8080/resources/images/cartas/6copas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (30, 'OROS', 6, 3, 'http://localhost:8080/resources/images/cartas/6oros.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (31, 'ESPADAS', 5, 2, 'http://localhost:8080/resources/images/cartas/5espadas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (32, 'BASTOS', 5, 2, 'http://localhost:8080/resources/images/cartas/5bastos.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (33, 'COPAS', 5, 2, 'http://localhost:8080/resources/images/cartas/5copas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (34, 'OROS', 5, 2, 'http://localhost:8080/resources/images/cartas/5oros.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (35, 'ESPADAS', 4, 1, 'http://localhost:8080/resources/images/cartas/4espadas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (36, 'BASTOS', 4, 1, 'http://localhost:8080/resources/images/cartas/4bastos.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (37, 'COPAS', 4, 1, 'http://localhost:8080/resources/images/cartas/4copas.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (38, 'OROS', 4, 1, 'http://localhost:8080/resources/images/cartas/4oros.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (39, 'BASTOS', 7, 4, 'http://localhost:8080/resources/images/cartas/7bastos.jpg');
+INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (40, 'COPAS', 7, 4, 'http://localhost:8080/resources/images/cartas/7copas.jpg');
