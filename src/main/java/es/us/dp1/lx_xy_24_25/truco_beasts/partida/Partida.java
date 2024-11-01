@@ -46,5 +46,7 @@ public class Partida extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @NotNull
     private Visibilidad visibilidad;
+
+    private Integer jugadorMano;
 }
  

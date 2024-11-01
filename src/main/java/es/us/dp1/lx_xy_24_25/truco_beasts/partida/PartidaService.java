@@ -9,8 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PartidaService {
 
-    @Autowired
     PartidaRepository partidaRepository;
+
+	@Autowired
+	public PartidaService(PartidaRepository partidaRepository) {
+		this.partidaRepository = partidaRepository;
+	}
 
     @Transactional(readOnly = true)
     public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
