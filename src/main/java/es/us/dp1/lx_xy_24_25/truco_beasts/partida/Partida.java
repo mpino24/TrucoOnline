@@ -21,7 +21,6 @@ public class Partida extends BaseEntity{
     Estado estado;
 
     @Column(name= "NUMJUGADORES")
-    @NotEmpty
     Integer numJugadores;
 
     @Column(name= "CODIGO")
