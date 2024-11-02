@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador, Integer>{
 
-    @Query("SELECT pj FROM PartidaJuagdor pj WHERE pj.jugador.id == :id")
-    PartidaJugador findPartidaJugardorbyId(Integer id);
+    @Query("SELECT pj FROM PartidaJugador pj WHERE pj.jugador.id == :id")
+    PartidaJugador findPartidaJugadorbyId(Integer id);
 
 }

@@ -96,8 +96,8 @@ public class ManoService {
         // si respuesta = vale4 --> cantar(true), cantar(true) y nueva llamada
         // cantar(respuesta)
         Integer jugadorActual = manoActual.getJugadorTurno();
-        PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugardorbyId(jugadorActual);
-        PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugardorbyId(jugadorRespuesta);
+        PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugadorbyId(jugadorActual);
+        PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugadorbyId(jugadorRespuesta);
 
         if (jugadorActu.getEquipo() == jugadorResp.getEquipo()) {
             throw new SameEquipoException();
@@ -118,9 +118,12 @@ public class ManoService {
 
     public void envido(Boolean respuesta, Integer jugadorRespuesta ) throws EnvidoException{
         Integer jugadorActual = manoActual.getJugadorTurno();
-        PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugardorbyId(jugadorActual);
-        PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugardorbyId(jugadorRespuesta);
+        PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugadorbyId(jugadorActual);
+        PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugadorbyId(jugadorRespuesta);
+        Integer jugadorMano = manoActual.getPartida().getJugadorMano();
+        PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano);
 
+        //Excepcion ver que el jugador que canta es el ultimo de cada equipo
         if(manoActual.getCartasDisp().get(-1).size()!=3){
             throw new EnvidoException("Solo se canta envido en la primera ronda");
         }
@@ -144,8 +147,17 @@ public class ManoService {
             if (jugadorActu.getEquipo() == Equipo.EQUIPO1)
                 partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
 
-            else
+            else if (jugadorActu.getEquipo() == Equipo.EQUIPO2)
                 partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + puntuacionSuma);
+            else {
+                
+                    if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
+                        partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
+        
+                    else
+                        partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntuacion());
+                
+            }
            }
     }
 
@@ -188,6 +200,23 @@ public class ManoService {
 
 
     public void ganarMano() {
+        Integer jugadorMano = manoActual.getPartida().getJugadorMano();
+        PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano); //No habrá que pasarle el id del jugador en lugar del jugador entero?
+        
+        Integer rondasGanadasEquipo1 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO1).toList().size();
+        Integer rondasGanadasEquipo2 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO2).toList().size();
+        if(rondasGanadasEquipo1==2){
+            partidaActual.setPuntosEquipo1(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo1());
+        }
+        else if(rondasGanadasEquipo2==2){
+            partidaActual.setPuntosEquipo2(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo2());
+        }else {
+            if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
+                partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
+
+            else
+                partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntuacion());
+        }
 
     }
 
