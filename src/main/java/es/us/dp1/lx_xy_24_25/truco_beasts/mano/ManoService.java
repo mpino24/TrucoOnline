@@ -2,10 +2,13 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -116,96 +119,60 @@ public class ManoService {
         PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugardorbyId(jugadorActual);
         PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugardorbyId(jugadorRespuesta);
 
-        if(){
-            throw new EnvidoException();
-        }
         if(manoActual.getCartasDisp().get(-1).size()!=3){
             throw new EnvidoException("Solo se canta envido en la primera ronda");
         }
-
-
-        
-
+      
         if(respuesta){
             Integer puntosEquipo1=0;
             Integer puntosEquipo2=0;
 
-           List<List<Carta>> cartasEquipo1 = manoActual.getCartasDisp().stream().filter(t-> t % 2 == 0);
-           List<List<Carta>> cartasEquipo2 = manoActual.getCartasDisp().stream().filter(t-> t % 2 != 0);
+           List<List<Carta>> cartasEquipo1 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 == 0).toList();
+           List<List<Carta>> cartasEquipo2 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 != 0).toList();
            
-
-           
-
-           List<Map<Palo, List<Integer>>> valoresEquipo1 = manoActual.getCartasDisp()
 
 
             for(int i=0; i<cartasEquipo1.size(); i++){
                 Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo1.get(i).forEach(cartasJugador -> cartasJugador.stream().collect(groupingBy(Carta::getPalo)));
-                diccCartasPaloJugador
-            }
-
-
-            
-
-
-
-
-         for(List<Carta> cartasJugadores1: cartasEquipo1){
-            //Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo1.get(i).forEach(cartasJugador -> cartasJugador.stream().collect(groupingBy(Carta::getPalo)));
-
-             for(Carta carta: cartasJugadores1){
-                Map<Palo,List<Integer>> valoresCartas=new map();
-                Integer puntoJugador=0;
-                Integer valorCarta= carta.getValor()<=10? 0: carta.getValor();
-                if(!valoresCartas.containsKey(carta.getPalo())){
-                    
-                    valoresCartas.put(carta.getPalo(), new ArrayList<>(valorCarta));
-                }
-                else{
-                    valoresCartas.put(carta.getPalo() ,valoresCartas.get(carta.getPalo()).add(valorCarta));
-                    
-                }
-                 
-                for(Palo llave:valoresCartas.keySet()){
-                   List<Integer> listaValores=valoresCartas.get(llave);
-                   if(listaValores.size()<=2){
-                    puntoJugador= listaValores.stream().sorted(Comparator.reverseOrder()).limit(2).mapToInt(Integer::intValue).sum();
-                   }
-                   else{
-                    if(listaValores.get(0)<puntoJugador){
-                    puntoJugador=listaValores.get(0);
-                    }
-                   }
-
-
-                }
-                }
-
-                if(puntosEquipo1>=puntoJugador){
-                    puntosEquipo1=puntoJugador;
+                Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+                if(sumaJugador> puntosEquipo1){
+                    puntosEquipo1 = sumaJugador;
                 }
             }
-            
-            
-        }
 
-
-        else{
-
-            if(jugadorActu.getEquipo() == Equipo.EQUIPO1) partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1()+ 1) ; 
-
-            else partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2()+ 1);   
-
-        }
-
-
+            for(int i=0; i<cartasEquipo2.size(); i++){
+                Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo2.get(i).forEach(cartasJugador -> cartasJugador.stream().collect(groupingBy(Carta::getPalo)));
+                Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+                if(sumaJugador> puntosEquipo2){
+                    puntosEquipo2 = sumaJugador;
+                }
+            }
     }
+}
 
     public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
-        
-
-        for(Map.Entry e : diccCartasPaloJugador.e)
+        List< Integer> listaSumas= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
+            if(e.getValue().size()==1){
+                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+            }
+            else if(e.getValue().size()==2){
+                Integer valor1= e.getValue().get(0).getValor();
+                Integer valor2= e.getValue().get(1).getValor();
+                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(e.getValue().size()==3){
+                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b+20);
+                listaSumas.add( valor);
+            }
+        }
+        return listaSumas.stream().max(Comparator.naturalOrder()).get();
     }
+
+    private Integer comprobarValor(Integer value) {
+        return value>=10?0:value;
+    }
+
+
 
     public void ganarMano() {
 
