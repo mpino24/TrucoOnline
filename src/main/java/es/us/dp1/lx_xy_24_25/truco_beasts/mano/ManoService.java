@@ -23,13 +23,15 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepositor
 public class ManoService {
 
     private final Mano manoActual;
-    private final Partida partidaActual;
+    
     PartidaJugadorRepository partidaJugadorRepository;
 
-    public ManoService(Mano mano, Partida partida) {
+    public ManoService(Mano mano ) {
         this.manoActual = mano;
-        this.partidaActual = partida;
+       
     }
+
+    
 
     public Integer siguienteJugador(Integer jugadorActual) {
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
@@ -98,7 +100,7 @@ public class ManoService {
         Integer jugadorActual = manoActual.getJugadorTurno();
         PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugadorbyId(jugadorActual);
         PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugadorbyId(jugadorRespuesta);
-
+        Partida partidaActual= manoActual.getPartida();
         if (jugadorActu.getEquipo() == jugadorResp.getEquipo()) {
             throw new SameEquipoException();
         }
@@ -122,7 +124,7 @@ public class ManoService {
         PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugadorbyId(jugadorRespuesta);
         Integer jugadorMano = manoActual.getPartida().getJugadorMano();
         PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano);
-
+        Partida partidaActual= manoActual.getPartida();
         //Excepcion ver que el jugador que canta es el ultimo de cada equipo
         if(manoActual.getCartasDisp().get(-1).size()!=3){
             throw new EnvidoException("Solo se canta envido en la primera ronda");
@@ -202,7 +204,7 @@ public class ManoService {
     public void ganarMano() {
         Integer jugadorMano = manoActual.getPartida().getJugadorMano();
         PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano); //No habrá que pasarle el id del jugador en lugar del jugador entero?
-        
+        Partida partidaActual= manoActual.getPartida();
         Integer rondasGanadasEquipo1 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO1).toList().size();
         Integer rondasGanadasEquipo2 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO2).toList().size();
         if(rondasGanadasEquipo1==2){
