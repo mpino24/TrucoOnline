@@ -104,26 +104,35 @@ public class ManoService {
 
     public Boolean puedeCantarEnvido(){
         Boolean sePuede = false;
-        Boolean tieneCartas = true;
+        Boolean esRondaUno = obtenerRondaActual() ==1;
         Boolean esPie = false;
+        Boolean noHayTruco = manoActual.getPuntosTruco() <= 1;
+        Boolean noSeCanto = manoActual.getPuntosEnvido() == 0; //No estoy seguro como lo gestionaremos con el resto de subidas, pero para el "primer canto" de envido, real envido o falta envido esta funcion serviria
+
+        Integer jugTurno = manoActual.getJugadorTurno();
         Integer pie = obtenerJugadorPie();
         Integer otroPie = obtenerJugadorAnterior(pie);
         
-        if(manoActual.getJugadorTurno() == pie){
-            List<Carta> cartasPie = manoActual.getCartasDisp().get(pie);
-            tieneCartas = cartasPie.size()>2 ?true:false; 
-            esPie = true;
-        } else if(manoActual.getJugadorTurno() == otroPie) {
-            List<Carta> cartasOtroPie = manoActual.getCartasDisp().get(otroPie);
-            tieneCartas = cartasOtroPie.size()>2 ?true:false;
-            esPie = true;
-        }
+        if(jugTurno == pie || jugTurno == otroPie) esPie = true;
         
-        Boolean noHayTruco = manoActual.getPuntuacion() <= 1;
-        sePuede = esPie && noHayTruco &&esPie &&tieneCartas;
         
-        return sePuede ;   
+        sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
+        
+        return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
     }    
+
+    public Integer obtenerRondaActual(){
+        Integer ronda = 0;
+        List<List<Carta>> cartas = manoActual.getCartasDisp();
+        Integer cartasPie = cartas.get(obtenerJugadorPie()).size();
+        if (cartasPie ==3) ronda= 1;
+        else if(cartasPie==2) ronda=2;
+        else ronda =3;            
+        return ronda;
+    }
+
+
+    
 
     public void cantarTruco(Boolean respuesta) throws SameEquipoException { //FALTA TEST
         // En frontend si es truco (respuesta si o no ) --> cantar(respuesta)
@@ -135,9 +144,9 @@ public class ManoService {
         Partida partidaActual= manoActual.getPartida();
         
         if (respuesta) { // Quiero
-            manoActual.setPuntuacion(manoActual.getPuntuacion() + 1); // Acá sumas 1 si es que si, y guardas 1 en puntuacion siempre, 
+            manoActual.setPuntosTruco(manoActual.getPuntosTruco() + 1); // Acá sumas 1 si es que si, y guardas 1 en puntuacion siempre, 
         } else { // No quiero
-            Integer puntuacionSuma = manoActual.getPuntuacion(); //entonces, el no quiero es mano.getPuntuacion nomas
+            Integer puntuacionSuma = manoActual.getPuntosTruco(); //entonces, el no quiero es mano.getPuntosTruco nomas
 
             if (jugadorActual % 2 == partidaActual.getJugadorMano() % 2) //Esto no estoy del todo seguro, pero el equipo se puede sacar con los que son modulo, lo que no se la diferencia de ambos
                 partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
@@ -180,7 +189,7 @@ public class ManoService {
 
            }
            else{
-            Integer puntuacionSuma = manoActual.getPuntuacion() - 1 == 0 ? 1 : manoActual.getPuntuacion() - 1; //Hay que o crear otra puntuacion para el envido o hacerlo de otra forma, porque se está cambiando la puntuacion del truco con la del envido
+            Integer puntuacionSuma = manoActual.getPuntosTruco() - 1 == 0 ? 1 : manoActual.getPuntosTruco() - 1; //Hay que o crear otra puntuacion para el envido o hacerlo de otra forma, porque se está cambiando la puntuacion del truco con la del envido
             if (jugadorActual%2 == 0) //lo mismo que antes, se podría hacer que los que estén en posiciones pares sean equipo1 y en impares equipo2
                 partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
 
@@ -189,10 +198,10 @@ public class ManoService {
             else {
                 
                     if (jugadorMano%2== 0)
-                        partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
+                        partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntosTruco());
         
                     else
-                        partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntuacion());
+                        partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntosTruco());
                 
             }
            }
@@ -243,16 +252,16 @@ public class ManoService {
     //     Integer rondasGanadasEquipo1 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO1).toList().size();
     //     Integer rondasGanadasEquipo2 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO2).toList().size();
     //     if(rondasGanadasEquipo1==2){
-    //         partidaActual.setPuntosEquipo1(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo1());
+    //         partidaActual.setPuntosEquipo1(manoActual.getPuntosTruco() + partidaActual.getPuntosEquipo1());
     //     }
     //     else if(rondasGanadasEquipo2==2){
-    //         partidaActual.setPuntosEquipo2(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo2());
+    //         partidaActual.setPuntosEquipo2(manoActual.getPuntosTruco() + partidaActual.getPuntosEquipo2());
     //     }else {
     //         if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
-    //             partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
+    //             partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntosTruco());
 
     //         else
-    //             partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntuacion());
+    //             partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntosTruco());
     //     }
 
     // }

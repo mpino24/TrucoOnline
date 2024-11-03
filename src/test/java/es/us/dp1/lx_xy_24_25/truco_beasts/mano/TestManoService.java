@@ -76,46 +76,84 @@ public class TestManoService {
         assertEquals(2, pie);
     }
 
+    @Test
+    public void obtenerRondaActualRondaUno(){
+        setup(3, 4);
+        setupCartasDisponibles(2, 1);
+        Integer ronda = manoService.obtenerRondaActual();
+        assertEquals(1, ronda);
+    }
+    @Test
+    public void obtenerRondaActualRondaDos(){
+        setup(3, 4);
+        setupCartasDisponibles(2, 2);
+        Integer ronda = manoService.obtenerRondaActual();
+        assertEquals(2, ronda);
+    }
+    @Test
+    public void obtenerRondaActualRondaTres(){
+        setup(3, 4);
+        setupCartasDisponibles(2, 3);
+        Integer ronda = manoService.obtenerRondaActual();
+        assertEquals(3, ronda);
+    }
 
+
+    @Test
+    public void sePuedeCantarEnvidoDeDos(){
+        setup(0, 1);
+        setupCartasDisponibles(0,1);
+        assertTrue(manoService.puedeCantarEnvido());
+        manoService.siguienteTurno();
+        assertTrue( manoService.puedeCantarEnvido());
+    }
     @Test
     public void sePuedeCantarEnvidoNoEsPie(){
         setup(2, 4);
         setupCartasDisponibles(3,1);
-        assertEquals(false, manoService.puedeCantarEnvido());
+        assertFalse(manoService.puedeCantarEnvido());
     }
 
     @Test
     public void sePuedeCantarEnvidoSiEsPie(){
         setup(2, 4);
         setupCartasDisponibles(1,1);
-        assertEquals(true, manoService.puedeCantarEnvido());
+        assertTrue( manoService.puedeCantarEnvido());
     }
     @Test
     public void sePuedeCantarEnvidoSiEsPieOtroEquipo(){
         setup(2, 4);
         setupCartasDisponibles(0,1);
-        assertEquals(true, manoService.puedeCantarEnvido());
+        assertTrue(manoService.puedeCantarEnvido());
     }
     @Test
     public void sePuedeCantarEnvidoHayTruco(){
         setup(2, 4);
         setupCartasDisponibles(0,1);
-        mano.setPuntuacion(2);
-        assertEquals(false, manoService.puedeCantarEnvido());
+        mano.setPuntosTruco(2);
+        assertFalse( manoService.puedeCantarEnvido());
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaDos(){
         setup(2, 4);
         setupCartasDisponibles(0,2);
-        assertEquals(false, manoService.puedeCantarEnvido());
+        assertFalse( manoService.puedeCantarEnvido());
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaTres(){
         setup(0, 4);
         setupCartasDisponibles(3,3);
-        assertEquals(false, manoService.puedeCantarEnvido());
+        assertFalse( manoService.puedeCantarEnvido());
     }
 
+    @Test
+    public void sePuedeCantarEnvidoYaSeCanto(){
+        setup(0, 4);
+        setupCartasDisponibles(3,1);
+        mano.setPuntosEnvido(2);
+        assertFalse( manoService.puedeCantarEnvido());
+    }
+    
     @Test
     public void cercanoAManoConMano() {
         setup(0,4);
