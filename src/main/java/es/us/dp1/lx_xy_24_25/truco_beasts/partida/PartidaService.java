@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -37,12 +38,6 @@ public class PartidaService {
 		
 	}
 
-
-    @Transactional(readOnly = true)
-    public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
-        return partidaRepository.findPartidaByCodigo(codigo);
-    }
-
 	@Transactional(readOnly = true)
 	public List<Partida> findAllPartidasActivas() throws DataAccessException {
 		return partidaRepository.findAllPartidasActivas();
@@ -53,4 +48,24 @@ public class PartidaService {
 		partidaRepository.save(partida);
 		return partida;
 	}
+
+	@Transactional(readOnly = true)
+	public Partida findPartidaById(int id) throws DataAccessException{
+		return partidaRepository.findById(id).get();
+	}
+
+	@Transactional()
+	public void deletePartida(String codigo) {
+		Partida p= findPartidaByCodigo(codigo);
+		partidaRepository.delete(p);
+		
+	}
+
+	
+	@Transactional(readOnly = true)
+    public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
+		Optional<Partida> p = partidaRepository.findPartidaByCodigo(codigo);
+        return p.isEmpty()?null: p.get();
+    }
+
 }
