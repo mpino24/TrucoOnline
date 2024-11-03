@@ -24,13 +24,22 @@ public class ManoService {
 
     private final Mano manoActual;
     
-    PartidaJugadorRepository partidaJugadorRepository;
+    
 
     public ManoService(Mano mano ) {
         this.manoActual = mano;
        
     }
 
+    public Integer obtenerJugadorPie(){
+        Integer pie = obtenerJugadorAnterior(manoActual.getPartida().getJugadorMano());
+        return pie;
+    }
+   
+    public Integer obtenerJugadorAnterior(Integer jugador) { //FALTA TEST
+        Integer numJugadores = manoActual.getPartida().getNumJugadores();
+        return (jugador + numJugadores - 1) % numJugadores;
+    }
     
 
     public Integer siguienteJugador(Integer jugadorActual) {
@@ -92,23 +101,45 @@ public class ManoService {
         siguienteTurno();
     }
 
-    public void cantar(Boolean respuesta, Integer jugadorRespuesta) throws SameEquipoException {
+
+    public Boolean puedeCantarEnvido(){
+        Boolean sePuede = false;
+        Boolean tieneCartas = true;
+        Boolean esPie = false;
+        Integer pie = obtenerJugadorPie();
+        Integer otroPie = obtenerJugadorAnterior(pie);
+        
+        if(manoActual.getJugadorTurno() == pie){
+            List<Carta> cartasPie = manoActual.getCartasDisp().get(pie);
+            tieneCartas = cartasPie.size()>2 ?true:false; 
+            esPie = true;
+        } else if(manoActual.getJugadorTurno() == otroPie) {
+            List<Carta> cartasOtroPie = manoActual.getCartasDisp().get(otroPie);
+            tieneCartas = cartasOtroPie.size()>2 ?true:false;
+            esPie = true;
+        }
+        
+        Boolean noHayTruco = manoActual.getPuntuacion() <= 1;
+        sePuede = esPie && noHayTruco &&esPie &&tieneCartas;
+        
+        return sePuede ;   
+    }    
+
+    public void cantarTruco(Boolean respuesta) throws SameEquipoException { //FALTA TEST
         // En frontend si es truco (respuesta si o no ) --> cantar(respuesta)
         // si respuesta = retruco --> cantar(true) y nueva llamada cantar(respuesta)
         // si respuesta = vale4 --> cantar(true), cantar(true) y nueva llamada
         // cantar(respuesta)
         Integer jugadorActual = manoActual.getJugadorTurno();
-        PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugadorbyId(jugadorActual);
-        PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugadorbyId(jugadorRespuesta);
+        
         Partida partidaActual= manoActual.getPartida();
-        if (jugadorActu.getEquipo() == jugadorResp.getEquipo()) {
-            throw new SameEquipoException();
-        }
+        
         if (respuesta) { // Quiero
-            manoActual.setPuntuacion(manoActual.getPuntuacion() + 1);
+            manoActual.setPuntuacion(manoActual.getPuntuacion() + 1); // Acá sumas 1 si es que si, y guardas 1 en puntuacion siempre, 
         } else { // No quiero
-            Integer puntuacionSuma = manoActual.getPuntuacion() - 1 == 0 ? 1 : manoActual.getPuntuacion() - 1;
-            if (jugadorActu.getEquipo() == Equipo.EQUIPO1)
+            Integer puntuacionSuma = manoActual.getPuntuacion(); //entonces, el no quiero es mano.getPuntuacion nomas
+
+            if (jugadorActual % 2 == partidaActual.getJugadorMano() % 2) //Esto no estoy del todo seguro, pero el equipo se puede sacar con los que son modulo, lo que no se la diferencia de ambos
                 partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
 
             else
@@ -116,17 +147,21 @@ public class ManoService {
         }
     }
 
+    
 
 
-    public void envido(Boolean respuesta, Integer jugadorRespuesta ) throws EnvidoException{
+
+    public void envido(Boolean respuesta) throws EnvidoException{ //FALTA TEST
         Integer jugadorActual = manoActual.getJugadorTurno();
-        PartidaJugador jugadorActu = partidaJugadorRepository.findPartidaJugadorbyId(jugadorActual);
-        PartidaJugador jugadorResp = partidaJugadorRepository.findPartidaJugadorbyId(jugadorRespuesta);
+        Integer jugadorResp = siguienteJugador(jugadorActual);
+
         Integer jugadorMano = manoActual.getPartida().getJugadorMano();
-        PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano);
+        
         Partida partidaActual= manoActual.getPartida();
+
+        Integer ultimo = obtenerJugadorPie();
         //Excepcion ver que el jugador que canta es el ultimo de cada equipo
-        if(manoActual.getCartasDisp().get(-1).size()!=3){
+        if(jugadorActual != ultimo || jugadorActual!=obtenerJugadorAnterior(ultimo)){ //Lo que estaba puesto no, porque no siempre el ultimo es el ultimo en esa lista, son posiciones fijas de la "mesa"
             throw new EnvidoException("Solo se canta envido en la primera ronda");
         }
       
@@ -145,15 +180,15 @@ public class ManoService {
 
            }
            else{
-            Integer puntuacionSuma = manoActual.getPuntuacion() - 1 == 0 ? 1 : manoActual.getPuntuacion() - 1;
-            if (jugadorActu.getEquipo() == Equipo.EQUIPO1)
+            Integer puntuacionSuma = manoActual.getPuntuacion() - 1 == 0 ? 1 : manoActual.getPuntuacion() - 1; //Hay que o crear otra puntuacion para el envido o hacerlo de otra forma, porque se está cambiando la puntuacion del truco con la del envido
+            if (jugadorActual%2 == 0) //lo mismo que antes, se podría hacer que los que estén en posiciones pares sean equipo1 y en impares equipo2
                 partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
 
-            else if (jugadorActu.getEquipo() == Equipo.EQUIPO2)
+            else if (jugadorActual%2 == 1)
                 partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + puntuacionSuma);
             else {
                 
-                    if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
+                    if (jugadorMano%2== 0)
                         partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
         
                     else
@@ -164,7 +199,7 @@ public class ManoService {
     }
 
 
-    public Integer comprobarValor(List<List<Carta>> cartasEquipo){
+    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ // Lo veo bastante bien, lo que no es necesario pasarle esa lista, las cartas de cada equipo son las que sean j%2==jugMano%2
         Integer puntos=0;
         for(int i=0; i<cartasEquipo.size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
@@ -200,26 +235,26 @@ public class ManoService {
     }
 
 
+// Esto no estoy seguro si va aca, ya que la comprobacion del que gana la mano deberia hacerse en el partidaService cuando se está por borrar
+    // public void ganarMano() { 
+    //     Integer jugadorMano = manoActual.getPartida().getJugadorMano();
+    //     PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano); //No habrá que pasarle el id del jugador en lugar del jugador entero?
+    //     Partida partidaActual= manoActual.getPartida();
+    //     Integer rondasGanadasEquipo1 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO1).toList().size();
+    //     Integer rondasGanadasEquipo2 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO2).toList().size();
+    //     if(rondasGanadasEquipo1==2){
+    //         partidaActual.setPuntosEquipo1(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo1());
+    //     }
+    //     else if(rondasGanadasEquipo2==2){
+    //         partidaActual.setPuntosEquipo2(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo2());
+    //     }else {
+    //         if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
+    //             partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
 
-    public void ganarMano() {
-        Integer jugadorMano = manoActual.getPartida().getJugadorMano();
-        PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano); //No habrá que pasarle el id del jugador en lugar del jugador entero?
-        Partida partidaActual= manoActual.getPartida();
-        Integer rondasGanadasEquipo1 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO1).toList().size();
-        Integer rondasGanadasEquipo2 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO2).toList().size();
-        if(rondasGanadasEquipo1==2){
-            partidaActual.setPuntosEquipo1(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo1());
-        }
-        else if(rondasGanadasEquipo2==2){
-            partidaActual.setPuntosEquipo2(manoActual.getPuntuacion() + partidaActual.getPuntosEquipo2());
-        }else {
-            if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
-                partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntuacion());
+    //         else
+    //             partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntuacion());
+    //     }
 
-            else
-                partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntuacion());
-        }
-
-    }
+    // }
 
 }

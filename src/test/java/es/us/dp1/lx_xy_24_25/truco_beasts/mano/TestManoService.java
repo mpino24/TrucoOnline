@@ -35,6 +35,8 @@ public class TestManoService {
     @Test
     public void devuelveSiguienteJugadorDe4() {
         setup(0,4);
+        Integer siguienteJugador = manoService.siguienteJugador(0);
+        assertEquals(1, siguienteJugador);
     }
 
     @Test
@@ -43,6 +45,75 @@ public class TestManoService {
 
         Integer siguienteJugador = manoService.siguienteJugador(5);
         assertEquals(0, siguienteJugador);
+    }
+
+    @Test
+    public void devuelveJugadorPieDe2(){
+        setup(0, 2);
+        Integer pie = manoService.obtenerJugadorAnterior(mano.getPartida().getJugadorMano());
+        assertEquals(1, pie);
+    }
+    @Test
+    public void devuelveJugadorPieDe4(){
+        setup(0, 4);
+        Integer pie = manoService.obtenerJugadorAnterior(mano.getPartida().getJugadorMano());
+        assertEquals(3, pie);
+    }
+
+    @Test
+    public void devuelveJugadorPieDe4OtroMano(){
+        setup(2, 4);
+        Integer pie = manoService.obtenerJugadorAnterior(mano.getPartida().getJugadorMano());
+        assertEquals(1, pie);
+        //El pie del otro equipo
+        Integer otroPie = manoService.obtenerJugadorAnterior(pie);
+        assertEquals(0, otroPie);
+    }
+    @Test 
+    public void devuelveJugadorPieMetodoEspecifico(){
+        setup(3, 6);
+        Integer pie = manoService.obtenerJugadorPie();
+        assertEquals(2, pie);
+    }
+
+
+    @Test
+    public void sePuedeCantarEnvidoNoEsPie(){
+        setup(2, 4);
+        setupCartasDisponibles(3,1);
+        assertEquals(false, manoService.puedeCantarEnvido());
+    }
+
+    @Test
+    public void sePuedeCantarEnvidoSiEsPie(){
+        setup(2, 4);
+        setupCartasDisponibles(1,1);
+        assertEquals(true, manoService.puedeCantarEnvido());
+    }
+    @Test
+    public void sePuedeCantarEnvidoSiEsPieOtroEquipo(){
+        setup(2, 4);
+        setupCartasDisponibles(0,1);
+        assertEquals(true, manoService.puedeCantarEnvido());
+    }
+    @Test
+    public void sePuedeCantarEnvidoHayTruco(){
+        setup(2, 4);
+        setupCartasDisponibles(0,1);
+        mano.setPuntuacion(2);
+        assertEquals(false, manoService.puedeCantarEnvido());
+    }
+    @Test
+    public void sePuedeCantarEnvidoYaEsRondaDos(){
+        setup(2, 4);
+        setupCartasDisponibles(0,2);
+        assertEquals(false, manoService.puedeCantarEnvido());
+    }
+    @Test
+    public void sePuedeCantarEnvidoYaEsRondaTres(){
+        setup(0, 4);
+        setupCartasDisponibles(3,3);
+        assertEquals(false, manoService.puedeCantarEnvido());
     }
 
     @Test
@@ -161,7 +232,7 @@ public class TestManoService {
         assertEquals(1, empezador);
     }
 
-    public void setupCartasDisponibles(Integer jugadorActual) {
+    public void setupCartasDisponibles(Integer jugadorActual, Integer ronda) {
         Carta c0 = new Carta();
         Carta c1 = new Carta();
         Carta c2 = new Carta();
@@ -170,10 +241,19 @@ public class TestManoService {
         c2.setPoder(6);
         mano.setJugadorTurno(jugadorActual);
         List<Carta> listaBase = new ArrayList<>();
-        listaBase.add(c0); listaBase.add(c1); listaBase.add(c2);
+        
         List<List<Carta>> cartasDisponibles = new ArrayList<>();
         List<Carta> cartasRonda = new ArrayList<>();
-        for(int i = 0;i <partida.getNumJugadores(); i++){
+        Integer numJugadores = partida.getNumJugadores();
+        if(ronda ==1){
+            listaBase.add(c0); listaBase.add(c1); listaBase.add(c2);
+        } else if(ronda ==2){
+            listaBase.add(c0);listaBase.add(c1); 
+        } else{
+            listaBase.add(c0);
+        }
+
+        for(int i = 0;i <numJugadores; i++){
             cartasRonda.add(null);
             cartasDisponibles.add(listaBase);
         }
@@ -186,7 +266,7 @@ public class TestManoService {
         Integer jugadorActual = 0;
         Integer cartaALanzar = 0;
         setup(0,4);
-        setupCartasDisponibles(jugadorActual);
+        setupCartasDisponibles(jugadorActual,1);
 
         manoService.tirarCarta(cartaALanzar);
         Integer tamCartasDisponibles = mano.getCartasDisp().get(jugadorActual).size();
@@ -201,7 +281,7 @@ public class TestManoService {
         Integer jugadorActual = 0;
         Integer cartaALanzar = 0;
         setup(0,4);
-        setupCartasDisponibles(jugadorActual);
+        setupCartasDisponibles(jugadorActual,1);
 
         manoService.tirarCarta(cartaALanzar);
         
@@ -214,10 +294,18 @@ public class TestManoService {
         Integer jugadorActual = 0;
         Integer cartaALanzar = 0;
         setup(0,4);
-        setupCartasDisponibles(jugadorActual);
+        setupCartasDisponibles(jugadorActual,1);
 
         manoService.tirarCarta(cartaALanzar);
         Integer siguienteTurno = mano.getJugadorTurno();
         assertEquals(manoService.siguienteJugador(jugadorActual), siguienteTurno);
     }
+
+    
+
+
+
+
+
+
 }
