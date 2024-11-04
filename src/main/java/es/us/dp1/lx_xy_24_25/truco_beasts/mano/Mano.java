@@ -21,7 +21,7 @@ public class Mano {
     private List<Integer> ganadoresRondas = new ArrayList<>();
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
-
+    private Integer equipoCantor =null;
 
     @ManyToOne
     private Partida partida;

@@ -24,7 +24,7 @@ public class TestManoService {
 
     @Test
     public void devuelveSiguienteJugadorDe2() {
-        setup(0,4);
+        setup(0,2);
 
         Integer siguienteJugador = manoService.siguienteJugador(0);
         assertEquals(1, siguienteJugador);
@@ -46,6 +46,61 @@ public class TestManoService {
         Integer siguienteJugador = manoService.siguienteJugador(5);
         assertEquals(0, siguienteJugador);
     }
+
+    @Test
+    public void turnoHaciaAdelanteDe2() {
+        setup(0,2);
+        mano.setJugadorTurno(0);
+        manoService.siguienteTurno();
+        assertEquals(1, mano.getJugadorTurno());
+        manoService.siguienteTurno();
+        assertEquals(0, mano.getJugadorTurno());
+    }
+
+    @Test
+    public void turnoHaciaAdelanteDe4() {
+        setup(0,4);
+        mano.setJugadorTurno(2);
+        manoService.siguienteTurno();
+        assertEquals(3, mano.getJugadorTurno());
+    }
+
+    @Test
+    public void turnoHaciaAdelanteUltimo() {
+        setup(0,4);
+
+        mano.setJugadorTurno(3);
+        manoService.siguienteTurno();
+        assertEquals(0, mano.getJugadorTurno());
+    }
+
+    @Test
+    public void turnoHaciaAtrasDe2() {
+        setup(0,2);
+        mano.setJugadorTurno(0);
+        manoService.anteriorTurno();
+        assertEquals(1, mano.getJugadorTurno());
+        manoService.anteriorTurno();
+        assertEquals(0, mano.getJugadorTurno());
+    }
+
+    @Test
+    public void turnoHaciaAtrasDe4() {
+        setup(0,4);
+        mano.setJugadorTurno(3);
+        manoService.anteriorTurno();
+        assertEquals(2, mano.getJugadorTurno());
+    }
+
+    @Test
+    public void turnoHaciaAtrasUltimo() {
+        setup(0,4);
+
+        mano.setJugadorTurno(0);
+        manoService.anteriorTurno();
+        assertEquals(3, mano.getJugadorTurno());
+    }
+    
 
     @Test
     public void devuelveJugadorPieDe2(){
@@ -339,6 +394,217 @@ public class TestManoService {
         assertEquals(manoService.siguienteJugador(jugadorActual), siguienteTurno);
     }
 
+    public void setupTruco(Integer equipoCantor, Integer truco){
+        if(equipoCantor!=null) mano.setEquipoCantor(equipoCantor);
+        if(truco!=null) mano.setPuntosTruco(truco);
+    }
+
+    @Test 
+    public void puedeCantarTrucoNoSeCanto(){
+        setup(0, 4);
+        setupTruco(null, null);
+        mano.setJugadorTurno(3);
+        assertTrue(manoService.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoLoCantoElOtroEquipo(){
+        setup(0, 4);
+        setupTruco(0, 2);
+        mano.setJugadorTurno(3);
+        assertTrue(manoService.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoNoLoCantoElOtroEquipo(){
+        setup(0, 4);
+        setupTruco(1, 2);
+        mano.setJugadorTurno(3);
+        assertFalse(manoService.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoLoCantoElOtroEquipoDe2(){
+        setup(0, 2);
+        setupTruco(0, 2);
+        mano.setJugadorTurno(1);
+        assertTrue(manoService.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoNoLoCantoElOtroEquipoDe2(){
+        setup(0, 2);
+        setupTruco(0, 2);
+        mano.setJugadorTurno(0);
+        assertFalse(manoService.puedeCantarTruco());
+    }
+
+
+    @Test 
+    public void cantaTruco() throws Exception{
+        setup(0, 4);
+        setupTruco(null, null);
+        mano.setJugadorTurno(0);
+
+        try {
+            manoService.cantosTruco(0);
+            assertTrue(mano.getJugadorTurno() == 1);
+            assertEquals(0, mano.getEquipoCantor());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test 
+    public void cantaRetruco() throws Exception{
+        setup(0, 4);
+        setupTruco(1, 2);
+        mano.setJugadorTurno(0);
+
+        try {
+            manoService.cantosTruco(1);
+            assertTrue(mano.getJugadorTurno() == 1);
+            assertEquals(0, mano.getEquipoCantor());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test 
+    public void cantaValecuatro() throws Exception{
+        setup(0, 4);
+        setupTruco(1, 3);
+        mano.setJugadorTurno(0);
+
+        try {
+            manoService.cantosTruco(2);
+            assertTrue(mano.getJugadorTurno() == 1);
+            assertEquals(0, mano.getEquipoCantor());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test
+    public void responderQuieroTruco() throws Exception{
+        setup(0, 4);
+        setupTruco(null, null); //No se canto
+        mano.setJugadorTurno(0);
+        try {
+            manoService.cantosTruco(0);
+            assertTrue(mano.getJugadorTurno() ==1);
+
+            manoService.responderTruco(0);
+            assertTrue(mano.getJugadorTurno() ==0);
+            assertEquals(2, mano.getPuntosTruco());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test
+    public void responderNoQuieroTruco() throws Exception{
+        setup(0, 4);
+        setupTruco(null, null); //No se canto
+        mano.setJugadorTurno(0);
+        try {
+            manoService.cantosTruco(0);
+            assertTrue(mano.getJugadorTurno() ==1);
+
+            manoService.responderTruco(1);
+            assertEquals(1, mano.getPuntosTruco());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test
+    public void responderQuieroRetruco() throws Exception{
+        setup(0, 4);
+        setupTruco(0, 2); //Se canto Truco
+        mano.setJugadorTurno(1);
+        try {
+            manoService.cantosTruco(1);
+            assertTrue(mano.getJugadorTurno() ==2);
+
+            manoService.responderTruco(0); //QUIERO
+            assertTrue(mano.getJugadorTurno() ==1);
+            assertEquals(3, mano.getPuntosTruco());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test
+    public void responderNoQuieroRetruco() throws Exception{
+        setup(0, 4);
+        setupTruco(0, 2); //Se canto Truco
+        mano.setJugadorTurno(1);
+        try {
+            manoService.cantosTruco(1);
+            assertTrue(mano.getJugadorTurno() ==2); 
+
+            manoService.responderTruco(1); //NO QUIERO
+            assertEquals(2, mano.getPuntosTruco());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+    @Test
+    public void responderQuieroValecuatro() throws Exception{
+        setup(0, 4);
+        setupTruco(0, 3); //Se canto Retruco
+        mano.setJugadorTurno(1);
+        try {
+            manoService.cantosTruco(2);
+            assertTrue(mano.getJugadorTurno() ==2);
+
+            manoService.responderTruco(0); //QUIERO
+            assertTrue(mano.getJugadorTurno() ==1);
+            assertEquals(4, mano.getPuntosTruco());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Test
+    public void responderNoQuieroValecuatro() throws Exception{
+        setup(0, 4);
+        setupTruco(0, 3); //Se canto Retruco
+        mano.setJugadorTurno(1);
+        try {
+            manoService.cantosTruco(2);
+            assertTrue(mano.getJugadorTurno() ==2);
+
+
+            manoService.responderTruco(1);
+            assertEquals(3, mano.getPuntosTruco());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
+    @Test
+    public void responderRetruco() throws Exception{
+        setup(0, 4);
+        setupTruco(null, null); //No se canto nada
+        mano.setJugadorTurno(0);
+        try {
+            manoService.cantosTruco(0);
+            assertTrue(mano.getJugadorTurno() == 1);
+
+            manoService.responderTruco(2);//SUBIR TRUCO
+            assertEquals(2, mano.getPuntosTruco());
+            assertEquals(0, mano.getJugadorTurno());
+
+            manoService.responderTruco(0);
+            assertEquals(3, mano.getPuntosTruco());
+            assertEquals(0, mano.getJugadorTurno());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
     
 
 

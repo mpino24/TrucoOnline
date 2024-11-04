@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.imageio.IIOException;
+
 import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
@@ -36,7 +38,7 @@ public class ManoService {
         return pie;
     }
    
-    public Integer obtenerJugadorAnterior(Integer jugador) { //FALTA TEST
+    public Integer obtenerJugadorAnterior(Integer jugador) { 
         Integer numJugadores = manoActual.getPartida().getNumJugadores();
         return (jugador + numJugadores - 1) % numJugadores;
     }
@@ -51,6 +53,12 @@ public class ManoService {
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         manoActual.setJugadorTurno(siguiente);
+    }
+
+    public void anteriorTurno() { 
+        Integer jugadorActual = manoActual.getJugadorTurno();
+        Integer anterior = obtenerJugadorAnterior(jugadorActual);
+        manoActual.setJugadorTurno(anterior);
     }
 
     public Integer compararCartas() {
@@ -116,7 +124,7 @@ public class ManoService {
         if(jugTurno == pie || jugTurno == otroPie) esPie = true;
         
         
-        sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
+        sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
         
         return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
     }    
@@ -131,10 +139,93 @@ public class ManoService {
         return ronda;
     }
 
+    //TODO: FALTAN TEST NEGATIVOS
+    public void cantosTruco(Integer canto) throws Exception{ //0 -> Truco, 1 -> Retruco, 2 -> Vale cuatro (CON UN ENUM QUEDARIA MÁS LINDO)
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer equipoCantor = manoActual.getEquipoCantor();
+        if (!puedeCantarTruco()) {
+            throw new Exception( "No podés cantar truco"); //GESTIONAR MEJOR
+        }
 
-    
+        switch (canto) {
+            case 0: //Truco
+                manoActual.setEquipoCantor(jugadorTurno%2);//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
+                                                             //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más)                                    
+                siguienteTurno();
+                break;
+            case 1:
+                if (manoActual.getPuntosTruco() <2) {
+                    throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
+                }
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                siguienteTurno();
+                break;
+            case 2:
+                if (manoActual.getPuntosTruco() <3) {
+                    throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
+                }
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                siguienteTurno();
+                break;
+            
+            default:
+                throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
+        }
+        
+        
+        
+        
+    }
 
-    public void cantarTruco(Boolean respuesta) throws SameEquipoException { //FALTA TEST
+    //TODO: FALTA TEST
+    public void responderTruco(Integer respuesta) throws Exception{ //0 -> Quiero, 1 -> No Quiero, 2 -> Retruco (subir apuesta) (CON UN ENUM QUEDARIA MÁS LINDO)
+        Integer truco = manoActual.getPuntosTruco();
+        // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
+        switch (respuesta) {
+            case 0:
+                
+                manoActual.setPuntosTruco(truco +1);
+                anteriorTurno(); //TODO: ESTO ESTÁ MAL, ya que si truco, retruco, quiero no hay que volver 1 atras, porque le toca a él. Habria que guardad el jugador cantor y a partir de él obtener el equipo cantor mejor (VA A AFECTAR TAMBIEN SI SE CANTA TRUCO EN UNA RONDA Y DESPUES RETRUCO OTRA PERSONA EN OTRA)
+                break;
+            case 1:
+                //iria un terminarMano()
+                manoActual.setPuntosTruco(truco); //Osea, se queda con truco -1 
+                break;
+            case 2:
+                if(truco == 1){
+                    manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
+                    cantosTruco(1);
+                }else if(truco==2){
+                    manoActual.setPuntosTruco(truco +1);
+                    cantosTruco(2);
+                } else {
+                    throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
+                }
+                anteriorTurno(); //ESTO HAY QUE REVISARLO, porque se vuelve al mismo jugador y lo canta él mismo xd (se puede crear un boolean que sea esperando respuesta o algo así)
+                anteriorTurno(); // Y esta solucion es pauperrima
+                break;
+            default:
+                throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
+        }
+    }
+
+    //TODO: FALTA TEST (NO SE NI SI ES NECESARIA ESTA FUNCIÓN)
+    public Boolean esEquipo1(Integer jugador){ // Podria devolver un integer sino
+        Boolean siEs = false;
+        if (jugador%2==0) siEs=true;
+        return siEs;
+    }
+
+
+
+    public Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
+        Integer equipoCantor = manoActual.getEquipoCantor();
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
+    }
+
+
+    public void cantar(Boolean respuesta) throws SameEquipoException { //FALTA TEST
         // En frontend si es truco (respuesta si o no ) --> cantar(respuesta)
         // si respuesta = retruco --> cantar(true) y nueva llamada cantar(respuesta)
         // si respuesta = vale4 --> cantar(true), cantar(true) y nueva llamada
