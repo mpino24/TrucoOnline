@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.imageio.IIOException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.SameEquipoException;
@@ -140,32 +141,74 @@ public class ManoService {
     }
 
     //TODO: FALTAN TEST NEGATIVOS
-    public void cantosTruco(Integer canto) throws Exception{ //0 -> Truco, 1 -> Retruco, 2 -> Vale cuatro (CON UN ENUM QUEDARIA MÁS LINDO)
+
+    public void cantosTruco(CantosTruco canto) throws Exception{ //0 -> Truco, 1 -> Retruco, 2 -> Vale cuatro (CON UN ENUM QUEDARIA MÁS LINDO)
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
-        if (!puedeCantarTruco()) {
-            throw new Exception( "No podés cantar truco"); //GESTIONAR MEJOR
-        }
+        Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        
+        List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
+        List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
+        listaRondaJugador.add(obtenerRondaActual());
+        listaRondaJugador.add(jugadorTurno);
 
+        Integer rondaActual = obtenerRondaActual();
+        manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
+        
+        if (!puedeCantarTruco()) {
+            throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
+        }
+        
         switch (canto) {
-            case 0: //Truco
-                manoActual.setEquipoCantor(jugadorTurno%2);//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
-                                                             //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más)                                    
+            case TRUCO: //Truco
+                
+                manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
+                                                             //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más) 
+                
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
                 siguienteTurno();
                 break;
-            case 1:
+            case RETRUCO:
                 if (manoActual.getPuntosTruco() <2) {
                     throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
                 }
+                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                Integer rondaTruco = cantoEnTruco.get(0);
+                Integer jugadorTruco = cantoEnTruco.get(1);
                 manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-                siguienteTurno();
+
+                if(rondaActual==rondaTruco && jugadorAnterior == jugadorTruco){
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else {
+                    manoActual.setJugadorTurno(jugadorSiguiente);
+                }
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+                
                 break;
-            case 2:
+            case VALECUATRO:
                 if (manoActual.getPuntosTruco() <3) {
                     throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
                 }
+                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                Integer rondaRetruco = cantoEnRetruco.get(0);
+                Integer jugadorRetruco = cantoEnRetruco.get(1);
                 manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-                siguienteTurno();
+                if(rondaActual==rondaRetruco && (jugadorAnterior == jugadorRetruco || jugadorSiguiente==jugadorRetruco )){ // Tecnicamente la comprobaci
+                    if(jugadorSiguiente==jugadorRetruco){
+                        manoActual.setJugadorTurno(jugadorSiguiente);
+                    }else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                    
+                } else {
+                    manoActual.setJugadorTurno(jugadorSiguiente);
+                }
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+
                 break;
             
             default:
@@ -178,31 +221,71 @@ public class ManoService {
     }
 
     //TODO: FALTA TEST
-    public void responderTruco(Integer respuesta) throws Exception{ //0 -> Quiero, 1 -> No Quiero, 2 -> Retruco (subir apuesta) (CON UN ENUM QUEDARIA MÁS LINDO)
+    public void responderTruco(Respuestas respuesta) throws Exception{ //0 -> Quiero, 1 -> No Quiero, 2 -> Retruco (subir apuesta) (CON UN ENUM QUEDARIA MÁS LINDO)
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+
         Integer truco = manoActual.getPuntosTruco();
+        List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
+        Integer queTrucoEs = secuenciaCantos.size();
+        Integer rondaActual = obtenerRondaActual();
+        manoActual.setEsperandoRespuesta(false);
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
         switch (respuesta) {
-            case 0:
-                
+            case QUIERO:
                 manoActual.setPuntosTruco(truco +1);
-                anteriorTurno(); //TODO: ESTO ESTÁ MAL, ya que si truco, retruco, quiero no hay que volver 1 atras, porque le toca a él. Habria que guardad el jugador cantor y a partir de él obtener el equipo cantor mejor (VA A AFECTAR TAMBIEN SI SE CANTA TRUCO EN UNA RONDA Y DESPUES RETRUCO OTRA PERSONA EN OTRA)
+                if(queTrucoEs == 1){ //Es decir, Truco
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else if( queTrucoEs == 2){
+                    List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                    Integer rondaTruco = cantoEnTruco.get(0);
+                    Integer jugadorTruco = cantoEnTruco.get(1);
+
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer rondaRetruco = cantoEnRetruco.get(0);
+                    Integer jugadorRetruco = cantoEnRetruco.get(1);
+                    if((rondaTruco == rondaActual && rondaRetruco == rondaActual) && (jugadorTruco==jugadorTurno && jugadorSiguiente==jugadorRetruco)){
+                        manoActual.setJugadorTurno(jugadorTurno);
+                    } else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                    
+                } else{ 
+                    
+
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer rondaRetruco = cantoEnRetruco.get(0);
+                    Integer jugadorRetruco = cantoEnRetruco.get(1);
+                    List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
+                    Integer rondaValecuatro = cantoEnValecuatro.get(0);
+                    Integer jugadorValecuatro = cantoEnValecuatro.get(1);
+
+                    if((rondaRetruco == rondaActual && rondaValecuatro == rondaActual) && (jugadorRetruco==jugadorTurno && jugadorSiguiente==jugadorValecuatro)){
+                        manoActual.setJugadorTurno(jugadorTurno);
+                    } else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                }
+                
+               // lo arregle (creo xd) // anteriorTurno(); //TODO: ESTO ESTÁ MAL, ya que si truco, retruco, quiero no hay que volver 1 atras, porque le toca a él. Habria que guardad el jugador cantor y a partir de él obtener el equipo cantor mejor (VA A AFECTAR TAMBIEN SI SE CANTA TRUCO EN UNA RONDA Y DESPUES RETRUCO OTRA PERSONA EN OTRA)
                 break;
-            case 1:
+            case NO_QUIERO:
                 //iria un terminarMano()
                 manoActual.setPuntosTruco(truco); //Osea, se queda con truco -1 
                 break;
-            case 2:
+            case SUBIR:
                 if(truco == 1){
                     manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
-                    cantosTruco(1);
+                    cantosTruco(CantosTruco.RETRUCO);
                 }else if(truco==2){
                     manoActual.setPuntosTruco(truco +1);
-                    cantosTruco(2);
+                    cantosTruco(CantosTruco.VALECUATRO);
                 } else {
                     throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
                 }
-                anteriorTurno(); //ESTO HAY QUE REVISARLO, porque se vuelve al mismo jugador y lo canta él mismo xd (se puede crear un boolean que sea esperando respuesta o algo así)
-                anteriorTurno(); // Y esta solucion es pauperrima
+                //anteriorTurno(); //ESTO HAY QUE REVISARLO, porque se vuelve al mismo jugador y lo canta él mismo xd (se puede crear un boolean que sea esperando respuesta o algo así)
+                //anteriorTurno(); // Y esta solucion es pauperrima
                 break;
             default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
@@ -210,10 +293,11 @@ public class ManoService {
     }
 
     //TODO: FALTA TEST (NO SE NI SI ES NECESARIA ESTA FUNCIÓN)
-    public Boolean esEquipo1(Integer jugador){ // Podria devolver un integer sino
-        Boolean siEs = false;
-        if (jugador%2==0) siEs=true;
-        return siEs;
+    public Integer getEquipo(Integer jugador){ // Podria devolver un integer sino
+        Integer equipo = null;
+        if (jugador%2==0) equipo=0; //equipo 1
+        else if(jugador%2==1) equipo =1; //equipo 2
+        return equipo;
     }
 
 
