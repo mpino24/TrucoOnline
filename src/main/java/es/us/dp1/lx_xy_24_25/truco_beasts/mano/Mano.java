@@ -21,8 +21,9 @@ public class Mano {
     private List<Integer> ganadoresRondas = new ArrayList<>();
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
-    private Integer equipoCantor =null;
-
+    private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
+    private Integer equipoCantor = null;
+    private Boolean esperandoRespuesta = false;
     @ManyToOne
     private Partida partida;
 }
