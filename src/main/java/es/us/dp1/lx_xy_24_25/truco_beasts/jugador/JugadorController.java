@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -35,7 +36,12 @@ public class JugadorController {
 
     @GetMapping("/{userName}")
     public ResponseEntity<JugadorDTO> findJugadorByJugadorName(@PathVariable String userName){
-        return new ResponseEntity<>(jugadorService.findJugadorByUserName(userName),HttpStatus.OK);
+        JugadorDTO j= jugadorService.findJugadorByUserName(userName);
+        if(j!=null){
+            return new ResponseEntity<>(jugadorService.findJugadorByUserName(userName),HttpStatus.OK);
+        }else{
+            throw new ResourceNotFoundException("Jugador no encontrado");
+        }
     }
     
 }
