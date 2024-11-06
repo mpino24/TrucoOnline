@@ -24,14 +24,14 @@ const GetJoinModal = forwardRef((props, ref) => {
 
         event.preventDefault();
         fetch(
-            "/api/v1/partida/" + codigo,
+            "/api/v1/partida/search?codigo=" + codigo,
             {
                 method: "GET"
             }
         )
             .then((response) => response.text())
             .then((data) => {
-                if (data&& codigo) {
+                if (data && codigo) {
                     setPartida(data)
                 }
                 else {
