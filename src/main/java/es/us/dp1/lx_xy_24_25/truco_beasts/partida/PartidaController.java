@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 //apa
@@ -55,15 +57,21 @@ public class PartidaController {
 		return new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
 	}
 
-	
-	@GetMapping("/{codigo}")
-	public ResponseEntity<Partida> findPartidaByCodigo(@PathVariable String codigo) {
-		ResponseEntity<Partida> res= new ResponseEntity<>(partidaService.findPartidaByCodigo(codigo), HttpStatus.OK);
-		if(res.hasBody()){
-			return res;
-		}else{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+	@GetMapping(value = "{id}")
+	public ResponseEntity<Partida> findPartidaById(@PathVariable("id") int id) {
+		return new ResponseEntity<>(partidaService.findPartidaById(id), HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/{codigo}")
+	public ResponseEntity<Void> deletePartida(@PathVariable("codigo") String codigo) throws NotPartidaFoundException{
+		Partida p= partidaService.findPartidaByCodigo(codigo);
+		if(p==null){
+			throw new NotPartidaFoundException();
+		}
+		partidaService.deletePartida(codigo);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	
 	
 }

@@ -1,48 +1,136 @@
+import { forwardRef, useState } from 'react';
 import { Form, Label} from "reactstrap";
+import useFetchState from "frontend/src/util/useFetchState.js";
 import { IoCloseCircle } from "react-icons/io5";
+import tokenService from "frontend/src/services/token.service.js";
+import getErrorModal from "frontend/src/util/getErrorModal";
+import parseSubmit from './getCreationUtils/parseSubmit';
+
+
+const jwt = tokenService.getLocalAccessToken();
+
+function handleModalVisible(setModalVisible, modalVisible) {
+    setModalVisible(!modalVisible);
+}
+
+const GetCreationModal=forwardRef((props,ref) =>{
+    const partidaVacia = {
+        numJugadores: 2,
+        conFlor: false,
+        puntosMaximos: false,
+        visibilidad: false, 
+        
+    };
+   
+  
+
+    const [message, setMessage] = useState(null); 
+    const [visible, setVisible] = useState(false);
+    const [partidaVaciaParse, setPartidaVaciaParse] = useFetchState(
+        [],
+        '/api/v1/partida/0',
+        jwt,
+        setMessage,
+        setVisible,
+        0 
+        );
+
+        
+    const [partidaParseada, setPartidaParseada] = useState(partidaVaciaParse)
+    const[partida, setPartida] = useState(partidaVacia);
+    
+    const modal = getErrorModal(setVisible, visible, message);
 
 
 
-export default function getCreationModal(setModalVisible, modalVisible=false){
+
+    function handleChange(name){
+        console.log(partida)
+        if (name === 'puntosMaximos') {
+            partida.puntosMaximos=!partida.puntosMaximos
+        }
+        
+        if (name === 'visibilidad') {
+            partida.visibilidad=!partida.visibilidad
+        }
+
+        if (name === 'conFlor') {
+           partida.conFlor=!partida.conFlor
+        }
+
+        if (name === 'numJugadores2') {
+            partida.numJugadores=2
+         }
+
+         if (name === 'numJugadores4') {
+            partida.numJugadores=4
+         }
+         
+         if (name === 'numJugadores6') {
+            partida.numJugadores=6
+         }
+        
+}
 
 
-
-    function handleModalVisible(setModalVisible, modalVisible) {
-        setModalVisible(!modalVisible);
-    }
-
-
-
+   function handleSubmit(event) {
+    const  partidaParseada = parseSubmit(partida, partidaVaciaParse);
+    
+                                         
+    console.log(partidaParseada)
+    event.preventDefault();
+    fetch("/api/v1/partida", {
+      method:  "POST",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(partidaParseada),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message) {
+          setMessage(json.message);
+          setVisible(true); 
+        } else 
+        window.location.href = "/partida/"+partidaParseada.codigo;
+      })
+      .catch((message) => alert(message));
+  }
+  
     return (
 
         <div >
-            <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: "absolute" }} onClick={() => handleModalVisible(setModalVisible, modalVisible)} />
+            <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: "absolute" }} onClick={() => handleModalVisible(props.setCreationModalView, props.creationModalView)} />
+            {modal}
             <div className= 'cuadro-creacion'>
                 <div style={{marginTop:"20px"}}>
-             <Form >
-                
-                <h3> Ajuste de la partida: </h3>
-                <div className='contenedor'>
-                    <Label> Numero de jugadores: </Label>
-                <div class="paste-button">
-                    
-                    <button class="button"> &nbsp; ▼</button>
-                    <div class="dropdown-content">
-                        <a id="top" href="#">2</a>
-                        <a id="middle" href="#">4</a>
-                        <a id="bottom" href="#">6</a>
-                    </div>
-                </div>
-                </div>
-                
-                <div className='contenedor'>
-                            <Label>
+                    <Form onSubmit={handleSubmit}>
+                        <h3> Ajuste de la partida: </h3>
+                         <div className='contenedor'>
+                            <Label> Numero de jugadores: </Label>
+                                <div class="paste-button"> 
+                                                   
+                                    <a class="button">▼</a> 
+                                        <div class="dropdown-content">
+                                            <a id="top" name="numJugadores2" onClick={()=>handleChange("numJugadores2")}>2</a>  
+                                            <a id="middle" name="numJugadores4" onClick={() => handleChange("numJugadores4")}>4</a>
+                                            <a id="bottom" name="numJugadores6" onClick={() => handleChange("numJugadores6")}>6</a>
+                                    
+                                         </div>
+                                    </div>
+                        </div> 
+
+       
+                        <div className='contenedor'>
+                        <Label>
                              Puntos:
                             </Label>
                                 <p style={{ marginRight:"10px",marginLeft:"170px"}}>15</p>
                                 <div class="checkbox-wrapper-51">
 
-                                    <input id="cbx-51" type="checkbox"/>
+                                    <input name= 'puntosMaximos' id="cbx-51" type="checkbox" onChange={() => handleChange("puntosMaximos")}/>
                                     <label class="toggle" for="cbx-51">
                                         <span>
                                         <svg viewBox="0 0 10 10" height="10px" width="10px">
@@ -50,21 +138,24 @@ export default function getCreationModal(setModalVisible, modalVisible=false){
                                         </svg>
                                         </span>
                                     </label>
-                                    </div>
+                                </div>
                                     <p style={{marginRight:"10px",marginLeft:"10px"}}>30</p>
-
                         </div>
+                        
+
+
+
+                        
+                        <div className='contenedor'>
+                           
                             
-
-
-                    <div className='contenedor'>
-                            <Label>
+                        <Label>
                              Usar Flor:
                             </Label>
                                 <p style={{ marginRight:"10px",marginLeft:"150px"}}>no</p>
                                 <div class="checkbox-wrapper-51">
 
-                                    <input id="cbx-52" type="checkbox"/>
+                                    <input  name= 'conFlor' id="cbx-52" type="checkbox" onChange={() => handleChange("conFlor")} />
                                     <label class="toggle" for="cbx-52">
                                         <span>
                                         <svg viewBox="0 0 10 10" height="10px" width="10px">
@@ -74,18 +165,21 @@ export default function getCreationModal(setModalVisible, modalVisible=false){
                                     </label>
                                     </div>
                                     <p style={{marginRight:"10px",marginLeft:"10px"}}>si</p>
-
+       
                         </div>
 
 
+
+
                         <div className='contenedor'>
-                            <Label>
+                            
+                             <Label>
                              Partida privada:
                             </Label>
                                 <p style={{ marginRight:"10px",marginLeft:"100px"}}>no</p>
                                 <div class="checkbox-wrapper-51">
 
-                                    <input id="cbx-53" type="checkbox"/>
+                                    <input  name= 'visibilidad' id="cbx-53" type="checkbox" onChange={() => handleChange ('visibilidad')} />
                                     <label class="toggle" for="cbx-53">
                                         <span>
                                         <svg viewBox="0 0 10 10" height="10px" width="10px">
@@ -96,18 +190,24 @@ export default function getCreationModal(setModalVisible, modalVisible=false){
                                     </div>
                                     <p style={{marginRight:"10px",marginLeft:"10px"}}>si</p>
 
+                        
                         </div>
+                        
+                        
 
-                            <div className="botones">
-                            <button className="recuadro">Crear</button>
-                            <button className="recuadro" onClick={() => handleModalVisible(setModalVisible, modalVisible)}>Volver</button>
-                            </div>
+                        
+                        
+                        <div className="botones">
+                                <button className="recuadro" onClick={() => handleSubmit}>Crear</button>
+                        </div>
                     </Form>
-                    </div>
+                </div>
             </div>
-            </div>
+        </div>
     )
 
 
 
 }
+)
+export default GetCreationModal

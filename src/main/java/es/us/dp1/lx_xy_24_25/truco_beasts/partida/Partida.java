@@ -1,6 +1,8 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 
 
+import org.springframework.stereotype.Component;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +23,6 @@ public class Partida extends BaseEntity{
     Estado estado;
 
     @Column(name= "NUMJUGADORES")
-    @NotEmpty
     Integer numJugadores;
 
     @Column(name= "CODIGO")
@@ -46,5 +47,7 @@ public class Partida extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @NotNull
     private Visibilidad visibilidad;
+
+    private Integer jugadorMano;
 }
  

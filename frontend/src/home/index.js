@@ -148,8 +148,8 @@ export default function Home() {
                     //    JoinModal(setJoinModalView, joinModalView,setCodigo,codigo,setMessage,message)         
                 }
                 {creationModalView &&
-                    CreationModal(setCreationModalView, creationModalView)
-                }
+                    <CreationModal  setCreationModalView={setCreationModalView} creationModalView={creationModalView}/>
+                 }
                 {!(joinModalView || creationModalView) &&
                     <div className="hero-div">
                         <h1>¿Un truco?</h1>
