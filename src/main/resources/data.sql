@@ -16,6 +16,7 @@ INSERT INTO appusers(id,username,password,authority) VALUES (11,'player8','$2a$1
 INSERT INTO appusers(id,username,password,authority) VALUES (12,'player9','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (13,'player10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 INSERT INTO appusers(id,username,password,authority) VALUES (14,'hmf2475','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (16,'phb1628','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
 
 -- Insertar partidas
 INSERT INTO Partida(id,Estado,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad) VALUES (0,'WAITING',2,'WWWWW',FALSE,15,0,0,'PUBLICA');
@@ -34,13 +35,17 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (3
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (4,'Eloy', 'Eloy', 'eloy@alum.us.es','http://localhost:8080/resources/images/quebuenascartas.jpg',6);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (5,'Ivan', 'FerLinandez', 'ivan@alum.us.es','http://localhost:8080/resources/images/paula.jpg',7);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (6,'jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/jorge.jpg',1);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (7,'David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/cervecita.jpg',9);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (7,'David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/cervecita.jpg',16);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (8,'Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/gorila.jpg',10);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (9,'otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/ballena.jpg',11);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (10,'lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/lampi.jpg',3);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (11,'mono', 'bananas', 'monin@alum.us.es','http://localhost:8080/resources/images/macaco.jpg',13);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (12,'bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/robot.jpg',14);
 
+-- faltan algunos que no tienen jugador asociado
+
+
+INSERT INTO amigo(jugador_id,amigo_id) VALUES (3,7),(7,3),(3,1),(1,3);
 
 -- Insertar las cartas
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (1, 'ESPADAS', 1, 14, 'http://localhost:8080/resources/images/cartas/1espadas.jpg');

@@ -2,7 +2,6 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -78,6 +76,14 @@ public class JugadorService {
             saveJugador(toUpdate);
             return toUpdate;
         }  
+    }
+
+    public List<JugadorDTO> findAmigosByUserId(int userId){
+        return jugadorRepository.findAmigosByUserId(userId);
+    }
+
+    public JugadorDTO findJugadorByUserName(String userName){
+        return jugadorRepository.findJugadorByUserName(userName);
     }
 
 }
