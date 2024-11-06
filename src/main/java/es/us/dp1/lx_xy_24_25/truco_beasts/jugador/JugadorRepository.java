@@ -17,8 +17,10 @@ public interface JugadorRepository extends CrudRepository<Jugador,Integer>{
     Optional<Jugador> findById(Integer id);
 
    @Query("SELECT a.amigos FROM Jugador a WHERE :id = a.id")
-    //@Query("SELECT * FROM Jugador j1 INNER JOIN Amigo a2 ON t1.userId = a2.jugadorId WHERE a2.userId = :id ")
-    List<Jugador> findAmigosByUserId(Integer id);
+    List<JugadorDTO> findAmigosByUserId(Integer id);
+
+    @Query("SELECT j FROM Jugador j WHERE j.user.username = :userName")
+    JugadorDTO findJugadorByUserName(String userName);
 
 }
 

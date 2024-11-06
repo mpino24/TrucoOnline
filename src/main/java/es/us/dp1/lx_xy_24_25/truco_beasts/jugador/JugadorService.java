@@ -78,8 +78,12 @@ public class JugadorService {
         }  
     }
 
-    public List<Jugador> findAmigosByUserId(int userId){
+    public List<JugadorDTO> findAmigosByUserId(int userId){
         return jugadorRepository.findAmigosByUserId(userId);
+    }
+
+    public JugadorDTO findJugadorByUserName(String userName){
+        return jugadorRepository.findJugadorByUserName(userName);
     }
 
 }
