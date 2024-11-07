@@ -86,5 +86,11 @@ public class JugadorService {
         return jugadorRepository.findJugadorByUserName(userName);
     }
 
+    public boolean checkIfAreFriends(String friendUserName, int userId){
+        List<JugadorDTO> amigos = jugadorRepository.findAmigosByUserId(userId);
+        return (amigos.stream().map(a-> a.getUserName()).toList().contains(friendUserName));
+
+    }
+
 }
 

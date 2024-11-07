@@ -3,10 +3,27 @@ import { Button, Label, Form, Input } from "reactstrap";
 import { IoIosSearch } from "react-icons/io";
 import JugadorView from './JugadorView';
 import JugadorList from "./JugadorList";
+import { IoCloseCircle } from "react-icons/io5";
+import tokenService from 'frontend/src/services/token.service.js';
+import useFetchState from "frontend/src/util/useFetchState.js";
 
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player,setPlayer]= useState(null);
     const [userName,setUsername] = useState("");
+    const user = tokenService.getUser();
+    const jwt = tokenService.getLocalAccessToken();
+
+    const [message, setMessage] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [amigos, setAmigos] = useFetchState(
+        [],
+        `/api/v1/jugador/amigos?userId=`+user.id,
+        jwt,
+        setMessage,
+        setVisible
+    );
+
+    const [friendBool,setFriendBool] = useState(false);
 
 
     function handleSubmit(event) {
@@ -26,9 +43,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     alert('Jugador ' + userName + ' no encontrado')
                 }else{
                     setPlayer(JSON.parse(data))
-                }
-
-                    
+                    }                    
             })
             .catch((message) => alert(message + userName));
     }
@@ -38,6 +53,11 @@ const GetFriendsModal = forwardRef((props, ref) => {
         const value = target.value;
         const name = target.name;
         setUsername(value)
+    }
+
+    function handleReset(){
+        setPlayer(null);
+        document.getElementById('inputId').value='';
     }
 
 
@@ -52,17 +72,25 @@ const GetFriendsModal = forwardRef((props, ref) => {
             <div style={{ display: 'flex', alignItems: 'center' }}>
             <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ display:'flex', alignItems: 'center' }}>
-                        <input onChange={handleChange} style={{ color: "black" }} placeholder="Buscar..." class="input" name="text" type="text" required />
+                        <input onChange={handleChange} style={{ color: "black" }} id='inputId' placeholder="Buscar..." class="input" name="text" type="text" required />
+                        <div>
                         <button style={{background: 'transparent', border:'transparent'}}>
                             <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
+                            
                         </button>
+                        <IoCloseCircle style={{ width: 40, height: 40, cursor: "pointer", position:'absolute', marginLeft:20 }} onClick={() => handleReset()} />
+                        </div>
                     </div>
                 </Form>
             </div>
             {player &&
                 <JugadorView jugador={player}/>}
             <div style={{overflowY:'auto'}}>
-                <JugadorList/>
+            {
+                !player &&
+                <JugadorList jugadores={amigos}/>
+            }   
+                
                 </div>
 
         </div>

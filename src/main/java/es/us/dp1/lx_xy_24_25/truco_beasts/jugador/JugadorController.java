@@ -52,4 +52,9 @@ public class JugadorController {
     public ResponseEntity<Jugador> saveJugador(@RequestBody @Valid Jugador jugador, @Valid User user) {
         return null;
     }
+
+    @GetMapping("/{userId}/isFriend/{friendUserName}")
+    public ResponseEntity<Boolean> checkIfAreFriends(@PathVariable int userId, @PathVariable String friendUserName){
+        return new ResponseEntity<>(jugadorService.checkIfAreFriends(friendUserName, userId),HttpStatus.OK);
+    }
 }
