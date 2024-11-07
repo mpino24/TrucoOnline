@@ -1,6 +1,8 @@
 import { forwardRef, useState } from 'react';
 import { Button, Label, Form, Input } from "reactstrap";
 import { IoIosSearch } from "react-icons/io";
+import JugadorView from './JugadorView';
+import JugadorList from "./JugadorList";
 
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player,setPlayer]= useState(null);
@@ -41,7 +43,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
 
     return (
-        <div style={{ backgroundColor: 'red', height: '100%'}}>
+        <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%'}}>
 
             <h1 style={{ fontSize: 30 ,position:'relative',textAlign:'center'}}>
                 Chats
@@ -56,9 +58,12 @@ const GetFriendsModal = forwardRef((props, ref) => {
                         </button>
                     </div>
                 </Form>
-                {player &&
-                <p>{player.email}</p>}
             </div>
+            {player &&
+                <JugadorView jugador={player}/>}
+            <div style={{overflowY:'auto'}}>
+                <JugadorList/>
+                </div>
 
         </div>
 
