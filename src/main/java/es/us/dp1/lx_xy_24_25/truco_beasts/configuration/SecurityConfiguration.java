@@ -67,6 +67,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partida/**")).permitAll() //Cambiar a authenticated ????
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).permitAll() //Cambiar a authenticated ????
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).permitAll() //Cambiar a authenticated ????
 			.requestMatchers("/api/v1/profile/edit").authenticated()
 			.anyRequest().authenticated())					
 			

@@ -9,12 +9,14 @@ import org.springframework.data.repository.CrudRepository;
 public interface JugadorRepository extends CrudRepository<Jugador, Integer> {
 
     Boolean existsById(int id);
-
-    Optional<Jugador> findByUserId(Integer id);
+    @Query("SELECT j FROM Jugador j WHERE j.user.id = :userId")
+    Optional<Jugador> findByUserId(Integer userId);
 
     List<Jugador> findAll();
 
+    @Query("SELECT j FROM Jugador j WHERE :id = j.id")
     Optional<Jugador> findById(Integer id);
+
 
     @Query("SELECT a.amigos FROM Jugador a WHERE :id = a.id")
     List<JugadorDTO> findAmigosByUserId(Integer id);

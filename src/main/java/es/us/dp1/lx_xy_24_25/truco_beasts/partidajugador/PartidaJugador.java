@@ -18,8 +18,8 @@ public class PartidaJugador extends BaseEntity{
     @NotNull
     Equipo equipo;
     
-    @NotNull
-    private Integer posicion;
+    //@NotNull
+    //private Integer posicion;
     
     @ManyToOne
     private Jugador player;

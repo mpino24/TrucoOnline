@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.PerfilJugadorUsuario;
 import jakarta.validation.Valid;
@@ -36,7 +37,8 @@ public class CurrentUserRestController {
     @GetMapping
     public ResponseEntity<PerfilJugadorUsuario> getProfile(Principal principal) {
         User user = userService.findCurrentUser();
-        Jugador jugador = jugadorService.findJugadorByUserId(user.getId());
+        JugadorDTO jugadorDto = jugadorService.findJugadorByUserId(user.getId());
+        Jugador jugador = jugadorService.findJugadorById(jugadorDto.getId());
         PerfilJugadorUsuario perfil = new PerfilJugadorUsuario();
         perfil.setJugador(jugador);
         perfil.setUser(user);

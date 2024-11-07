@@ -8,6 +8,7 @@ import parseSubmit from './getCreationUtils/parseSubmit';
 
 
 const jwt = tokenService.getLocalAccessToken();
+const user = tokenService.getUser();
 
 function handleModalVisible(setModalVisible, modalVisible) {
     setModalVisible(!modalVisible);
@@ -79,7 +80,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
                                          
     console.log(partidaParseada)
     event.preventDefault();
-    fetch("/api/v1/partida", {
+    fetch("/api/v1/partida?userId="+user.id, {
       method:  "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,

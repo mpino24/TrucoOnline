@@ -29,7 +29,7 @@ public class JugadorController {
 
 
     @GetMapping
-	public ResponseEntity<Jugador> findJugadorByUserId(@RequestParam(required=true) String userId) {
+	public ResponseEntity<JugadorDTO> findJugadorByUserId(@RequestParam(required=true) String userId) {
 		return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
 	}
 

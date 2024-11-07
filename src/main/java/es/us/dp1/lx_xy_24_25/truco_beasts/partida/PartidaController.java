@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 //apa
@@ -28,10 +29,12 @@ public class PartidaController {
 
 
  	private final PartidaService partidaService;
+	private final PartidaJugadorService partJugService;
 
 		@Autowired
-	public PartidaController(PartidaService partidaService)   {
+	public PartidaController(PartidaService partidaService, PartidaJugadorService pjService)   {
 		this.partidaService=partidaService;
+		this.partJugService=pjService;
 
 	}
 
@@ -57,12 +60,14 @@ public class PartidaController {
 	
 
     @PostMapping
-	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida) {
+	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida,@RequestParam(required=true) Integer userId) {
 		
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");
 		// newPartida.setCodigo(generateRandomCode());
-		return new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
+		ResponseEntity<Partida> res=new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
+		partJugService.addJugadorPartida(newPartida,userId);
+		return res;
 	}
 
 	@GetMapping(value = "{id}")
