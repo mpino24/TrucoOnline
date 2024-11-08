@@ -19,9 +19,13 @@ public class Mano {
     private Integer jugadorTurno; // Por defecto sera el jugador mano
     private List<Carta> cartasLanzadasRonda = new ArrayList<>(); // IMPORTANTE !!!! : se inicializa como lista de nulls y cada carta sustituye al null de la posicion de su jugador (se borran en cada ronda)
     private List<Integer> ganadoresRondas = new ArrayList<>();
-    private Integer puntuacion=1;
+    private Integer puntosTruco=1;
+    private Integer puntosEnvido =0;
+    private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
+    private Integer equipoCantor = null;
+    private Boolean esperandoRespuesta = false;
 
-
+    private List<Integer> envidos = new ArrayList<>();
     @ManyToOne
     private Partida partida;
 }
