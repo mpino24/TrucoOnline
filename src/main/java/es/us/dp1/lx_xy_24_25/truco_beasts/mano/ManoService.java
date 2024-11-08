@@ -150,13 +150,13 @@ public class ManoService {
         Integer equipoCantor = manoActual.getEquipoCantor();
         Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
-        
+        Integer rondaActual = obtenerRondaActual();
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
-        listaRondaJugador.add(obtenerRondaActual());
+        listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
 
-        Integer rondaActual = obtenerRondaActual();
+        
         manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
         
         if (!puedeCantarTruco()) {
@@ -216,12 +216,11 @@ public class ManoService {
             
             default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
-        }
-        
-        
-        
-        
+        }      
     }
+
+
+    
 
     //TODO: FALTA TEST
     public void responderTruco(Respuestas respuesta) throws Exception{ //0 -> Quiero, 1 -> No Quiero, 2 -> Retruco (subir apuesta) (CON UN ENUM QUEDARIA MÁS LINDO)
@@ -254,9 +253,7 @@ public class ManoService {
                         manoActual.setJugadorTurno(jugadorAnterior);
                     }
                     
-                } else{ 
-                    
-
+                } else{         
                     List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
                     Integer rondaRetruco = cantoEnRetruco.get(0);
                     Integer jugadorRetruco = cantoEnRetruco.get(1);
@@ -287,8 +284,7 @@ public class ManoService {
                 } else {
                     throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
                 }
-                //anteriorTurno(); //ESTO HAY QUE REVISARLO, porque se vuelve al mismo jugador y lo canta él mismo xd (se puede crear un boolean que sea esperando respuesta o algo así)
-                //anteriorTurno(); // Y esta solucion es pauperrima
+                
                 break;
             default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
@@ -312,6 +308,7 @@ public class ManoService {
     }
 
 
+    
     public void cantar(Boolean respuesta) throws SameEquipoException { //FALTA TEST
         // En frontend si es truco (respuesta si o no ) --> cantar(respuesta)
         // si respuesta = retruco --> cantar(true) y nueva llamada cantar(respuesta)
@@ -333,6 +330,7 @@ public class ManoService {
                 partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + puntuacionSuma);
         }
     }
+    
 
     
 
