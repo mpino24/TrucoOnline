@@ -1,4 +1,5 @@
 package jugador;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,16 +19,17 @@ public class TestJugadorService {
     private JugadorService jugadorService;
 
     public TestJugadorService(){}
+    Jugador jugador;
+    Jugador jugador2;
 
     @BeforeEach
     public void setup() {
-        // Any setup code you need to run before each test
+         jugador = jugadorService.findJugadorById(1);
+         jugador2 = jugadorService.findJugadorById(2);
     }
 
     @Test
-    void findAmigosByUserId(){
-        Jugador jugador = jugadorService.findJugadorById(1);
-        Jugador jugador2 = jugadorService.findJugadorById(2);
+    void testFindAmigosByUserId(){
         
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
         
@@ -40,13 +42,19 @@ public class TestJugadorService {
         assertEquals(1, jugadorService.findAmigosByUserId(jugador2.getUser().getId()).size());
 
         assertEquals(jugador.getFirstName(), jugadorService.findAmigosByUserId(jugador2.getUser().getId()).get(0).getFirstName());
-
-
+    }
+    
+    @Test
+    void testCheckIfAreFriends(){
         
+        jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
 
+        assertTrue(jugadorService.checkIfAreFriends(jugador.getUser().getUsername(), jugador2.getUser().getId()));
+    }
 
-
-
+    @Test
+    void TestfindJugadorByUserName(){
+        assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
 }
 
