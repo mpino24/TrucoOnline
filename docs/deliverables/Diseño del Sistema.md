@@ -115,7 +115,7 @@ Os recordamos que la decisión sobre cómo implementar las distintas reglas de n
 
 _Ejemplos de uso de la plantilla con otras decisiones de diseño:_
 
-### Decisión 1: Importación de datos reales para demostración
+### Decisión ejemplo: Importación de datos reales para demostración
 #### Descripción del problema:
 
 Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suficientes, porque resulta más motivador. El problema es al incluir todos esos datos como parte del script de inicialización de la base de datos, el arranque del sistema para desarrollo y pruebas resulta muy tedioso.
@@ -150,6 +150,32 @@ Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suf
 
 *Justificación de la solución adoptada*
 Como consideramos que la división en capas es fundamental y no queremos renunciar a un trabajo ágil durante el desarrollo de la aplicación, seleccionamos la alternativa de diseño 1.c.
+
+### Decisión 2: Creacion de la clase PartidaJugador
+#### Descripción del problema:*
+
+Al haber creado la clase Jugador y la clase Partida que tienen una relación ManyToMany necesitamos que ambas esten conectadas. Además, cada jugador tiene una posicion asociada en cada partida.
+
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Poner el atributo posicion en partida y que se evalue cual es la posicion de cada jugador en esa partida especifica.
+
+*Ventajas:*
+•	Solucion inmediata y pudiendo aprovechar la creacion de tablas automaticas de JPA.
+*Inconvenientes:*
+•	Implementación mucho más complicada para obtener las posiciones de cada jugador especifico en cada partida.
+•   Se necesitarian funciones auxiliares para que funcione como es debido.
+
+*Alternativa 2*: Crear una clase llamada PartidaJugador intermedia que tenga un ManyToOne a Partida y a Jugador y el atributo la posición, siendo así uno solo especifico por Jugador en cada Partida.
+
+*Ventajas:*
+•	Obtenemos una clase más con los datos necesarios y faciles de acceder.
+*Inconvenientes:*
+•	Se crea una clase más en la base de datos.
+•   Para obtener la posicion de un jugador en la partida hay que usar 2 funciones.
+
+#### Justificación de la solución adoptada
+
+Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posicion de un jugador en una partida especifica de una manera más sencilla.
 
 ## Refactorizaciones aplicadas
 
