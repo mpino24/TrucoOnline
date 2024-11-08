@@ -31,7 +31,7 @@ const PartidaView = forwardRef((props, ref) => {
         } else {
             setConnectedUsers(game.numJugadores)
         }
-    }, [game.estado, game.numJugadores]);
+    }, [game.estado, game.id, game.numJugadores]);
 
     function handleSubmit() {
         fetch(
