@@ -24,6 +24,8 @@ public class Mano {
     private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
+
+    private List<Integer> envidos = new ArrayList<>();
     @ManyToOne
     private Partida partida;
 }

@@ -420,26 +420,4 @@ public class ManoService {
     }
 
 
-// Esto no estoy seguro si va aca, ya que la comprobacion del que gana la mano deberia hacerse en el partidaService cuando se está por borrar
-    // public void ganarMano() { 
-    //     Integer jugadorMano = manoActual.getPartida().getJugadorMano();
-    //     PartidaJugador jugadorManoR = partidaJugadorRepository.findPartidaJugadorbyId(jugadorMano); //No habrá que pasarle el id del jugador en lugar del jugador entero?
-    //     Partida partidaActual= manoActual.getPartida();
-    //     Integer rondasGanadasEquipo1 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO1).toList().size();
-    //     Integer rondasGanadasEquipo2 = manoActual.getGanadoresRondas().stream().filter(t-> partidaJugadorRepository.findPartidaJugadorbyId(t).getEquipo()==Equipo.EQUIPO2).toList().size();
-    //     if(rondasGanadasEquipo1==2){
-    //         partidaActual.setPuntosEquipo1(manoActual.getPuntosTruco() + partidaActual.getPuntosEquipo1());
-    //     }
-    //     else if(rondasGanadasEquipo2==2){
-    //         partidaActual.setPuntosEquipo2(manoActual.getPuntosTruco() + partidaActual.getPuntosEquipo2());
-    //     }else {
-    //         if (jugadorManoR.getEquipo() == Equipo.EQUIPO1)
-    //             partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntosTruco());
-
-    //         else
-    //             partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntosTruco());
-    //     }
-
-    // }
-
 }
