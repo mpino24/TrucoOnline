@@ -20,35 +20,9 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 •	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
 •	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>._
 
-_Un ejemplo de diagrama para los ejercicios planteados en los boletines de laboratorio sería (hemos omitido las generalizaciones hacia BaseEntity para simplificar el diagrama):_
-
-
-_Ej:_
-
-```mermaid
-classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
-    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : age
-    Animal : gender
-    class Duck{
-        beakColor        
-    }
-    class Fish{
-       sizeInFeet
-    }
-    class Zebra{
-        is_wild
-        
-    }
-```
-_En este caso hemos vuelto a usar mermaid para crear el diagrama de dominio/diseño, pero recuerda que puedes usar cualquier otra herramienta que consideres oportuno para crear tus diagramas e inclurlos en este document como imagen tal y como se explica en [este tutorial](https://www.baeldung.com/ops/github-readme-insert-image)_
-
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 _En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
+![Diagrama de dominio Truco Beasts](https://github.com/user-attachments/assets/234ba735-8506-4207-884c-ef8f578bce82)
 
 ![hLPHKjmm3FttAJpzWXzEq64WoyzsA33G7i3hYA2fOsSiXsccmwau0XThDb6eDwi4FhfVIEyzMNvoR2uecPZQsYdrX2LeYz4wK4ernluo5UWlUcCQetkeYK3Wax7uzkhxl25znwc4mUi_IlU_eKeDzGuY3Gdh396-RDFJ9lWKWtCGC-0Adi65fcUByBUsCc](https://github.com/user-attachments/assets/db11d049-7089-45a4-bb0f-844d428dca68)
 
