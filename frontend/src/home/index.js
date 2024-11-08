@@ -146,7 +146,7 @@ export default function Home() {
                 }
                 {friendsView && 
                 <div style={{ width: '36%', height:'100%', marginRight:-12}}>
-                    <GetFriendsModal/>
+                    <GetFriendsModal setModalVisible={setFriendsView} modalVisible={friendsView}/>
                 </div>  
                 
                 }

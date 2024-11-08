@@ -13,7 +13,6 @@ const JugadorList = forwardRef((props, ref)  => {
 
     const jugadoresList = props.jugadores.map((player) => {
         return (
-            
             <JugadorView
             jugador={player}
             isFriend={true}
@@ -21,9 +20,11 @@ const JugadorList = forwardRef((props, ref)  => {
         )
     });
     return (
-        <div>
-            <p style={{overflowY:true}}>{jugadoresList}</p>
-        </div>
+
+            <div style={{overflowY:'auto',maxHeight: '400px'}}>
+                {jugadoresList}
+            </div>
+
         
     )
 }

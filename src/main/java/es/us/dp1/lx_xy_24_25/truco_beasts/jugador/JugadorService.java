@@ -82,20 +82,46 @@ public class JugadorService {
    
         }
     }
-
+    @Transactional(readOnly=true)
     public List<JugadorDTO> findAmigosByUserId(int userId){
         return jugadorRepository.findAmigosByUserId(userId);
     }
-
+    @Transactional(readOnly=true)
     public JugadorDTO findJugadorByUserName(String userName){
         return jugadorRepository.findJugadorByUserName(userName);
     }
-
+    @Transactional(readOnly=true)
     public boolean checkIfAreFriends(String friendUserName, int userId){
         List<JugadorDTO> amigos = jugadorRepository.findAmigosByUserId(userId);
         return (amigos.stream().map(a-> a.getUserName()).toList().contains(friendUserName));
 
     }
+    @Transactional()
+    public void addNewFriends(int userId, int amigoPlayerId){
+        Optional<Jugador> jugadorOpt= jugadorRepository.findByUserId(userId);
+        Optional<Jugador> amigoOpt= jugadorRepository.findById(amigoPlayerId);
+        if(!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()){
+            Jugador jugador = jugadorOpt.get();
+            Jugador amigo = amigoOpt.get();
+            if(!jugador.getAmigos().contains(amigo)){
+               if(!jugador.getId().equals(amigo.getId())){
+                    jugador.getAmigos().add(amigo);
+                    amigo.getAmigos().add(jugador);
+                    jugadorRepository.save(jugador);
+                    jugadorRepository.save(amigo);
+                }else{
+                    throw new IllegalStateException("No te puedes agregar a ti mismo");
+                }
+            }else{
+                throw new IllegalStateException("Ya sois amigos!!");
+            } 
+        }else{
+            throw new ResourceNotFoundException("Usuarios no encontrados");
+        }
+        
+
+    }
+
 
 }
 

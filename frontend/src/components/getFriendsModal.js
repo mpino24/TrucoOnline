@@ -1,29 +1,41 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { Button, Label, Form, Input } from "reactstrap";
 import { IoIosSearch } from "react-icons/io";
 import JugadorView from './JugadorView';
 import JugadorList from "./JugadorList";
+import { VscChromeClose } from "react-icons/vsc";
 import { IoCloseCircle } from "react-icons/io5";
 import tokenService from 'frontend/src/services/token.service.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
 
 const GetFriendsModal = forwardRef((props, ref) => {
-    const [player,setPlayer]= useState(null);
-    const [userName,setUsername] = useState("");
+    const [player, setPlayer] = useState(null);
+    const [userName, setUsername] = useState("");
     const user = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
 
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [amigos, setAmigos] = useFetchState(
-        [],
-        `/api/v1/jugador/amigos?userId=`+user.id,
-        jwt,
-        setMessage,
-        setVisible
-    );
+    const [amigos, setAmigos] = useState([]);
 
-    const [friendBool,setFriendBool] = useState(false);
+    useEffect(() => {
+            if (!userName) {
+                fetch(
+                    `/api/v1/jugador/amigos?userId=` + user.id,
+                    {
+                        method: "GET"
+                    }
+                )
+                    .then((response) => response.text())
+                    .then((data) => {
+                        setAmigos(JSON.parse(data))
+
+                    })
+                //.catch((message) => alert(message));
+            }
+
+
+    })
 
 
     function handleSubmit(event) {
@@ -31,19 +43,19 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
         event.preventDefault();
         fetch(
-            "/api/v1/jugador/"+userName,
+            "/api/v1/jugador/" + userName,
             {
                 method: "GET"
             }
         )
-            .then((response) =>  response.text())
+            .then((response) => response.text())
             .then((data) => {
-                
-                if(data.includes('"statusCode":40')){
+
+                if (data.includes('"statusCode":40')) {
                     alert('Jugador ' + userName + ' no encontrado')
-                }else{
+                } else {
                     setPlayer(JSON.parse(data))
-                    }                    
+                }
             })
             .catch((message) => alert(message + userName));
     }
@@ -55,45 +67,62 @@ const GetFriendsModal = forwardRef((props, ref) => {
         setUsername(value)
     }
 
-    function handleReset(){
+    function handleReset() {
         setPlayer(null);
-        document.getElementById('inputId').value='';
+        document.getElementById('inputId').value = '';
+        fetch(
+            `/api/v1/jugador/amigos?userId=` + user.id,
+            {
+                method: "GET"
+            }
+        )
+            .then((response) => response.text())
+            .then((data) => {
+                setAmigos(JSON.parse(data))
+
+            })
+        //.catch((message) => alert(message));
+    }
+    function handleModalVisible(setModalVisible, modalVisible) {
+        setModalVisible(!modalVisible);
     }
 
 
-
     return (
-        <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%'}}>
-
-            <h1 style={{ fontSize: 30 ,position:'relative',textAlign:'center'}}>
+        <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
+            <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
+            <h1 style={{ fontSize: 30, textAlign: 'center' }}>
                 Chats
             </h1>
             <hr></hr>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ display:'flex', alignItems: 'center' }}>
+                <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         <input onChange={handleChange} style={{ color: "black" }} id='inputId' placeholder="Buscar..." class="input" name="text" type="text" required />
                         <div>
-                        <button style={{background: 'transparent', border:'transparent'}}>
-                            <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
-                            
-                        </button>
-                        <IoCloseCircle style={{ width: 40, height: 40, cursor: "pointer", position:'absolute', marginLeft:20 }} onClick={() => handleReset()} />
+                            <button style={{ background: 'transparent', border: 'transparent' }}>
+                                <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
+
+                            </button>
+                            {player &&
+                                <VscChromeClose style={{ width: 40, height: 40, cursor: "pointer", position: 'absolute', marginLeft: 20 }} onClick={() => handleReset()} />
+                            }
                         </div>
                     </div>
                 </Form>
             </div>
             {player &&
-                <JugadorView jugador={player}/>}
-            <div style={{overflowY:'auto'}}>
-            {
-                !player &&
-                <JugadorList jugadores={amigos}/>
-            }   
-                
-                </div>
+                <JugadorView jugador={player} />}
+                {!player &&
+                    <div>
+                        <JugadorList jugadores={amigos} />
+                    </div>
+                }
 
-        </div>
+
+            </div>
+
+
 
 
 
