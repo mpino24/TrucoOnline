@@ -51,6 +51,14 @@ public class TestJugadorService {
 
         assertTrue(jugadorService.checkIfAreFriends(jugador.getUser().getUsername(), jugador2.getUser().getId()));
     }
+    
+    @Test
+    void testCheckIfAreFriendsFallo(){
+        
+        jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
+
+        assertTrue(jugadorService.checkIfAreFriends(jugador2.getUser().getUsername(), 4));
+    }
 
     @Test
     void TestfindJugadorByUserName(){

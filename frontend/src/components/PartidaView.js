@@ -13,7 +13,7 @@ const PartidaView = forwardRef((props, ref) => {
 
     useEffect(() => {
         if (game.estado === 'WAITING') {
-             fetch(
+            fetch(
                 "/api/v1/partidajugador/numjugadores?partidaId=" + game.id,
                 {
                     method: "GET"
@@ -53,41 +53,27 @@ const PartidaView = forwardRef((props, ref) => {
                 {game.conFlor && <TbFlower style={{ verticalAlign: 'middle' }} />}
                 {!game.conFlor && <TbFlowerOff />}
             </p>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <p>{connectedUsers}/{game.numJugadores} jugadores</p>
             {
-                connectedUsers<game.numJugadores&&
-
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <p>{connectedUsers}/{game.numJugadores} jugadores</p>
+                connectedUsers < game.numJugadores &&
                     <Link
                         to={`/partidas/${game.codigo}`}
                         style={{ textDecoration: "none" }}
                     ><button class="button" style={{ margin: 10, color: 'brown' }} onClick={() => handleSubmit()} >
                             Unirse
                         </button>
-                    </Link>
+                    </Link> 
+            }
+            </div>
+            <Link
+                to={`/partidas/${game.codigo}`}
+                style={{ textDecoration: "none" }}
+            ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
+                    Ver
+                </button>
+            </Link>
 
-                    <Link
-                        to={`/partidas/${game.codigo}`}
-                        style={{ textDecoration: "none" }}
-                    ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
-                            Ver
-                        </button>
-                    </Link>
-                </div>
-            }
-            {
-                connectedUsers>=game.numJugadores &&
-                <>
-                    <p>{game.numJugadores}/{game.numJugadores} jugadores</p>
-                    <Link
-                        to={`/partidas/${game.codigo}`}
-                        style={{ textDecoration: "none" }}
-                    ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
-                            Ver
-                        </button>
-                    </Link>
-                </>
-            }
         </div>
     )
 });

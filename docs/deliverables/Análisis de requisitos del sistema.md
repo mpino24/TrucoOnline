@@ -63,7 +63,11 @@ Como jugador quiero que el sistema me permita poder unirme a partidas para jugar
  ### HU-(NOISSUE): Poder cerrar sesion ([])
  Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
  ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
- ## Historia de Usuario Jugar partidas:
+ ## HU-(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
+ Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
+ ![Mockup_chat - copia](https://github.com/user-attachments/assets/f5e8999d-a6f5-4689-8801-f3cc5362cf66)
+ ## HU-(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
+ Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
  ## Historia de Usuario Aspecto social:
  ## Historia de Usuario Aspectos especificos del usuario:
 
