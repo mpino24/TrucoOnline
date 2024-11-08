@@ -1,13 +1,11 @@
-import { Button, Label, Form, Input } from "reactstrap";
-import React, { useState, useCallback, forwardRef } from 'react';
-import { Link, Router } from 'react-router-dom';
+import { Form } from "reactstrap";
+import React, { useState, forwardRef } from 'react';
 import 'frontend/src/components/css/joinModal.css';
 import { IoCloseCircle } from "react-icons/io5";
 import GameList from "./GameList";
-import { ScrollView } from "react-native";
 import { IoIosSearch } from "react-icons/io";
 import PartidaView from "./PartidaView";
-import { ImageBackground } from "react-native-web";
+import { VscChromeClose } from "react-icons/vsc";
 
 const GetJoinModal = forwardRef((props, ref) => {
 
@@ -31,7 +29,7 @@ const GetJoinModal = forwardRef((props, ref) => {
         )
             .then((response) => response.text())
             .then((data) => {
-                if (data && codigo && JSON.parse(data).estado!=='FINISHED') {
+                if (data && codigo && JSON.parse(data).estado !== 'FINISHED') {
                     setPartida(data)
                 }
                 else {
@@ -49,21 +47,40 @@ const GetJoinModal = forwardRef((props, ref) => {
         setCodigo(value)
     }
 
+    function handleReset() {
+        setCodigo('');
+        setPartida(null);
+        document.getElementById('inputId').value = null;
+    }
+
 
     return (
         <>
             <div className='cuadro-union'>
-                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position:'absolute' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
-                
+                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
+
                 <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ display:'flex', alignItems: 'center' }}>
-                        <h1 style={{ fontSize: 24 , whiteSpace: "nowrap"}}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <h1 style={{ fontSize: 24, whiteSpace: "nowrap" }}>
                             Buscar Partida:
                         </h1>
-                        <input onChange={handleChange} style={{ color: "black" }} placeholder="código de partida" class="input" name="text" pattern="[A-Z0-9]{0,5}" type="text" required />
-                        <button style={{background: 'transparent', border:'transparent'}}>
-                            <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
-                        </button>
+                        <input onChange={handleChange} style={{ color: "black" }} placeholder="código de partida" class="input" name="text" id='inputId' pattern="[A-Z0-9]{0,5}" type="text" required />
+
+
+                        <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                            <button type="submit" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                                <IoIosSearch style={{ width: 30, height: 30 }} />
+                            </button>
+                            {partida && 
+                                <VscChromeClose onClick={handleReset} style={{width: 30,height: 30,cursor: "pointer",marginLeft: 8}}/>
+                            }
+                        </div>
+
+
+
+
+
+
                     </div>
                 </Form>
                 {partida &&
@@ -74,8 +91,8 @@ const GetJoinModal = forwardRef((props, ref) => {
                 <h1 style={{ fontSize: 24 }}>
                     Partidas públicas:
                 </h1>
-                <div style={{overflowY:'auto'}}>
-                <GameList />
+                <div style={{ overflowY: 'auto' }}>
+                    <GameList />
                 </div>
             </div>
 
