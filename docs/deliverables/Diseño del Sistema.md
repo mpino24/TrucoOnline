@@ -200,3 +200,61 @@ código fuente en java, jsx o javascript
 _Ej: Era difícil añadir información para implementar la lógica de negocio en cada una de las fases del juego (en nuestro caso varía bastante)_
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 _Ej: Ahora podemos añadir arbitrariamente los datos que nos hagan falta al contexto de la partida para que sea más sencillo llevar a cabo los turnos y jugadas_
+
+### Refactorización Botón Ver: 
+En esta refactorización cambiamos nuestro código para que quedase mas legible, en lugar de tener dos veces la misma declaración del boton Ver (para poder ver partidas), ya solo aparece una vez.
+#### Estado inicial del código
+```
+
+                <Link
+                        to={`/partidas/${game.codigo}`}
+                        style={{ textDecoration: "none" }}
+                    ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
+                            Ver
+                        </button>
+                    </Link>
+                </div>
+            }
+            {
+                connectedUsers>=game.numJugadores &&
+                <>
+                    <p>{game.numJugadores}/{game.numJugadores} jugadores</p>
+                    <Link
+                        to={`/partidas/${game.codigo}`}
+                        style={{ textDecoration: "none" }}
+                    ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
+                            Ver
+                        </button>
+                    </Link>
+                </>
+            }
+
+```
+#### Estado del código refactorizado
+```
+{
+                connectedUsers < game.numJugadores &&
+                    <Link
+                        to={`/partidas/${game.codigo}`}
+                        style={{ textDecoration: "none" }}
+                    ><button class="button" style={{ margin: 10, color: 'brown' }} onClick={() => handleSubmit()} >
+                            Unirse
+                        </button>
+                    </Link> 
+            }
+            </div>
+            <Link
+                to={`/partidas/${game.codigo}`}
+                style={{ textDecoration: "none" }}
+            ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
+                    Ver
+                </button>
+            </Link>
+
+        </div>
+        
+```
+#### Problema que nos hizo realizar la refactorización
+Esta duplicación en el código podía generar dudas entre nosotros (los desarrolladores) ya que la opción de ver partida siempre está disponible y ese problema que teníamos podría llegar a generar confusión.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora la visualización de las partidas queda bastante más claro y no genera iopción de duda.
