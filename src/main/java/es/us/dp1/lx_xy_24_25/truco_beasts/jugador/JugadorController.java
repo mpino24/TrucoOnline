@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -29,7 +31,7 @@ public class JugadorController {
 
 
     @GetMapping
-	public ResponseEntity<Jugador> findJugadorByUserId(@RequestParam(required=true) String userId) {
+	public ResponseEntity<JugadorDTO> findJugadorByUserId(@RequestParam(required=true) String userId) {
 		return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
 	}
 
@@ -51,5 +53,16 @@ public class JugadorController {
     @PostMapping
     public ResponseEntity<Jugador> saveJugador(@RequestBody @Valid Jugador jugador, @Valid User user) {
         return null;
+    }
+
+    @GetMapping("/{userId}/isFriend/{friendUserName}")
+    public ResponseEntity<Boolean> checkIfAreFriends(@PathVariable int userId, @PathVariable String friendUserName){
+        return new ResponseEntity<>(jugadorService.checkIfAreFriends(friendUserName, userId),HttpStatus.OK);
+    }
+
+    @PatchMapping("{userId}/isFriend/{amigoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addNewFriend(@PathVariable int userId, @PathVariable int amigoId){
+        jugadorService.addNewFriends(userId, amigoId);
     }
 }

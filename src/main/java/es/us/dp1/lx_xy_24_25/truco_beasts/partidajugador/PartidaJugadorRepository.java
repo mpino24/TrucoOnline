@@ -11,4 +11,8 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     @Query("SELECT pj FROM PartidaJugador pj WHERE pj.player.id = :id")
     PartidaJugador findPartidaJugadorbyId(Integer id);
 
+    @Query("SELECT COUNT(pj) FROM PartidaJugador pj WHERE pj.game.id = :partidaId")
+    Integer findNumJugadoresPartida(Integer partidaId);
+
+
 }

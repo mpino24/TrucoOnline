@@ -2,6 +2,7 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,16 @@ public class JugadorService {
             ()-> new ResourceNotFoundException("Jugador", "id", id));
     }
     @Transactional(readOnly = true)
-    public Jugador findJugadorByUserId(int userId) throws DataAccessException{
-        return jugadorRepository.findByUserId(userId).orElseThrow(
-            ()-> new ResourceNotFoundException("Jugador", "userid", userId));
+    public JugadorDTO findJugadorByUserId(int userId) throws DataAccessException{
+        Optional<Jugador> j=jugadorRepository.findByUserId(userId);
+        if(j.isEmpty()){
+            throw new ResourceNotFoundException("El jugador de ID "+userId+" no fue encontrado");
+        }else{
+            JugadorDTO res= new JugadorDTO(j.get());
+        return res;
+        }
+        
+        
     }
 
     @Transactional(readOnly =true)
@@ -56,35 +64,64 @@ public class JugadorService {
 
     @Transactional(rollbackFor = {EntityNotFoundException.class, DataAccessException.class})
     public Jugador updateJugador(@RequestBody @Valid Jugador jugador, User user){
-        Jugador toUpdate = findJugadorByUserId(user.getId());
-        
-        if (toUpdate == null) {
-            throw new EntityNotFoundException("Jugador no encontrado para el usuario: " + user.getUsername());
+        Optional<Jugador> j=jugadorRepository.findByUserId(user.getId());
+        if(j.isEmpty()){
+            throw new ResourceNotFoundException("El jugador de ID "+user.getId()+" no fue encontrado");
         }else{
+            Jugador toUpdate = j.get();
             BeanUtils.copyProperties(jugador, toUpdate, "id","user","amigos");
-            
-         if (jugador.getAmigos() != null) {
-        
-            toUpdate.getAmigos().clear();  
-
-        
-            for (Jugador amigo : jugador.getAmigos()) {
-            toUpdate.getAmigos().add(amigo);  
-            amigo.getAmigos().add(toUpdate);   
-            }
+            if (jugador.getAmigos() != null) {
+               toUpdate.getAmigos().clear();  
+               for (Jugador amigo : jugador.getAmigos()) {
+               toUpdate.getAmigos().add(amigo);  
+               amigo.getAmigos().add(toUpdate);   
+               }
+           }
+               saveJugador(toUpdate);
+               return toUpdate; 
+   
         }
-            saveJugador(toUpdate);
-            return toUpdate;
-        }  
     }
-
+    @Transactional(readOnly=true)
     public List<JugadorDTO> findAmigosByUserId(int userId){
         return jugadorRepository.findAmigosByUserId(userId);
     }
-
+    @Transactional(readOnly=true)
     public JugadorDTO findJugadorByUserName(String userName){
         return jugadorRepository.findJugadorByUserName(userName);
     }
+    @Transactional(readOnly=true)
+    public boolean checkIfAreFriends(String friendUserName, int userId){
+        List<JugadorDTO> amigos = jugadorRepository.findAmigosByUserId(userId);
+        return (amigos.stream().map(a-> a.getUserName()).toList().contains(friendUserName));
+
+    }
+    @Transactional()
+    public void addNewFriends(int userId, int amigoPlayerId){
+        Optional<Jugador> jugadorOpt= jugadorRepository.findByUserId(userId);
+        Optional<Jugador> amigoOpt= jugadorRepository.findById(amigoPlayerId);
+        if(!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()){
+            Jugador jugador = jugadorOpt.get();
+            Jugador amigo = amigoOpt.get();
+            if(!jugador.getAmigos().contains(amigo)){
+               if(!jugador.getId().equals(amigo.getId())){
+                    jugador.getAmigos().add(amigo);
+                    amigo.getAmigos().add(jugador);
+                    jugadorRepository.save(jugador);
+                    jugadorRepository.save(amigo);
+                }else{
+                    throw new IllegalStateException("No te puedes agregar a ti mismo");
+                }
+            }else{
+                throw new IllegalStateException("Ya sois amigos!!");
+            } 
+        }else{
+            throw new ResourceNotFoundException("Usuarios no encontrados");
+        }
+        
+
+    }
+
 
 }
 

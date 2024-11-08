@@ -13,11 +13,13 @@ import CreationModal from "frontend/src/components/getCreationModal.js"
 import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
 import GetJoinModal from 'frontend/src/components/getJoinModal.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
+import GetFriendsModal from '../components/getFriendsModal';
 
 
 export default function Home() {
     const [joinModalView, setJoinModalView] = useState(false);
     const [creationModalView, setCreationModalView] = useState(false);
+    const [friendsView,setFriendsView] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
     const [backgroundUrl, setBackgroundUrl] = useState()
     const [username, setUsername] = useState("");
@@ -31,33 +33,6 @@ export default function Home() {
 
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
-
-
-  /*  useEffect(() => {
-        fetch('/api/v1/jugador?userId='+usuario.id, jwt ? {
-            headers: {
-                "Authorization": `Bearer ${jwt}`,
-            },
-        } : {})
-            .then(response => response.json())
-            .then(json => {
-                if (json.message) {
-                    if (setMessage !== null) {
-                        setMessage(json.message);
-                        setVisible(true);
-                        setPlayer(JSON.parse(json));
-                    } else
-                    window.alert('/api/v1/jugador?userId='+usuario.id);
-                }
-                else {
-                    window.alert('/api/v1/jugador?userId='+usuario.id);
-                }
-            }).catch((message) => {
-                console.log(message);
-                setMessage('Failed to fetch data');
-                setVisible(true);
-            })
-   });*/
 
 
    const [player, setPlayer] = useFetchState(
@@ -101,6 +76,10 @@ export default function Home() {
         setCreationModalView((current) => !current);
     }, []);
 
+    const toggleFriendsModal = useCallback(() => {
+        setFriendsView((current) => !current);
+    },[])
+
     useEffect(() => {
         if (usuario) {
             setUsername(usuario.username);
@@ -113,6 +92,7 @@ export default function Home() {
 
     return (
         <>
+        {!friendsView && 
             <Nav className="ms-auto mb-2 mb-lg-0" navbar style={{ float: 'right', marginTop: 15, marginRight: 15 }}>
                 <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={toggleAccountMenu}>
                     <p style={{ color: "white", marginRight: 20, fontSize: 20 }} >{username}</p>
@@ -131,7 +111,7 @@ export default function Home() {
                     </div>
                 }
             </Nav>
-
+        }
 
             <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%' }}>
                 <div style={{ width: '36%' }}>
@@ -144,8 +124,7 @@ export default function Home() {
                 {joinModalView &&
                     <GetJoinModal
                         setModalVisible={setJoinModalView}
-                        modalVisible={joinModalView} />
-                    //    JoinModal(setJoinModalView, joinModalView,setCodigo,codigo,setMessage,message)         
+                        modalVisible={joinModalView} />      
                 }
                 {creationModalView &&
                     <CreationModal  setCreationModalView={setCreationModalView} creationModalView={creationModalView}/>
@@ -157,12 +136,20 @@ export default function Home() {
                         <button className="home-button" onClick={toggleJoinModal}>Unirte</button>
                     </div>
                 }
+                {!friendsView && 
                 <div style={{ width: '36%' }}>
-                    <div style={{ cursor: 'pointer' }} >
+                    <div style={{ cursor: 'pointer' }} onClick={toggleFriendsModal} >
                         <FaUserFriends style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
                         <RiArrowLeftDoubleLine style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
                     </div>
                 </div>
+                }
+                {friendsView && 
+                <div style={{ width: '36%', height:'100%', marginRight:-12}}>
+                    <GetFriendsModal setModalVisible={setFriendsView} modalVisible={friendsView}/>
+                </div>  
+                
+                }
                 <div style={{ backgroundColor: 'black', position: 'fixed', bottom: 0, width: '100%', height: 41 }}>
                     <center style={{ color: 'white', marginTop: 5 }}>© MIDPIE</center>
                 </div>

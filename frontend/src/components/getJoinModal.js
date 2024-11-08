@@ -24,14 +24,14 @@ const GetJoinModal = forwardRef((props, ref) => {
 
         event.preventDefault();
         fetch(
-            "/api/v1/partida/" + codigo,
+            "/api/v1/partida/search?codigo=" + codigo,
             {
                 method: "GET"
             }
         )
             .then((response) => response.text())
             .then((data) => {
-                if (data&& codigo) {
+                if (data && codigo) {
                     setPartida(data)
                 }
                 else {
@@ -60,7 +60,7 @@ const GetJoinModal = forwardRef((props, ref) => {
                         <h1 style={{ fontSize: 24 , whiteSpace: "nowrap"}}>
                             Buscar Partida:
                         </h1>
-                        <input onChange={handleChange} style={{ color: "black" }} placeholder="código de partida" class="input" name="text" pattern="[A-Z]{0,5}"  type="text" required />
+                        <input onChange={handleChange} style={{ color: "black" }} placeholder="código de partida" class="input" name="text" pattern="[A-Z0-9]{0,5}" type="text" required />
                         <button style={{background: 'transparent', border:'transparent'}}>
                             <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
                         </button>

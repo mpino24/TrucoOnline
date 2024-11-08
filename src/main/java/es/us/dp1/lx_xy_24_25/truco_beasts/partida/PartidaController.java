@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 //apa
@@ -26,8 +28,15 @@ import jakarta.validation.Valid;
 public class PartidaController {
 
 
-	@Autowired	
- 	PartidaService partidaService;
+ 	private final PartidaService partidaService;
+	private final PartidaJugadorService partJugService;
+
+		@Autowired
+	public PartidaController(PartidaService partidaService, PartidaJugadorService pjService)   {
+		this.partidaService=partidaService;
+		this.partJugService=pjService;
+
+	}
 
 
 	private String generateRandomCode() {
@@ -48,19 +57,24 @@ public class PartidaController {
 		return new ResponseEntity<>(partidaService.findAllPartidasActivas(), HttpStatus.OK);
 	}
 
+	
+
     @PostMapping
-	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida) {
+	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida,@RequestParam(required=true) Integer userId) {
 		
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");
 		// newPartida.setCodigo(generateRandomCode());
-		return new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
+		ResponseEntity<Partida> res=new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
+		partJugService.addJugadorPartida(newPartida,userId);
+		return res;
 	}
 
 	@GetMapping(value = "{id}")
 	public ResponseEntity<Partida> findPartidaById(@PathVariable("id") int id) {
 		return new ResponseEntity<>(partidaService.findPartidaById(id), HttpStatus.OK);
 	}
+
 	
 	@DeleteMapping("/{codigo}")
 	public ResponseEntity<Void> deletePartida(@PathVariable("codigo") String codigo) throws NotPartidaFoundException{
@@ -70,8 +84,11 @@ public class PartidaController {
 		}
 		partidaService.deletePartida(codigo);
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
+	}	
 
-	
+	@GetMapping("/search")
+	public ResponseEntity<Partida> findPartidaByCodigo(@RequestParam(required=true) String codigo) {
+		return new ResponseEntity<>(partidaService.findPartidaByCodigo(codigo), HttpStatus.OK);
+	}
 	
 }
