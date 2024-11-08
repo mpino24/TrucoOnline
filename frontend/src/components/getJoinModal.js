@@ -31,7 +31,7 @@ const GetJoinModal = forwardRef((props, ref) => {
         )
             .then((response) => response.text())
             .then((data) => {
-                if (data && codigo) {
+                if (data && codigo && JSON.parse(data).estado!=='FINISHED') {
                     setPartida(data)
                 }
                 else {

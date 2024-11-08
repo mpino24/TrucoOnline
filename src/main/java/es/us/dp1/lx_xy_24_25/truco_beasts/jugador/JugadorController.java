@@ -62,7 +62,8 @@ public class JugadorController {
 
     @PatchMapping("{userId}/isFriend/{amigoId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addNewFriend(@PathVariable int userId, @PathVariable int amigoId){
+    public ResponseEntity addNewFriend(@PathVariable int userId, @PathVariable int amigoId){
         jugadorService.addNewFriends(userId, amigoId);
+        return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
 }

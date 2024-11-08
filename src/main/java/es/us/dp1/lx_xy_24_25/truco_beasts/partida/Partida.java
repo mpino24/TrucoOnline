@@ -1,7 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 
 
-import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import jakarta.persistence.Column;
@@ -18,9 +18,12 @@ import lombok.Setter;
 @Setter
 public class Partida extends BaseEntity{
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    Estado estado;
+
+    @Column(name= "INICIO")
+    LocalDateTime instanteInicio;
+
+    @Column(name= "FIN")
+    LocalDateTime instanteFin;
 
     @Column(name= "NUMJUGADORES")
     Integer numJugadores;
@@ -49,5 +52,16 @@ public class Partida extends BaseEntity{
     private Visibilidad visibilidad;
 
     private Integer jugadorMano;
+
+
+    public Estado getEstado(){
+        if(instanteInicio==null && instanteFin==null){
+            return Estado.WAITING;
+        }else if(instanteFin==null){
+            return Estado.ACTIVE;
+        }else{
+            return Estado.FINISHED;
+        }
+    }
 }
  
