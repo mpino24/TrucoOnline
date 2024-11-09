@@ -3,12 +3,12 @@ import "../../static/css/auth/authPage.css";
 import tokenService from "../../services/token.service";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import { registerFormInputs } from "./form/registerForm";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Register() {
   let [type, setType] = useState(null);
   let [authority, setAuthority] = useState(null);
-  let [clinics, setClinics] = useState([]);
+
 
   const registerFormRef = useRef();
 
@@ -27,6 +27,7 @@ export default function Register() {
     const request = values;
     request["authority"] = authority;
     let state = "";
+
 
     fetch("/api/v1/auth/signup", {
       headers: { "Content-Type": "application/json" },
