@@ -61,27 +61,32 @@ Como jugador quiero que el sistema me permita editar las paridas para decidir de
 Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
 ![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
 
- ### HU-(ISSUE#144): Poder tirar carta ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/144])
-Como jugador quiero poder tirar una carta para poder jugar.
- ### HU-(ISSUE#147): Poder ver la puntuación en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/147])
-Como jugador quiero poder ver la puntuación en la propia partida para saber cómo va mi equipo.
- ### HU-(ISSUE#148): Poder ver cómo cambia la puntuación ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/148])
-Como jugador quiero poder ver cómo cambia la puntuación en la partida para tener una mejor experiencia de usuario en cuanto a la visualización.
+
+
+ ### HU-(ISSUE#143): Poder ver cartas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/143])
+Como jugador quiero poder ver mis cartas para poder crear una estrategia de juego.
  ### HU-(ISSUE#145): Poder cantar Truco ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/145])
 Como jugador quiero poder cantar Truco para aumentar la puntuación de la mano.
  ### HU-(ISSUE#146): Poder cantar Envido ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/146])
 Como jugador quiero poder cantar Envido para poder aumentar la puntuación de mi equipo.
  ### HU-(ISSUE#153): Poder cantar Flor ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/153])
 Como jugador quiero poder cantar Flor para poder aumentar la puntuación de mi equipo.
+![Mockup VerPartida](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_VerPartida.jpg)
+
+ ### HU-(ISSUE#144): Poder tirar carta ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/144])
+Como jugador quiero poder tirar una carta para poder jugar.
+ ### HU-(ISSUE#147): Poder ver la puntuación en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/147])
+Como jugador quiero poder ver la puntuación en la propia partida para saber cómo va mi equipo.
+ ### HU-(ISSUE#148): Poder ver cómo cambia la puntuación ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/148])
+Como jugador quiero poder ver cómo cambia la puntuación en la partida para tener una mejor experiencia de usuario en cuanto a la visualización.
 ![Mockup MasPunt](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_MasPunt.jpg)
 
 
- ### HU-(ISSUE#143): Poder ver cartas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/143])
-Como jugador quiero poder ver mis cartas para poder crear una estrategia de juego.
  ### HU-(ISSUE#149): Poder decir Quiero y No Quiero ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/149])
 Como jugador quiero poder aceptar o rechazar una propuesta para poder tomar decisiones en el juego.
  ### HU-(ISSUE#150): Poder responder Envido y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/150])
 Como jugador quiero poder responder Envido y sus variantes para subir la apuesta del Envido.
+![Mockup Envido](Mockup_Envido.jpg)
  ### HU-(ISSUE#151): Poder responder Truco y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/151])
 Como jugador quiero poder responder Truco y sus variantes para subir la apuesta del Truco.
  ### HU-(ISSUE#152): Poder responder Flor y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/152])
