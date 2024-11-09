@@ -19,38 +19,12 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 •	_Especificar las restricciones simples aplicadas a cada atributo de cada clase de domino_
 •	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
 •	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>._
-
-_Un ejemplo de diagrama para los ejercicios planteados en los boletines de laboratorio sería (hemos omitido las generalizaciones hacia BaseEntity para simplificar el diagrama):_
-
-
-_Ej:_
-
-```mermaid
-classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
-    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : age
-    Animal : gender
-    class Duck{
-        beakColor        
-    }
-    class Fish{
-       sizeInFeet
-    }
-    class Zebra{
-        is_wild
-        
-    }
-```
-_En este caso hemos vuelto a usar mermaid para crear el diagrama de dominio/diseño, pero recuerda que puedes usar cualquier otra herramienta que consideres oportuno para crear tus diagramas e inclurlos en este document como imagen tal y como se explica en [este tutorial](https://www.baeldung.com/ops/github-readme-insert-image)_
-
+![Diagrama de dominio Truco Beasts](https://github.com/user-attachments/assets/234ba735-8506-4207-884c-ef8f578bce82)
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 _En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
 
-![your-UML-diagram-name](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/gii-is-DP1/group-project-seed/main/docs/diagrams/LayersUMLPackageDiagram.iuml)
+
+![hLPHKjmm3FttAJpzWXzEq64WoyzsA33G7i3hYA2fOsSiXsccmwau0XThDb6eDwi4FhfVIEyzMNvoR2uecPZQsYdrX2LeYz4wK4ernluo5UWlUcCQetkeYK3Wax7uzkhxl25znwc4mUi_IlU_eKeDzGuY3Gdh396-RDFJ9lWKWtCGC-0Adi65fcUByBUsCc](https://github.com/user-attachments/assets/db11d049-7089-45a4-bb0f-844d428dca68)
 
 _El diagrama debe especificar además las relaciones de uso entre controladores y servicios, entre servicios y servicios, y entre servicios y repositorios._
 _Tal y como se muestra en el diagrama de ejemplo, para el caso de los repositorios se deben especificar las consultas personalizadas creadas (usando la signatura de su método asociado)._
@@ -152,30 +126,57 @@ Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suf
 Como consideramos que la división en capas es fundamental y no queremos renunciar a un trabajo ágil durante el desarrollo de la aplicación, seleccionamos la alternativa de diseño 1.c.
 
 ### Decisión 2: Creacion de la clase PartidaJugador
-#### Descripción del problema:*
+#### Descripción del problema:
 
 Al haber creado la clase Jugador y la clase Partida que tienen una relación ManyToMany necesitamos que ambas esten conectadas. Además, cada jugador tiene una posicion asociada en cada partida.
 
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: Poner el atributo posicion en partida y que se evalue cual es la posicion de cada jugador en esa partida especifica.
+*Alternativa 1*: Poner el atributo posicion en partida y que se evalue cual es la posición de cada jugador en esa partida especifica.
 
 *Ventajas:*
 •	Solucion inmediata y pudiendo aprovechar la creacion de tablas automaticas de JPA.
 *Inconvenientes:*
 •	Implementación mucho más complicada para obtener las posiciones de cada jugador especifico en cada partida.
-•   Se necesitarian funciones auxiliares para que funcione como es debido.
+• Se necesitarian funciones auxiliares para que funcione como es debido.
 
-*Alternativa 2*: Crear una clase llamada PartidaJugador intermedia que tenga un ManyToOne a Partida y a Jugador y el atributo la posición, siendo así uno solo especifico por Jugador en cada Partida.
+*Alternativa 2*: Crear una clase llamada PartidaJugador intermedia que tenga un ManyToOne a Partida y a Jugador y el atributo de la posición, siendo así uno solo especifico por Jugador en cada Partida.
 
 *Ventajas:*
 •	Obtenemos una clase más con los datos necesarios y faciles de acceder.
 *Inconvenientes:*
-•	Se crea una clase más en la base de datos.
-•   Para obtener la posicion de un jugador en la partida hay que usar 2 funciones.
+•	Se crea una entidad más en la base de datos.
 
 #### Justificación de la solución adoptada
+Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posicion de un jugador en una partida especifica de una manera más sencilla, ya que su implementación en otra clase no nos permitiria utilizar este atributo como lo necesitamos.
 
-Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posicion de un jugador en una partida especifica de una manera más sencilla.
+### Decisión 3: Separar funciones canto y respuesta del truco.
+#### Descripción del problema:
+
+En el juego tenemos que poder evaluar los cambios de puntaje y cuando se puede cantar el truco y quien debe dar respuesta al mismo. Surgieron varias maneras de abordarlo.
+
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Crear una única funcion que se encargara del cante y la respuest.
+
+*Ventajas:*
+•	Simplicidad conceptual
+• Más cohesionada.
+*Inconvenientes:*
+•	La implementacion de todos los posibles casos se acomplejaba más de lo que debería.
+• Demasiadas funcionalidades agrupadas en una sola (bloater).
+
+*Alternativa 2*: Crear dos funciones separadas, una encargada de la gestión del cante y otra de la respuesta.
+
+*Ventajas:*
+•	Se tienen en cuenta todos los casos.
+• Separacion de funcionalidades.
+• Potencial de reutilizacion (en el envido por ejemplo)
+*Inconvenientes:*
+•	Mayor abstracción, por ende complicada de entender.
+• Cantidad de código elevada incluso para haber dividido las funcionalidades.
+
+#### Justificación de la solución adoptada
+Después de un acalorado debate y lluvia de ideas, nos decantamos por la alternativa 2 ya que la separación de responsabilidades permite una implementación más fiel y comprensible de las reglas específicas del canto y la respuesta en el truco. Además de adecuarse mejor a las reglas de negocio de nuestro juego.
+
 
 ## Refactorizaciones aplicadas
 
@@ -258,3 +259,28 @@ En esta refactorización cambiamos nuestro código para que quedase mas legible,
 Esta duplicación en el código podía generar dudas entre nosotros (los desarrolladores) ya que la opción de ver partida siempre está disponible y ese problema que teníamos podría llegar a generar confusión.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora la visualización de las partidas queda bastante más claro y no genera iopción de duda.
+
+### Refactorización Canto Truco: 
+En esta refactorización retocamos la funcion de cantarTruco para dividirla en su canto y su respuesta en casos separados
+#### Estado inicial del código
+``` 
+public void cantar(Boolean respuesta)
+{
+  *logica del truco y sus casos segun la respuesta*
+}
+``` 
+
+#### Estado del código refactorizado
+
+```
+public void cantarTruco(CantosTruco canto){
+*logica del truco*
+}
+public void responderTruco(Respuestas respuesta){
+*logica de los casos de las respuestas del truco*
+}
+```
+#### Problema que nos hizo realizar la refactorización
+Era dificil evaluar los cambios en los turnos de los jugadores y gestion del puntaje en la mano.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Estando separado nos es sencillo dicha gestion y aparte nos sirve como plantilla para la gestión del envido (función que se hizo posteriormente)

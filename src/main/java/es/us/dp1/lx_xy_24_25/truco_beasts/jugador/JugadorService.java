@@ -88,7 +88,14 @@ public class JugadorService {
     }
     @Transactional(readOnly=true)
     public JugadorDTO findJugadorByUserName(String userName){
-        return jugadorRepository.findJugadorByUserName(userName);
+        Optional<JugadorDTO> res = jugadorRepository.findJugadorByUserName(userName);
+        if(res.isEmpty()){
+            throw new ResourceNotFoundException("Jugador no encontrado");
+        }
+        else{
+            return res.get();
+        }
+        
     }
     @Transactional(readOnly=true)
     public boolean checkIfAreFriends(String friendUserName, int userId){

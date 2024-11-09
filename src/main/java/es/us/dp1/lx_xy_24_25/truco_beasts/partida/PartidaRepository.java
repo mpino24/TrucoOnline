@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PartidaRepository extends CrudRepository<Partida, Integer> {
-    @Query("SELECT p FROM Partida p WHERE (p.estado = ACTIVE OR p.estado = WAITING) AND p.visibilidad = PUBLICA")
+    @Query("SELECT p FROM Partida p WHERE (p.instanteInicio IS NULL OR p.instanteFin IS NULL) AND p.visibilidad = PUBLICA")
     List<Partida> findAllPartidasActivas();
 
     @Query("SELECT p FROM Partida p WHERE (p.codigo = :codigo)")
