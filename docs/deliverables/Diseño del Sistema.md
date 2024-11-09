@@ -125,7 +125,7 @@ Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suf
 *Justificación de la solución adoptada*
 Como consideramos que la división en capas es fundamental y no queremos renunciar a un trabajo ágil durante el desarrollo de la aplicación, seleccionamos la alternativa de diseño 1.c.
 
-### Decisión 2: Creacion de la clase PartidaJugador
+### Decisión 1: Creacion de la clase PartidaJugador
 #### Descripción del problema:
 
 Al haber creado la clase Jugador y la clase Partida que tienen una relación ManyToMany necesitamos que ambas esten conectadas. Además, cada jugador tiene una posicion asociada en cada partida.
@@ -149,7 +149,7 @@ Al haber creado la clase Jugador y la clase Partida que tienen una relación Man
 #### Justificación de la solución adoptada
 Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posicion de un jugador en una partida especifica de una manera más sencilla, ya que su implementación en otra clase no nos permitiria utilizar este atributo como lo necesitamos.
 
-### Decisión 3: Separar funciones canto y respuesta del truco.
+### Decisión 2: Separar funciones canto y respuesta del truco.
 #### Descripción del problema:
 
 En el juego tenemos que poder evaluar los cambios de puntaje y cuando se puede cantar el truco y quien debe dar respuesta al mismo. Surgieron varias maneras de abordarlo.
@@ -176,6 +176,31 @@ En el juego tenemos que poder evaluar los cambios de puntaje y cuando se puede c
 
 #### Justificación de la solución adoptada
 Después de un acalorado debate y lluvia de ideas, nos decantamos por la alternativa 2 ya que la separación de responsabilidades permite una implementación más fiel y comprensible de las reglas específicas del canto y la respuesta en el truco. Además de adecuarse mejor a las reglas de negocio de nuestro juego.
+
+### Decisión 3: Empleo del modal en lugar de pestañas en la creación y modal de unión a la partida
+#### Descripción del problema:
+Como grupo no teniamos claro como abordar los apartados de creación y unión de partidas.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: : Crear páginas nuevas para ambos apartados
+
+*Ventajas:*
+• Separación mas clara de los apartados de página
+• Personalización individual de cada apartado
+*Inconvenientes:*
+•	Recargas constantes debido a las redirecciones  
+• Aumento de carga en memoria y de tiempo de espera 
+
+*Alternativa 2*: Crear dos funciones separadas, una encargada de la gestión del cante y otra de la respuesta.
+*Ventajas:*
+•	Interfaz mas limpia y dinámica
+• Omisión de recargas
+• Menor carga en memoria y tiempo de espera
+*Inconvenientes:*
+•	Mayor complejidad en la implementacíon
+• Falta de personalización
+
+
+#### Justificación de la solución adoptada
 
 
 ## Refactorizaciones aplicadas
