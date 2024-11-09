@@ -284,3 +284,213 @@ public void responderTruco(Respuestas respuesta){
 Era dificil evaluar los cambios en los turnos de los jugadores y gestion del puntaje en la mano.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Estando separado nos es sencillo dicha gestion y aparte nos sirve como plantilla para la gestión del envido (función que se hizo posteriormente)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Refactorización del cálculo del ganador del evnido: 
+En esta refactorización trasladamos las funciones para determinar el ganador del envido en una mano. En concreto colocamos las funciones de obtener el ganador y determinar los puntos del mismo en lugar de en la clase manoService a la clase mano ahorrandonos la llamada a la clase mano para obtener las cartas disponibles. 
+
+Además determinamos que solo con la posicion del jugador, podiamos saber que equipo era el ganador, por lo que tambien nos ahorramos el hacer el calculo de la puntuacion de ambos equipos y la comparacion entre los mismos.
+#### Estado inicial del código
+```Java 
+class ManoService
+public void envido(Boolean respuesta) throws EnvidoException{
+                                                              ...
+            
+           List<List<Carta>> cartasEquipo1 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 == 0).toList();
+           List<List<Carta>> cartasEquipo2 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 != 0).toList();
+           
+        if(respuesta){  
+           Integer puntosEquipo1=comprobarValor(cartasEquipo1);
+           Integer puntosEquipo2=comprobarValor(cartasEquipo2);
+     
+            if(puntosEquipo1>puntosEquipo2) partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + 2);
+            else partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + 2);
+else if (jugadorActual%2 == 1)
+                
+            }
+           }
+    }
+    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ // Lo veo bastante bien, lo que no es necesario pasarle esa lista, las cartas de cada equipo son las que sean j%2==jugMano%2
+        Integer puntos=0;
+        for(int i=0; i<cartasEquipo.size(); i++){
+            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+            if(sumaJugador> puntos){
+                puntos = sumaJugador;
+            }
+        }
+        return puntos;
+    }
+    public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
+        List< Integer> listaSumas= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
+            if(e.getValue().size()==1){
+                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+            }
+            else if(e.getValue().size()==2){
+                Integer valor1= e.getValue().get(0).getValor();
+                Integer valor2= e.getValue().get(1).getValor();
+                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(e.getValue().size()==3){
+                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
+                listaSumas.add( valor+20);
+            }
+        }
+        return listaSumas.stream().max(Comparator.naturalOrder()).get();
+    }
+    private Integer comprobarValor(Integer value) {
+        return value>=10?0:value;
+    }
+    }
+``` 
+_Puedes añadir información sobre el lenguaje concreto en el que está escrito el código para habilitar el coloreado de sintaxis tal y como se especifica en [este tutorial](https://docs.github.com/es/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks)_
+
+#### Estado del código refactorizado
+
+```
+public class Mano {
+                        ...
+
+     public Integer jugadorGanadorEnvido(List<List<Carta>> cartasDisp){ 
+        Integer puntos=0;
+        Integer posicion=0;
+        for(int i=0; i<cartasDisp.size(); i++){
+            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+            if(sumaJugador> puntos){
+                puntos= sumaJugador;
+                posicion= i;
+            }
+        }
+        return posicion;
+    }
+
+     public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
+        List< Integer> listaSumas= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
+            if(e.getValue().size()==1){
+                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+            }
+            else if(e.getValue().size()==2){
+                Integer valor1= e.getValue().get(0).getValor();
+                Integer valor2= e.getValue().get(1).getValor();
+                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(e.getValue().size()==3){
+                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
+                listaSumas.add( valor+20);
+            }
+        }
+        return listaSumas.stream().max(Comparator.naturalOrder()).get();
+    }
+
+    private Integer comprobarValor(Integer value) {
+        return value>=10?0:value;
+    }
+}
+```
+#### Problema que nos hizo realizar la refactorización
+Había muchos calculos innecesarios, lo que dificultaba tanto la lectura como la eficiencia del codigo.
+
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Al cambiar el enfoque y determinar la posicion del ganador en lugar de comparar los puntos entre equipos nos ahorramos una llamada a la funcion, aumentando dicha legibilidad y eficacia.
+
+
+### Refactorización de las funciones utiles de getCreationModal: 
+En esta refactorización externalizamos las funciones de generación de código de partida y la de parseo de partida.
+#### Estado inicial del código
+```Java
+getCreationModal.js
+
+const GetCreationModal=forwardRef(
+                                    ...
+
+    function generateRandomCode() { //Recordemos que esta funcion, tambien generada por IA crea un codigo que se auto-genera y se asigna al abrir el modal
+    const length = 5;
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+    let code = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+    return code;
+}
+...
+   function handleSubmit(event) {
+        if(partida.conFlor){
+            partidaParseada.conFlor=true
+        }
+        if(partida.puntosMaximos){
+            partidaParseada.puntosMaximos=30
+        }
+        if(partida.visibilidad){
+            partidaParseada.visibilidad='PRIVADA'
+        } 
+        partidaParseada.codigo=generateRandomCode();                     
+    console.log(partidaParseada)
+    event.preventDefault();
+    fetch("/api/v1/partida", {
+      method:  "POST",
+    ...
+    )
+}
+export default GetCreationModal
+```
+
+#### Estado del código refactorizado
+
+```
+generateRandomCode.js
+export default function generateRandomCode() { //Recordemos que esta funcion, tambien generada por IA crea un codigo que se auto-genera y se asigna al abrir el modal
+    const length = 5;
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+    let code = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+    return code;
+}
+
+parseSubmit.js
+
+import generateCode from './generateCode.js'
+export default function parseSubmit(partida, partidaParseada){
+
+        
+   if(partida.conFlor){
+      partidaParseada.conFlor=true
+  }
+  if(partida.puntosMaximos){
+      partidaParseada.puntosMaximos=30
+  }
+  if(partida.visibilidad){
+      partidaParseada.visibilidad='PRIVADA'
+  }
+      partidaParseada.numJugadores=partida.numJugadores
+      partidaParseada.codigo=generateCode()
+    return partidaParseada;
+
+}
+
+```
+#### Problema que nos hizo realizar la refactorización
+Se delegaban demasiadas responsabilidades al componente gerCreationModal haciendo que su cohesion fuera baja, por lo que era dificil la lectura y el codigo quedaba demasiado grande.
+
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Al tener las funciones generateRandomCode y parseSubmit separadas queda mas claro que el componente getCreationModal se encarga de crear la partida. Además si estas funciones se necesitan en un futuro se encuentran disponibles como utils. 
+
+
