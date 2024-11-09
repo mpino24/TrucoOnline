@@ -8,9 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
@@ -43,8 +41,6 @@ public class PartidaJugadorService {
             partJug.setEquipo(Equipo.EQUIPO1); //POR AHORA
             pjRepository.save(partJug);
         }
-
-
 
     }
     

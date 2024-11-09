@@ -3,55 +3,83 @@
 hide circle
 
 
-package " Presentation Layer " as Presentation {
+package " Capa de presentación " as Presentation {
     hide members
-    class WelcomeController
-    class UserController
-    class OwnerController
-    class PetController
-    class VisitController
-    class VetController
+    class AuthController
+    class DevelopersController
+    class JugadorController
+    class PartidaController
+    class PartidaJugadorController
+    class UserRestController
+    class CurrentUserRestController
 }
 
-package " Business Logic Layer " as BusinessLogic {
+package " Capa de lógica de negocio " as BusinessLogic {
     hide members
+    class AuthService
+    class UserDetailsImplService
+    class ManoService
+    class JugadorService
+    class PartidaService
+    class PartidaJugadorService
     class AuthoritiesService
     class UserService
-    class OwnerService
-    class PetService
-    class VisitService
-    class VetService
 }
 
-package " Resources Layer " as Resources {
+package " Capa de recursos " as Resources {
     hide attributes
-    interface AuthoritiesRepository 
-    interface UserRepository 
-    interface PetRepository
-    interface VisitRepository {
-        List<Visit> findVisitByPetId(Integer PetId)
+    interface JugadorRepository {
+        Boolean existsById(int id)
+        Optional<Jugador> findByUserId(Integer userId)
+        List<Jugador> findAll()
+        Optional<Jugador> findById(Integer id)
+        List<JugadorDTO> findAmigosByUserId(Integer id)
+        JugadorDTO findJugadorByUserName(String userName)
     }
-    interface OwnerRepository {
-        List<Owner> findByLastName(String lastname)
+    interface PartidaRepository {
+        List<Partida> findAllPartidasActivas()
+        Optional<Partida> findPartidaByCodigo(String codigo)
+    }
+    interface PartidaJugadorRepository {
+        PartidaJugador findPartidaJugadorbyId(Integer id)
+        Integer findNumJugadoresPartida(Integer partidaId)
+    }
+    interface AuthoritiesRepository {
+        Optional<Authorities> findByName(String authority)
+    }
+    interface UserRepository {
+        Optional<User> findByUsername(String username)
+        Boolean existsByUsername(String username)
+        Optional<User> findById(Integer id)
+        Iterable<User> findAllByAuthority(String auth)
     }
 }
 
-UserController  ..> OwnerService
-OwnerController ..> OwnerService
-PetController ..> OwnerService
-PetController ..> PetService
-VisitController ..> PetService
-VisitController ..> VetService
-VetController ..> VetService
+AuthController ..> UserService
+AuthController ..> AuthService
+JugadorController ..> JugadorService
+PartidaController ..> PartidaService
+PartidaController ..> PartidaJugadorService
+PartidaJugadorController ..> PartidaJugadorService
+PartidaJugadorController ..> PartidaService
+CurrentUserRestController ..> UserService
+CurrentUserRestController ..> JugadorService
+UserRestController ..> UserService
+UserRestController ..> AuthoritiesService
 
-AuthoritiesService ..> UserService
-OwnerService ..> UserService
-OwnerService ..> AuthoritiesService
+AuthService ..> AuthoritiesService
+AuthService ..> UserService
+AuthService ..> JugadorService
+PartidaService ..> ManoService
 
-OwnerService ..> OwnerRepository
-UserService ..> UserRepository
+UserDetailsImplService ..> UserRepository
+JugadorService ..> JugadorRepository
+PartidaService ..> PartidaRepository
+PartidaJugadorService ..> PartidaJugadorRepository
+PartidaJugadorService ..> JugadorRepository
 AuthoritiesService ..> AuthoritiesRepository
-PetService ..> PetRepository
-VisitService ..> VisitRepository
+UserService ..> UserRepository
+
 
 @enduml
+
