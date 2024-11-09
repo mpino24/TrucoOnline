@@ -69,13 +69,6 @@ Como jugador quiero poder tirar una carta para poder jugar.
 Como jugador quiero poder ver la puntuación en la propia partida para saber cómo va mi equipo.
  ### HU-(ISSUE#148): Poder ver cómo cambia la puntuación ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/148])
 Como jugador quiero poder ver cómo cambia la puntuación en la partida para tener una mejor experiencia de usuario en cuanto a la visualización.
-## HU-(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
- Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
- ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
- ## HU-(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
- Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
- ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
-
 
 
 
