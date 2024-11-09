@@ -86,12 +86,13 @@ Como jugador quiero poder ver cómo cambia la puntuación en la partida para ten
 Como jugador quiero poder aceptar o rechazar una propuesta para poder tomar decisiones en el juego.
  ### HU-(ISSUE#150): Poder responder Envido y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/150])
 Como jugador quiero poder responder Envido y sus variantes para subir la apuesta del Envido.
-![Mockup Envido](Mockup_Envido.jpg)
+![Mockup Envido](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_Envido.jpg)
  ### HU-(ISSUE#151): Poder responder Truco y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/151])
 Como jugador quiero poder responder Truco y sus variantes para subir la apuesta del Truco.
+![Mockup Truco](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_TirarCarta.jpg)
  ### HU-(ISSUE#152): Poder responder Flor y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/152])
 Como jugador quiero poder responder Flor y sus variantes para subir la apuesta del Flor.
-
+![Mockup Flor](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_Flor.jpg)
  
  ### HU-(NOISSUE): Poder cerrar sesion ([])
 Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
