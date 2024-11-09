@@ -1,26 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.imageio.IIOException;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.SameEquipoException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 
 @Service
 public class ManoService {
@@ -306,37 +289,11 @@ public class ManoService {
         Integer jugadorTurno = manoActual.getJugadorTurno();
         return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
     }
-
-
-    
-    public void cantar(Boolean respuesta) throws SameEquipoException { //FALTA TEST
-        // En frontend si es truco (respuesta si o no ) --> cantar(respuesta)
-        // si respuesta = retruco --> cantar(true) y nueva llamada cantar(respuesta)
-        // si respuesta = vale4 --> cantar(true), cantar(true) y nueva llamada
-        // cantar(respuesta)
-        Integer jugadorActual = manoActual.getJugadorTurno();
-        
-        Partida partidaActual= manoActual.getPartida();
-        
-        if (respuesta) { // Quiero
-            manoActual.setPuntosTruco(manoActual.getPuntosTruco() + 1); // Acá sumas 1 si es que si, y guardas 1 en puntuacion siempre, 
-        } else { // No quiero
-            Integer puntuacionSuma = manoActual.getPuntosTruco(); //entonces, el no quiero es mano.getPuntosTruco nomas
-
-            if (jugadorActual % 2 == partidaActual.getJugadorMano() % 2) //Esto no estoy del todo seguro, pero el equipo se puede sacar con los que son modulo, lo que no se la diferencia de ambos
-                partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
-
-            else
-                partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + puntuacionSuma);
-        }
-    }
-    
-
     
 
 
 
-    public void envido(Boolean respuesta) throws EnvidoException{ //FALTA TEST
+    /* public void envido(Boolean respuesta) throws EnvidoException{ //FALTA TEST
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer jugadorResp = siguienteJugador(jugadorActual);
 
@@ -350,16 +307,8 @@ public class ManoService {
             throw new EnvidoException("Solo se canta envido en la primera ronda");
         }
       
-        if(respuesta){
-            
+        if(respuesta){  
 
-           List<List<Carta>> cartasEquipo1 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 == 0).toList();
-           List<List<Carta>> cartasEquipo2 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 != 0).toList();
-           
-
-           Integer puntosEquipo1=comprobarValor(cartasEquipo1);
-           Integer puntosEquipo2=comprobarValor(cartasEquipo2);
-     
             if(puntosEquipo1>puntosEquipo2) partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + 2);
             else partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + 2);
 
@@ -381,43 +330,7 @@ public class ManoService {
                 
             }
            }
-    }
-
-
-    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ // Lo veo bastante bien, lo que no es necesario pasarle esa lista, las cartas de cada equipo son las que sean j%2==jugMano%2
-        Integer puntos=0;
-        for(int i=0; i<cartasEquipo.size(); i++){
-            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
-            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
-            if(sumaJugador> puntos){
-                puntos = sumaJugador;
-            }
-        }
-        return puntos;
-    }
-
-
-    public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
-        List< Integer> listaSumas= new ArrayList<>();
-        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
-            if(e.getValue().size()==1){
-                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
-            }
-            else if(e.getValue().size()==2){
-                Integer valor1= e.getValue().get(0).getValor();
-                Integer valor2= e.getValue().get(1).getValor();
-                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
-            }else if(e.getValue().size()==3){
-                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
-                listaSumas.add( valor+20);
-            }
-        }
-        return listaSumas.stream().max(Comparator.naturalOrder()).get();
-    }
-
-    private Integer comprobarValor(Integer value) {
-        return value>=10?0:value;
-    }
+    }    */
 
 
 }

@@ -1,7 +1,10 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -28,4 +31,40 @@ public class Mano {
     private List<Integer> envidos = new ArrayList<>();
     @ManyToOne
     private Partida partida;
+
+     public Integer jugadorGanadorEnvido(List<List<Carta>> cartasDisp){ 
+        Integer puntos=0;
+        Integer posicion=0;
+        for(int i=0; i<cartasDisp.size(); i++){
+            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+            if(sumaJugador> puntos){
+                puntos= sumaJugador;
+                posicion= i;
+            }
+        }
+        return posicion;
+    }
+
+     public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
+        List< Integer> listaSumas= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
+            if(e.getValue().size()==1){
+                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+            }
+            else if(e.getValue().size()==2){
+                Integer valor1= e.getValue().get(0).getValor();
+                Integer valor2= e.getValue().get(1).getValor();
+                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(e.getValue().size()==3){
+                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
+                listaSumas.add( valor+20);
+            }
+        }
+        return listaSumas.stream().max(Comparator.naturalOrder()).get();
+    }
+
+    private Integer comprobarValor(Integer value) {
+        return value>=10?0:value;
+    }
 }
