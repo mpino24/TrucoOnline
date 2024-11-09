@@ -18,8 +18,9 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 •	_Especificar el tipo de los atributos_
 •	_Especificar las restricciones simples aplicadas a cada atributo de cada clase de domino_
 •	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
-•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>._
-![Diagrama de dominio Truco Beasts](https://github.com/user-attachments/assets/234ba735-8506-4207-884c-ef8f578bce82)
+•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
+
+![Diagrama de dominio Truco Beasts fondo transparente](https://github.com/user-attachments/assets/dcaa3fb8-f673-4dc9-a597-67c1496cb21e)
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 _En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
 
