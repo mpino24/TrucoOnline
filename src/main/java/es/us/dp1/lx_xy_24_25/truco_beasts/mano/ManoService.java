@@ -1,26 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.imageio.IIOException;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.SameEquipoException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 
 @Service
 public class ManoService {
@@ -119,7 +102,7 @@ public class ManoService {
         Boolean esRondaUno = obtenerRondaActual() ==1;
         Boolean esPie = false;
         Boolean noHayTruco = manoActual.getPuntosTruco() <= 1;
-        Boolean noSeCanto = manoActual.getPuntosEnvido() == 0; //No estoy seguro como lo gestionaremos con el resto de subidas, pero para el "primer canto" de envido, real envido o falta envido esta funcion serviria
+        Boolean noSeCanto = manoActual.getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
 
         Integer jugTurno = manoActual.getJugadorTurno();
         Integer pie = obtenerJugadorPie();
@@ -145,7 +128,7 @@ public class ManoService {
 
     //TODO: FALTAN TEST NEGATIVOS
 
-    public void cantosTruco(CantosTruco canto) throws Exception{ //0 -> Truco, 1 -> Retruco, 2 -> Vale cuatro (CON UN ENUM QUEDARIA MÁS LINDO)
+    public void cantosTruco(CantosTruco canto) throws Exception{
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
         Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
@@ -199,12 +182,10 @@ public class ManoService {
                 Integer rondaRetruco = cantoEnRetruco.get(0);
                 Integer jugadorRetruco = cantoEnRetruco.get(1);
                 manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-                if(rondaActual==rondaRetruco && (jugadorAnterior == jugadorRetruco || jugadorSiguiente==jugadorRetruco )){ // Tecnicamente la comprobaci
-                    if(jugadorSiguiente==jugadorRetruco){
-                        manoActual.setJugadorTurno(jugadorSiguiente);
-                    }else{
+                if(rondaActual==rondaRetruco && (jugadorAnterior == jugadorRetruco )){ // TODO ESTAS COMPROBACIONES PONER EN UN METODO APARTE
+                    
                         manoActual.setJugadorTurno(jugadorAnterior);
-                    }
+                    
                     
                 } else {
                     manoActual.setJugadorTurno(jugadorSiguiente);
@@ -223,7 +204,7 @@ public class ManoService {
     
 
     //TODO: FALTA TEST
-    public void responderTruco(Respuestas respuesta) throws Exception{ //0 -> Quiero, 1 -> No Quiero, 2 -> Retruco (subir apuesta) (CON UN ENUM QUEDARIA MÁS LINDO)
+    public void responderTruco(Respuestas respuesta) throws Exception{ 
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
@@ -268,7 +249,7 @@ public class ManoService {
                     }
                 }
                 
-               // lo arregle (creo xd) // anteriorTurno(); //TODO: ESTO ESTÁ MAL, ya que si truco, retruco, quiero no hay que volver 1 atras, porque le toca a él. Habria que guardad el jugador cantor y a partir de él obtener el equipo cantor mejor (VA A AFECTAR TAMBIEN SI SE CANTA TRUCO EN UNA RONDA Y DESPUES RETRUCO OTRA PERSONA EN OTRA)
+               
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
@@ -306,118 +287,7 @@ public class ManoService {
         Integer jugadorTurno = manoActual.getJugadorTurno();
         return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
     }
-
-
     
-    public void cantar(Boolean respuesta) throws SameEquipoException { //FALTA TEST
-        // En frontend si es truco (respuesta si o no ) --> cantar(respuesta)
-        // si respuesta = retruco --> cantar(true) y nueva llamada cantar(respuesta)
-        // si respuesta = vale4 --> cantar(true), cantar(true) y nueva llamada
-        // cantar(respuesta)
-        Integer jugadorActual = manoActual.getJugadorTurno();
-        
-        Partida partidaActual= manoActual.getPartida();
-        
-        if (respuesta) { // Quiero
-            manoActual.setPuntosTruco(manoActual.getPuntosTruco() + 1); // Acá sumas 1 si es que si, y guardas 1 en puntuacion siempre, 
-        } else { // No quiero
-            Integer puntuacionSuma = manoActual.getPuntosTruco(); //entonces, el no quiero es mano.getPuntosTruco nomas
-
-            if (jugadorActual % 2 == partidaActual.getJugadorMano() % 2) //Esto no estoy del todo seguro, pero el equipo se puede sacar con los que son modulo, lo que no se la diferencia de ambos
-                partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
-
-            else
-                partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + puntuacionSuma);
-        }
-    }
-    
-
-    
-
-
-
-    public void envido(Boolean respuesta) throws EnvidoException{ //FALTA TEST
-        Integer jugadorActual = manoActual.getJugadorTurno();
-        Integer jugadorResp = siguienteJugador(jugadorActual);
-
-        Integer jugadorMano = manoActual.getPartida().getJugadorMano();
-        
-        Partida partidaActual= manoActual.getPartida();
-
-        Integer ultimo = obtenerJugadorPie();
-        //Excepcion ver que el jugador que canta es el ultimo de cada equipo
-        if(jugadorActual != ultimo || jugadorActual!=obtenerJugadorAnterior(ultimo)){ //Lo que estaba puesto no, porque no siempre el ultimo es el ultimo en esa lista, son posiciones fijas de la "mesa"
-            throw new EnvidoException("Solo se canta envido en la primera ronda");
-        }
-      
-        if(respuesta){
-            
-
-           List<List<Carta>> cartasEquipo1 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 == 0).toList();
-           List<List<Carta>> cartasEquipo2 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 != 0).toList();
-           
-
-           Integer puntosEquipo1=comprobarValor(cartasEquipo1);
-           Integer puntosEquipo2=comprobarValor(cartasEquipo2);
-     
-            if(puntosEquipo1>puntosEquipo2) partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + 2);
-            else partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + 2);
-
-           }
-           else{
-            Integer puntuacionSuma = manoActual.getPuntosTruco() - 1 == 0 ? 1 : manoActual.getPuntosTruco() - 1; //Hay que o crear otra puntuacion para el envido o hacerlo de otra forma, porque se está cambiando la puntuacion del truco con la del envido
-            if (jugadorActual%2 == 0) //lo mismo que antes, se podría hacer que los que estén en posiciones pares sean equipo1 y en impares equipo2
-                partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + puntuacionSuma);
-
-            else if (jugadorActual%2 == 1)
-                partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + puntuacionSuma);
-            else {
-                
-                    if (jugadorMano%2== 0)
-                        partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + manoActual.getPuntosTruco());
-        
-                    else
-                        partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + manoActual.getPuntosTruco());
-                
-            }
-           }
-    }
-
-
-    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ // Lo veo bastante bien, lo que no es necesario pasarle esa lista, las cartas de cada equipo son las que sean j%2==jugMano%2
-        Integer puntos=0;
-        for(int i=0; i<cartasEquipo.size(); i++){
-            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
-            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
-            if(sumaJugador> puntos){
-                puntos = sumaJugador;
-            }
-        }
-        return puntos;
-    }
-
-
-    public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
-        List< Integer> listaSumas= new ArrayList<>();
-        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
-            if(e.getValue().size()==1){
-                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
-            }
-            else if(e.getValue().size()==2){
-                Integer valor1= e.getValue().get(0).getValor();
-                Integer valor2= e.getValue().get(1).getValor();
-                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
-            }else if(e.getValue().size()==3){
-                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
-                listaSumas.add( valor+20);
-            }
-        }
-        return listaSumas.stream().max(Comparator.naturalOrder()).get();
-    }
-
-    private Integer comprobarValor(Integer value) {
-        return value>=10?0:value;
-    }
 
 
 }

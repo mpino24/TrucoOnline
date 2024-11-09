@@ -1,6 +1,7 @@
 
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -64,6 +65,7 @@ public class PartidaController {
 		
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");
+		newPartida.setInstanteInicio(LocalDateTime.now());
 		// newPartida.setCodigo(generateRandomCode());
 		ResponseEntity<Partida> res=new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
 		partJugService.addJugadorPartida(newPartida,userId);

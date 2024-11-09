@@ -44,9 +44,9 @@ A continuación se definen  todas las historias de usuario a implementar:
  ## Historia de Usuario Creación y configuración partidas:
  ### HU-(NOISSUE): Poder loggearme
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
- ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
+![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-(NOISSUE): Poder borrar la cuenta ([])
- Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso
+Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso
  ### HU-(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
 ![Mockup_home](https://github.com/user-attachments/assets/fb8b849a-f27e-4e48-92ec-5b402253ecdf)
@@ -60,15 +60,53 @@ Como jugador quiero que el sistema me permita editar las paridas para decidir de
  ### HU-(ISSUE#63): Poder unirse a las partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/63])
 Como jugador quiero que el sistema me permita poder unirme a partidas para jugar 
 ![Mockup_union](https://github.com/user-attachments/assets/c244beb7-ca79-4549-989e-d677dfefa39a)
+ ### HU-(ISSUE#143): Poder ver cartas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/143])
+Como jugador quiero poder ver mis cartas para poder crear una estrategia de juego.
+ ### HU-(ISSUE#144): Poder tirar carta ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/144])
+Como jugador quiero poder tirar una carta para poder jugar.
+
+ ### HU-(ISSUE#147): Poder ver la puntuación en la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/147])
+Como jugador quiero poder ver la puntuación en la propia partida para saber cómo va mi equipo.
+ ### HU-(ISSUE#148): Poder ver cómo cambia la puntuación ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/148])
+Como jugador quiero poder ver cómo cambia la puntuación en la partida para tener una mejor experiencia de usuario en cuanto a la visualización.
+
+
+
+
+
+
+
+
+
+ ### HU-(ISSUE#145): Poder cantar Truco ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/145])
+Como jugador quiero poder cantar Truco para aumentar la puntuación de la mano.
+ ### HU-(ISSUE#146): Poder cantar Envido ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/146])
+Como jugador quiero poder cantar Envido para poder aumentar la puntuación de mi equipo.
+ ### HU-(ISSUE#153): Poder cantar Flor ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/153])
+Como jugador quiero poder cantar Flor para poder aumentar la puntuación de mi equipo.
+
+
+ ### HU-(ISSUE#149): Poder decir Quiero y No Quiero ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/149])
+Como jugador quiero poder aceptar o rechazar una propuesta para poder tomar decisiones en el juego.
+ ### HU-(ISSUE#150): Poder responder Envido y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/150])
+Como jugador quiero poder responder Envido y sus variantes para subir la apuesta del Envido.
+ ### HU-(ISSUE#151): Poder responder Truco y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/151])
+Como jugador quiero poder responder Truco y sus variantes para subir la apuesta del Truco.
+ ### HU-(ISSUE#152): Poder responder Flor y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/152])
+Como jugador quiero poder responder Flor y sus variantes para subir la apuesta del Flor.
+
+ 
  ### HU-(NOISSUE): Poder cerrar sesion ([])
- Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
- ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
+Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
+![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ## HU-(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
+
  Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
  ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
  ## HU-(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
  Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
  ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+
  ## Historia de Usuario Aspecto social:
  ## Historia de Usuario Aspectos especificos del usuario:
 

@@ -35,10 +35,10 @@ public class Person extends BaseEntity {
 	@NotEmpty
 	protected String lastName;
 
-	@NotEmpty
+	
 	protected String email;
   
-	@NotEmpty
+	
 	protected String photo;
 
 	public String getFirstName() {
