@@ -38,6 +38,7 @@ public class PartidaJugadorService {
             throw new ResourceNotFoundException("Jugador no encontrado");
         }else{
             partJug.setPlayer(jugadorOpt.get());
+            partJug.setPosicion(1); //POR AHORA
             partJug.setEquipo(Equipo.EQUIPO1); //POR AHORA
             pjRepository.save(partJug);
         }
