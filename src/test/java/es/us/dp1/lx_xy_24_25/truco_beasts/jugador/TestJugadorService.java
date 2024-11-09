@@ -1,4 +1,5 @@
-package jugador;
+package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 
@@ -53,16 +55,32 @@ public class TestJugadorService {
     }
     
     @Test
-    void testCheckIfAreFriendsFallo(){
-        
+    void testAddFriendAgainFallo(){
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
-
-        assertTrue(jugadorService.checkIfAreFriends(jugador2.getUser().getUsername(), 4));
+        
+        assertThrows(IllegalStateException.class,() -> jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId()));
     }
 
     @Test
-    void TestfindJugadorByUserName(){
+    void testAddYourselfFallo(){
+
+        assertThrows(IllegalStateException.class,() -> jugadorService.addNewFriends(jugador.getUser().getId(), jugador.getId()));
+    }
+
+    @Test
+    void testAddNotFoundFriendFallo(){
+        assertThrows(ResourceNotFoundException.class,() -> jugadorService.addNewFriends(jugador.getUser().getId(),50));
+    }
+
+    @Test
+    void TestFindJugadorByUserName(){
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
+
+    @Test
+    void TestFindNotFoundJugadorByUserNameFallo(){
+        assertThrows(ResourceNotFoundException.class,() -> jugadorService.findJugadorByUserName("Manolito074k"));
+    }
+
 }
 
