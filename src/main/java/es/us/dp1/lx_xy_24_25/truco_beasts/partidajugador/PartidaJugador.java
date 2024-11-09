@@ -16,10 +16,10 @@ import lombok.Setter;
 public class PartidaJugador extends BaseEntity{
     
     @NotNull
-    Equipo equipo;
+    Equipo equipo; //Sera borrado en la siguiente refactorizacion
     
-    //@NotNull
-    //private Integer posicion;
+    @NotNull
+    private Integer posicion;
     
     @ManyToOne
     private Jugador player;
