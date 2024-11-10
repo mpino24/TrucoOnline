@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +30,7 @@ import jakarta.validation.Valid;
 public class PartidaController {
 
 
- 	private final PartidaService partidaService;
+	private final PartidaService partidaService;
 	private final PartidaJugadorService partJugService;
 
 		@Autowired
@@ -53,15 +54,15 @@ public class PartidaController {
 	}
 
    
-    @GetMapping
+	@GetMapping
 	public ResponseEntity<List<Partida>> findAllPartidas() {
 		return new ResponseEntity<>(partidaService.findAllPartidasActivas(), HttpStatus.OK);
 	}
 
 	
 
-    @PostMapping
-	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida,@RequestParam(required=true) Integer userId) {
+	@PostMapping
+	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida,@RequestParam(required=true) Integer userId) throws AlreadyInGameException {
 		
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");

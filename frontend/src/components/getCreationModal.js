@@ -24,7 +24,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
     };
    
   
-
+    const [numJugadores, setNumJugadores] = useState(null);
     const [message, setMessage] = useState(null); 
     const [visible, setVisible] = useState(false);
     const [partidaVaciaParse, setPartidaVaciaParse] = useFetchState(
@@ -61,14 +61,17 @@ const GetCreationModal=forwardRef((props,ref) =>{
 
         if (name === 'numJugadores2') {
             partida.numJugadores=2
+            setNumJugadores(2);
          }
 
          if (name === 'numJugadores4') {
             partida.numJugadores=4
+            setNumJugadores(4);
          }
          
          if (name === 'numJugadores6') {
             partida.numJugadores=6
+            setNumJugadores(6);
          }
         
 }
@@ -113,7 +116,9 @@ const GetCreationModal=forwardRef((props,ref) =>{
                             <Label> Numero de jugadores: </Label>
                                 <div class="paste-button"> 
                                                    
-                                    <a class="button">▼</a> 
+                                    <a class="button">
+                                    {numJugadores ? `${numJugadores}▼` : '▼'}    
+                                    </a> 
                                         <div class="dropdown-content">
                                             <a id="top" name="numJugadores2" onClick={()=>handleChange("numJugadores2")}>2</a>  
                                             <a id="middle" name="numJugadores4" onClick={() => handleChange("numJugadores4")}>4</a>
