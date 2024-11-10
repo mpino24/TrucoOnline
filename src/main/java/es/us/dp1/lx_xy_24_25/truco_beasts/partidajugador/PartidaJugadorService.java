@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
@@ -29,14 +30,24 @@ public class PartidaJugadorService {
         return pjRepository.findNumJugadoresPartida(partidaId);
     }
 
+    @Transactional(readOnly = true)
+    public Integer getNumberOfGamesConnected(Integer jugadorId){
+        return pjRepository.numberOfGamesConnected(jugadorId);
+    }
+
+
     @Transactional
-    public void addJugadorPartida(Partida partida, Integer userId){
+    public void addJugadorPartida(Partida partida, Integer userId) throws AlreadyInGameException{
         PartidaJugador partJug = new PartidaJugador();
         partJug.setGame(partida);
         Optional<Jugador> jugadorOpt = jugRepository.findByUserId(userId);
         if(jugadorOpt.isEmpty()){
             throw new ResourceNotFoundException("Jugador no encontrado");
         }else{
+            if(pjRepository.numberOfGamesConnected(jugadorOpt.get().getId())>0){
+                throw new AlreadyInGameException("Ya estás conectado a una partida");
+            }
+
             partJug.setPlayer(jugadorOpt.get());
             partJug.setPosicion(1); //POR AHORA
             partJug.setEquipo(Equipo.EQUIPO1); //POR AHORA

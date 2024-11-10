@@ -70,7 +70,8 @@ function App() {
         {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" exact={true} element={<Home />} />
+        <Route path="/home" exact={true} element={<Home />} />
+        <Route path="/" exact={true} element={<Login />} />
         <Route path="/profile" exact={true} element={<Profile />} />
       </>
     )

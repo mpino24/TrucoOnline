@@ -12,7 +12,8 @@ function AppNavbar() {
     const jwt = tokenService.getLocalAccessToken();
     const [collapsed, setCollapsed] = useState(true);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
-    const [photoUrl,setPhotoUrl] = useState('/fotoPerfil.jpg')
+    const [photoUrl,setPhotoUrl] = useState('/fotoPerfil.jpg');
+    const [escapeLink,setEscapeLink] = useState("/");
     
 
 
@@ -26,6 +27,7 @@ function AppNavbar() {
         if (jwt) {
             setRoles(jwt_decode(jwt).authorities);
             setUsername(jwt_decode(jwt).sub);
+            setEscapeLink("/home");
         }
     }, [jwt])
 
@@ -47,7 +49,7 @@ function AppNavbar() {
     return (
         <div>
             <Navbar expand="md" dark style={{float:'left'}} >
-                <NavbarBrand href="/">
+                <NavbarBrand href={escapeLink}>
                     <img alt="logo" src={logoChico} style={{ height: 80, width: 80, borderRadius: 500 }} />
                 </NavbarBrand>
              </Navbar>
