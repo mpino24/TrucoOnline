@@ -1,4 +1,4 @@
-package jugador;
+package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
