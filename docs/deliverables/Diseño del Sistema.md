@@ -231,7 +231,7 @@ _Ej: Ahora podemos añadir arbitrariamente los datos que nos hagan falta al cont
 ### Refactorización Botón Ver: 
 En esta refactorización cambiamos nuestro código para que quedase mas legible, en lugar de tener dos veces la misma declaración del boton Ver (para poder ver partidas), ya solo aparece una vez.
 #### Estado inicial del código
-```
+```jsx
 
                 <Link
                         to={`/partidas/${game.codigo}`}
@@ -258,7 +258,7 @@ En esta refactorización cambiamos nuestro código para que quedase mas legible,
 
 ```
 #### Estado del código refactorizado
-```
+```Jsx
 {
                 connectedUsers < game.numJugadores &&
                     <Link
@@ -289,7 +289,7 @@ Ahora la visualización de las partidas queda bastante más claro y no genera io
 ### Refactorización Canto Truco: 
 En esta refactorización retocamos la funcion de cantarTruco para dividirla en su canto y su respuesta en casos separados
 #### Estado inicial del código
-``` 
+```Java
 public void cantar(Boolean respuesta)
 {
   *logica del truco y sus casos segun la respuesta*
@@ -298,7 +298,7 @@ public void cantar(Boolean respuesta)
 
 #### Estado del código refactorizado
 
-```
+```Java
 public void cantarTruco(CantosTruco canto){
 *logica del truco*
 }
@@ -312,19 +312,7 @@ Era dificil evaluar los cambios en los turnos de los jugadores y gestion del pun
 Estando separado nos es sencillo dicha gestion y aparte nos sirve como plantilla para la gestión del envido (función que se hizo posteriormente)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-### Refactorización del cálculo del ganador del evnido: 
+### Refactorización del cálculo del ganador del envido: 
 En esta refactorización trasladamos las funciones para determinar el ganador del envido en una mano. En concreto colocamos las funciones de obtener el ganador y determinar los puntos del mismo en lugar de en la clase manoService a la clase mano ahorrandonos la llamada a la clase mano para obtener las cartas disponibles. 
 
 Además determinamos que solo con la posicion del jugador, podiamos saber que equipo era el ganador, por lo que tambien nos ahorramos el hacer el calculo de la puntuacion de ambos equipos y la comparacion entre los mismos.
@@ -343,7 +331,7 @@ public void envido(Boolean respuesta) throws EnvidoException{
      
             if(puntosEquipo1>puntosEquipo2) partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + 2);
             else partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + 2);
-else if (jugadorActual%2 == 1)
+else if (jugadorActual%2 == 1){
                 
             }
            }
@@ -379,13 +367,12 @@ else if (jugadorActual%2 == 1)
     private Integer comprobarValor(Integer value) {
         return value>=10?0:value;
     }
-    }
+    
 ``` 
-_Puedes añadir información sobre el lenguaje concreto en el que está escrito el código para habilitar el coloreado de sintaxis tal y como se especifica en [este tutorial](https://docs.github.com/es/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks)_
 
 #### Estado del código refactorizado
 
-```
+```Java
 public class Mano {
                         ...
 
@@ -442,7 +429,7 @@ getCreationModal.js
 const GetCreationModal=forwardRef(
                                     ...
 
-    function generateRandomCode() { //Recordemos que esta funcion, tambien generada por IA crea un codigo que se auto-genera y se asigna al abrir el modal
+    function generateRandomCode() {
     const length = 5;
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
     let code = '';
@@ -477,9 +464,9 @@ export default GetCreationModal
 
 #### Estado del código refactorizado
 
-```
+```Java
 generateRandomCode.js
-export default function generateRandomCode() { //Recordemos que esta funcion, tambien generada por IA crea un codigo que se auto-genera y se asigna al abrir el modal
+export default function generateRandomCode() { 
     const length = 5;
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
     let code = '';
@@ -520,3 +507,200 @@ Se delegaban demasiadas responsabilidades al componente gerCreationModal haciend
 Al tener las funciones generateRandomCode y parseSubmit separadas queda mas claro que el componente getCreationModal se encarga de crear la partida. Además si estas funciones se necesitan en un futuro se encuentran disponibles como utils. 
 
 
+### Refactorización Obtener el jugador que responde al truco: 
+En esta refactorización se separo la logica de obtener el jugador que responde del metodo que gestiona el truco:
+#### Estado inicial del código
+```Java 
+public void cantosTruco(CantosTruco canto) throws Exception{
+    ....
+            case RETRUCO:
+                if (manoActual.getPuntosTruco() <2) {
+                    throw new Exception( "No se canto truco"); 
+                }
+                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                Integer rondaTruco = cantoEnTruco.get(0);
+                Integer jugadorTruco = cantoEnTruco.get(1);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+
+                if(rondaActual==rondaTruco && jugadorAnterior == jugadorTruco){
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else {
+                    manoActual.setJugadorTurno(jugadorSiguiente);
+                }
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+                
+                break;
+            case VALECUATRO:
+                if (manoActual.getPuntosTruco() <3) {
+                    throw new Exception( "No se canto retruco"); 
+                }
+                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                Integer rondaRetruco = cantoEnRetruco.get(0);
+                Integer jugadorRetruco = cantoEnRetruco.get(1);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                if(rondaActual==rondaRetruco && (jugadorAnterior == jugadorRetruco )){ 
+                    
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    
+                    
+                } else {
+                    manoActual.setJugadorTurno(jugadorSiguiente);
+                }
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+
+                break;
+    ....
+}
+``` 
+
+
+#### Estado del código refactorizado
+
+```Java
+ public void cantosTruco(CantosTruco canto) throws Exception{
+    ....
+            case RETRUCO:
+                if (manoActual.getPuntosTruco() <2) {
+                    throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
+                }
+                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                Integer elQueRespondeAlRetruco = quienResponde(cantoEnTruco, jugadorTurno);
+                manoActual.setJugadorTurno(elQueRespondeAlRetruco);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+                
+                break;
+            case VALECUATRO:
+                if (manoActual.getPuntosTruco() <3) {
+                    throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
+                }
+                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                Integer elQueResponde = quienResponde(cantoEnRetruco, jugadorTurno);
+                manoActual.setJugadorTurno(elQueResponde);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+
+                break;
+    ....
+ }
+    public Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+        Integer res = null;
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer rondaCanto = cantoHecho.get(0);
+        Integer jugadorCanto = cantoHecho.get(1); 
+        if (rondaActual==rondaCanto && jugadorAnterior== jugadorCanto) {
+            res = jugadorAnterior;
+        }else{
+            res = jugadorSiguiente;
+        }
+        return res;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+El código era demasiado largo y se podía ver claramente que la lógica se repetia.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Se puede visualizar facilmente lo que hace el codigo y al estar separado es más sencillo mantenerlo.
+
+### Refactorización Obtener el jugador al que le toca luego de responder un truco: 
+En esta refactorización se separo la obtención del que debe jugar ahora después de decir "Quiero" al Retruco y/o Valecuatro.
+#### Estado inicial del código
+```Java 
+public void responderTruco(Respuestas respuesta) throws Exception{ 
+        switch (respuesta) {
+            case QUIERO:
+                manoActual.setPuntosTruco(truco +1);
+                if(queTrucoEs == 1){ //Es decir, Truco
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else if( queTrucoEs == 2){
+                    List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                    Integer rondaTruco = cantoEnTruco.get(0);
+                    Integer jugadorTruco = cantoEnTruco.get(1);
+
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer rondaRetruco = cantoEnRetruco.get(0);
+                    Integer jugadorRetruco = cantoEnRetruco.get(1);
+                    if((rondaTruco == rondaActual && rondaRetruco == rondaActual) && (jugadorTruco==jugadorTurno && jugadorSiguiente==jugadorRetruco)){
+                        manoActual.setJugadorTurno(jugadorTurno);
+                    } else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                    
+                } else{         
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer rondaRetruco = cantoEnRetruco.get(0);
+                    Integer jugadorRetruco = cantoEnRetruco.get(1);
+                    List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
+                    Integer rondaValecuatro = cantoEnValecuatro.get(0);
+                    Integer jugadorValecuatro = cantoEnValecuatro.get(1);
+
+                    if((rondaRetruco == rondaActual && rondaValecuatro == rondaActual) && (jugadorRetruco==jugadorTurno && jugadorSiguiente==jugadorValecuatro)){
+                        manoActual.setJugadorTurno(jugadorTurno);
+                    } else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                }
+            break;
+        ....
+        }
+    ....
+ }
+
+``` 
+
+
+#### Estado del código refactorizado
+
+```Java
+public void responderTruco(Respuestas respuesta) throws Exception{ 
+    switch (respuesta) {
+            case QUIERO:
+                manoActual.setPuntosTruco(truco +1);
+                if(queTrucoEs == 1){ //Es decir, Truco
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else if( queTrucoEs == 2){
+                    List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnTruco, cantoEnRetruco, jugadorTurno);
+                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                    
+                } else {         
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
+                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnRetruco, cantoEnValecuatro, jugadorTurno);
+                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                }  
+                break;
+            ....
+            }
+    ....
+}
+
+public Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
+        Integer res = null;
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+
+        Integer rondaCantoAnterior = cantoAnterior.get(0);
+        Integer jugadorCantoAnterior = cantoAnterior.get(1);
+
+        Integer rondaCantoAhora = cantoAhora.get(0);
+        Integer jugadorCantoAhora = cantoAhora.get(1);
+        if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
+            res = jugadorTurno;
+        }else{
+            res = jugadorAnterior;
+        }
+        return res;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Como en el caso anterior, había código que se repetía y era difícil de comprender, un claro code smell.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora separado es mucho más fácil de mantener y se entiende mejor su funcionalidad.

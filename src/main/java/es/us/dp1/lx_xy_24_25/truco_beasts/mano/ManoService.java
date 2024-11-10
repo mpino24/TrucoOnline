@@ -222,19 +222,15 @@ public class ManoService {
                 } else if( queTrucoEs == 2){
                     List<Integer> cantoEnTruco = secuenciaCantos.get(0);
                     List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-
-
                     Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnTruco, cantoEnRetruco, jugadorTurno);
                     manoActual.setJugadorTurno(aQuienLeTocaAhora);
                     
                 } else {         
                     List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
                     List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
-
                     Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnRetruco, cantoEnValecuatro, jugadorTurno);
                     manoActual.setJugadorTurno(aQuienLeTocaAhora);
-                }
-                    
+                }  
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
