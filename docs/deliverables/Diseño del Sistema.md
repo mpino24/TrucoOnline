@@ -18,8 +18,9 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 •	_Especificar el tipo de los atributos_
 •	_Especificar las restricciones simples aplicadas a cada atributo de cada clase de domino_
 •	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
-•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>._
-![Diagrama de dominio Truco Beasts](https://github.com/user-attachments/assets/234ba735-8506-4207-884c-ef8f578bce82)
+•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
+
+![Diagrama de dominio Truco Beasts fondo transparente](https://github.com/user-attachments/assets/dcaa3fb8-f673-4dc9-a597-67c1496cb21e)
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 _En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
 
@@ -125,7 +126,7 @@ Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suf
 *Justificación de la solución adoptada*
 Como consideramos que la división en capas es fundamental y no queremos renunciar a un trabajo ágil durante el desarrollo de la aplicación, seleccionamos la alternativa de diseño 1.c.
 
-### Decisión 2: Creacion de la clase PartidaJugador
+### Decisión 1: Creacion de la clase PartidaJugador
 #### Descripción del problema:
 
 Al haber creado la clase Jugador y la clase Partida que tienen una relación ManyToMany necesitamos que ambas esten conectadas. Además, cada jugador tiene una posicion asociada en cada partida.
@@ -149,7 +150,7 @@ Al haber creado la clase Jugador y la clase Partida que tienen una relación Man
 #### Justificación de la solución adoptada
 Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posicion de un jugador en una partida especifica de una manera más sencilla, ya que su implementación en otra clase no nos permitiria utilizar este atributo como lo necesitamos.
 
-### Decisión 3: Separar funciones canto y respuesta del truco.
+### Decisión 2: Separar funciones canto y respuesta del truco.
 #### Descripción del problema:
 
 En el juego tenemos que poder evaluar los cambios de puntaje y cuando se puede cantar el truco y quien debe dar respuesta al mismo. Surgieron varias maneras de abordarlo.
@@ -176,6 +177,31 @@ En el juego tenemos que poder evaluar los cambios de puntaje y cuando se puede c
 
 #### Justificación de la solución adoptada
 Después de un acalorado debate y lluvia de ideas, nos decantamos por la alternativa 2 ya que la separación de responsabilidades permite una implementación más fiel y comprensible de las reglas específicas del canto y la respuesta en el truco. Además de adecuarse mejor a las reglas de negocio de nuestro juego.
+
+### Decisión 3: Empleo del modal en lugar de pestañas en la creación y modal de unión a la partida
+#### Descripción del problema:
+Como grupo no teniamos claro como abordar los apartados de creación y unión de partidas.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: : Crear páginas nuevas para ambos apartados
+
+*Ventajas:*
+• Separación mas clara de los apartados de página
+• Personalización individual de cada apartado
+*Inconvenientes:*
+•	Recargas constantes debido a las redirecciones  
+• Aumento de carga en memoria y de tiempo de espera 
+
+*Alternativa 2*: Crear dos funciones separadas, una encargada de la gestión del cante y otra de la respuesta.
+*Ventajas:*
+•	Interfaz mas limpia y dinámica
+• Omisión de recargas
+• Menor carga en memoria y tiempo de espera
+*Inconvenientes:*
+•	Mayor complejidad en la implementacíon
+• Falta de personalización
+
+
+#### Justificación de la solución adoptada
 
 
 ## Refactorizaciones aplicadas
@@ -205,7 +231,7 @@ _Ej: Ahora podemos añadir arbitrariamente los datos que nos hagan falta al cont
 ### Refactorización Botón Ver: 
 En esta refactorización cambiamos nuestro código para que quedase mas legible, en lugar de tener dos veces la misma declaración del boton Ver (para poder ver partidas), ya solo aparece una vez.
 #### Estado inicial del código
-```
+```jsx
 
                 <Link
                         to={`/partidas/${game.codigo}`}
@@ -232,7 +258,7 @@ En esta refactorización cambiamos nuestro código para que quedase mas legible,
 
 ```
 #### Estado del código refactorizado
-```
+```Jsx
 {
                 connectedUsers < game.numJugadores &&
                     <Link
@@ -263,7 +289,7 @@ Ahora la visualización de las partidas queda bastante más claro y no genera io
 ### Refactorización Canto Truco: 
 En esta refactorización retocamos la funcion de cantarTruco para dividirla en su canto y su respuesta en casos separados
 #### Estado inicial del código
-``` 
+```Java
 public void cantar(Boolean respuesta)
 {
   *logica del truco y sus casos segun la respuesta*
@@ -272,7 +298,7 @@ public void cantar(Boolean respuesta)
 
 #### Estado del código refactorizado
 
-```
+```Java
 public void cantarTruco(CantosTruco canto){
 *logica del truco*
 }
@@ -284,3 +310,397 @@ public void responderTruco(Respuestas respuesta){
 Era dificil evaluar los cambios en los turnos de los jugadores y gestion del puntaje en la mano.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Estando separado nos es sencillo dicha gestion y aparte nos sirve como plantilla para la gestión del envido (función que se hizo posteriormente)
+
+
+### Refactorización del cálculo del ganador del envido: 
+En esta refactorización trasladamos las funciones para determinar el ganador del envido en una mano. En concreto colocamos las funciones de obtener el ganador y determinar los puntos del mismo en lugar de en la clase manoService a la clase mano ahorrandonos la llamada a la clase mano para obtener las cartas disponibles. 
+
+Además determinamos que solo con la posicion del jugador, podiamos saber que equipo era el ganador, por lo que tambien nos ahorramos el hacer el calculo de la puntuacion de ambos equipos y la comparacion entre los mismos.
+#### Estado inicial del código
+```Java 
+class ManoService
+public void envido(Boolean respuesta) throws EnvidoException{
+                                                              ...
+            
+           List<List<Carta>> cartasEquipo1 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 == 0).toList();
+           List<List<Carta>> cartasEquipo2 = manoActual.getCartasDisp().stream().filter(t-> manoActual.getCartasDisp().indexOf(t)%2 != 0).toList();
+           
+        if(respuesta){  
+           Integer puntosEquipo1=comprobarValor(cartasEquipo1);
+           Integer puntosEquipo2=comprobarValor(cartasEquipo2);
+     
+            if(puntosEquipo1>puntosEquipo2) partidaActual.setPuntosEquipo1(partidaActual.getPuntosEquipo1() + 2);
+            else partidaActual.setPuntosEquipo2(partidaActual.getPuntosEquipo2() + 2);
+else if (jugadorActual%2 == 1){
+                
+            }
+           }
+    }
+    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ // Lo veo bastante bien, lo que no es necesario pasarle esa lista, las cartas de cada equipo son las que sean j%2==jugMano%2
+        Integer puntos=0;
+        for(int i=0; i<cartasEquipo.size(); i++){
+            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+            if(sumaJugador> puntos){
+                puntos = sumaJugador;
+            }
+        }
+        return puntos;
+    }
+    public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
+        List< Integer> listaSumas= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
+            if(e.getValue().size()==1){
+                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+            }
+            else if(e.getValue().size()==2){
+                Integer valor1= e.getValue().get(0).getValor();
+                Integer valor2= e.getValue().get(1).getValor();
+                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(e.getValue().size()==3){
+                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
+                listaSumas.add( valor+20);
+            }
+        }
+        return listaSumas.stream().max(Comparator.naturalOrder()).get();
+    }
+    private Integer comprobarValor(Integer value) {
+        return value>=10?0:value;
+    }
+    
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+public class Mano {
+                        ...
+
+     public Integer jugadorGanadorEnvido(List<List<Carta>> cartasDisp){ 
+        Integer puntos=0;
+        Integer posicion=0;
+        for(int i=0; i<cartasDisp.size(); i++){
+            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+            if(sumaJugador> puntos){
+                puntos= sumaJugador;
+                posicion= i;
+            }
+        }
+        return posicion;
+    }
+
+     public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
+        List< Integer> listaSumas= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
+            if(e.getValue().size()==1){
+                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+            }
+            else if(e.getValue().size()==2){
+                Integer valor1= e.getValue().get(0).getValor();
+                Integer valor2= e.getValue().get(1).getValor();
+                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(e.getValue().size()==3){
+                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
+                listaSumas.add( valor+20);
+            }
+        }
+        return listaSumas.stream().max(Comparator.naturalOrder()).get();
+    }
+
+    private Integer comprobarValor(Integer value) {
+        return value>=10?0:value;
+    }
+}
+```
+#### Problema que nos hizo realizar la refactorización
+Había muchos calculos innecesarios, lo que dificultaba tanto la lectura como la eficiencia del codigo.
+
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Al cambiar el enfoque y determinar la posicion del ganador en lugar de comparar los puntos entre equipos nos ahorramos una llamada a la funcion, aumentando dicha legibilidad y eficacia.
+
+
+### Refactorización de las funciones utiles de getCreationModal: 
+En esta refactorización externalizamos las funciones de generación de código de partida y la de parseo de partida.
+#### Estado inicial del código
+```Java
+getCreationModal.js
+
+const GetCreationModal=forwardRef(
+                                    ...
+
+    function generateRandomCode() {
+    const length = 5;
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+    let code = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+    return code;
+}
+...
+   function handleSubmit(event) {
+        if(partida.conFlor){
+            partidaParseada.conFlor=true
+        }
+        if(partida.puntosMaximos){
+            partidaParseada.puntosMaximos=30
+        }
+        if(partida.visibilidad){
+            partidaParseada.visibilidad='PRIVADA'
+        } 
+        partidaParseada.codigo=generateRandomCode();                     
+    console.log(partidaParseada)
+    event.preventDefault();
+    fetch("/api/v1/partida", {
+      method:  "POST",
+    ...
+    )
+}
+export default GetCreationModal
+```
+
+#### Estado del código refactorizado
+
+```Java
+generateRandomCode.js
+export default function generateRandomCode() { 
+    const length = 5;
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+    let code = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+    return code;
+}
+
+parseSubmit.js
+
+import generateCode from './generateCode.js'
+export default function parseSubmit(partida, partidaParseada){
+
+        
+   if(partida.conFlor){
+      partidaParseada.conFlor=true
+  }
+  if(partida.puntosMaximos){
+      partidaParseada.puntosMaximos=30
+  }
+  if(partida.visibilidad){
+      partidaParseada.visibilidad='PRIVADA'
+  }
+      partidaParseada.numJugadores=partida.numJugadores
+      partidaParseada.codigo=generateCode()
+    return partidaParseada;
+
+}
+
+```
+#### Problema que nos hizo realizar la refactorización
+Se delegaban demasiadas responsabilidades al componente gerCreationModal haciendo que su cohesion fuera baja, por lo que era dificil la lectura y el codigo quedaba demasiado grande.
+
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Al tener las funciones generateRandomCode y parseSubmit separadas queda mas claro que el componente getCreationModal se encarga de crear la partida. Además si estas funciones se necesitan en un futuro se encuentran disponibles como utils. 
+
+
+### Refactorización Obtener el jugador que responde al truco: 
+En esta refactorización se separo la logica de obtener el jugador que responde del metodo que gestiona el truco:
+#### Estado inicial del código
+```Java 
+public void cantosTruco(CantosTruco canto) throws Exception{
+    ....
+            case RETRUCO:
+                if (manoActual.getPuntosTruco() <2) {
+                    throw new Exception( "No se canto truco"); 
+                }
+                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                Integer rondaTruco = cantoEnTruco.get(0);
+                Integer jugadorTruco = cantoEnTruco.get(1);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+
+                if(rondaActual==rondaTruco && jugadorAnterior == jugadorTruco){
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else {
+                    manoActual.setJugadorTurno(jugadorSiguiente);
+                }
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+                
+                break;
+            case VALECUATRO:
+                if (manoActual.getPuntosTruco() <3) {
+                    throw new Exception( "No se canto retruco"); 
+                }
+                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                Integer rondaRetruco = cantoEnRetruco.get(0);
+                Integer jugadorRetruco = cantoEnRetruco.get(1);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                if(rondaActual==rondaRetruco && (jugadorAnterior == jugadorRetruco )){ 
+                    
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    
+                    
+                } else {
+                    manoActual.setJugadorTurno(jugadorSiguiente);
+                }
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+
+                break;
+    ....
+}
+``` 
+
+
+#### Estado del código refactorizado
+
+```Java
+ public void cantosTruco(CantosTruco canto) throws Exception{
+    ....
+            case RETRUCO:
+                if (manoActual.getPuntosTruco() <2) {
+                    throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
+                }
+                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                Integer elQueRespondeAlRetruco = quienResponde(cantoEnTruco, jugadorTurno);
+                manoActual.setJugadorTurno(elQueRespondeAlRetruco);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+                
+                break;
+            case VALECUATRO:
+                if (manoActual.getPuntosTruco() <3) {
+                    throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
+                }
+                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                Integer elQueResponde = quienResponde(cantoEnRetruco, jugadorTurno);
+                manoActual.setJugadorTurno(elQueResponde);
+                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+                secuenciaCantos.add(listaRondaJugador);
+                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+
+                break;
+    ....
+ }
+    public Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+        Integer res = null;
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer rondaCanto = cantoHecho.get(0);
+        Integer jugadorCanto = cantoHecho.get(1); 
+        if (rondaActual==rondaCanto && jugadorAnterior== jugadorCanto) {
+            res = jugadorAnterior;
+        }else{
+            res = jugadorSiguiente;
+        }
+        return res;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+El código era demasiado largo y se podía ver claramente que la lógica se repetia.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Se puede visualizar facilmente lo que hace el codigo y al estar separado es más sencillo mantenerlo.
+
+### Refactorización Obtener el jugador al que le toca luego de responder un truco: 
+En esta refactorización se separo la obtención del que debe jugar ahora después de decir "Quiero" al Retruco y/o Valecuatro.
+#### Estado inicial del código
+```Java 
+public void responderTruco(Respuestas respuesta) throws Exception{ 
+        switch (respuesta) {
+            case QUIERO:
+                manoActual.setPuntosTruco(truco +1);
+                if(queTrucoEs == 1){ //Es decir, Truco
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else if( queTrucoEs == 2){
+                    List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                    Integer rondaTruco = cantoEnTruco.get(0);
+                    Integer jugadorTruco = cantoEnTruco.get(1);
+
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer rondaRetruco = cantoEnRetruco.get(0);
+                    Integer jugadorRetruco = cantoEnRetruco.get(1);
+                    if((rondaTruco == rondaActual && rondaRetruco == rondaActual) && (jugadorTruco==jugadorTurno && jugadorSiguiente==jugadorRetruco)){
+                        manoActual.setJugadorTurno(jugadorTurno);
+                    } else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                    
+                } else{         
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer rondaRetruco = cantoEnRetruco.get(0);
+                    Integer jugadorRetruco = cantoEnRetruco.get(1);
+                    List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
+                    Integer rondaValecuatro = cantoEnValecuatro.get(0);
+                    Integer jugadorValecuatro = cantoEnValecuatro.get(1);
+
+                    if((rondaRetruco == rondaActual && rondaValecuatro == rondaActual) && (jugadorRetruco==jugadorTurno && jugadorSiguiente==jugadorValecuatro)){
+                        manoActual.setJugadorTurno(jugadorTurno);
+                    } else{
+                        manoActual.setJugadorTurno(jugadorAnterior);
+                    }
+                }
+            break;
+        ....
+        }
+    ....
+ }
+
+``` 
+
+
+#### Estado del código refactorizado
+
+```Java
+public void responderTruco(Respuestas respuesta) throws Exception{ 
+    switch (respuesta) {
+            case QUIERO:
+                manoActual.setPuntosTruco(truco +1);
+                if(queTrucoEs == 1){ //Es decir, Truco
+                    manoActual.setJugadorTurno(jugadorAnterior);
+                } else if( queTrucoEs == 2){
+                    List<Integer> cantoEnTruco = secuenciaCantos.get(0);
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnTruco, cantoEnRetruco, jugadorTurno);
+                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                    
+                } else {         
+                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
+                    List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
+                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnRetruco, cantoEnValecuatro, jugadorTurno);
+                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                }  
+                break;
+            ....
+            }
+    ....
+}
+
+public Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
+        Integer res = null;
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+
+        Integer rondaCantoAnterior = cantoAnterior.get(0);
+        Integer jugadorCantoAnterior = cantoAnterior.get(1);
+
+        Integer rondaCantoAhora = cantoAhora.get(0);
+        Integer jugadorCantoAhora = cantoAhora.get(1);
+        if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
+            res = jugadorTurno;
+        }else{
+            res = jugadorAnterior;
+        }
+        return res;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Como en el caso anterior, había código que se repetía y era difícil de comprender, un claro code smell.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora separado es mucho más fácil de mantener y se entiende mejor su funcionalidad.

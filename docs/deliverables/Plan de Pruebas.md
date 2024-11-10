@@ -2,7 +2,7 @@
 
 ## 1. Introducción
 
-Este documento describe el plan de pruebas para el proyecto **[Nombre del Proyecto]** desarrollado en el marco de la asignatura **Diseño y Pruebas 1** por el grupo **LX-XY**. El objetivo del plan de pruebas es garantizar que el software desarrollado cumple con los requisitos especificados en las historias de usuario y que se han realizado las pruebas necesarias para validar su funcionamiento.
+Este documento describe el plan de pruebas para el proyecto **Truco Beasts: Bardo en la Jungla** desarrollado en el marco de la asignatura **Diseño y Pruebas 1** por el grupo **L6-5**. El objetivo del plan de pruebas es garantizar que el software desarrollado cumple con los requisitos especificados en las historias de usuario y que se han realizado las pruebas necesarias para validar su funcionamiento.
 
 ## 2. Alcance
 
@@ -47,19 +47,53 @@ https://html-preview.github.io/?url=https://raw.githubusercontent.com/gii-is-DP1
 
 | Historia de Usuario | Prueba | Descripción | Estado |Tipo |
 |---------------------|--------|-------------|--------|--------|
-| HU-01: Iniciar sesión | [UTB-1:TestLogin](./src/test/java/com/proyecto/tests/TestLogin.java) | Verifica que un usuario puede iniciar sesión con credenciales válidas. | Implementada | Unitaria en backend |
-| HU-02: Registrar usuario | [UTB-2:TestRegister](./src/test/java/com/proyecto/tests/TestRegister.java) | Verifica que un nuevo usuario puede registrarse en el sistema. | Implementada |Unitaria en backend |
-| HU-03: Realizar pedido | [UTB-3:TestOrder](./src/test/java/com/proyecto/tests/TestOrder.java) | Asegura que un usuario puede realizar un pedido correctamente. | Implementada | Unitaria en backend |
-| HU-04: Cancelar pedido | [UTB-4:TestCancelOrder](./src/test/java/com/proyecto/tests/TestCancelOrder.java) | Verifica que un usuario puede cancelar un pedido antes de ser procesado. | Implementada |Unitaria en backend |
+| HU-1(NOISSUE): Poder loggearme | [UTB-1:AuthControllerTests](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/auth/AuthControllerTests.java) | Verifica que un usuario puede iniciar sesión con credenciales válidas. | Implementada | Unitaria en backend |
+| HU-2(NOISSUE): Poder borrar la cuenta |  | Verifica que un usuario puede borrar su cuenta. | No implementada | Unitaria en backend |
+| HU-3(NOISSUE): Poder cerrar sesion |  | Verifica que un usuario puede cerrar su sesión | No implementada | Unitaria en frontend |
+| HU-4(ISSUE#59): Crear partidas | [UTB-2:PartidaServiceTests](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/partida/PartidaServiceTests.java) | Asegura que un usuario puede crear una partida. | Implementada | Unitaria en backend |
+| HU-5(ISSUE#60): Editar los puntos de la partida |  | Verifica que un usuario puede decidir los puntos de la partida antes de crearla. | No implementada | Unitaria en frontend |
+| HU-6(ISSUE#61): Editar la flor en la partida |  | Verifica que un usuario puede decidir jugar o no con flor en la partida antes de crearla. | No implementada | Unitaria en frontend |
+| HU-7(ISSUE#62): Editar numero de jugadores de la partida |  | Verifica que un usuario puede decidir el número de jugadores de la partida antes de crearla. | No implementada | Unitaria en frontend |
+| HU-8(ISSUE#63): Poder unirse a las partidas |  | Verifica que un usuario puede unirse a una partida. | No implementada | Unitaria en backend |
+| HU-9(ISSUE#143): Poder ver cartas |  | Verifica que un usuario puede ver las cartas que tiene durante la partida. | No implementada | Unitaria en frontend |
+| HU-10(ISSUE#145): Poder cantar Truco | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede cantar truco durante la partida. | Implementada | Unitaria en backend |
+| HU-11(ISSUE#146): Poder cantar Envido |  | Verifica que un jugador puede cantar envido durante la partida. | No implementada | Unitaria en backend |
+| HU-12(ISSUE#153): Poder cantar Flor |  | Verifica que un jugador puede cantar flor durante la partida. | No implementada | Unitaria en backend |
+| HU-13(ISSUE#144): Poder tirar carta | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede tirar una carta. | Implementada | Unitaria en backend |
+| HU-14(ISSUE#147): Poder ver la puntuación en la partida |  | Verifica que un jugador puede ver la puntuación durante la partida. | No implementada | Unitaria en frontend |
+| HU-15(ISSUE#148): Poder ver cómo cambia la puntuación |  | Verifica que un jugador puede ver los cambios en la puntuación durante la partida. | No implementada | Unitaria en frontend |
+| HU-16(ISSUE#149): Poder decir Quiero y No Quiero | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede aceptar o rechazar un canto. | Implementada (sólo para el truco) | Unitaria en backend |
+| HU-17(ISSUE#150): Poder responder Envido y sus variantes |  | Verifica que un jugador puede responder a un envido con una de sus variantes. | No implementada | Unitaria en backend |
+| HU-18(ISSUE#151): Poder responder Truco y sus variantes | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede responder a otro que ha cantado truco durante la partida. | Implementada | Unitaria en backend |
+| HU-19(ISSUE#152): Poder responder Flor y sus variantes |  | Verifica que un jugador puede responder a una flor con una de sus variantes. | No implementada | Unitaria en backend |
+| HU-20(ISSUE#130): Poder buscar usuarios | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Implementada | Unitaria en backend |
+| HU-21(ISSUE#131): Poder ver mis amigos |  | Verifica que un usuario puede ver los amigos que tiene. | No implementada | Unitaria en frontend |
 
 ### 5.3 Matriz de Trazabilidad entre Pruebas e Historias de Usuario
 
-| Prueba             | HU-01 | HU-02 | HU-03 | HU-04 |
+| Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 |
 |--------------------|-------|-------|-------|-------|
-| UTB-1:TestLogin          |   X   |       |       |       |
-| UTB-2:TestRegister       |       |   X   |       |       |
-| UTB-3:TestOrder          |       |       |   X   |       |
-| UTB-4:TestCancelOrder    |       |       |       |   X   |
+| HU-1                |   X   |       |       |       |
+| HU-2                |       |      |       |       |
+| HU-3                |       |       |      |       |
+| HU-4                |       |   X   |       |      |
+| HU-5                |      |       |       |       |
+| HU-6                |       |      |       |       |
+| HU-7                |       |       |      |       |
+| HU-8                |       |       |       |      |
+| HU-9                |      |       |       |       |
+| HU-10                |       |      |   X    |       |
+| HU-11                |       |       |      |       |
+| HU-12                |       |       |       |      |
+| HU-13                |      |       |   X   |       |
+| HU-14                |       |      |       |       |
+| HU-15                |       |       |      |       |
+| HU-16                |       |       |   X   |      |
+| HU-17                |      |       |       |       |
+| HU-18                |       |      |   X   |       |
+| HU-19                |       |       |      |       |
+| HU-20                |       |       |       |   X   |
+| HU-21                |       |       |       |      |
 
 ## 6. Criterios de Aceptación
 

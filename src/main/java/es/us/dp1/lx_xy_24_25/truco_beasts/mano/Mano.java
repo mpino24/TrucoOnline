@@ -32,6 +32,7 @@ public class Mano {
     @ManyToOne
     private Partida partida;
 
+
      public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
         for(int i=0; i<cartasDisp.size(); i++){
