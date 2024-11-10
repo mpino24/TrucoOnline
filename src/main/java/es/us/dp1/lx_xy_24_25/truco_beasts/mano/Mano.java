@@ -32,7 +32,7 @@ public class Mano {
     @ManyToOne
     private Partida partida;
 
-     public Integer jugadorGanadorEnvido(List<List<Carta>> cartasDisp){ 
+     public Integer jugadorGanadorEnvido(){ 
         Integer puntos=0;
         Integer posicion=0;
         for(int i=0; i<cartasDisp.size(); i++){
