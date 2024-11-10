@@ -19,7 +19,7 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     Integer numberOfGamesConnected(Integer id);
 
     @Modifying
-    @Query("DELETE FROM PartidaJugador pj WHERE pj.player.id = :userId")
+    @Query("DELETE FROM PartidaJugador pj WHERE pj.player.id = :userId AND pj.game.instanteFin IS NULL")
     void deleteByPlayerId(Integer userId);
 
 
