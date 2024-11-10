@@ -55,5 +55,10 @@ public class PartidaJugadorService {
         }
 
     }
+
+    @Transactional
+    public void eliminateJugadorPartida(Integer userId){
+        pjRepository.deleteByPlayerId(userId);
+    }
     
 }

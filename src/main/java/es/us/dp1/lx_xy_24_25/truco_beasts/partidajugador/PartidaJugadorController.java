@@ -1,11 +1,14 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
@@ -36,12 +39,17 @@ public class PartidaJugadorController {
     public void addJugadorPartida(@RequestParam(required=true) Integer userId, @PathVariable("partidaId") Integer partidaId) throws AlreadyInGameException{
         Partida partida = partidaService.findPartidaById(partidaId);
         pjService.addJugadorPartida(partida, userId);
-
     }
 
     @GetMapping("/connectedTo/{jugadorId}")
     public Integer getNumberOfGamesConnected(@PathVariable("jugadorId") Integer jugadorId){
             return pjService.getNumberOfGamesConnected(jugadorId);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void eliminateJugadorPartida(@RequestParam(required=true) Integer userId){
+        pjService.eliminateJugadorPartida(userId);
     }
     
 }
