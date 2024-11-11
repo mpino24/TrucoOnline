@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ErrorBoundary } from "react-error-boundary";
 import AppNavbar from "./AppNavbar";
@@ -14,6 +14,8 @@ import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import SwaggerDocs from "./public/swagger";
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import './App.css'; // Make sure to import your CSS file with the transition styles
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -22,12 +24,13 @@ function ErrorFallback({ error, resetErrorBoundary }) {
       <pre>{error.message}</pre>
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
-  )
+  );
 }
 
 function App() {
+  const location = useLocation();
   const jwt = tokenService.getLocalAccessToken();
-  let roles = []
+  let roles = [];
   if (jwt) {
     roles = getRolesFromJWT(jwt);
   }
@@ -37,59 +40,58 @@ function App() {
   }
 
   let adminRoutes = <></>;
-  let ownerRoutes = <></>;
   let userRoutes = <></>;
-  let vetRoutes = <></>;
   let publicRoutes = <></>;
 
   roles.forEach((role) => {
     if (role === "ADMIN") {
       adminRoutes = (
         <>
-          <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
-          <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />          
-        </>)
+          <Route path="/users" element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
+          <Route path="/users/:username" element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
+        </>
+      );
     }
-    if (role === "PLAYER") {
-      ownerRoutes = (
-        <>
-          
-        </>)
-    }    
-  })
+  });
+
   if (!jwt) {
     publicRoutes = (
-      <>        
+      <>
         <Route path="/register" element={<Register />} />
-        <Route path="/" exact={true} element={<Login />} />
+        <Route path="/" element={<Login />} />
       </>
-    )
+    );
   } else {
     userRoutes = (
       <>
-        {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/home" exact={true} element={<Home />} />
-        <Route path="/" exact={true} element={<Login />} />
-        <Route path="/profile" exact={true} element={<Profile />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
       </>
-    )
+    );
   }
 
   return (
     <div>
-      <ErrorBoundary FallbackComponent={ErrorFallback} >
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <AppNavbar />
-        <Routes>
-          <Route path="/plans" element={<PlanList />} />
-          <Route path="/docs" element={<SwaggerDocs />} />
-          {publicRoutes}
-          {userRoutes}
-          {adminRoutes}
-          {ownerRoutes}
-          {vetRoutes}
-        </Routes>
+        <TransitionGroup>
+          <CSSTransition
+            key={location.key}
+            timeout={700}
+            classNames="fade"
+          >
+            <Routes location={location}>
+              <Route path="/plans" element={<PlanList />} />
+              <Route path="/docs" element={<SwaggerDocs />} />
+              {publicRoutes}
+              {userRoutes}
+              {adminRoutes}
+            </Routes>
+          </CSSTransition>
+        </TransitionGroup>
       </ErrorBoundary>
     </div>
   );

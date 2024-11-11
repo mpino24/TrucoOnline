@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "react-modal": "^3.16.1",
-    "react-native-web": "^0.19.12"
+    "react-native-web": "^0.19.12",
+    "react-transition-group": "^4.4.5"
   }
 }
