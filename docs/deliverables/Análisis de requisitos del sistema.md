@@ -46,7 +46,7 @@ A continuación se definen  todas las historias de usuario a implementar:
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
 ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-2(NOISSUE): Poder borrar la cuenta ([])
-Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso
+Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso.
  ### HU-3(NOISSUE): Poder cerrar sesion ([])
 Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
 ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
@@ -96,11 +96,14 @@ Como jugador quiero poder responder Flor y sus variantes para subir la apuesta d
  
 
  ## Historia de Usuario Aspecto social:
- ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
+ ## HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
 Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
-![Mockup_chat - copia](https://github.com/user-attachments/assets/f5e8999d-a6f5-4689-8801-f3cc5362cf66)
- ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
-Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
+ ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
+ ## HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
+ Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
+ ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+
+
 
 
 
