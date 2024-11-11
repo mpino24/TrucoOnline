@@ -6,7 +6,6 @@ import jwt_decode from "jwt-decode";
 import logoChico from './/static/images/logoChico.png';
 import Modal from 'react-modal';
 
-
 function AppNavbar() {
     const [roles, setRoles] = useState([]);
     const jwt = tokenService.getLocalAccessToken();
@@ -112,6 +111,7 @@ function AppNavbar() {
                 ariaHideApp={false}
             >
                 <h2 style={{ marginBottom: '20px', color: '#333' }}>¿Quieres abandonar la partida?</h2>
+                <img src="https://c.tenor.com/vkvU9Fi4uOsAAAAC/tenor.gif" alt="Mono GIF" style={{ width: '100%', height: 'auto', marginBottom: '20px' }} />
                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                     <button
                         onClick={leaveGame}
