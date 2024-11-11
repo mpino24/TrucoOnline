@@ -141,19 +141,11 @@ public class JugadorService {
                     amigo.getAmigos().remove(jugador);
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
-                }else{
-                    throw new IllegalStateException("No te puedes eliminar a ti mismo");
-                }
-            }else{
-                throw new IllegalStateException("No sois amigos!!");
-            } 
+                } 
         }else{
             throw new ResourceNotFoundException("Usuarios no encontrados");
         }
-        
-
     }
-
-
+    }
 }
 

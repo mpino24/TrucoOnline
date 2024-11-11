@@ -2,7 +2,6 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 
 @SpringBootTest(classes=TrucoBeastsApplication.class )
 @AutoConfigureTestDatabase
@@ -27,8 +24,9 @@ public class TestJugadorService {
 
     @BeforeEach
     public void setup() {
-         jugador = jugadorService.findJugadorById(1);
-         jugador2 = jugadorService.findJugadorById(2);
+         jugador = jugadorService.findJugadorById(3);
+         jugador2 = jugadorService.findJugadorById(4);
+        // jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
     }
 
     @Test
@@ -78,6 +76,7 @@ public class TestJugadorService {
     void testAddNotFoundFriendFallo(){
         assertThrows(ResourceNotFoundException.class,() -> jugadorService.addNewFriends(jugador.getUser().getId(),50));
     }
+   
 
     @Test
     void TestFindJugadorByUserName(){
