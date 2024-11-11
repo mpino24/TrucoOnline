@@ -128,6 +128,31 @@ public class JugadorService {
         
 
     }
+    @Transactional()
+    public void deleteFriends(int userId, int amigoPlayerId){
+        Optional<Jugador> jugadorOpt= jugadorRepository.findByUserId(userId);
+        Optional<Jugador> amigoOpt= jugadorRepository.findById(amigoPlayerId);
+        if(!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()){
+            Jugador jugador = jugadorOpt.get();
+            Jugador amigo = amigoOpt.get();
+            if(jugador.getAmigos().contains(amigo)){
+               if(!jugador.getId().equals(amigo.getId())){
+                    jugador.getAmigos().remove(amigo);
+                    amigo.getAmigos().remove(jugador);
+                    jugadorRepository.save(jugador);
+                    jugadorRepository.save(amigo);
+                }else{
+                    throw new IllegalStateException("No te puedes eliminar a ti mismo");
+                }
+            }else{
+                throw new IllegalStateException("No sois amigos!!");
+            } 
+        }else{
+            throw new ResourceNotFoundException("Usuarios no encontrados");
+        }
+        
+
+    }
 
 
 }
