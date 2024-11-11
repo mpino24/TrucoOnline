@@ -45,6 +45,26 @@ public class Mano {
         }
         return posicion;
     }
+    public Integer siguienteJugador(Integer jugadorActual) {
+        Integer siguiente = (jugadorActual + 1) % partida.getNumJugadores();
+        return siguiente;
+    }
+
+    public List<List<Integer>> puntosEnvido(){
+        List<List<Integer>> res = new ArrayList<>();
+        
+        for (int i = partida.getJugadorMano(); res.size() < cartasDisp.size(); i = siguienteJugador(i)) {
+            List<Integer> posicionEnvido = new ArrayList<>();
+            posicionEnvido.add(i);
+            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
+            posicionEnvido.add(sumaJugador);
+            res.add(posicionEnvido);
+        }
+        
+        return res;
+        
+    }
 
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
         List< Integer> listaSumas= new ArrayList<>();
