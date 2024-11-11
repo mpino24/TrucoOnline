@@ -26,12 +26,11 @@ public class TestJugadorService {
     public void setup() {
          jugador = jugadorService.findJugadorById(3);
          jugador2 = jugadorService.findJugadorById(4);
-        // jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
     }
 
     @Test
     void testFindAmigosByUserId(){
-        
+        jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
         
         assertEquals(1, jugadorService.findAmigosByUserId(jugador.getUser().getId()).size());
@@ -54,13 +53,14 @@ public class TestJugadorService {
     }
     
     @Test
-    void TestfindJugadorByUserName(){
+    void testfindJugadorByUserName(){
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
 
 
         @Test
     void testAddFriendAgainFallo(){
+        jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
 
         assertThrows(IllegalStateException.class,() -> jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId()));
@@ -79,13 +79,26 @@ public class TestJugadorService {
    
 
     @Test
-    void TestFindJugadorByUserName(){
+    void testFindJugadorByUserName(){
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
 
     @Test
-    void TestFindNotFoundJugadorByUserNameFallo(){
+    void testFindNotFoundJugadorByUserNameFallo(){
         assertThrows(ResourceNotFoundException.class,() -> jugadorService.findJugadorByUserName("Manolito074k"));
+    }
+
+    @Test
+    void testDeleteFriend(){
+        jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
+
+        
+        jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
+        assertEquals(1, jugadorService.findAmigosByUserId(jugador.getUser().getId()).size());
+        
+        jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
+        assertEquals(0, jugadorService.findAmigosByUserId(jugador.getUser().getId()).size());
+
     }
 }
 
