@@ -1,11 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.assertj.core.util.Arrays;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -42,7 +43,7 @@ public class TestMano {
 
         Carta carta4= setUpCarta(Palo.BASTOS, 3);
         Carta carta5= setUpCarta(Palo.ESPADAS, 2);
-        Carta carta6= setUpCarta(Palo.COPAS, 1);
+        Carta carta6= setUpCarta(Palo.COPAS, 3);
 
         Carta carta7= setUpCarta(Palo.OROS, 5);
         Carta carta8= setUpCarta(Palo.OROS, 7);
@@ -60,6 +61,20 @@ public class TestMano {
         return List.of(jugador1, jugador2, jugador3, jugador4);
 
     }
+
+
+    public Map<Palo, List<Carta>> setUpCartasPaloValorTresIguales(){
+        List<Carta> cartasJug3=setUpListaCartasDispo().get(2);
+        Map<Palo, List<Carta>> listaPaloValoresJug=mano.agrupaCartasPalo(cartasJug3);
+        return listaPaloValoresJug;
+    }
+
+    public Map<Palo, List<Carta>> setUpCartasPaloValorTresDiferentes(){
+        List<Carta> cartasJug2=setUpListaCartasDispo().get(1);
+        Map<Palo, List<Carta>> listaPaloValoresJug=mano.agrupaCartasPalo(cartasJug2);
+        return listaPaloValoresJug;
+    }
+   
 
     public void setUpCartas(List<List<Carta>> cartasDisponibles){
         mano.setCartasDisp(cartasDisponibles);
@@ -85,7 +100,36 @@ public class TestMano {
 
     
 
+    @Test
+    public void agrupaCartasPorPalo(){
 
+        List<Carta> cartasDeJugador1= setUpListaCartasDispo().get(0);
+
+        List<Carta> cartasDeEspada= Arrays.asList(setUpListaCartasDispo().get(0).get(0), setUpListaCartasDispo().get(0).get(1));
+        List<Carta> cartasDeOro=  Arrays.asList(setUpListaCartasDispo().get(0).get(2)); 
+
+        Map<Palo, List<Carta>> paloCartas= new HashMap<>();
+        paloCartas.put(Palo.ESPADAS, cartasDeEspada);
+        paloCartas.put(Palo.OROS, cartasDeOro);
+        
+        assertEquals(paloCartas, mano.agrupaCartasPalo(cartasDeJugador1));
+
+    }
+   
+    @Test
+    public void puntuacionDeJugadorCorrecta3Iguales(){
+        Map<Palo, List<Carta>> listaPaloValoresJug3= setUpCartasPaloValorTresIguales();
+        assertEquals(32, mano.getMaxPuntuacion(listaPaloValoresJug3));
+    }
+
+
+    @Test
+    public void puntuacionDeJugadorCorrecta3Diferentes(){
+        Map<Palo, List<Carta>> listaPaloValoresJug2= setUpCartasPaloValorTresDiferentes();
+        assertEquals(3, mano.getMaxPuntuacion(listaPaloValoresJug2));
+    }
+ 
+ 
 
     
 

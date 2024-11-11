@@ -36,7 +36,7 @@ public class Mano {
      public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
         for(int i=0; i<cartasDisp.size(); i++){
-            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
             listaEnvidosCadaJugador.add(i, sumaJugador);
         }
@@ -64,5 +64,10 @@ public class Mano {
 
     public Integer comprobarValor(Integer value) {
         return value>=10?0:value;
+    }
+
+    public Map<Palo, List<Carta>> agrupaCartasPalo(List<Carta> listaDeCartas){
+        Map<Palo, List<Carta>> diccCartasPaloJugador = listaDeCartas.stream().collect(Collectors.groupingBy(Carta::getPalo));
+        return diccCartasPaloJugador;
     }
 }
