@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tokenService from "../services/token.service";
 import getErrorModal from "./../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
@@ -11,11 +11,12 @@ export default function Profile() {
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [newPassword, setNewPassword] = useState();
-  const [selectedFile, setSelectedFile] = useState(null);
+
 
   const [perfil, setPerfil] = useFetchState(
     {}, "/api/v1/profile", jwt, setMessage, setVisible
   );
+
 
   
   const modal = getErrorModal(setVisible, visible, message);
@@ -23,14 +24,11 @@ export default function Profile() {
 
 
 
-function handleFileChange(event) {
-    setSelectedFile(event.target.files[0]); 
-  }
-
   function handleSubmit(event) {
     event.preventDefault();
     const updatedPerfil = {
         ...perfil,
+        
         password: newPassword ? newPassword : undefined // Solo incluir si hay una nueva contraseña
         
     };
@@ -73,6 +71,7 @@ function handleFileChange(event) {
     setPerfil({ ...perfil, [name]: value });
   }
 
+
   function handlePasswordChange(event) {
     setNewPassword(event.target.value);
   }
@@ -90,7 +89,6 @@ function handleFileChange(event) {
                 <Label for="username" className="custom-form-input-label">Nombre de usuario</Label>
                 <Input
                   type="text"
-                  required
                   name="username"
                   id="username"
                   value={perfil.username || ""}
@@ -150,18 +148,23 @@ function handleFileChange(event) {
                 <Label for="photo" className="custom-form-input-label">Foto</Label>
                 {perfil.photo && (
                   <img
-                    src={perfil.photo}
+                    src={perfil.photo }
                     alt="Foto del perfil"
                     style={{ width: '100px', height: '100px', borderRadius: '50%' }}
+                    onError={(e) => (e.target.style.display = 'none')}
                   />
                 )}
+                <Label for="photo" className="custom-form-input-label">Foto</Label>
                 <Input
-                  type="file"
+                  type="text"
                   name="photo"
                   id="photo"
-                  onChange={handleFileChange} 
+                  value={perfil.photo }
+                  onChange={handleChange}
                   className="custom-input"
+                  placeholder="Poné el link de la foto que quieras usar"
                 />
+              
               </div>
               
               <div className="custom-button-row">

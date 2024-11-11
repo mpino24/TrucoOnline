@@ -644,6 +644,30 @@ public class TestManoService {
         }
     }
 
+    @Test
+    public void responderRetrucoValeCuatroQuiero() throws Exception{
+        setup(0, 4);
+        setupTruco(0, 2); //Se canto Truco
+        setupCartasDisponibles(3, 2);
+        setupSecuenciaCantos(0, 1, null, null, null, null);
+        
+        try {
+            manoService.cantosTruco(CantosTruco.RETRUCO);
+            assertTrue(mano.getJugadorTurno() == 0);
+
+            manoService.responderTruco(Respuestas.SUBIR); //VALECUATRO
+            assertEquals(3, mano.getPuntosTruco());
+            assertEquals(3, mano.getJugadorTurno());
+
+            manoService.responderTruco(Respuestas.QUIERO); 
+            assertEquals(4, mano.getPuntosTruco());
+            assertEquals(3, mano.getJugadorTurno());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
     @Test //OBVIAMENTE ESTE TEST HAY QUE SEPARARLO TODO, PERO QUE FUNCIONE ME VA A HACER LLORAR DE LA EMOCION
     public void responderTrucoRetrucoValecuatroQuiero() throws Exception{
         setup(0, 4);

@@ -131,8 +131,7 @@ public class ManoService {
     public void cantosTruco(CantosTruco canto) throws Exception{
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
-        Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
-        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+
         Integer rondaActual = obtenerRondaActual();
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
@@ -147,7 +146,7 @@ public class ManoService {
         }
         
         switch (canto) {
-            case TRUCO: //Truco
+            case TRUCO: 
                 
                 manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
                                                              //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más) 
@@ -161,15 +160,9 @@ public class ManoService {
                     throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
                 }
                 List<Integer> cantoEnTruco = secuenciaCantos.get(0);
-                Integer rondaTruco = cantoEnTruco.get(0);
-                Integer jugadorTruco = cantoEnTruco.get(1);
+                Integer elQueRespondeAlRetruco = quienResponde(cantoEnTruco, jugadorTurno);
+                manoActual.setJugadorTurno(elQueRespondeAlRetruco);
                 manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-
-                if(rondaActual==rondaTruco && jugadorAnterior == jugadorTruco){
-                    manoActual.setJugadorTurno(jugadorAnterior);
-                } else {
-                    manoActual.setJugadorTurno(jugadorSiguiente);
-                }
                 secuenciaCantos.add(listaRondaJugador);
                 manoActual.setSecuenciaCantoLista(secuenciaCantos);
                 
@@ -179,17 +172,9 @@ public class ManoService {
                     throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
                 }
                 List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                Integer rondaRetruco = cantoEnRetruco.get(0);
-                Integer jugadorRetruco = cantoEnRetruco.get(1);
+                Integer elQueResponde = quienResponde(cantoEnRetruco, jugadorTurno);
+                manoActual.setJugadorTurno(elQueResponde);
                 manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-                if(rondaActual==rondaRetruco && (jugadorAnterior == jugadorRetruco )){ // TODO ESTAS COMPROBACIONES PONER EN UN METODO APARTE
-                    
-                        manoActual.setJugadorTurno(jugadorAnterior);
-                    
-                    
-                } else {
-                    manoActual.setJugadorTurno(jugadorSiguiente);
-                }
                 secuenciaCantos.add(listaRondaJugador);
                 manoActual.setSecuenciaCantoLista(secuenciaCantos);
 
@@ -200,19 +185,33 @@ public class ManoService {
         }      
     }
 
+    public Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+        Integer res = null;
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer rondaCanto = cantoHecho.get(0);
+        Integer jugadorCanto = cantoHecho.get(1); 
+        if (rondaActual==rondaCanto && jugadorAnterior== jugadorCanto) {
+            res = jugadorAnterior;
+        }else{
+            res = jugadorSiguiente;
+        }
+        return res;
+    }
 
     
 
     //TODO: FALTA TEST
     public void responderTruco(Respuestas respuesta) throws Exception{ 
         Integer jugadorTurno = manoActual.getJugadorTurno();
-        Integer jugadorSiguiente =  siguienteJugador(jugadorTurno);
+
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
 
         Integer truco = manoActual.getPuntosTruco();
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         Integer queTrucoEs = secuenciaCantos.size();
-        Integer rondaActual = obtenerRondaActual();
+        
         manoActual.setEsperandoRespuesta(false);
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
         switch (respuesta) {
@@ -222,34 +221,16 @@ public class ManoService {
                     manoActual.setJugadorTurno(jugadorAnterior);
                 } else if( queTrucoEs == 2){
                     List<Integer> cantoEnTruco = secuenciaCantos.get(0);
-                    Integer rondaTruco = cantoEnTruco.get(0);
-                    Integer jugadorTruco = cantoEnTruco.get(1);
-
                     List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                    Integer rondaRetruco = cantoEnRetruco.get(0);
-                    Integer jugadorRetruco = cantoEnRetruco.get(1);
-                    if((rondaTruco == rondaActual && rondaRetruco == rondaActual) && (jugadorTruco==jugadorTurno && jugadorSiguiente==jugadorRetruco)){
-                        manoActual.setJugadorTurno(jugadorTurno);
-                    } else{
-                        manoActual.setJugadorTurno(jugadorAnterior);
-                    }
+                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnTruco, cantoEnRetruco, jugadorTurno);
+                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
                     
-                } else{         
+                } else {         
                     List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                    Integer rondaRetruco = cantoEnRetruco.get(0);
-                    Integer jugadorRetruco = cantoEnRetruco.get(1);
                     List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
-                    Integer rondaValecuatro = cantoEnValecuatro.get(0);
-                    Integer jugadorValecuatro = cantoEnValecuatro.get(1);
-
-                    if((rondaRetruco == rondaActual && rondaValecuatro == rondaActual) && (jugadorRetruco==jugadorTurno && jugadorSiguiente==jugadorValecuatro)){
-                        manoActual.setJugadorTurno(jugadorTurno);
-                    } else{
-                        manoActual.setJugadorTurno(jugadorAnterior);
-                    }
-                }
-                
-               
+                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnRetruco, cantoEnValecuatro, jugadorTurno);
+                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                }  
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
@@ -288,6 +269,25 @@ public class ManoService {
         return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
     }
     
+
+    public Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
+        Integer res = null;
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+
+        Integer rondaCantoAnterior = cantoAnterior.get(0);
+        Integer jugadorCantoAnterior = cantoAnterior.get(1);
+
+        Integer rondaCantoAhora = cantoAhora.get(0);
+        Integer jugadorCantoAhora = cantoAhora.get(1);
+        if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
+            res = jugadorTurno;
+        }else{
+            res = jugadorAnterior;
+        }
+        return res;
+    }
 
 
 }
