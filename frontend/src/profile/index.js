@@ -49,7 +49,7 @@ export default function Profile() {
         navigate("/login");
       } else if (data === "HOME") {
         console.log(data)
-        navigate("/");
+        navigate("/home");
       } else {
         let json = JSON.parse(data);
         if (json.message) {
@@ -57,7 +57,7 @@ export default function Profile() {
           setMessage(mensaje);
           setVisible(true);
         } else {
-          navigate("/");
+          navigate("/home");
         }
       }
     })

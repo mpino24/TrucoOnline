@@ -1,4 +1,5 @@
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import React, { useState } from 'react';
 /**
  * Toggles the visibility state of a modal.
  *
@@ -23,6 +24,17 @@ function handleVisible(setVisible, visible) {
  * const modal = getErrorModal(setVisible, visible, "An error occurred!");
  */
 export default function getErrorModal(setVisible, visible = false, message = null) {
+
+    function getGifMono(){
+        const gifsLink=["https://media1.tenor.com/m/BbeN4otDs4cAAAAd/dying-dead.gif",
+            "https://c.tenor.com/vkvU9Fi4uOsAAAAC/tenor.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2cwcHF4azI0dWZkaHFieW9ybXc2bzN0M2VmcTU0Y3BzbnJvazFkcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/HBt1lszlxqZ5XBfF14/giphy.webp"
+        ];
+        const randomIndex = Math.floor(Math.random() * gifsLink.length)
+        return(gifsLink[randomIndex])
+
+    }
+
     if (message) {
         const closeBtn = (
             <button className="close" onClick={() => handleVisible(setVisible, visible)} type="button">
@@ -35,6 +47,7 @@ export default function getErrorModal(setVisible, visible = false, message = nul
                     keyboard={false}>
                     <ModalHeader toggle={() => handleVisible(setVisible, visible)} close={closeBtn}>Alert!</ModalHeader>
                     <ModalBody>
+                    <img src={getGifMono()} alt="Mono GIF" style={{ width: '100%', height: 'auto', marginBottom: '20px' }} />
                         {message}
                     </ModalBody>
                     <ModalFooter>
