@@ -375,20 +375,16 @@ else if (jugadorActual%2 == 1){
 ```Java
 public class Mano {
                         ...
-
-     public Integer jugadorGanadorEnvido(List<List<Carta>> cartasDisp){ 
-        Integer puntos=0;
-        Integer posicion=0;
+ public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
+        List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
         for(int i=0; i<cartasDisp.size(); i++){
-            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+            Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
-            if(sumaJugador> puntos){
-                puntos= sumaJugador;
-                posicion= i;
-            }
+            listaEnvidosCadaJugador.add(i, sumaJugador);
         }
-        return posicion;
+        return listaEnvidosCadaJugador;
     }
+
 
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
         List< Integer> listaSumas= new ArrayList<>();
@@ -408,8 +404,13 @@ public class Mano {
         return listaSumas.stream().max(Comparator.naturalOrder()).get();
     }
 
-    private Integer comprobarValor(Integer value) {
+    public Integer comprobarValor(Integer value) {
         return value>=10?0:value;
+    }
+
+    public Map<Palo, List<Carta>> agrupaCartasPalo(List<Carta> listaDeCartas){
+        Map<Palo, List<Carta>> diccCartasPaloJugador = listaDeCartas.stream().collect(Collectors.groupingBy(Carta::getPalo));
+        return diccCartasPaloJugador;
     }
 }
 ```
