@@ -47,21 +47,22 @@ public class Mano {
 
 
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
-        List< Integer> listaSumas= new ArrayList<>();
-        for(Map.Entry<Palo, List<Carta>> e : diccCartasPaloJugador.entrySet()){
-            if(e.getValue().size()==1){
-                listaSumas.add( comprobarValor(e.getValue().get(0).getValor()));
+        List< Integer> listaSumasPalo= new ArrayList<>();
+        for(Map.Entry<Palo, List<Carta>> cartasPaloJugador : diccCartasPaloJugador.entrySet()){
+            if(cartasPaloJugador.getValue().size()==1){
+                listaSumasPalo.add( comprobarValor(cartasPaloJugador.getValue().get(0).getValor()));
             }
-            else if(e.getValue().size()==2){
-                Integer valor1= e.getValue().get(0).getValor();
-                Integer valor2= e.getValue().get(1).getValor();
-                listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
-            }else if(e.getValue().size()==3){
-                Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
-                listaSumas.add( valor+constanteEnvido);
+            else if(cartasPaloJugador.getValue().size()==2){
+                Integer valor1= cartasPaloJugador.getValue().get(0).getValor();
+                Integer valor2= cartasPaloJugador.getValue().get(1).getValor();
+                listaSumasPalo.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
+            }else if(cartasPaloJugador.getValue().size()==3){
+                Integer valor= cartasPaloJugador.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
+                listaSumasPalo.add( valor+constanteEnvido);
             }
         }
-        return listaSumas.stream().max(Comparator.naturalOrder()).get();
+        Integer puntosEnvidoJugador = listaSumasPalo.stream().max(Comparator.naturalOrder()).get();
+        return puntosEnvidoJugador;
     }
 
     public Integer comprobarValor(Integer value) {
