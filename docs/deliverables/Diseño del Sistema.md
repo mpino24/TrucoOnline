@@ -202,7 +202,7 @@ Como grupo no teniamos claro como abordar los apartados de creación y unión de
 
 
 #### Justificación de la solución adoptada
-
+Al emplear modales en lugar de páginas, la UX es más dinámica y limpia.
 
 ## Refactorizaciones aplicadas
 
