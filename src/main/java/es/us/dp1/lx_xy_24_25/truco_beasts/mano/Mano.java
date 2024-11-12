@@ -28,6 +28,8 @@ public class Mano {
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
 
+    private final Integer constanteEnvido=20;
+
     private List<Integer> envidos = new ArrayList<>();
     @ManyToOne
     private Partida partida;
@@ -56,7 +58,7 @@ public class Mano {
                 listaSumas.add(  20 + comprobarValor(valor1) + comprobarValor(valor2));
             }else if(e.getValue().size()==3){
                 Integer valor= e.getValue().stream().map(x-> comprobarValor(x.getValor())).sorted(Comparator.reverseOrder()).limit(2).reduce(0, (a, b) -> a+b);
-                listaSumas.add( valor+20);
+                listaSumas.add( valor+constanteEnvido);
             }
         }
         return listaSumas.stream().max(Comparator.naturalOrder()).get();
