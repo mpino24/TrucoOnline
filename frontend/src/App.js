@@ -77,12 +77,6 @@ function App() {
     <div>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <AppNavbar />
-        <TransitionGroup>
-          <CSSTransition
-            key={location.key}
-            timeout={700}
-            classNames="fade"
-          >
             <Routes location={location}>
               <Route path="/plans" element={<PlanList />} />
               <Route path="/docs" element={<SwaggerDocs />} />
@@ -90,8 +84,6 @@ function App() {
               {userRoutes}
               {adminRoutes}
             </Routes>
-          </CSSTransition>
-        </TransitionGroup>
       </ErrorBoundary>
     </div>
   );
