@@ -13,7 +13,7 @@ export default function GameList() {
     const [visible, setVisible] = useState(false);
     const [games, setGames] = useFetchState(
         [],
-        `/api/v1/partida`,
+        `/api/v1/partida/partidas/accesibles`,
         jwt,
         setMessage,
         setVisible
