@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 public class ManoService {
 
     private static Mano manoActual;
-            
-            
-        
+
     public ManoService(Mano mano ) {
         ManoService.manoActual = mano;
     }
@@ -95,76 +93,74 @@ public class ManoService {
     }
                             
 
-public Boolean puedeCantarEnvido(){
-    Boolean sePuede = false;
-    Boolean esRondaUno = obtenerRondaActual() ==1;
-    Boolean esPie = false;
-    Boolean noHayTruco = manoActual.getPuntosTruco() <= 1;
-    Boolean noSeCanto = manoActual.getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
+    public Boolean puedeCantarEnvido(){
+        Boolean sePuede = false;
+        Boolean esRondaUno = obtenerRondaActual() ==1;
+        Boolean esPie = false;
+        Boolean noHayTruco = manoActual.getPuntosTruco() <= 1;
+        Boolean noSeCanto = manoActual.getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
 
-    Integer jugTurno = manoActual.getJugadorTurno();
-    Integer pie = obtenerJugadorPie();
-    Integer otroPie = obtenerJugadorAnterior(pie);
+        Integer jugTurno = manoActual.getJugadorTurno();
+        Integer pie = obtenerJugadorPie();
+        Integer otroPie = obtenerJugadorAnterior(pie);
     
-    if(jugTurno == pie || jugTurno == otroPie) esPie = true;
+        if(jugTurno == pie || jugTurno == otroPie) esPie = true;
     
     
-    sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
+        sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
     
-    return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
-}    
+        return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
+    }    
 
-public static Integer obtenerRondaActual(){
+    public static Integer obtenerRondaActual(){
         Integer ronda = 0;
         List<List<Carta>> cartas = manoActual.getCartasDisp();
         Integer cartasPie = cartas.get(obtenerJugadorPie()).size();
-    if (cartasPie ==3) ronda= 1;
-    else if(cartasPie==2) ronda=2;
-    else ronda =3;            
-    return ronda;
-}
-
-//TODO: FALTAN TEST NEGATIVOS
-
-public static void cantosTruco(CantosTruco canto) throws Exception{
-    Integer jugadorTurno = manoActual.getJugadorTurno();
-    Integer equipoCantor = manoActual.getEquipoCantor();
-
-    Integer rondaActual = obtenerRondaActual();
-    List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
-    List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
-    manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
-    listaRondaJugador.add(rondaActual);
-    listaRondaJugador.add(jugadorTurno);
-
-
-    if (!puedeCantarTruco()) {
-        throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
+        if (cartasPie ==3) ronda= 1;
+        else if(cartasPie==2) ronda=2;
+        else ronda =3;            
+        return ronda;
     }
-                        
-    switch (canto) {
-        case TRUCO: 
-            Truco truco = new TipoTruco();
-            truco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-            siguienteTurno();
-            break;
-        case RETRUCO:
-            if (manoActual.getPuntosTruco() <2) {
-                throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
-            }
-            Truco retruco = new TipoRetruco();
-            retruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-            break;
-        case VALECUATRO:
-            if (manoActual.getPuntosTruco() <3) {
-                throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
-            }
-            Truco valeCuatro = new TipoValeCuatro();
-            valeCuatro.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-            break;
-            
+
+    //TODO: FALTAN TEST NEGATIVOS
+    public static void cantosTruco(CantosTruco canto) throws Exception{
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer equipoCantor = manoActual.getEquipoCantor();
+
+        Integer rondaActual = obtenerRondaActual();
+        List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
+        List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
+        manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
+        listaRondaJugador.add(rondaActual);
+        listaRondaJugador.add(jugadorTurno);
+
+
+        if (!puedeCantarTruco()) {
+            throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
+        }
+                            
+        switch (canto) {
+            case TRUCO: 
+                Truco truco = new TipoTruco();
+                truco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                siguienteTurno();
+                break;
+            case RETRUCO:
+                if (manoActual.getPuntosTruco() <2) {
+                    throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
+                }
+                Truco retruco = new TipoRetruco();
+                retruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                break;
+            case VALECUATRO:
+                if (manoActual.getPuntosTruco() <3) {
+                    throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
+                }
+                Truco valeCuatro = new TipoValeCuatro();
+                valeCuatro.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                break;
             default:
-                throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
+                    throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
         }      
     }
                                 
