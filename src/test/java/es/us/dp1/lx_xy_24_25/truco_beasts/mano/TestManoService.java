@@ -521,7 +521,7 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.TRUCO);
             assertTrue(mano.getJugadorTurno() ==1);
 
-            manoService.responderTruco(Respuestas.QUIERO);
+            manoService.responderTruco(RespuestasTruco.QUIERO);
             assertTrue(mano.getJugadorTurno() ==0);
             assertEquals(2, mano.getPuntosTruco());
         } catch (Exception e) {
@@ -539,7 +539,7 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.TRUCO);
             assertTrue(mano.getJugadorTurno() ==1);
 
-            manoService.responderTruco(Respuestas.NO_QUIERO);
+            manoService.responderTruco(RespuestasTruco.NO_QUIERO);
             assertEquals(1, mano.getPuntosTruco());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -557,7 +557,7 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.RETRUCO);
             assertTrue(mano.getJugadorTurno() ==2);
 
-            manoService.responderTruco(Respuestas.QUIERO); //QUIERO
+            manoService.responderTruco(RespuestasTruco.QUIERO); //QUIERO
             assertTrue(mano.getJugadorTurno() ==1);
             assertEquals(3, mano.getPuntosTruco());
         } catch (Exception e) {
@@ -575,7 +575,7 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.RETRUCO);
             assertTrue(mano.getJugadorTurno() ==2); 
 
-            manoService.responderTruco(Respuestas.NO_QUIERO); //NO QUIERO
+            manoService.responderTruco(RespuestasTruco.NO_QUIERO); //NO QUIERO
             assertEquals(2, mano.getPuntosTruco());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -593,7 +593,7 @@ public class TestManoService {
             assertEquals(2, mano.getJugadorTurno());
             assertTrue(mano.getEsperandoRespuesta());
 
-            manoService.responderTruco(Respuestas.QUIERO); //QUIERO
+            manoService.responderTruco(RespuestasTruco.QUIERO); //QUIERO
             // HAY QUE SEPARAR LOS TESTS, PERO AHORA ME DA PAJA
             assertFalse(mano.getEsperandoRespuesta());
             assertTrue(mano.getJugadorTurno() ==1);
@@ -614,7 +614,7 @@ public class TestManoService {
             assertTrue(mano.getJugadorTurno() ==2);
 
 
-            manoService.responderTruco(Respuestas.NO_QUIERO);
+            manoService.responderTruco(RespuestasTruco.NO_QUIERO);
             assertEquals(3, mano.getPuntosTruco());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -632,11 +632,11 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.TRUCO);
             assertTrue(mano.getJugadorTurno() == 1);
 
-            manoService.responderTruco(Respuestas.SUBIR); //RETRUCO
+            manoService.responderTruco(RespuestasTruco.SUBIR); //RETRUCO
             assertEquals(2, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
 
-            manoService.responderTruco(Respuestas.QUIERO); 
+            manoService.responderTruco(RespuestasTruco.QUIERO); 
             assertEquals(3, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
         } catch (Exception e) {
@@ -655,11 +655,11 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.RETRUCO);
             assertTrue(mano.getJugadorTurno() == 0);
 
-            manoService.responderTruco(Respuestas.SUBIR); //VALECUATRO
+            manoService.responderTruco(RespuestasTruco.SUBIR); //VALECUATRO
             assertEquals(3, mano.getPuntosTruco());
             assertEquals(3, mano.getJugadorTurno());
 
-            manoService.responderTruco(Respuestas.QUIERO); 
+            manoService.responderTruco(RespuestasTruco.QUIERO); 
             assertEquals(4, mano.getPuntosTruco());
             assertEquals(3, mano.getJugadorTurno());
         } catch (Exception e) {
@@ -678,15 +678,15 @@ public class TestManoService {
             manoService.cantosTruco(CantosTruco.TRUCO); //TRUCO
             assertEquals(1,mano.getJugadorTurno());
 
-            manoService.responderTruco(Respuestas.SUBIR);//RETRUCO
+            manoService.responderTruco(RespuestasTruco.SUBIR);//RETRUCO
             assertEquals(2, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
 
-            manoService.responderTruco(Respuestas.SUBIR);//VALECUATRO
+            manoService.responderTruco(RespuestasTruco.SUBIR);//VALECUATRO
             assertEquals(3, mano.getPuntosTruco());
             assertEquals(1, mano.getJugadorTurno());
 
-            manoService.responderTruco(Respuestas.QUIERO); //QUIERO
+            manoService.responderTruco(RespuestasTruco.QUIERO); //QUIERO
             assertEquals(4, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
         } catch (Exception e) {
