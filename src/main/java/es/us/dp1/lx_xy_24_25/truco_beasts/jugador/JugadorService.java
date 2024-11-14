@@ -89,6 +89,11 @@ public class JugadorService {
     }
 
     @Transactional(readOnly = true)
+    public List<JugadorDTO> findSolicitudesByUserId(int userId) {
+        return jugadorRepository.findSolicitudesByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
     public JugadorDTO findJugadorByUserName(String userName) {
         Optional<JugadorDTO> res = jugadorRepository.findJugadorByUserName(userName);
         if (res.isEmpty()) {
@@ -103,6 +108,12 @@ public class JugadorService {
     public boolean checkIfAreFriends(String friendUserName, int userId) {
         List<JugadorDTO> amigos = jugadorRepository.findAmigosByUserId(userId);
         return (amigos.stream().map(a -> a.getUserName()).toList().contains(friendUserName));
+
+    }
+    @Transactional(readOnly = true)
+    public boolean comprobarExistenciaSolicitud(String friendUserName, int userId) {
+        List<JugadorDTO> solicitudes = jugadorRepository.findSolicitudesByUserId(userId);
+        return (solicitudes.stream().map(a -> a.getUserName()).toList().contains(friendUserName));
 
     }
 
@@ -131,6 +142,30 @@ public class JugadorService {
 
     }
 
+    @Transactional
+    public void crearSolicitud(int userId, int solicitadoId){
+        Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
+        Optional<Jugador> solicitadoOpt = jugadorRepository.findById(solicitadoId);
+        if (!jugadorOpt.isEmpty() && !solicitadoOpt.isEmpty()) {
+            Jugador jugador = jugadorOpt.get();
+            Jugador solicitado = solicitadoOpt.get();
+            if (!jugador.getSolicitudes().contains(solicitado)) {
+                if (!jugador.getId().equals(solicitado.getId())) {
+                    jugador.getSolicitudes().add(solicitado);
+                    solicitado.getSolicitudes().add(jugador);
+                    jugadorRepository.save(jugador);
+                    jugadorRepository.save(solicitado);
+                } else {
+                    throw new IllegalStateException("No te puedes agregar a ti mismo");
+                }
+            } else {
+                throw new IllegalStateException("Ya sois amigos!!");
+            }
+        } else {
+            throw new ResourceNotFoundException("Usuarios no encontrados");
+        }
+    }
+
     @Transactional()
     public void deleteFriends(int userId, int amigoPlayerId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
@@ -144,6 +179,25 @@ public class JugadorService {
                     amigo.getAmigos().remove(jugador);
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
+                }
+            }
+        } else {
+            throw new ResourceNotFoundException("Usuarios no encontrados");
+        }
+    }
+    @Transactional()
+    public void deleteSolicitud(int userId, int solicitadoId) {
+        Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
+        Optional<Jugador> solicitadoOpt = jugadorRepository.findById(solicitadoId);
+        if (!jugadorOpt.isEmpty() && !solicitadoOpt.isEmpty()) {
+            Jugador jugador = jugadorOpt.get();
+            Jugador solicitado = solicitadoOpt.get();
+            if (jugador.getSolicitudes().contains(solicitado)) {
+                if (!jugador.getId().equals(solicitado.getId())) {
+                    jugador.getSolicitudes().remove(solicitado);
+                    solicitado.getSolicitudes().remove(jugador);
+                    jugadorRepository.save(jugador);
+                    jugadorRepository.save(solicitado);
                 }
             }
         } else {

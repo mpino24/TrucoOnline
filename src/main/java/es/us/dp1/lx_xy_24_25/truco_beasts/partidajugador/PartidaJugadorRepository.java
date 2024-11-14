@@ -1,6 +1,8 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -21,6 +23,10 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     @Modifying
     @Query("DELETE FROM PartidaJugador pj WHERE pj.player.id = :userId AND pj.game.instanteFin IS NULL")
     void deleteByPlayerId(Integer userId);
+
+    @Query("SELECT pj.posicion FROM PartidaJugador pj WHERE pj.game.id = :partidaId")
+    List<Integer> lastPosition(Integer partidaId);
+
 
 
 }

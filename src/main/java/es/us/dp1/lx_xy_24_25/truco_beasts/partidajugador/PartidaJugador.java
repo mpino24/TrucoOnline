@@ -14,10 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PartidaJugador extends BaseEntity{
-    
-    @NotNull
-    Equipo equipo; //Sera borrado en la siguiente refactorizacion
-    
+
     @NotNull
     private Integer posicion;
     
@@ -26,6 +23,14 @@ public class PartidaJugador extends BaseEntity{
 
     @ManyToOne
     private Partida game;
+
+    public Equipo getEquipo(){
+        if(posicion%2==0){
+            return Equipo.EQUIPO1;
+        }else{
+            return Equipo.EQUIPO2;
+        }
+    }
 
 }
 

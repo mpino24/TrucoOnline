@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
 @Service
@@ -47,10 +48,11 @@ public class PartidaJugadorService {
             if(pjRepository.numberOfGamesConnected(jugadorOpt.get().getId())>0){
                 throw new AlreadyInGameException("Ya estás conectado a una partida");
             }
-
+            
             partJug.setPlayer(jugadorOpt.get());
-            partJug.setPosicion(1); //POR AHORA
-            partJug.setEquipo(Equipo.EQUIPO1); //POR AHORA
+            List<Integer> posiciones =pjRepository.lastPosition(partida.getId());
+            Integer posi= posiciones.stream().max(Comparator.naturalOrder()).orElse(-1);
+            partJug.setPosicion(posi+1); 
             pjRepository.save(partJug);
         }
 

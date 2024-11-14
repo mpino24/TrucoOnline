@@ -40,6 +40,10 @@ public class JugadorController {
     public ResponseEntity<List<JugadorDTO>> findAmigosByUserId(@RequestParam(required=true) String userId) {
 		return new ResponseEntity<>(jugadorService.findAmigosByUserId(Integer.valueOf(userId)), HttpStatus.OK);
 	}
+    @GetMapping("/solicitudes")
+    public ResponseEntity<List<JugadorDTO>> findSolicitudesByUserId(@RequestParam(required=true) String userId) {
+		return new ResponseEntity<>(jugadorService.findSolicitudesByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+	}
 
     @GetMapping("/{userName}")
     public ResponseEntity<JugadorDTO> findJugadorByJugadorName(@PathVariable String userName){
@@ -67,10 +71,26 @@ public class JugadorController {
         jugadorService.addNewFriends(userId, amigoId);
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
+   
     @DeleteMapping("{userId}/isFriend/{amigoId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity deleteFriend(@PathVariable int userId, @PathVariable int amigoId){
         jugadorService.deleteFriends(userId, amigoId);
+        return new ResponseEntity<>(void.class,HttpStatus.OK);
+    }
+    
+    @PatchMapping("{userId}/isSolicitado/{solicitadoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity crearSolicitud(@PathVariable int userId, @PathVariable int solicitadoId){
+        jugadorService.crearSolicitud(userId, solicitadoId);
+        return new ResponseEntity<>(void.class,HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("{userId}/isSolicitado/{amigoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity deleteSolicitud(@PathVariable int userId, @PathVariable int solicitadoId){
+        jugadorService.deleteSolicitud(userId, solicitadoId);
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
 }
