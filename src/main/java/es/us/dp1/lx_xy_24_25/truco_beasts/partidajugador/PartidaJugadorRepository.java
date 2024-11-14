@@ -27,6 +27,9 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     @Query("SELECT pj.posicion FROM PartidaJugador pj WHERE pj.game.id = :partidaId")
     List<Integer> lastPosition(Integer partidaId);
 
+    @Query("SELECT pj FROM PartidaJugador pj WHERE pj.game.codigo= :partidaCode")
+    List<PartidaJugador> findPlayersConnectedTo(String partidaCode);
+
 
 
 }

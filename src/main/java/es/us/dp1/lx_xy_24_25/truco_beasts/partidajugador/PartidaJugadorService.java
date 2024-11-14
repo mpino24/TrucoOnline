@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
@@ -61,6 +63,11 @@ public class PartidaJugadorService {
     @Transactional
     public void eliminateJugadorPartida(Integer userId){
         pjRepository.deleteByPlayerId(userId);
+    }
+
+    @Transactional(readOnly=true)
+    public List<PartidaJugador> getPlayersConnectedTo(String partidaCode){
+        return pjRepository.findPlayersConnectedTo(partidaCode);
     }
     
 }

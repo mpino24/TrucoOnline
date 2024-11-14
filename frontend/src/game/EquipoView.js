@@ -5,26 +5,10 @@ import { CiCirclePlus } from "react-icons/ci";
 
 
 const EquipoView = forwardRef((props, ref) => {
-    const [jugadores, setJugadores] = useState([]);
 
-    useEffect(() => {
-        fetch(
-            `/api/v1/jugador/amigos?userId=4`,
-            {
-                method: "GET"
-            }
-        )
-            .then((response) => response.text())
-            .then((data) => {
-                setJugadores(JSON.parse(data))
-
-            })
-
-
-    })
 
     function getJugadoresList() {
-        const jugadoresList = jugadores.map((player) => {
+        const jugadoresList = props.jugadores.map((player) => {
             return (
                 <JugadorView
                     jugador={player}
@@ -33,20 +17,27 @@ const EquipoView = forwardRef((props, ref) => {
             )
         });
 
-        const jugRestantes = Math.max(0, props.partida.numJugadores / 2 - jugadores.length);
+        function changeTeam(){
+            alert('hola')
+
+        }
+
+        const jugRestantes = Math.max(0, props.partida.numJugadores / 2 - props.jugadores.length);
         const botones = [];
         for (let i = 0; i < jugRestantes; i++) {
             botones.push(
                 <div style={{
                     border: '2px solid black',
                     padding: '20px',
-                    display: 'flex',           // Cambiado a flex para alinear horizontalmente
-                    alignItems: 'center',      // Centra verticalmente los elementos dentro del contenedor
+                    display: 'flex',      
+                    alignItems: 'center',     
                     textAlign: 'center',
                     width: 'auto',
                     height: 'auto',
                     cursor: 'pointer'
-                }}>
+                }}
+                onClick={() => changeTeam()}
+                >
                     <CiCirclePlus style={{ width: 30, height: 30, color: 'black', marginRight: 10 }} />
                     <p style={{ margin: 0 }}>Unirse al equipo {props.equipo}</p>
                 </div>
@@ -56,14 +47,12 @@ const EquipoView = forwardRef((props, ref) => {
 
 
         }
-        if (jugadores.length < props.partida.numJugadores / 2) {
             return (
                 <div>
                     <p>{jugadoresList}</p>
                     <p>{botones}</p>
                 </div>
             )
-        }
 
     }
 

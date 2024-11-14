@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,6 +52,12 @@ public class PartidaJugadorController {
     @ResponseStatus(HttpStatus.OK)
     public void eliminateJugadorPartida(@RequestParam(required=true) Integer userId){
         pjService.eliminateJugadorPartida(userId);
+    }
+
+    @GetMapping("/players")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PartidaJugador> getPlayersConnectedTo(@RequestParam(required=true) String partidaCode){
+        return pjService.getPlayersConnectedTo(partidaCode);
     }
     
 }

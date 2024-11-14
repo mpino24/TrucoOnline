@@ -13,21 +13,24 @@ const WaitingModal = forwardRef((props, ref) => {
     const navigate = useNavigate();
     const [modalIsOpen, setIsOpen] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState(0);
+    const [jugadores, setJugadores] = useState([]);
 
     useEffect(() => {
         fetch(
-            "/api/v1/partidajugador/numjugadores?partidaId=" + game.id,
+            `/api/v1/partidajugador/players?partidaCode=`+game.codigo,
             {
                 method: "GET"
             }
         )
-            .then((response) => response.text())
+            .then((response) => response.json())
             .then((data) => {
-                setConnectedUsers(JSON.parse(data))
+                setJugadores(data)
+                setConnectedUsers(data.length)
 
             })
-            .catch((message) => alert(message));
-    }, [game.id]);
+
+
+    })
 
 
     const customModalStyles = {
@@ -70,8 +73,15 @@ const WaitingModal = forwardRef((props, ref) => {
                 navigate("/home");
             })
             .catch((message) => alert(message));
+    }
 
+    function getJugadoresEquipo(equipo){
+        if(jugadores.length>0){
 
+            return jugadores.filter(jugador => jugador.equipo=== "EQUIPO"+equipo).map(j=> j.player);
+        }else{
+            return [];
+        }
 
     }
 
@@ -97,7 +107,7 @@ const WaitingModal = forwardRef((props, ref) => {
                     <h2 style={{ color: 'red' }}>Equipo 1</h2>
                     <EquipoView
                         partida={game}
-                        equipo={1}
+                        jugadores={getJugadoresEquipo(1)}
                     />
                 </div>
 
@@ -110,7 +120,7 @@ const WaitingModal = forwardRef((props, ref) => {
                     <h2 style={{ color: 'red' }}>Equipo 2</h2>
                     <EquipoView
                         partida={game}
-                        equipo={2}
+                        jugadores={getJugadoresEquipo(2)}
                     />
                 </div>
             </div>
