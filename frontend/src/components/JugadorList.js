@@ -16,6 +16,7 @@ const JugadorList = forwardRef((props, ref)  => {
             <JugadorView
             jugador={player}
             isFriend={true}
+            isSolicitud={true}
             />
         )
     });

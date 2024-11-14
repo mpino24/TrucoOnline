@@ -7,7 +7,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { IoCloseCircle } from "react-icons/io5";
 import tokenService from 'frontend/src/services/token.service.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
-
+import { FaRegEnvelope } from "react-icons/fa6";
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player, setPlayer] = useState(null);
     const [userName, setUsername] = useState("");
@@ -107,9 +107,13 @@ const GetFriendsModal = forwardRef((props, ref) => {
                             {player &&
                                 <VscChromeClose style={{ width: 40, height: 40, cursor: "pointer", position: 'absolute', marginLeft: 20 }} onClick={() => handleReset()} />
                             }
+                            
                         </div>
                     </div>
                 </Form>
+                <button style={{ background: 'transparent', border: 'transparent' }}>
+                                <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer' , marginLeft:60}}/>
+                </button>
             </div>
             {player &&
                 <JugadorView jugador={player} />}
