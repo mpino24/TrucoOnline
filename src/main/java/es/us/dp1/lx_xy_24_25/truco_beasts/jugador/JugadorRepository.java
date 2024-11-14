@@ -23,4 +23,7 @@ public interface JugadorRepository extends CrudRepository<Jugador, Integer> {
 
     @Query("SELECT j FROM Jugador j WHERE j.user.username = :userName")
     Optional<JugadorDTO> findJugadorByUserName(String userName);
+
+    @Query("SELECT a.solicitudes FROM Jugador a WHERE :id = a.user.id")
+    List<JugadorDTO> findSolicitudesByUserId(Integer id);
 }

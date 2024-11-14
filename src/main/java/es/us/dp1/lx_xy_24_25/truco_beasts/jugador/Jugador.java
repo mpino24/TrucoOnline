@@ -31,6 +31,14 @@ public class Jugador extends Person{
 	)
 	protected List<Jugador> amigos = new ArrayList<>();
 
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+        name = "Solicitud",
+        joinColumns = @JoinColumn(name = "solicitanteId"),
+        inverseJoinColumns = @JoinColumn(name = "solicitadoId")
+	)
+	protected List<Jugador> solicitudes = new ArrayList<>();
+
 
 
 
