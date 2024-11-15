@@ -14,6 +14,8 @@ const WaitingModal = forwardRef((props, ref) => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState(0);
     const [jugadores, setJugadores] = useState([]);
+    const [jugadoresE1,setJugadoresE1] = useState([]);
+    const [jugadoresE2,setJugadoresE2] = useState([]);
 
     useEffect(() => {
         fetch(
@@ -25,6 +27,8 @@ const WaitingModal = forwardRef((props, ref) => {
             .then((response) => response.json())
             .then((data) => {
                 setJugadores(data)
+                setJugadoresE1(jugadores.filter(jugadorPartida => jugadorPartida.equipo=== "EQUIPO1"))
+                setJugadoresE2(jugadores.filter(jugadorPartida => jugadorPartida.equipo=== "EQUIPO2"))
                 setConnectedUsers(data.length)
 
             })
@@ -78,7 +82,7 @@ const WaitingModal = forwardRef((props, ref) => {
     function getJugadoresEquipo(equipo){
         if(jugadores.length>0){
 
-            return jugadores.filter(jugador => jugador.equipo=== "EQUIPO"+equipo).map(j=> j.player);
+            return jugadores.filter(jugadorPartida => jugadorPartida.equipo=== "EQUIPO"+equipo);
         }else{
             return [];
         }
@@ -104,10 +108,10 @@ const WaitingModal = forwardRef((props, ref) => {
                     alignItems: 'center',        
                     textAlign: 'center'    
                 }}>
-                    <h2 style={{ color: 'red' }}>Equipo 1</h2>
+                    <h2 style={{ color: 'blue' }}>Equipo 1</h2>
                     <EquipoView
                         partida={game}
-                        jugadores={getJugadoresEquipo(1)}
+                        jugadores={jugadoresE1}
                     />
                 </div>
 
@@ -120,7 +124,7 @@ const WaitingModal = forwardRef((props, ref) => {
                     <h2 style={{ color: 'red' }}>Equipo 2</h2>
                     <EquipoView
                         partida={game}
-                        jugadores={getJugadoresEquipo(2)}
+                        jugadores={jugadoresE2}
                     />
                 </div>
             </div>

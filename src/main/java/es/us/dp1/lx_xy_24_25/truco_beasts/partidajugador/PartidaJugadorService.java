@@ -1,9 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
@@ -68,6 +68,33 @@ public class PartidaJugadorService {
     @Transactional(readOnly=true)
     public List<PartidaJugador> getPlayersConnectedTo(String partidaCode){
         return pjRepository.findPlayersConnectedTo(partidaCode);
+    }
+
+    @Transactional(readOnly=true)
+    public Partida getPartidaOfUserId(Integer userId){
+        Optional<Partida> res= pjRepository.findPartidaByUserId(userId);
+        if(res.isEmpty()){
+            throw new ResourceNotFoundException("El usuario no está en ninguna partida.");
+        }else{
+            return res.get();
+        }
+    }
+
+    @Transactional
+    public void changeTeamOfUser(Integer userId) throws TeamIsFullException{
+        Partida partida = getPartidaOfUserId(userId);
+        List<Integer> posiciones =pjRepository.lastPosition(partida.getId());
+        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj-> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+        if(partjugador==null){
+            throw new ResourceNotFoundException("El usuario no pertenece a la partida");
+        }
+        Integer posInicial = partjugador.getPosicion();
+        Integer posNueva = IntStream.range(0, partida.getNumJugadores()).boxed().filter(p->!posiciones.contains(p)).filter(p->posInicial%2!=p%2).findFirst().orElse(null);
+        if(posNueva==null){
+            throw new TeamIsFullException();
+        }
+        partjugador.setPosicion(posNueva);
+        pjRepository.save(partjugador);
     }
     
 }
