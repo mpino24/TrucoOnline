@@ -28,20 +28,24 @@ public class ManoService {
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         return siguiente;
     }
-            
+       
+    //no hay controller
     public static void siguienteTurno() {
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         manoActual.setJugadorTurno(siguiente);
     }
-                            
+        
+    
+    //No hay controller
     public void anteriorTurno() { 
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer anterior = obtenerJugadorAnterior(jugadorActual);
         manoActual.setJugadorTurno(anterior);
     }
-                            
-    public Integer compararCartas() {
+      
+    
+    public static Integer compararCartas() {
         Integer poderMayor = 0;
         Integer empezador = null;
         List<Carta> cartasLanzadas = manoActual.getCartasLanzadasRonda();
@@ -61,7 +65,8 @@ public class ManoService {
         return empezador != null ? empezador : cercanoAMano(empate);
     }
 
-    public Integer cercanoAMano(List<Integer> jugadores) {
+    //No hay controller
+    public static Integer cercanoAMano(List<Integer> jugadores) {
         Integer jugadorMano = manoActual.getPartida().getJugadorMano();
         Integer jugadorPreferencia = null;
         List<Integer> lista = new ArrayList<>();
@@ -81,7 +86,7 @@ public class ManoService {
         return jugadorPreferencia;
     }
 
-    public void tirarCarta(Integer indiceCarta) {
+    public static void tirarCarta(Integer indiceCarta) {
         if(!manoActual.getEsperandoRespuesta()){
             Integer jugadorActual = manoActual.getJugadorTurno();
             Carta carta = manoActual.getCartasDisp().get(jugadorActual).get(indiceCarta);
@@ -92,7 +97,7 @@ public class ManoService {
         
     }
                             
-
+    //no hay controller
     public Boolean puedeCantarEnvido(){
         Boolean sePuede = false;
         Boolean esRondaUno = obtenerRondaActual() ==1;
@@ -112,6 +117,7 @@ public class ManoService {
         return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
     }    
 
+    //no hay controller
     public static Integer obtenerRondaActual(){
         Integer ronda = 0;
         List<List<Carta>> cartas = manoActual.getCartasDisp();
@@ -163,7 +169,8 @@ public class ManoService {
                     throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
         }      
     }
-                                
+       
+    //no hay controller
     public static Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
         Integer res = null;
         Integer rondaActual = obtenerRondaActual();
@@ -178,8 +185,8 @@ public class ManoService {
         }
         return res;
     }
-                    
-    public void responderTruco(RespuestasTruco respuesta) throws Exception{ 
+      
+    public static void responderTruco(RespuestasTruco respuesta) throws Exception{ 
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer truco = manoActual.getPuntosTruco();
@@ -211,14 +218,14 @@ public class ManoService {
                         
                     
                     
-                    
+     //no hay controller               
     public static Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
         Integer equipoCantor = manoActual.getEquipoCantor();
         Integer jugadorTurno = manoActual.getJugadorTurno();
         return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
     }
     
-
+    //no hay controller
     public static Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
         Integer res = null;
         Integer rondaActual = obtenerRondaActual();
