@@ -62,8 +62,6 @@ const JugadorView = forwardRef((props, ref) => {
                     {friendBool &&
                         <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap" }}> Último mensaje </p>
                     }
-
-
                 </div>
                 {!friendBool && !solicitudBool &&
                     <button class="button" style={{ margin: 10, color: 'darkgreen' }} onClick={() => handleSubmit()}>

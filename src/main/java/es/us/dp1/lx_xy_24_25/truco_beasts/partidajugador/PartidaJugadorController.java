@@ -58,7 +58,7 @@ public class PartidaJugadorController {
 
     @GetMapping("/players")
     @ResponseStatus(HttpStatus.OK)
-    public List<PartidaJugador> getPlayersConnectedTo(@RequestParam(required=true) String partidaCode){
+    public List<PartidaJugadorDTO> getPlayersConnectedTo(@RequestParam(required=true) String partidaCode){
         return pjService.getPlayersConnectedTo(partidaCode);
     }
 

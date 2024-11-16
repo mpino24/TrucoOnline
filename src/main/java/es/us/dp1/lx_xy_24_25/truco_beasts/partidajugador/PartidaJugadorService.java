@@ -66,8 +66,8 @@ public class PartidaJugadorService {
     }
 
     @Transactional(readOnly=true)
-    public List<PartidaJugador> getPlayersConnectedTo(String partidaCode){
-        return pjRepository.findPlayersConnectedTo(partidaCode);
+    public List<PartidaJugadorDTO> getPlayersConnectedTo(String partidaCode){ 
+        return pjRepository.findPlayersConnectedTo(partidaCode).stream().map(pj-> new PartidaJugadorDTO(pj)).toList();
     }
 
     @Transactional(readOnly=true)
