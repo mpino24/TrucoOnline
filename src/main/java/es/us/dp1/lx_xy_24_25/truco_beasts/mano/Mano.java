@@ -32,38 +32,15 @@ public class Mano {
     @ManyToOne
     private Partida partida;
 
-     public Integer jugadorGanadorEnvido(){ 
-        Integer puntos=0;
-        Integer posicion=0;
-        for(int i=0; i<cartasDisp.size(); i++){
-            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
-            Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
-            if(sumaJugador> puntos){
-                puntos= sumaJugador;
-                posicion= i;
-            }
-        }
-        return posicion;
-    }
-    public Integer siguienteJugador(Integer jugadorActual) {
-        Integer siguiente = (jugadorActual + 1) % partida.getNumJugadores();
-        return siguiente;
-    }
 
-    public List<List<Integer>> puntosEnvido(){
-        List<List<Integer>> res = new ArrayList<>();
-        
-        for (int i = partida.getJugadorMano(); res.size() < cartasDisp.size(); i = siguienteJugador(i)) {
-            List<Integer> posicionEnvido = new ArrayList<>();
-            posicionEnvido.add(i);
-            Map<Palo, List<Carta>> diccCartasPaloJugador = cartasDisp.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
+     public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
+        List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
+        for(int i=0; i<cartasDisp.size(); i++){
+            Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
-            posicionEnvido.add(sumaJugador);
-            res.add(posicionEnvido);
+            listaEnvidosCadaJugador.add(i, sumaJugador);
         }
-        
-        return res;
-        
+        return listaEnvidosCadaJugador;
     }
 
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
@@ -84,7 +61,12 @@ public class Mano {
         return listaSumas.stream().max(Comparator.naturalOrder()).get();
     }
 
-    private Integer comprobarValor(Integer value) {
+    public Integer comprobarValor(Integer value) {
         return value>=10?0:value;
+    }
+
+    public Map<Palo, List<Carta>> agrupaCartasPalo(List<Carta> listaDeCartas){
+        Map<Palo, List<Carta>> diccCartasPaloJugador = listaDeCartas.stream().collect(Collectors.groupingBy(Carta::getPalo));
+        return diccCartasPaloJugador;
     }
 }
