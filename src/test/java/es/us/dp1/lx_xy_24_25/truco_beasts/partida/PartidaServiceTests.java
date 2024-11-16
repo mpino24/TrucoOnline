@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectRetrievalFailureException;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Carta;
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.EntityUtils;
 import jakarta.transaction.Transactional;
 
@@ -21,6 +23,15 @@ public class PartidaServiceTests {
     
     @Autowired
     private PartidaService partidaService;
+
+    @Autowired
+    CartaRepository cartaRepository;
+
+
+
+
+
+
 
     @Test
     public void devuelvePartidasActivas() {
@@ -69,4 +80,26 @@ public class PartidaServiceTests {
 		assertEquals(initialCount + 1, finalCount);
 		assertNotNull(partida.getId());
 	}
+
+    @Test
+    public void testRepartirCartas() {
+
+        Partida partida = new Partida();
+        partida.setCodigo("TESTS");
+        partida.setPuntosEquipo1(0);
+        partida.setPuntosEquipo2(0);
+		partida.setConFlor(true);
+        partida.setVisibilidad(Visibilidad.PUBLICA);
+        partida.setPuntosMaximos(15);
+        partida.setNumJugadores(4);
+        partidaService.savePartida(partida);
+
+        
+        List<List<Carta>> cartasRepartidas = partidaService.repartirCartas(partida);
+
+       
+        assertNotNull(cartasRepartidas);
+        assertEquals(4, cartasRepartidas.size()); 
+        cartasRepartidas.forEach(cartas -> assertEquals(3, cartas.size())); //TODO: no se si hace falta añadir un test que compruebe que sean todas distintas también.
+    }
 }
