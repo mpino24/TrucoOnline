@@ -15,5 +15,4 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
     @Query("SELECT p FROM Partida p WHERE (p.codigo = :codigo)")
     Optional<Partida> findPartidaByCodigo(String codigo);
 
-
 }
