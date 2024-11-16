@@ -8,43 +8,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class ManoService {
 
-    private final Mano manoActual;
-    
-    
+    private static Mano manoActual;
 
     public ManoService(Mano mano ) {
-        this.manoActual = mano;
-       
+        ManoService.manoActual = mano;
     }
-
-    public Integer obtenerJugadorPie(){
+    
+    public static Integer obtenerJugadorPie(){
         Integer pie = obtenerJugadorAnterior(manoActual.getPartida().getJugadorMano());
         return pie;
     }
-   
-    public Integer obtenerJugadorAnterior(Integer jugador) { 
+                       
+    public static Integer obtenerJugadorAnterior(Integer jugador) { 
         Integer numJugadores = manoActual.getPartida().getNumJugadores();
         return (jugador + numJugadores - 1) % numJugadores;
     }
-    
-
-    public Integer siguienteJugador(Integer jugadorActual) {
+        
+    public static Integer siguienteJugador(Integer jugadorActual) {
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         return siguiente;
     }
-
-    public void siguienteTurno() {
+            
+    public static void siguienteTurno() {
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         manoActual.setJugadorTurno(siguiente);
     }
-
+                            
     public void anteriorTurno() { 
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer anterior = obtenerJugadorAnterior(jugadorActual);
         manoActual.setJugadorTurno(anterior);
     }
-
+                            
     public Integer compararCartas() {
         Integer poderMayor = 0;
         Integer empezador = null;
@@ -95,7 +91,7 @@ public class ManoService {
         }
         
     }
-
+                            
 
     public Boolean puedeCantarEnvido(){
         Boolean sePuede = false;
@@ -107,16 +103,16 @@ public class ManoService {
         Integer jugTurno = manoActual.getJugadorTurno();
         Integer pie = obtenerJugadorPie();
         Integer otroPie = obtenerJugadorAnterior(pie);
-        
+    
         if(jugTurno == pie || jugTurno == otroPie) esPie = true;
-        
-        
+    
+    
         sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
-        
+    
         return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
     }    
 
-    public Integer obtenerRondaActual(){
+    public static Integer obtenerRondaActual(){
         Integer ronda = 0;
         List<List<Carta>> cartas = manoActual.getCartasDisp();
         Integer cartasPie = cartas.get(obtenerJugadorPie()).size();
@@ -127,65 +123,48 @@ public class ManoService {
     }
 
     //TODO: FALTAN TEST NEGATIVOS
-
-    public void cantosTruco(CantosTruco canto) throws Exception{
+    public static void cantosTruco(CantosTruco canto) throws Exception{
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
 
         Integer rondaActual = obtenerRondaActual();
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
+        manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
         listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
 
-        
-        manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
-        
+
         if (!puedeCantarTruco()) {
             throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
         }
-        
+                            
         switch (canto) {
             case TRUCO: 
-                
-                manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
-                                                             //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más) 
-                
-                secuenciaCantos.add(listaRondaJugador);
-                manoActual.setSecuenciaCantoLista(secuenciaCantos);
+                Truco truco = new TipoTruco();
+                truco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
                 siguienteTurno();
                 break;
             case RETRUCO:
                 if (manoActual.getPuntosTruco() <2) {
                     throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
                 }
-                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
-                Integer elQueRespondeAlRetruco = quienResponde(cantoEnTruco, jugadorTurno);
-                manoActual.setJugadorTurno(elQueRespondeAlRetruco);
-                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-                secuenciaCantos.add(listaRondaJugador);
-                manoActual.setSecuenciaCantoLista(secuenciaCantos);
-                
+                Truco retruco = new TipoRetruco();
+                retruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
                 break;
             case VALECUATRO:
                 if (manoActual.getPuntosTruco() <3) {
                     throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
                 }
-                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                Integer elQueResponde = quienResponde(cantoEnRetruco, jugadorTurno);
-                manoActual.setJugadorTurno(elQueResponde);
-                manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-                secuenciaCantos.add(listaRondaJugador);
-                manoActual.setSecuenciaCantoLista(secuenciaCantos);
-
+                Truco valeCuatro = new TipoValeCuatro();
+                valeCuatro.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
                 break;
-            
             default:
-                throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
+                    throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
         }      
     }
-
-    public Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+                                
+    public static Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
         Integer res = null;
         Integer rondaActual = obtenerRondaActual();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
@@ -199,15 +178,10 @@ public class ManoService {
         }
         return res;
     }
-
-    
-
-    //TODO: FALTA TEST
-    public void responderTruco(Respuestas respuesta) throws Exception{ 
+                    
+    public void responderTruco(RespuestasTruco respuesta) throws Exception{ 
         Integer jugadorTurno = manoActual.getJugadorTurno();
-
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
-
         Integer truco = manoActual.getPuntosTruco();
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         Integer queTrucoEs = secuenciaCantos.size();
@@ -216,61 +190,36 @@ public class ManoService {
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
         switch (respuesta) {
             case QUIERO:
-                manoActual.setPuntosTruco(truco +1);
-                if(queTrucoEs == 1){ //Es decir, Truco
-                    manoActual.setJugadorTurno(jugadorAnterior);
-                } else if( queTrucoEs == 2){
-                    List<Integer> cantoEnTruco = secuenciaCantos.get(0);
-                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnTruco, cantoEnRetruco, jugadorTurno);
-                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
-                    
-                } else {         
-                    List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                    List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
-                    Integer aQuienLeTocaAhora = aQuienLeToca(cantoEnRetruco, cantoEnValecuatro, jugadorTurno);
-                    manoActual.setJugadorTurno(aQuienLeTocaAhora);
-                }  
+                RespuestaTruco quieroTruco = new RespuestaQuieroTruco();
+                quieroTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);  
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
-                manoActual.setPuntosTruco(truco); //Osea, se queda con truco -1 
+                    //Osea, se queda con truco -1 
+                RespuestaTruco noQuieroTruco = new RespuestaNoQuieroTruco();
+                noQuieroTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);  
                 break;
+
             case SUBIR:
-                if(truco == 1){
-                    manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
-                    cantosTruco(CantosTruco.RETRUCO);
-                }else if(truco==2){
-                    manoActual.setPuntosTruco(truco +1);
-                    cantosTruco(CantosTruco.VALECUATRO);
-                } else {
-                    throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
-                }
-                
+                RespuestaTruco subirTruco= new RespuestaSubirTruco();
+                subirTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);
                 break;
             default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
         }
     }
-
-    //TODO: FALTA TEST (NO SE NI SI ES NECESARIA ESTA FUNCIÓN)
-    public Integer getEquipo(Integer jugador){ // Podria devolver un integer sino
-        Integer equipo = null;
-        if (jugador%2==0) equipo=0; //equipo 1
-        else if(jugador%2==1) equipo =1; //equipo 2
-        return equipo;
-    }
-
-
-
-    public Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
+                        
+                    
+                    
+                    
+    public static Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
         Integer equipoCantor = manoActual.getEquipoCantor();
         Integer jugadorTurno = manoActual.getJugadorTurno();
         return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
     }
     
 
-    public Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
+    public static Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
         Integer res = null;
         Integer rondaActual = obtenerRondaActual();
         Integer jugadorSiguiente = siguienteJugador(jugadorTurno);

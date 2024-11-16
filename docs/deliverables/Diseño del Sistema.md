@@ -20,7 +20,7 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 •	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
 •	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
 
-![Diagrama de dominio Truco Beasts fondo transparente](https://github.com/user-attachments/assets/dcaa3fb8-f673-4dc9-a597-67c1496cb21e)
+![Diagrama de dominio Truco Beasts fondo claro](https://github.com/user-attachments/assets/3dcc08e2-9f77-4617-9080-48ae819a206d)
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 _En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
 
@@ -202,7 +202,7 @@ Como grupo no teniamos claro como abordar los apartados de creación y unión de
 
 
 #### Justificación de la solución adoptada
-
+Al emplear modales en lugar de páginas, la UX es más dinámica y limpia.
 
 ## Refactorizaciones aplicadas
 

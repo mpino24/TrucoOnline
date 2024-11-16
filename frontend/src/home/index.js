@@ -21,7 +21,7 @@ export default function Home() {
     const [creationModalView, setCreationModalView] = useState(false);
     const [friendsView,setFriendsView] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
-    const [backgroundUrl, setBackgroundUrl] = useState()
+    const [backgroundUrl, setBackgroundUrl] = useState();
     const [username, setUsername] = useState("");
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
 

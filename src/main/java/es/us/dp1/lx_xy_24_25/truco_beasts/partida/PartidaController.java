@@ -53,9 +53,14 @@ public class PartidaController {
 		return code.toString();
 	}
 
+	@GetMapping("/partidas")
+	public ResponseEntity<List<Partida>> findAll() {
+		return new ResponseEntity<>(partidaService.findAllPartidas(), HttpStatus.OK);
+	}
+
    
-	@GetMapping
-	public ResponseEntity<List<Partida>> findAllPartidas() {
+	@GetMapping("/partidas/accesibles")
+	public ResponseEntity<List<Partida>> findPartidasActivasPublicas() {
 		return new ResponseEntity<>(partidaService.findAllPartidasActivas(), HttpStatus.OK);
 	}
 

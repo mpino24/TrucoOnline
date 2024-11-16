@@ -58,7 +58,7 @@ const PartidaView = forwardRef((props, ref) => {
             {
                 connectedUsers < game.numJugadores &&
                     <Link
-                        to={`/partidas/${game.codigo}`}
+                        to={`/partidas?partidaCode=${game.codigo}`}
                         style={{ textDecoration: "none" }}
                     ><button class="button" style={{ margin: 10, color: 'brown' }} onClick={() => handleSubmit()} >
                             Unirse
@@ -67,7 +67,7 @@ const PartidaView = forwardRef((props, ref) => {
             }
             </div>
             <Link
-                to={`/partidas/${game.codigo}`}
+                to={`/partidas?partidaCode=${game.codigo}`}
                 style={{ textDecoration: "none" }}
             ><button class="button" style={{ margin: 10, color: 'darkgreen' }} >
                     Ver

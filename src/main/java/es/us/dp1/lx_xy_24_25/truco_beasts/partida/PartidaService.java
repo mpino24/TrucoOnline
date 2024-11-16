@@ -1,6 +1,8 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 import java.util.ArrayList;
+
 import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,6 +73,13 @@ public class PartidaService {
 		Integer ganador = mano.getGanadoresRondas().get(mano.getGanadoresRondas().size()-1);
 		partida.setJugadorMano(manoService.siguienteJugador(partida.getJugadorMano()));
 		
+	}
+
+	@Transactional(readOnly = true)
+	public List<Partida> findAllPartidas() throws DataAccessException {
+		List<Partida> res = new ArrayList<>();
+		partidaRepository.findAll().forEach(x->res.add(x));
+		return res;
 	}
 
 	@Transactional(readOnly = true)
