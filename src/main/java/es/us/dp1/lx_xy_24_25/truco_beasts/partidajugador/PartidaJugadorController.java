@@ -42,7 +42,7 @@ public class PartidaJugadorController {
     @PostMapping("/{partidaId}")
     public void addJugadorPartida(@RequestParam(required=true) Integer userId, @PathVariable("partidaId") Integer partidaId) throws AlreadyInGameException{
         Partida partida = partidaService.findPartidaById(partidaId);
-        pjService.addJugadorPartida(partida, userId);
+        pjService.addJugadorPartida(partida, userId,false);
     }
 
     @GetMapping("/connectedTo/{jugadorId}")

@@ -24,6 +24,9 @@ public class PartidaJugador extends BaseEntity{
     @ManyToOne
     private Partida game;
 
+    @NotNull
+    private Boolean isCreator;
+
     public Equipo getEquipo(){
         if(posicion%2==0){
             return Equipo.EQUIPO1;

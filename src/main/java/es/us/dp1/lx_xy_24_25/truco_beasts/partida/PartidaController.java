@@ -73,7 +73,7 @@ public class PartidaController {
 		newPartida.setInstanteInicio(null);
 		// newPartida.setCodigo(generateRandomCode());
 		ResponseEntity<Partida> res=new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
-		partJugService.addJugadorPartida(newPartida,userId);
+		partJugService.addJugadorPartida(newPartida,userId,true);
 		return res;
 	}
 

@@ -40,7 +40,7 @@ public class PartidaJugadorService {
 
 
     @Transactional
-    public void addJugadorPartida(Partida partida, Integer userId) throws AlreadyInGameException{
+    public void addJugadorPartida(Partida partida, Integer userId, Boolean isCreator) throws AlreadyInGameException{
         PartidaJugador partJug = new PartidaJugador();
         partJug.setGame(partida);
         Optional<Jugador> jugadorOpt = jugRepository.findByUserId(userId);
@@ -55,13 +55,26 @@ public class PartidaJugadorService {
             List<Integer> posiciones =pjRepository.lastPosition(partida.getId());
             Integer posi= posiciones.stream().max(Comparator.naturalOrder()).orElse(-1);
             partJug.setPosicion(posi+1); 
+            partJug.setIsCreator(isCreator);
             pjRepository.save(partJug);
         }
 
     }
 
+
     @Transactional
-    public void eliminateJugadorPartida(Integer userId){
+    public void eliminateJugadorPartida(Integer userId){ //NO FUNCIONA TODAVÍA
+        Partida partida = getPartidaOfUserId(userId);
+        List<PartidaJugador> jugadores= pjRepository.findPlayersConnectedTo(partida.getCodigo());
+        Integer creadorId = jugadores.stream().filter(pj->pj.getIsCreator()).map(pj->pj.getPlayer().getId()).findFirst().orElse(null);
+        if(creadorId!=null && creadorId.equals(userId)){
+            PartidaJugador nuevoCreador = jugadores.stream().filter(pj->!pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+            if(nuevoCreador!=null){
+                nuevoCreador.setIsCreator(true);
+                pjRepository.save(nuevoCreador);
+    
+            }
+        }
         pjRepository.deleteByPlayerId(userId);
     }
 

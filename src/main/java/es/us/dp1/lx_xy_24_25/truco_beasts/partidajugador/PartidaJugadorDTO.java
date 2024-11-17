@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
@@ -25,6 +24,9 @@ public class PartidaJugadorDTO {
     @NotNull
     private Equipo equipo;
 
+    @NotNull
+    private Boolean isCreator;
+
     public PartidaJugadorDTO() {
     }
 
@@ -33,5 +35,6 @@ public class PartidaJugadorDTO {
         this.player = new JugadorDTO(pj.getPlayer());
         this.game = pj.getGame(); 
         this.equipo = pj.getEquipo();
+        this.isCreator = pj.getIsCreator();
     }
 }
