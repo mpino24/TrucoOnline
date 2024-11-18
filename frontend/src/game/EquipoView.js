@@ -26,7 +26,7 @@ const EquipoView = forwardRef((props, ref) => {
     
                     <JugadorView
                         jugador={player}
-                        isFriend={true}
+                        isFriend={false}
                     />
                 </div>
             )

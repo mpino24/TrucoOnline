@@ -15,17 +15,20 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 
 @Service
 public class PartidaJugadorService {
 
     	PartidaJugadorRepository pjRepository;
         JugadorRepository jugRepository;
+        PartidaService partidaService;
 
 	@Autowired
-	public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo) {
+	public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo, PartidaService partidaService) {
 		this.pjRepository = partJugRepository;
         this.jugRepository= jugadorRepo;
+        this.partidaService = partidaService;
 	}
 
     @Transactional(readOnly = true)
@@ -63,19 +66,21 @@ public class PartidaJugadorService {
 
 
     @Transactional
-    public void eliminateJugadorPartida(Integer userId){ //NO FUNCIONA TODAVÍA
+    public void eliminateJugadorPartida(Integer userId){
         Partida partida = getPartidaOfUserId(userId);
         List<PartidaJugador> jugadores= pjRepository.findPlayersConnectedTo(partida.getCodigo());
         Integer creadorId = jugadores.stream().filter(pj->pj.getIsCreator()).map(pj->pj.getPlayer().getId()).findFirst().orElse(null);
         if(creadorId!=null && creadorId.equals(userId)){
             PartidaJugador nuevoCreador = jugadores.stream().filter(pj->!pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+            pjRepository.deleteByPlayerId(userId);
             if(nuevoCreador!=null){
                 nuevoCreador.setIsCreator(true);
                 pjRepository.save(nuevoCreador);
-    
+             }else{
+                partidaService.deletePartida(partida.getCodigo());
             }
         }
-        pjRepository.deleteByPlayerId(userId);
+        
     }
 
     @Transactional(readOnly=true)

@@ -58,12 +58,12 @@ const JugadorView = forwardRef((props, ref) => {
                 <div style={{ display: '' }}>
                     <p style={{ marginLeft: 10, fontSize: 25, marginBottom: 0 }}>{jugador.firstName}</p>
                     <p style={{ marginLeft: 10, fontSize: 12, marginBottom: 0 }}>{jugador.userName}</p>
-
-                    {friendBool &&
+                
+                    {friendBool && jugador.id!==user.id && 
                         <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap" }}> Último mensaje </p>
                     }
                 </div>
-                {!friendBool && !solicitudBool &&
+                {!friendBool && !solicitudBool && jugador.id!==user.id &&
                     <button class="button" style={{ margin: 10, color: 'darkgreen' }} onClick={() => handleSubmit()}>
                         Solicitud amistad
                     </button>
