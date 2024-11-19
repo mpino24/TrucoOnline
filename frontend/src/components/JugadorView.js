@@ -10,10 +10,11 @@ const jwt = tokenService.getLocalAccessToken();
 const JugadorView = forwardRef((props, ref) => {
     const [jugador, setJugador] = useState(props.jugador)
     const [friendBool, setFriendBool] = useState(props.isFriend)
+    const [solicitudBool, setSolicitudBool] = useState(props.isSolicitud)
 
     function handleSubmit() {
         fetch(
-            "/api/v1/jugador/" + user.id + "/isFriend/" + jugador.id,
+            "/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.id,
             {
                 method: "PATCH"
             }
@@ -21,9 +22,9 @@ const JugadorView = forwardRef((props, ref) => {
             .then((response) => response.text())
             .then((data) => {
                 if(JSON.parse(data).statusCode===500){
-                    alert("No se ha podido añadir al amigo")
+                    alert("No se puede mandar esa solicitud")
                 }else{
-                    setFriendBool(true);
+                    setSolicitudBool(true);
                 }
                 
 
@@ -33,9 +34,9 @@ const JugadorView = forwardRef((props, ref) => {
 
 
     useEffect(() => {
-        if (friendBool !== true) {
+        if (friendBool !== true && solicitudBool) {
             fetch(
-                "/api/v1/jugador/" + user.id + "/isFriend/" + jugador.userName,
+                "/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.userName,
                 {
                     method: "GET"
                 }
@@ -43,11 +44,11 @@ const JugadorView = forwardRef((props, ref) => {
                 .then((response) => response.text())
                 .then((data) => {
                 
-                    setFriendBool(JSON.parse(data))
+                    setSolicitudBool(JSON.parse(data))
                 })
                 .catch((message) => alert(message));
         }
-    }, [friendBool, jugador.userName, props.isFriend]);
+    }, [friendBool, jugador.userName, props.isFriend,solicitudBool, props.isSolicitud]);
 
     return (
         <div style={{ cursor: 'pointer' }}>
@@ -57,16 +58,14 @@ const JugadorView = forwardRef((props, ref) => {
                 <div style={{ display: '' }}>
                     <p style={{ marginLeft: 10, fontSize: 25, marginBottom: 0 }}>{jugador.firstName}</p>
                     <p style={{ marginLeft: 10, fontSize: 12, marginBottom: 0 }}>{jugador.userName}</p>
-
-                    {friendBool &&
+                
+                    {friendBool && jugador.id!==user.id && 
                         <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap" }}> Último mensaje </p>
                     }
-
-
                 </div>
-                {!friendBool &&
+                {!friendBool && !solicitudBool && jugador.id!==user.id &&
                     <button class="button" style={{ margin: 10, color: 'darkgreen' }} onClick={() => handleSubmit()}>
-                        Añadir amigo
+                        Solicitud amistad
                     </button>
                 }
 

@@ -1,4 +1,5 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -13,25 +14,37 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.CartaRepository;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 
 @Service
 public class PartidaService {
 
-    PartidaRepository partidaRepository;
-
+  PartidaRepository partidaRepository;
 	ManoService manoService;
-	CartaRepository cartaRepository;
+	UserService userService;
+	PartidaJugadorService partidaJugadorService;
+  CartaRepository cartaRepository;
 
 	@Autowired
-	public PartidaService(PartidaRepository partidaRepository, ManoService manoService, CartaRepository cartaRepository) {
+	public PartidaService(PartidaRepository partidaRepository, ManoService manoService, UserService userService, PartidaJugadorService partidaJugadorService, CartaRepository cartaRepository) {
 		this.partidaRepository = partidaRepository;
 		this.manoService = manoService;
-		this.cartaRepository = cartaRepository;
-	}
+		this.userService = userService;
+		this.partidaJugadorService = partidaJugadorService;
+    this.cartaRepository = cartaRepository;
+  }
+
 	public List<List<Carta>> repartirCartas(Partida partida){
 		Integer numJugadores = partida.getNumJugadores();
 		List<List<Carta>> res = new ArrayList<>();
@@ -111,5 +124,21 @@ public class PartidaService {
 		Optional<Partida> p = partidaRepository.findPartidaByCodigo(codigo);
         return p.isEmpty()?null: p.get();
     }
+
+	@Transactional
+	public void startGame(String codigo){
+		Partida partida= findPartidaByCodigo(codigo);
+		if(partida==null){
+			throw new ResourceNotFoundException("La partida no existe");
+		}
+		User currentUser= userService.findCurrentUser();
+		User creadorPartida = partidaJugadorService.getGameCreator(partida);
+		if(currentUser.getId().equals(creadorPartida.getId())){
+			partida.setInstanteInicio(LocalDateTime.now());
+		}else{
+			throw new AccessDeniedException();
+		}
+		
+	}
 
 }
