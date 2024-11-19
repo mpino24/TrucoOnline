@@ -9,6 +9,7 @@ import tokenService from 'frontend/src/services/token.service.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
 import { FaRegEnvelope } from "react-icons/fa6";
 import SolicitudList from './SolicitudList';
+import { FaRegEnvelopeOpen } from "react-icons/fa6";
 
 
 const GetFriendsModal = forwardRef((props, ref) => {
@@ -21,7 +22,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [amigos, setAmigos] = useState([]);
     const [request, setRequest] = useState([]);
-    const [requestView,setRequestView]= useState(false);
+    const [requestView, setRequestView] = useState(false);
 
     useEffect(() => {
         if (!userName) {
@@ -103,9 +104,9 @@ const GetFriendsModal = forwardRef((props, ref) => {
         )
             .then((response) => response.text())
             .then((data) => {
-                if(data.length===0){
+                if (data.length === 0) {
                     setRequest([]);
-                }else{
+                } else {
                     setRequest(JSON.parse(data))
                 }
                 setRequestView(true);
@@ -138,10 +139,18 @@ const GetFriendsModal = forwardRef((props, ref) => {
                         </div>
                     </div>
                 </Form>
-                <button onClick={() => { handleFriendsRequest() }} style={{ background: 'transparent', border: 'transparent' }}>
-                    <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
-                </button>
-                
+                {!requestView &&
+                    <button onClick={() => { handleFriendsRequest() }} style={{ background: 'transparent', border: 'transparent' }}>
+                        <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                    </button>
+                }
+                {requestView &&
+                    <button onClick={() => { setRequestView(false) }} style={{ background: 'transparent', border: 'transparent' }}>
+                        <FaRegEnvelopeOpen style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                    </button>
+
+                }
+
             </div>
             {player &&
                 <JugadorView jugador={player} />}
@@ -153,7 +162,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
             {requestView &&
                 <div>
                     <SolicitudList jugadores={request}
-                    setJugadores={setRequest} />
+                        setJugadores={setRequest} />
                 </div>
             }
 
