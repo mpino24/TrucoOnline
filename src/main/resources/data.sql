@@ -48,6 +48,7 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1
 
 INSERT INTO amigo(jugador_id,amigo_id) VALUES (3,1),(1,3),(7,1),(1,7),(2,7),(7,2);
 INSERT INTO amigo(jugador_id,amigo_id) VALUES (10,8),(8,10);
+-- INSERT INTO solicitud(solicitado_id,solicitante_id) VALUES (4,3);
 -- INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (1,6,9,0,FALSE);
 
 -- Insertar las cartas

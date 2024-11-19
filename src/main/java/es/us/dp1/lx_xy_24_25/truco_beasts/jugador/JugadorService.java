@@ -128,6 +128,7 @@ public class JugadorService {
                 if (!jugador.getId().equals(amigo.getId())) {
                     jugador.getAmigos().add(amigo);
                     amigo.getAmigos().add(jugador);
+                    jugador.getSolicitudes().remove(amigo);
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
                 } else {
@@ -151,9 +152,7 @@ public class JugadorService {
             Jugador solicitado = solicitadoOpt.get();
             if (!jugador.getSolicitudes().contains(solicitado)) {
                 if (!jugador.getId().equals(solicitado.getId())) {
-                    jugador.getSolicitudes().add(solicitado);
                     solicitado.getSolicitudes().add(jugador);
-                    jugadorRepository.save(jugador);
                     jugadorRepository.save(solicitado);
                 } else {
                     throw new IllegalStateException("No te puedes agregar a ti mismo");
@@ -188,16 +187,14 @@ public class JugadorService {
     @Transactional()
     public void deleteSolicitud(int userId, int solicitadoId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
-        Optional<Jugador> solicitadoOpt = jugadorRepository.findById(solicitadoId);
-        if (!jugadorOpt.isEmpty() && !solicitadoOpt.isEmpty()) {
+        Optional<Jugador> solicitanteOpt = jugadorRepository.findById(solicitadoId);
+        if (!jugadorOpt.isEmpty() && !solicitanteOpt.isEmpty()) {
             Jugador jugador = jugadorOpt.get();
-            Jugador solicitado = solicitadoOpt.get();
-            if (jugador.getSolicitudes().contains(solicitado)) {
-                if (!jugador.getId().equals(solicitado.getId())) {
-                    jugador.getSolicitudes().remove(solicitado);
-                    solicitado.getSolicitudes().remove(jugador);
+            Jugador solicitante = solicitanteOpt.get();
+            if (jugador.getSolicitudes().contains(solicitante)) {
+                if (!jugador.getId().equals(solicitante.getId())) {
+                    jugador.getSolicitudes().remove(solicitante);
                     jugadorRepository.save(jugador);
-                    jugadorRepository.save(solicitado);
                 }
             }
         } else {

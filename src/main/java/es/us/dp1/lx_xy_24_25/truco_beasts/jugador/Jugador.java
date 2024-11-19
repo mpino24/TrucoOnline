@@ -34,8 +34,8 @@ public class Jugador extends Person{
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
         name = "Solicitud",
-        joinColumns = @JoinColumn(name = "solicitanteId"),
-        inverseJoinColumns = @JoinColumn(name = "solicitadoId")
+        joinColumns = @JoinColumn(name = "solicitadoId"),
+        inverseJoinColumns = @JoinColumn(name = "solicitanteId")
 	)
 	protected List<Jugador> solicitudes = new ArrayList<>();
 
