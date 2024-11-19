@@ -10,6 +10,7 @@ import useFetchState from "frontend/src/util/useFetchState.js";
 import { FaRegEnvelope } from "react-icons/fa6";
 import SolicitudList from './SolicitudList';
 import { FaRegEnvelopeOpen } from "react-icons/fa6";
+import { BsEnvelopePaper } from "react-icons/bs";
 
 
 const GetFriendsModal = forwardRef((props, ref) => {
@@ -26,22 +27,34 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
     useEffect(() => {
         if (!userName) {
-            fetch(
-                `/api/v1/jugador/amigos?userId=` + user.id,
-                {
-                    method: "GET"
-                }
-            )
-                .then((response) => response.text())
-                .then((data) => {
-                    setAmigos(JSON.parse(data))
+            fetchFriends();
+            fetchFriendsRequest();
+            const intervalId = setInterval(fetchFriends, 5000);
 
-                })
-            //.catch((message) => alert(message));
+            const intervalId2 = setInterval(fetchFriendsRequest, 1000);
+
+            return () => {clearInterval(intervalId)
+                clearInterval(intervalId2)
+             }
+
         }
-
-
     })
+
+    function fetchFriends() {
+        fetch(
+            `/api/v1/jugador/amigos?userId=` + user.id,
+            {
+                method: "GET"
+            }
+        )
+            .then((response) => response.text())
+            .then((data) => {
+                setAmigos(JSON.parse(data))
+
+            })
+            .catch((message) => alert(message));
+
+    }
 
 
     function handleSubmit(event) {
@@ -92,7 +105,8 @@ const GetFriendsModal = forwardRef((props, ref) => {
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
     }
-    function handleFriendsRequest() {
+
+    function fetchFriendsRequest() {
         fetch(
             `/api/v1/jugador/solicitudes?userId=` + user.id,
             {
@@ -109,8 +123,6 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 } else {
                     setRequest(JSON.parse(data))
                 }
-                setRequestView(true);
-
             })
             .catch((message) => alert(message));
     }
@@ -139,9 +151,14 @@ const GetFriendsModal = forwardRef((props, ref) => {
                         </div>
                     </div>
                 </Form>
-                {!requestView &&
-                    <button onClick={() => { handleFriendsRequest() }} style={{ background: 'transparent', border: 'transparent' }}>
+                {!requestView && request.length === 0 &&
+                    <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
                         <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                    </button>
+                }
+                {!requestView && request.length !== 0 &&
+                    <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
+                        <BsEnvelopePaper style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
                     </button>
                 }
                 {requestView &&
@@ -165,8 +182,6 @@ const GetFriendsModal = forwardRef((props, ref) => {
                         setJugadores={setRequest} />
                 </div>
             }
-
-
         </div>
 
 
