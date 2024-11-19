@@ -25,4 +25,8 @@ public class Carta extends BaseEntity {
     private Integer poder;
 
     private String foto;
+
+    public String toString() {
+        return "Carta{id=" + id + ", nombre=" + valor + "de " + palo +" con poder="+ poder +"}";
+    }
 }

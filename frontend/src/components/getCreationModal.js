@@ -98,7 +98,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
           setMessage(json.message);
           setVisible(true); 
         } else 
-        window.location.href = "/partida?partidaCode="+partidaParseada.codigo;
+        window.location.href = "/partidas?partidaCode="+partidaParseada.codigo;
       })
       .catch((message) => alert(message));
   }

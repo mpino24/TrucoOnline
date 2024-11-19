@@ -13,6 +13,7 @@ import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
+import Game from "./game"
 import SwaggerDocs from "./public/swagger";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './App.css'; // Make sure to import your CSS file with the transition styles
@@ -69,6 +70,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path= "/partidas" element={<Game />}/>
+
       </>
     );
   }

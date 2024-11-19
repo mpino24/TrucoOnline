@@ -7,6 +7,11 @@ import { VscChromeClose } from "react-icons/vsc";
 import { IoCloseCircle } from "react-icons/io5";
 import tokenService from 'frontend/src/services/token.service.js';
 import useFetchState from "frontend/src/util/useFetchState.js";
+import { FaRegEnvelope } from "react-icons/fa6";
+import SolicitudList from './SolicitudList';
+import { FaRegEnvelopeOpen } from "react-icons/fa6";
+import { BsEnvelopePaper } from "react-icons/bs";
+
 
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player, setPlayer] = useState(null);
@@ -17,25 +22,39 @@ const GetFriendsModal = forwardRef((props, ref) => {
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [amigos, setAmigos] = useState([]);
+    const [request, setRequest] = useState([]);
+    const [requestView, setRequestView] = useState(false);
 
     useEffect(() => {
-            if (!userName) {
-                fetch(
-                    `/api/v1/jugador/amigos?userId=` + user.id,
-                    {
-                        method: "GET"
-                    }
-                )
-                    .then((response) => response.text())
-                    .then((data) => {
-                        setAmigos(JSON.parse(data))
+        if (!userName) {
+            fetchFriends();
+            fetchFriendsRequest();
+            const intervalId = setInterval(fetchFriends, 5000);
 
-                    })
-                //.catch((message) => alert(message));
-            }
+            const intervalId2 = setInterval(fetchFriendsRequest, 1000);
 
+            return () => {clearInterval(intervalId)
+                clearInterval(intervalId2)
+             }
 
+        }
     })
+
+    function fetchFriends() {
+        fetch(
+            `/api/v1/jugador/amigos?userId=` + user.id,
+            {
+                method: "GET"
+            }
+        )
+            .then((response) => response.text())
+            .then((data) => {
+                setAmigos(JSON.parse(data))
+
+            })
+            .catch((message) => alert(message));
+
+    }
 
 
     function handleSubmit(event) {
@@ -81,10 +100,31 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 setAmigos(JSON.parse(data))
 
             })
-        //.catch((message) => alert(message));
+            .catch((message) => alert(message));
     }
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
+    }
+
+    function fetchFriendsRequest() {
+        fetch(
+            `/api/v1/jugador/solicitudes?userId=` + user.id,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((response) => response.text())
+            .then((data) => {
+                if (data.length === 0) {
+                    setRequest([]);
+                } else {
+                    setRequest(JSON.parse(data))
+                }
+            })
+            .catch((message) => alert(message));
     }
 
 
@@ -107,20 +147,42 @@ const GetFriendsModal = forwardRef((props, ref) => {
                             {player &&
                                 <VscChromeClose style={{ width: 40, height: 40, cursor: "pointer", position: 'absolute', marginLeft: 20 }} onClick={() => handleReset()} />
                             }
+
                         </div>
                     </div>
                 </Form>
+                {!requestView && request.length === 0 &&
+                    <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
+                        <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                    </button>
+                }
+                {!requestView && request.length !== 0 &&
+                    <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
+                        <BsEnvelopePaper style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                    </button>
+                }
+                {requestView &&
+                    <button onClick={() => { setRequestView(false) }} style={{ background: 'transparent', border: 'transparent' }}>
+                        <FaRegEnvelopeOpen style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                    </button>
+
+                }
+
             </div>
             {player &&
                 <JugadorView jugador={player} />}
-                {!player &&
-                    <div>
-                        <JugadorList jugadores={amigos} />
-                    </div>
-                }
-
-
-            </div>
+            {!player && !requestView &&
+                <div>
+                    <JugadorList jugadores={amigos} />
+                </div>
+            }
+            {requestView &&
+                <div>
+                    <SolicitudList jugadores={request}
+                        setJugadores={setRequest} />
+                </div>
+            }
+        </div>
 
 
 

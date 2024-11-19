@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -29,6 +30,8 @@ public class JugadorController {
 
     @Autowired
     JugadorService jugadorService;
+    @Autowired
+    UserService userService;
 
 
     @GetMapping
@@ -39,6 +42,11 @@ public class JugadorController {
     @GetMapping("/amigos")
     public ResponseEntity<List<JugadorDTO>> findAmigosByUserId(@RequestParam(required=true) String userId) {
 		return new ResponseEntity<>(jugadorService.findAmigosByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+	}
+    @GetMapping("/solicitudes")
+    public ResponseEntity<List<JugadorDTO>> findSolicitudesByUserId() {
+        User currentUser= userService.findCurrentUser();
+		return new ResponseEntity<>(jugadorService.findSolicitudesByUserId(currentUser.getId()), HttpStatus.OK);
 	}
 
     @GetMapping("/{userName}")
@@ -61,16 +69,35 @@ public class JugadorController {
         return new ResponseEntity<>(jugadorService.checkIfAreFriends(friendUserName, userId),HttpStatus.OK);
     }
 
-    @PatchMapping("{userId}/isFriend/{amigoId}")
+    @PatchMapping("/isFriend/{amigoId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity addNewFriend(@PathVariable int userId, @PathVariable int amigoId){
-        jugadorService.addNewFriends(userId, amigoId);
+    public ResponseEntity addNewFriend(@PathVariable int amigoId){
+        User currentUser= userService.findCurrentUser();
+        jugadorService.addNewFriends(currentUser.getId(), amigoId);
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
-    @DeleteMapping("{userId}/isFriend/{amigoId}")
+   
+    @DeleteMapping("isFriend/{amigoId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity deleteFriend(@PathVariable int userId, @PathVariable int amigoId){
-        jugadorService.deleteFriends(userId, amigoId);
+    public ResponseEntity deleteFriend(@PathVariable int amigoId){
+        User currentUser= userService.findCurrentUser();
+        jugadorService.deleteFriends(currentUser.getId(), amigoId);
+        return new ResponseEntity<>(void.class,HttpStatus.OK);
+    }
+    
+    @PatchMapping("{userId}/isSolicitado/{solicitadoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity crearSolicitud(@PathVariable int userId, @PathVariable int solicitadoId){
+        jugadorService.crearSolicitud(userId, solicitadoId);
+        return new ResponseEntity<>(void.class,HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/isSolicitado/{solicitadoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity deleteSolicitud(@PathVariable int solicitadoId){
+        User currentUser= userService.findCurrentUser();
+        jugadorService.deleteSolicitud(currentUser.getId(), solicitadoId);
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
 }
