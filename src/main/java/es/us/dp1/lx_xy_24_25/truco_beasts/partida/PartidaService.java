@@ -31,15 +31,15 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 public class PartidaService {
 
   PartidaRepository partidaRepository;
-	ManoService manoService;
+
 	UserService userService;
 	PartidaJugadorService partidaJugadorService;
   CartaRepository cartaRepository;
 
 	@Autowired
-	public PartidaService(PartidaRepository partidaRepository, ManoService manoService, UserService userService, PartidaJugadorService partidaJugadorService, CartaRepository cartaRepository) {
+	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService, CartaRepository cartaRepository) {
 		this.partidaRepository = partidaRepository;
-		this.manoService = manoService;
+		
 		this.userService = userService;
 		this.partidaJugadorService = partidaJugadorService;
     this.cartaRepository = cartaRepository;
@@ -79,12 +79,13 @@ public class PartidaService {
 		mano.setPartida(partida);
 		mano.setJugadorTurno(partida.getJugadorMano());
 		mano.setCartasDisp(repartirCartas(partida));
+		
 		return mano;
 	}
 	//PROVISIONAL
 	public void terminarMano(Mano mano, Partida partida){
 		Integer ganador = mano.getGanadoresRondas().get(mano.getGanadoresRondas().size()-1);
-		partida.setJugadorMano(manoService.siguienteJugador(partida.getJugadorMano()));
+		partida.setJugadorMano(ManoService.siguienteJugador(partida.getJugadorMano()));
 		
 	}
 
