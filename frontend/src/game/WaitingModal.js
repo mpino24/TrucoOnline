@@ -14,6 +14,7 @@ const WaitingModal = forwardRef((props, ref) => {
     const [jugadores, setJugadores] = useState([]);
     const [leavingModal, setLeavingModal] = useState(false);
     const usuario = tokenService.getUser();
+    const jwt = tokenService.getLocalAccessToken();
 
 
 
@@ -51,20 +52,43 @@ const WaitingModal = forwardRef((props, ref) => {
 
     }
 
-
-
-
-
-
-
-
-
     function getJugadoresEquipo(equipo) {
         if (jugadores.length > 0) {
 
             return jugadores.filter(jugadorPartida => jugadorPartida.equipo === "EQUIPO" + equipo);
         } else {
             return [];
+        }
+
+    }
+
+    function startGame(){
+        if(getJugadoresEquipo(1).length===game.numJugadores/2 && getJugadoresEquipo(2).length===game.numJugadores/2 ){
+            fetch(
+                `/api/v1/partida/${game.codigo}/start`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                      },
+                }
+            )
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then((errorMessage) => {
+                        throw new Error("Error al empezar la partida: " + errorMessage);
+                    });
+                }
+            })
+            .then(() => {
+
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+
+        }else{
+            alert(`Faltan jugadores para comenzar la partida. Equipo 1:${getJugadoresEquipo(1).length}. Equipo 2:${getJugadoresEquipo(2).length}`)
         }
 
     }
@@ -120,6 +144,7 @@ const WaitingModal = forwardRef((props, ref) => {
                             width: '100%',
                         }}>
                             <button
+                                onClick={()=> startGame()}
                                 className="button"
                                 style={{ color: 'darkgreen', width: '20%', left:0 }}
                             >

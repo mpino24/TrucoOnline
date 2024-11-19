@@ -13,7 +13,10 @@ const EquipoView = forwardRef((props, ref) => {
                 method: "PATCH"
             }
         )
-            .then(() => {
+            .then((response) => {
+                if(!response.ok){
+                    alert("Error al cambiar de equipo")
+                }
             })
             .catch((message) => alert(message));
 

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -64,8 +66,9 @@ public class PartidaJugadorController {
 
     @PatchMapping("/changeteam")
     @ResponseStatus(HttpStatus.OK)
-    public void changeTeamOfUser(@RequestParam(required=true) Integer userId) throws TeamIsFullException{
+    public ResponseEntity<String> changeTeamOfUser(@RequestParam(required=true) Integer userId) throws TeamIsFullException{
         pjService.changeTeamOfUser(userId);
+        return new ResponseEntity<>("Usuario cambiado de equipo",HttpStatus.OK);
     }
     
 }

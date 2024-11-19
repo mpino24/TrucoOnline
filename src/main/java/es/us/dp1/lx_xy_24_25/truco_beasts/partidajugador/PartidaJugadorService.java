@@ -15,20 +15,25 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 
 @Service
 public class PartidaJugadorService {
 
     	PartidaJugadorRepository pjRepository;
         JugadorRepository jugRepository;
-        PartidaService partidaService;
+        UserService userService;
+        PartidaRepository partidaRepository;
 
 	@Autowired
-	public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo, PartidaService partidaService) {
+	public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo,UserService userService,PartidaRepository partidaRepository) {
 		this.pjRepository = partJugRepository;
         this.jugRepository= jugadorRepo;
-        this.partidaService = partidaService;
+        this.userService= userService;
+        this.partidaRepository= partidaRepository;
 	}
 
     @Transactional(readOnly = true)
@@ -77,7 +82,7 @@ public class PartidaJugadorService {
                 nuevoCreador.setIsCreator(true);
                 pjRepository.save(nuevoCreador);
              }else{
-                partidaService.deletePartida(partida.getCodigo());
+                partidaRepository.delete(partida);
             }
         }
         
@@ -113,6 +118,16 @@ public class PartidaJugadorService {
         }
         partjugador.setPosicion(posNueva);
         pjRepository.save(partjugador);
+    }
+
+    @Transactional(readOnly=true)
+    public User getGameCreator(Partida p){
+        Optional<PartidaJugador> pj = pjRepository.findCreator(p.getId());
+        if(pj.isEmpty()){
+            throw new ResourceNotFoundException("Creador de la partida no encontrado");
+        }
+        return userService.findUser(pj.get().getPlayer().getId());
+
     }
     
 }
