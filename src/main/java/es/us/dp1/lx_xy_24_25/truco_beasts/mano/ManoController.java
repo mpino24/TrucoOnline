@@ -2,12 +2,16 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
 
 
@@ -22,6 +26,14 @@ public class ManoController {
     public ManoController(ManoService manoService){
         this.manoService = manoService;
     }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Mano> actualizarMano(@RequestParam(required=true) String codigo){
+        Mano mano = manoService.getMano(codigo);
+        return new ResponseEntity<>(mano, HttpStatus.OK);
+    }
+
 
     @GetMapping("/idJugadorPie")
     @ResponseStatus(HttpStatus.OK)

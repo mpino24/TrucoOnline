@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import tokenService from "frontend/src/services/token.service.js";
 import WaitingModal from "frontend/src/game/WaitingModal.js"
 import PlayingModal from "frontend/src/manos/PlayingModal.js"
+
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Game(){
@@ -52,7 +53,7 @@ export default function Game(){
             game={game}/>}
 
             {game && game.estado === 'ACTIVE' &&
-            <PlayingModal game={game} setGame={setGame}/>
+            <PlayingModal game={game} />
             }
 
 

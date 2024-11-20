@@ -1,23 +1,43 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
 
 @Service
 public class ManoService {
 
-    private  Mano manoActual;
+     private final Map<String, Mano> manosPorPartida = new HashMap<>();
 
+     public Mano getMano(String codigo) {
+        Mano mano=  manosPorPartida.get(codigo);
+        return mano;
+    }
+    
+    
+    private Mano manoActual;
+    private CartaRepository cartaRepository;
     private static ConverterTruco converterTruco;
     private static ConverterRespuestaTruco converterRespuestaTruco;
+    
 
-    public ManoService(Mano mano ) {
+    public ManoService(Mano mano, CartaRepository cartaRepository) {
         manoActual = mano;
+        this.cartaRepository = cartaRepository;
+
+
     }
     
     public  Integer obtenerJugadorPie(){
@@ -298,5 +318,81 @@ public class ManoService {
         return res;
     }
 
+    public List<List<Carta>> repartirCartas(Partida partida){
+		Integer numJugadores = partida.getNumJugadores();
+		List<List<Carta>> res = new ArrayList<>();
+		Integer cartasEnLaBaraja = 40;
+		Integer cartasPorJugador = 3;
+		List<Integer> listaCartasId = IntStream.rangeClosed(1, cartasEnLaBaraja).boxed().collect(Collectors.toList());
+		if (numJugadores * 3 > listaCartasId.size()) {
+			throw new IllegalArgumentException("No hay suficientes cartas para todos los jugadores.");
+		}
+		Collections.shuffle(listaCartasId);
+		int indiceCarta = 0;
+    	for (int i = 0; i < numJugadores; i++) {
+        	List<Carta> cartasJugador = new ArrayList<>();
+        	for (int j = 0; j < cartasPorJugador; j++) {
+            	Carta carta = findCarta(listaCartasId.get(indiceCarta++));
+            	if (carta != null) {
+            	    cartasJugador.add(carta);
+            	}
+        	}
+        	res.add(cartasJugador);
+    	}
+		return res;
+	}
+
+	public Carta findCarta(Integer cartaId){
+		Carta res = cartaRepository.findById(cartaId).orElse(null);
+		return res;
+	}
+
+	
+	public Mano crearMano(Partida partida){
+		Mano nuevaMano = new Mano();
+		
+		nuevaMano.setPartida(partida);
+		nuevaMano.setJugadorTurno(partida.getJugadorMano());
+		nuevaMano.setCartasDisp(repartirCartas(partida));
+		Integer ganadasIniciales = 0;
+		List<Integer> ganadoresRonda = new ArrayList<>();
+		ganadoresRonda.add(ganadasIniciales);
+		ganadoresRonda.add(ganadasIniciales);
+		nuevaMano.setGanadoresRondas(ganadoresRonda);
+
+        manosPorPartida.put(partida.getCodigo(), nuevaMano);
+		return nuevaMano;
+	}
+	
+
+	public void terminarMano(Partida partida){
+		
+		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
+		
+		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
+
+		if(ganadoresRondaActual.get(0) == ganadoresRondaActual.get(1)){ // si hay empate, gana el mano
+
+			if (equipoMano ==0)  partida.setPuntosEquipo1(manoActual.getPuntosTruco());
+
+			else partida.setPuntosEquipo2(manoActual.getPuntosTruco());
+			
+		} else if (ganadoresRondaActual.get(0) >  ganadoresRondaActual.get(1)){
+			partida.setPuntosEquipo1(manoActual.getPuntosTruco());
+
+		} else {
+			partida.setPuntosEquipo2(manoActual.getPuntosTruco());
+		}
+
+		if (partida.getEstado() == Estado.FINISHED) {
+			//TODO
+		} else {
+            manosPorPartida.remove(partida.getCodigo());
+			partida.setJugadorMano((partida.getJugadorMano() + 1) % partida.getNumJugadores());
+			crearMano(partida);
+		}
+		
+		
+	}
 
 }
