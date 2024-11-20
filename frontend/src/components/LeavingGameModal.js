@@ -1,4 +1,4 @@
-import { useState, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import Modal from 'react-modal';
 import tokenService from 'frontend/src/services/token.service.js';
 import { useNavigate } from 'react-router-dom'
@@ -7,16 +7,19 @@ import { useNavigate } from 'react-router-dom'
 
 const LeavingGameModal = forwardRef((props, ref) => {
     const navigate = useNavigate();
-
+    const jwt = tokenService.getLocalAccessToken();
     function closeModal() {
         props.setIsOpen(false);
     }
 
     function leaveGame() {
         fetch(
-            "/api/v1/partidajugador?userId=" + tokenService.getUser().id,
+            "/api/v1/partidajugador",
             {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                  },
             }
         )
             .then((response) => response.text())

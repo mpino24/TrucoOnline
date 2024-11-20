@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -29,10 +30,12 @@ public class PartidaJugadorController {
     
     private final PartidaJugadorService pjService;
     private final PartidaService partidaService;
+    private final UserService userService;
     @Autowired
-    public PartidaJugadorController(PartidaJugadorService partJugService,PartidaService partidaService)   {
+    public PartidaJugadorController(PartidaJugadorService partJugService,PartidaService partidaService,UserService userService)   {
         this.pjService=partJugService;
         this.partidaService=partidaService;
+        this.userService=userService;
 
     }
 
@@ -54,8 +57,9 @@ public class PartidaJugadorController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public void eliminateJugadorPartida(@RequestParam(required=true) Integer userId){
-        pjService.eliminateJugadorPartida(userId);
+    public void eliminateJugadorPartida(){
+        User currentUser = userService.findCurrentUser();
+        pjService.eliminateJugadorPartida(currentUser.getId());
     }
 
     @GetMapping("/players")
