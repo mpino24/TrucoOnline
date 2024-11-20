@@ -45,7 +45,6 @@ public class Mano {
         return listaEnvidosCadaJugador;
     }
 
-
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
         List< Integer> listaSumasPalo= new ArrayList<>();
         for(Map.Entry<Palo, List<Carta>> cartasPaloJugador : diccCartasPaloJugador.entrySet()){

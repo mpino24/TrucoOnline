@@ -1,7 +1,6 @@
 
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -71,10 +71,11 @@ public class PartidaController {
 		
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");
-		newPartida.setInstanteInicio(LocalDateTime.now());
+		newPartida.setInstanteInicio(null);
+		newPartida.setInstanteFin(null);
 		// newPartida.setCodigo(generateRandomCode());
 		ResponseEntity<Partida> res=new ResponseEntity<>(partidaService.savePartida(newPartida), HttpStatus.CREATED);
-		partJugService.addJugadorPartida(newPartida,userId);
+		partJugService.addJugadorPartida(newPartida,userId,true);
 		return res;
 	}
 
@@ -97,6 +98,12 @@ public class PartidaController {
 	@GetMapping("/search")
 	public ResponseEntity<Partida> findPartidaByCodigo(@RequestParam(required=true) String codigo) {
 		return new ResponseEntity<>(partidaService.findPartidaByCodigo(codigo), HttpStatus.OK);
+	}
+
+	@PatchMapping("/{codigo}/start")
+	public ResponseEntity<String> startGame(@PathVariable("codigo") String codigo){
+		partidaService.startGame(codigo);
+		return new ResponseEntity<>("Partida comenzada con éxito", HttpStatus.OK);
 	}
 	
 }

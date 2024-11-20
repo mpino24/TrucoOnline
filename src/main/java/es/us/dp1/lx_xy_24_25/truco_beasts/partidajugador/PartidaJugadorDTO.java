@@ -1,39 +1,40 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-//Este hay que tocarlo basto
-@Entity
+
 @Getter
 @Setter
-public class PartidaJugador extends BaseEntity{
+public class PartidaJugadorDTO {
 
     @NotNull
     private Integer posicion;
-    
+
     @ManyToOne
-    private Jugador player;
+    private JugadorDTO player;
 
     @ManyToOne
     private Partida game;
 
     @NotNull
+    private Equipo equipo;
+
+    @NotNull
     private Boolean isCreator;
 
-    public Equipo getEquipo(){
-        if(posicion%2==0){
-            return Equipo.EQUIPO1;
-        }else{
-            return Equipo.EQUIPO2;
-        }
+    public PartidaJugadorDTO() {
     }
 
+    public PartidaJugadorDTO(PartidaJugador pj) {
+        this.posicion = pj.getPosicion();
+        this.player = new JugadorDTO(pj.getPlayer());
+        this.game = pj.getGame(); 
+        this.equipo = pj.getEquipo();
+        this.isCreator = pj.getIsCreator();
+    }
 }
-

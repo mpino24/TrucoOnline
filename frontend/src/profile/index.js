@@ -169,7 +169,7 @@ export default function Profile() {
               
               <div className="custom-button-row">
                 <button className="auth-button">Guardar</button>
-                <Link to={`/`} className="auth-button" style={{ textDecoration: "none" }}>
+                <Link to={`/home`} className="auth-button" style={{ textDecoration: "none" }}>
                   Volver
                 </Link>
               </div>
