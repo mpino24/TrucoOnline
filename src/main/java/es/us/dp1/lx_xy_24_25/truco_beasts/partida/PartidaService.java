@@ -30,16 +30,15 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 @Service
 public class PartidaService {
 
-  PartidaRepository partidaRepository;
-	ManoService manoService;
+  	PartidaRepository partidaRepository;
 	UserService userService;
 	PartidaJugadorService partidaJugadorService;
-  CartaRepository cartaRepository;
+  	CartaRepository cartaRepository;
 
 	@Autowired
-	public PartidaService(PartidaRepository partidaRepository, ManoService manoService, UserService userService, PartidaJugadorService partidaJugadorService, CartaRepository cartaRepository) {
+	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService, CartaRepository cartaRepository) {
 		this.partidaRepository = partidaRepository;
-		this.manoService = manoService;
+
 		this.userService = userService;
 		this.partidaJugadorService = partidaJugadorService;
     this.cartaRepository = cartaRepository;
@@ -68,24 +67,72 @@ public class PartidaService {
     	}
 		return res;
 	}
+
 	public Carta findCarta(Integer cartaId){
 		Carta res = cartaRepository.findById(cartaId).orElse(null);
 		return res;
 	}
 
-	//PROVISIONAL
+	
 	public Mano crearMano(Partida partida){
 		Mano mano = new Mano();
+		
 		mano.setPartida(partida);
 		mano.setJugadorTurno(partida.getJugadorMano());
 		mano.setCartasDisp(repartirCartas(partida));
+
+		Integer ganadasIniciales = 0;
+		List<Integer> ganadoresRonda = new ArrayList<>();
+		ganadoresRonda.add(ganadasIniciales);
+		ganadoresRonda.add(ganadasIniciales);
+		mano.setGanadoresRondas(ganadoresRonda);
+
+		ManoService manoService = new ManoService(mano);
+
 		return mano;
 	}
-	//PROVISIONAL
+	
+
 	public void terminarMano(Mano mano, Partida partida){
-		Integer ganador = mano.getGanadoresRondas().get(mano.getGanadoresRondas().size()-1);
-		partida.setJugadorMano(manoService.siguienteJugador(partida.getJugadorMano()));
 		
+		List<Integer> ganadoresRondaActual = mano.getGanadoresRondas();
+		
+		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
+
+		if(ganadoresRondaActual.get(0) == ganadoresRondaActual.get(1)){ // si hay empate, gana el mano
+
+			if (equipoMano ==0)  partida.setPuntosEquipo1(mano.getPuntosTruco());
+
+			else partida.setPuntosEquipo2(mano.getPuntosTruco());
+			
+		} else if (ganadoresRondaActual.get(0) >  ganadoresRondaActual.get(1)){
+			partida.setPuntosEquipo1(mano.getPuntosTruco());
+
+		} else {
+			partida.setPuntosEquipo2(mano.getPuntosTruco());
+		}
+
+		if (comprobarFinPartida(partida)) {
+			//TODO
+		} else {
+
+			partida.setJugadorMano((partida.getJugadorMano() + 1) % partida.getNumJugadores());
+			crearMano(partida);
+		}
+		
+		
+	}
+
+	public Boolean comprobarFinPartida(Partida partida){
+		Boolean res = false;
+		Integer puntosEquipo1 = partida.getPuntosEquipo1();
+		Integer puntosEquipo2 = partida.getPuntosEquipo2();
+		Integer puntosPartida = partida.getPuntosMaximos();
+
+		if (puntosEquipo1==puntosPartida  || puntosEquipo2 == puntosPartida ) {
+			res = true;
+		}
+		return res;
 	}
 
 	@Transactional(readOnly = true)
@@ -127,10 +174,13 @@ public class PartidaService {
 
 	@Transactional
 	public void startGame(String codigo){
+		
 		Partida partida= findPartidaByCodigo(codigo);
 		if(partida==null){
 			throw new ResourceNotFoundException("La partida no existe");
 		}
+		Integer jugadorMano =  (int) (Math.random() * partida.getNumJugadores());
+		partida.setJugadorMano(jugadorMano);
 		User currentUser= userService.findCurrentUser();
 		User creadorPartida = partidaJugadorService.getGameCreator(partida);
 		if(currentUser.getId().equals(creadorPartida.getId())){

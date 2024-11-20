@@ -11,7 +11,7 @@ public class TipoTruco extends Truco{
     }
 
     @Override
-    public void accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual ) {
+    public void accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual,ManoService manoService ) {
         listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
         manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
