@@ -9,13 +9,17 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.orm.ObjectRetrievalFailureException;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.EntityUtils;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
+//@DataJpaTest(includeFilters= @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes=PartidaService.class))
 @AutoConfigureTestDatabase
 public class PartidaServiceTests {
     
