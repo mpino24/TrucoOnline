@@ -81,15 +81,57 @@ public class PartidaService {
 		mano.setPartida(partida);
 		mano.setJugadorTurno(partida.getJugadorMano());
 		mano.setCartasDisp(repartirCartas(partida));
-		
+		Integer ganadasIniciales = 0;
+		List<Integer> ganadoresRonda = new ArrayList<>();
+		ganadoresRonda.add(ganadasIniciales);
+		ganadoresRonda.add(ganadasIniciales);
+		mano.setGanadoresRondas(ganadoresRonda);
+
+		ManoService manoService = new ManoService(mano);
 		return mano;
 	}
 	
 
 	public void terminarMano(Mano mano, Partida partida){
-		Integer ganador = mano.getGanadoresRondas().get(mano.getGanadoresRondas().size()-1);
-		partida.setJugadorMano(ManoService.siguienteJugador(partida.getJugadorMano()));
 		
+		List<Integer> ganadoresRondaActual = mano.getGanadoresRondas();
+		
+		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
+
+		if(ganadoresRondaActual.get(0) == ganadoresRondaActual.get(1)){ // si hay empate, gana el mano
+
+			if (equipoMano ==0)  partida.setPuntosEquipo1(mano.getPuntosTruco());
+
+			else partida.setPuntosEquipo2(mano.getPuntosTruco());
+			
+		} else if (ganadoresRondaActual.get(0) >  ganadoresRondaActual.get(1)){
+			partida.setPuntosEquipo1(mano.getPuntosTruco());
+
+		} else {
+			partida.setPuntosEquipo2(mano.getPuntosTruco());
+		}
+
+		if (comprobarFinPartida(partida)) {
+			//TODO
+		} else {
+
+			partida.setJugadorMano((partida.getJugadorMano() + 1) % partida.getNumJugadores());
+			crearMano(partida);
+		}
+		
+		
+	}
+
+	public Boolean comprobarFinPartida(Partida partida){
+		Boolean res = false;
+		Integer puntosEquipo1 = partida.getPuntosEquipo1();
+		Integer puntosEquipo2 = partida.getPuntosEquipo2();
+		Integer puntosPartida = partida.getPuntosMaximos();
+
+		if (puntosEquipo1==puntosPartida  || puntosEquipo2 == puntosPartida ) {
+			res = true;
+		}
+		return res;
 	}
 
 	@Transactional(readOnly = true)
