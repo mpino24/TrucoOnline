@@ -5,8 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaRepository;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 
 @ExtendWith(MockitoExtension.class)
 public class IsolatedPartidaServiceTest {
@@ -17,8 +15,8 @@ public class IsolatedPartidaServiceTest {
 
 
     @BeforeEach
-    public void setup(){
-        ps = new PartidaService(ps);
+    public void setup(PartidaService partidaService){
+        ps = partidaService; // Lo anterior era ps = new PartidaService(ps);
     }
     
 }

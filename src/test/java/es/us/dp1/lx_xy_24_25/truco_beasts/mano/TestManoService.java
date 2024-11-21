@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Visibilidad;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
@@ -712,7 +713,18 @@ public class TestManoService {
     
 
 
+@Test
+    public void testRepartirCartas() {
+        setup(0,4);
 
+        
+        List<List<Carta>> cartasRepartidas = manoService.repartirCartas(partida);
+
+       
+        assertNotNull(cartasRepartidas);
+        assertEquals(4, cartasRepartidas.size()); 
+        cartasRepartidas.forEach(cartas -> assertEquals(3, cartas.size())); //TODO: no se si hace falta añadir un test que compruebe que sean todas distintas también.
+    }
 
 
 
