@@ -1,12 +1,24 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class RespuestaSubirTruco extends RespuestaTruco{
 
-    
+        @Override 
+        public boolean equals(Object o) { 
+            if (this == o) return true; 
+            if (o == null || getClass() != o.getClass()) return false; 
+            RespuestaSubirTruco respuestaSubirTruco = (RespuestaSubirTruco) o; 
+            return true; 
+        }
+            
+        @Override public int hashCode() { 
+            return Objects.hash(); 
+        
+        }
 
     @Override
     public RespuestasTruco getTipoRespuestaTruco() {

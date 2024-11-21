@@ -259,7 +259,7 @@ public class ManoService {
         return res;
     }
       
-    public static void responderTruco(RespuestasTruco respuesta) throws Exception{ 
+    public void responderTruco(RespuestasTruco respuesta) throws Exception{ 
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer truco = manoActual.getPuntosTruco();

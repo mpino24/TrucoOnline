@@ -20,10 +20,8 @@ public class ConverterTruco implements AttributeConverter<Truco, CantosTruco>{
             return new TipoTruco();
         }else if (dbData.equals(CantosTruco.RETRUCO)){
             return new TipoRetruco();
-        }else if (dbData.equals(CantosTruco.VALECUATRO)){
+        }else {
             return new TipoValeCuatro();
-        }else{
-            throw new IllegalArgumentException("Tipo de canto no valido:"+ dbData);
         }
     }
     
