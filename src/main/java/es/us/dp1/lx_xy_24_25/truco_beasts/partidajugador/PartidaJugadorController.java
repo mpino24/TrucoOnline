@@ -39,7 +39,7 @@ public class PartidaJugadorController {
         this.pjService=partJugService;
         this.partidaService=partidaService;
         this.userService=userService;
-
+    }
 
     @GetMapping("/miposicion/{partidaId}")
     public Integer getMiPosicion(@PathVariable("partidaId") Integer partidaId){
