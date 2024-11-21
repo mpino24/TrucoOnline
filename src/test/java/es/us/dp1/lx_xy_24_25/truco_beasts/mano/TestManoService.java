@@ -1,19 +1,24 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-
+import org.mockito.Mockito;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Visibilidad;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
+
 
 
 public class TestManoService {
@@ -23,7 +28,11 @@ public class TestManoService {
     Partida partida = new Partida();
     Mano mano = new Mano();
 
+    
     ManoService manoService = null;
+
+   
+    CartaRepository cartaRepository;
 
 
     public void setup(Integer jugMano, Integer numJugadores) {
@@ -34,7 +43,8 @@ public class TestManoService {
         ganadoresRonda.add(0);
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
-        manoService = new ManoService(mano, null);
+        
+        manoService = new ManoService(mano, cartaRepository);
          
     }
 
@@ -713,17 +723,24 @@ public class TestManoService {
     
 
 
-@Test
+    @Test
     public void testRepartirCartas() {
-        setup(0,4);
+       setup(0,4);
+            
+        CartaRepository cartaRepository = Mockito.mock(CartaRepository.class);
+        Carta carta = mock(Carta.class);
 
+        when(cartaRepository.findById(anyInt())).thenReturn(Optional.of(carta));
         
+        manoService = new ManoService(mano, cartaRepository);
+    
         List<List<Carta>> cartasRepartidas = manoService.repartirCartas(partida);
-
-       
+    
+            
         assertNotNull(cartasRepartidas);
-        assertEquals(4, cartasRepartidas.size()); 
-        cartasRepartidas.forEach(cartas -> assertEquals(3, cartas.size())); //TODO: no se si hace falta añadir un test que compruebe que sean todas distintas también.
+        assertEquals(4, cartasRepartidas.size()); // 4 jugadores
+        cartasRepartidas.forEach(cartas -> assertEquals(3, cartas.size())); // Cada jugador recibe 3 cartas
+    
     }
 
 
