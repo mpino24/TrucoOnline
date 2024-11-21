@@ -19,7 +19,9 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -32,11 +34,17 @@ public class PartidaJugadorController {
     private final PartidaService partidaService;
     private final UserService userService;
     @Autowired
+
     public PartidaJugadorController(PartidaJugadorService partJugService,PartidaService partidaService,UserService userService)   {
         this.pjService=partJugService;
         this.partidaService=partidaService;
         this.userService=userService;
 
+
+    @GetMapping("/miposicion/{partidaId}")
+    public Integer getMiPosicion(@PathVariable("partidaId") Integer partidaId){
+        Integer userId = userService.findCurrentUser().getId();
+        return pjService.getMiPosicion(userId, partidaId);
     }
 
     @GetMapping("/numjugadores")

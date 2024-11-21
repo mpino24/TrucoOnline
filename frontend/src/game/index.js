@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import tokenService from "frontend/src/services/token.service.js";
 import WaitingModal from "frontend/src/game/WaitingModal.js"
+import PlayingModal from "frontend/src/manos/PlayingModal.js"
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -10,9 +11,13 @@ export default function Game(){
     const [visible, setVisible] = useState(false);
     const codigo = currentUrl.split('partidaCode=')[1].substring(0,5);
     const [game,setGame]= useState(null);
+    
 
     useEffect(() => { //¿Hace falta que sea así?
+        let intervalId;
+
         function fetchGame() {
+            
             fetch(
                 '/api/v1/partida/search?codigo='+codigo,
                 {
@@ -25,15 +30,20 @@ export default function Game(){
                 .then((response) => response.json())
                 .then((data) => {
                     setGame(data);
-
+                    if(data.estado === 'FINISHED'){
+                        clearInterval(intervalId)
+                    }
                 })
         }
         fetchGame();
 
-        const intervalId = setInterval(fetchGame, 1000);
-
+        intervalId = setInterval(fetchGame, 1000);
+        
         return () => clearInterval(intervalId)
     },[codigo])
+
+
+
     
     return(
         <div>
@@ -42,8 +52,9 @@ export default function Game(){
             <WaitingModal
             game={game}/>}
 
-
-
+            {game && game.estado === 'ACTIVE' &&
+            <PlayingModal game={game} />
+            }
 
 
         </div>

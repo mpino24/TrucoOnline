@@ -45,6 +45,18 @@ public class PartidaJugadorService {
         return pjRepository.numberOfGamesConnected(jugadorId);
     }
 
+    
+    @Transactional(readOnly = true)
+    public Integer getMiPosicion(Integer userId, Integer partidaId) throws ResourceNotFoundException{
+        Partida partida = partidaRepository.findById(partidaId).get();
+        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj-> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+        if (partjugador == null) {
+            throw new ResourceNotFoundException("No se encontro la partidaJugador pedida");
+        }
+        return partjugador.getPosicion();
+    }
+
+
     @Transactional
     public void addJugadorPartida(Partida partida, Integer userId, Boolean isCreator) throws AlreadyInGameException {
         PartidaJugador partJug = new PartidaJugador();
