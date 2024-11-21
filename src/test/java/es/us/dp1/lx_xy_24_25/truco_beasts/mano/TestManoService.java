@@ -7,14 +7,24 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
+
 
 public class TestManoService {
 
+
+
     Partida partida = new Partida();
     Mano mano = new Mano();
+
     ManoService manoService = null;
-    
+
+
     public void setup(Integer jugMano, Integer numJugadores) {
         partida.setNumJugadores(numJugadores);
         partida.setJugadorMano(jugMano);
@@ -23,7 +33,8 @@ public class TestManoService {
         ganadoresRonda.add(0);
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
-        manoService = new ManoService(mano);
+        manoService = new ManoService(mano, null);
+         
     }
 
     @Test
@@ -464,13 +475,14 @@ public class TestManoService {
         mano.setSecuenciaCantoLista(secuenciaCantos);
     }
 
+    
+  
+
     @Test 
     public void cantaTruco() throws Exception{
         setup(0, 4);
         setupTruco(null, null);
         setupCartasDisponibles(0, 1);
-        
-
         try {
             manoService.cantosTruco(CantosTruco.TRUCO);
             assertTrue(mano.getJugadorTurno() == 1);

@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
 
 @Service
 public class ManoService {
@@ -29,8 +32,8 @@ public class ManoService {
     
     private Mano manoActual;
     private CartaRepository cartaRepository;
-    private static ConverterTruco converterTruco;
-    private static ConverterRespuestaTruco converterRespuestaTruco;
+    private static ConverterTruco converterTruco = new ConverterTruco();
+    private static ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco();
     
 
     public ManoService(Mano mano, CartaRepository cartaRepository) {
@@ -219,7 +222,7 @@ public class ManoService {
         if (!puedeCantarTruco()) {
             throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
         }
-        Truco estadoTruco =   converterTruco.convertToEntityAttribute(canto);
+        Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
 
         switch (canto) {
             case TRUCO: 

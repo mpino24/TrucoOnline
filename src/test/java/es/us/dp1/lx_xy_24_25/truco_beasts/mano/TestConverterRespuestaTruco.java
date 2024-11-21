@@ -6,8 +6,12 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.PatronEstadoTruco.ConverterRespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaNoQuieroTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaQuieroTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaSubirTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
 public class TestConverterRespuestaTruco {
 

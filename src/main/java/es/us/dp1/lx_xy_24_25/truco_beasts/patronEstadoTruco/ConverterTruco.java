@@ -1,10 +1,5 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.CantosTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.TipoRetruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.TipoTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.TipoValeCuatro;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Truco;
 import jakarta.persistence.AttributeConverter;
 
 public class ConverterTruco implements AttributeConverter<Truco, CantosTruco>{
@@ -20,13 +15,11 @@ public class ConverterTruco implements AttributeConverter<Truco, CantosTruco>{
             return new TipoTruco();
         }else if (dbData.equals(CantosTruco.RETRUCO)){
             return new TipoRetruco();
-        }else if (dbData.equals(CantosTruco.VALECUATRO)){
+        }else {
             return new TipoValeCuatro();
-        }else{
-            throw new IllegalArgumentException("Tipo de canto no valido:"+ dbData);
         }
     }
+    
 
-
-
+    
 }

@@ -6,8 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.PatronEstadoTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoRetruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoValeCuatro;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
 
 public class TestConverterTruco {
 

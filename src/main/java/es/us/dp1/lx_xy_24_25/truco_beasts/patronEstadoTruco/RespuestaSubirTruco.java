@@ -1,9 +1,12 @@
-package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
+package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
 
 public class RespuestaSubirTruco extends RespuestaTruco{
 
