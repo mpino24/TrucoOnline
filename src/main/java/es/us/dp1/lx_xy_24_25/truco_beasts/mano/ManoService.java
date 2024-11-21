@@ -10,6 +10,8 @@ import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;

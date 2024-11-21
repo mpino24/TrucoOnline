@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+
 public class TestMano {
     Carta carta = new Carta();
     Mano mano = new Mano();

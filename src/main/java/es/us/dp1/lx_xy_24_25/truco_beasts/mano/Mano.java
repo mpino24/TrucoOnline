@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;

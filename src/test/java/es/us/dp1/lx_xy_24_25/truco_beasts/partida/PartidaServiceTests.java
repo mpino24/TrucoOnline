@@ -15,8 +15,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.orm.ObjectRetrievalFailureException;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Carta;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.CartaRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.EntityUtils;
 import jakarta.transaction.Transactional;
 
