@@ -19,6 +19,10 @@ public class TestManoService {
         partida.setNumJugadores(numJugadores);
         partida.setJugadorMano(jugMano);
         mano.setPartida(partida);
+        List<Integer> ganadoresRonda = new ArrayList<>();
+        ganadoresRonda.add(0);
+        ganadoresRonda.add(0);
+        mano.setGanadoresRondas(ganadoresRonda);
         manoService = new ManoService(mano);
     }
 

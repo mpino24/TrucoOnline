@@ -6,16 +6,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.PatronEstadoTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
+
+
 
 public class TestConverterTruco {
 
     ConverterTruco convertidorTruco;
 
-    
+
     @Before
     public void setUp() { convertidorTruco = new ConverterTruco(); }
-    
+
     @Test
     public void devuelveTipoTruco(){
         Truco tipoTruco= new TipoTruco();
@@ -43,19 +45,19 @@ public class TestConverterTruco {
         Truco resultado = convertidorTruco.convertToEntityAttribute(canto);
         assertEquals(new TipoTruco(), resultado);
     }
-    
+
 
     @Test
     public void devuelveEntidadTipoRetruco(){
         CantosTruco canto= CantosTruco.RETRUCO;
         Truco resultado = convertidorTruco.convertToEntityAttribute(canto);
-        assertEquals(new TipoTruco(), resultado);
+        assertEquals(new TipoRetruco(), resultado);
     }
 
     @Test
     public void devuelveEntidadTipoValeCuatro(){
         CantosTruco canto= CantosTruco.VALECUATRO;
         Truco resultado = convertidorTruco.convertToEntityAttribute(canto);
-        assertEquals(new TipoTruco(), resultado);
+        assertEquals(new TipoValeCuatro(), resultado);
     }
 }
