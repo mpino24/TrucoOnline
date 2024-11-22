@@ -35,8 +35,8 @@ public class ManoService {
     
     private Mano manoActual;
     private final CartaRepository cartaRepository;
-    private static ConverterTruco converterTruco = new ConverterTruco();
-    private static ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco();
+    private static ConverterTruco converterTruco;
+    private static ConverterRespuestaTruco converterRespuestaTruco;
     
 
     @Autowired
