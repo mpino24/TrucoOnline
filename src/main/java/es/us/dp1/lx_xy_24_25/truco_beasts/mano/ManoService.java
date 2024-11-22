@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
@@ -31,11 +32,12 @@ public class ManoService {
     
     
     private Mano manoActual;
-    private CartaRepository cartaRepository;
+    private final CartaRepository cartaRepository;
     private static ConverterTruco converterTruco = new ConverterTruco();
     private static ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco();
     
 
+    @Autowired
     public ManoService(Mano mano, CartaRepository cartaRepository) {
         manoActual = mano;
         this.cartaRepository = cartaRepository;

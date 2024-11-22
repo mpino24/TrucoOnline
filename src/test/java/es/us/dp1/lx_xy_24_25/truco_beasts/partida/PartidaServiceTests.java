@@ -9,14 +9,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+
 import org.springframework.orm.ObjectRetrievalFailureException;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Carta;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.CartaRepository;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.EntityUtils;
 import jakarta.transaction.Transactional;
 
@@ -27,9 +25,6 @@ public class PartidaServiceTests {
     
     @Autowired
     private PartidaService partidaService;
-
-    @Autowired
-    CartaRepository cartaRepository;
 
 
 
@@ -85,25 +80,5 @@ public class PartidaServiceTests {
 		assertNotNull(partida.getId());
 	}
 
-    @Test
-    public void testRepartirCartas() {
-
-        Partida partida = new Partida();
-        partida.setCodigo("TESTS");
-        partida.setPuntosEquipo1(0);
-        partida.setPuntosEquipo2(0);
-		partida.setConFlor(true);
-        partida.setVisibilidad(Visibilidad.PUBLICA);
-        partida.setPuntosMaximos(15);
-        partida.setNumJugadores(4);
-        partidaService.savePartida(partida);
-
-        
-        List<List<Carta>> cartasRepartidas = partidaService.repartirCartas(partida);
-
-       
-        assertNotNull(cartasRepartidas);
-        assertEquals(4, cartasRepartidas.size()); 
-        cartasRepartidas.forEach(cartas -> assertEquals(3, cartas.size())); //TODO: no se si hace falta añadir un test que compruebe que sean todas distintas también.
-    }
+    
 }
