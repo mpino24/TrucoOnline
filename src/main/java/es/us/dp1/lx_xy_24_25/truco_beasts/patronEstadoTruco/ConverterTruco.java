@@ -1,9 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
 import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
+import jakarta.persistence.Convert;
 
-@Converter
+@Convert
 public class ConverterTruco implements AttributeConverter<Truco, CantosTruco>{
 
     @Override

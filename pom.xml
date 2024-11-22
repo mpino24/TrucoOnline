@@ -114,6 +114,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jpatterns</groupId>
+			<artifactId>jpatterns</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<!-- Databases - Use H2 by default -->
 		<dependency>
 			<groupId>com.h2database</groupId>

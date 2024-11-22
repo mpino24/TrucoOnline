@@ -5,11 +5,11 @@ import { TbFlowerOff } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 import tokenService from 'frontend/src/services/token.service.js';
 
-const user = tokenService.getUser();
 
 const PartidaView = forwardRef((props, ref) => {
     const [game, setGame] = useState(props.game);
     const [connectedUsers, setConnectedUsers] = useState(0);
+    const jwt = tokenService.getLocalAccessToken();
 
     useEffect(() => {
         if (game.estado === 'WAITING') {
@@ -35,9 +35,12 @@ const PartidaView = forwardRef((props, ref) => {
 
     function handleSubmit() {
         fetch(
-            "/api/v1/partidajugador/" + game.id + "?userId=" + user.id,
+            "/api/v1/partidajugador/" + game.id,
             {
-                method: "POST"
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                  },
             }
         )
             .then((response) => response.text())
