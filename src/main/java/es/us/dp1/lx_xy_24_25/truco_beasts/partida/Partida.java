@@ -63,5 +63,21 @@ public class Partida extends BaseEntity{
             return Estado.FINISHED;
         }
     }
+
+
+/*     public Partida clone(){
+        Partida partida = new Partida();
+        partida.setId(0);
+        partida.setNumJugadores(2);
+        partida.setCodigo("WWWWW");
+        partida.setConFlor(false);
+        partida.setPuntosMaximos(15);
+        partida.setPuntosEquipo1(0);
+        partida.setPuntosEquipo2(0);
+        partida.setVisibilidad(Visibilidad.PUBLICA);
+        partida.setInstanteInicio(LocalDateTime.of(2024, 11, 8, 20, 28));
+        partida.setInstanteFin(LocalDateTime.of(2024, 11, 8, 20, 37));
+        return partida;
+    } */
 }
  
