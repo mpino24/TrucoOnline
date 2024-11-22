@@ -1,4 +1,4 @@
-import { useState, forwardRef, useEffect } from 'react';
+import { useState, forwardRef, useEffect, useRef } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 
@@ -9,6 +9,10 @@ const PlayingModal = forwardRef((props, ref) => {
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [mano, setMano] = useState(null)
+    const [draggedCarta, setDraggedCarta] = useState(null);
+
+
+
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
       );
@@ -49,26 +53,57 @@ const PlayingModal = forwardRef((props, ref) => {
 
             
             return cartasJugador.map((carta, index) => (
+                
                 <img
                     key={index}
                     src={carta.foto} 
                     alt={`Carta ${index + 1}`}
                     style={{ width: '50px', height: '75px', margin: '5px' }} 
                     onError={(e) => (e.target.style.display = 'none')} 
+                    draggable
+                    onDragStart={(evento)=> dragStart(evento, carta)} 
+                    
                 />
+                
             ));
         }
 
         return <div>Cargando cartas...</div>;
     };
 
+    const dragStart = (evento, carta) => {
+        setDraggedCarta(carta);
+        evento.dataTransfer.effectAllowed ='move';
+    }
+
+    const handleDrop = (evento) => {
+        evento.preventDefault();
+        // Aquí puedes manejar el caso de soltar la carta
+        const offsetX = evento.clientX;
+        const offsetY = evento.clientY;
+        
+    };
+    const allowDrop = (evento) => {
+        evento.preventDefault();
+    };
+
+    
+
+
+
     return (<>
             <div>
                 <h3>Cartas del Jugador {posicion + 1}</h3>
                 {renderCartasJugador()} 
+                {draggedCarta && 
+                  <img
+                  src={draggedCarta.foto} 
+                  alt='Carta arrastrada'
+                  style={{ position: 'absolute', left: '178px', top: '130px', width: '50px', height: '75px' }}
+                  onError={(e) => (e.target.style.display = 'none')}
+                  />  }
             </div>
-        {console.log(mano)}
-        {console.log(posicion)}</>
+        </>
     )
         
     
