@@ -26,7 +26,7 @@ public class ManoService {
 
     private final Map<String, Mano> manosPorPartida = new HashMap<>();
 
-   private Mano manoActual;
+    private Mano manoActual;
     
     private final CartaRepository cartaRepository;
     private static ConverterTruco converterTruco = new ConverterTruco();
@@ -36,7 +36,7 @@ public class ManoService {
     @Autowired
     public ManoService(Mano mano, CartaRepository cartaRepository) {
         this.cartaRepository = cartaRepository;
-        manoActual=mano;
+        manoActual = mano;
     }
 
     public void setManoActual(String codigo){
@@ -203,23 +203,45 @@ public class ManoService {
         return jugadorPreferencia;
     }
 
-    public  Carta tirarCarta(Integer indiceCarta, String codigo) {
-        setManoActual(codigo);
+    public  Carta tirarCarta(Integer cartaId, String codigo) {
+        Mano manoActual = getMano(codigo);
         if(!manoActual.getEsperandoRespuesta()){
-            
+            Carta cartaALanzar = cartaRepository.findById(cartaId).orElseThrow(()->  new NotFoundException("No se encontro esa carta"));
             Integer jugadorActual = manoActual.getJugadorTurno();
-            if (indiceCarta == null || indiceCarta < 0 || indiceCarta >= manoActual.getCartasDisp().get(manoActual.getJugadorTurno()).size()) {
-                throw new NotFoundException("Índice de carta no válido");
+            
+            List<Carta> cartasDisponibles = manoActual.getCartasDisp().get(jugadorActual);
+            Integer indice = 0;
+            for (int i=0; i < cartasDisponibles.size(); i++){
+                if(cartasDisponibles.get(i)!= null){
+                    if(cartasDisponibles.get(i).getId()==cartaALanzar.getId()){
+                        indice=i;
+                        
+                    }
+                }
+                
             }
-            Carta carta = manoActual.getCartasDisp().get(jugadorActual).get(indiceCarta);
 
-            manoActual.getCartasDisp().get(jugadorActual).remove(carta);
-            manoActual.getCartasLanzadasRonda().set(jugadorActual, carta);
-            siguienteTurno(codigo);
-            manosPorPartida.remove(codigo);
-            manosPorPartida.put(codigo, manoActual);
-            setManoActual(codigo);
-            return carta;
+            manoActual.getCartasDisp().get(jugadorActual).set(indice,null);
+            manoActual.getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
+
+            List<Carta> listaCartasLanzadas = manoActual.getCartasLanzadasRonda();
+            if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
+                List<Carta> listaCartasLanzadasNuevo = new ArrayList<>();
+                for (int i = 0; i <manoActual.getPartida().getNumJugadores(); i++){
+                    listaCartasLanzadasNuevo.add(null);
+                }
+                manoActual.setCartasLanzadasRonda(listaCartasLanzadasNuevo);
+                actualizarMano(manoActual, codigo); //importante que se actualice antes, ya que es la que se usara en comparar cartas
+                compararCartas(codigo);
+            } else{
+                siguienteTurno(codigo);
+                actualizarMano(manoActual, codigo);
+            }
+
+            
+            
+    
+            return cartaALanzar;
         } else{
             throw new NotFoundException("No tenés más esa carta");
         }
@@ -431,7 +453,7 @@ public class ManoService {
 	
 
 	public void terminarMano(Partida partida){
-		
+		Mano manoActual = getMano(partida.getCodigo());
 		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
 		
 		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
