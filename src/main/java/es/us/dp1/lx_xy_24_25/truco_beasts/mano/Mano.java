@@ -35,6 +35,15 @@ public class Mano {
     private Partida partida;
 
 
+    public  Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
+        
+        Integer equipoCantor = getEquipoCantor();
+        Integer jugadorTurno = getJugadorTurno();
+        return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
+    }
+
+    
+
      public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
         for(int i=0; i<cartasDisp.size(); i++){

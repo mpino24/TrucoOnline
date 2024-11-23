@@ -27,7 +27,7 @@ public class TestManoService {
 
     Partida partida = new Partida();
     Mano mano = new Mano();
-
+    String codigo = null;
     
     ManoService manoService = null;
 
@@ -38,6 +38,7 @@ public class TestManoService {
     public void setup(Integer jugMano, Integer numJugadores) {
         partida.setNumJugadores(numJugadores);
         partida.setJugadorMano(jugMano);
+        partida.setCodigo("TESTS");
         mano.setPartida(partida);
         List<Integer> ganadoresRonda = new ArrayList<>();
         ganadoresRonda.add(0);
@@ -45,7 +46,9 @@ public class TestManoService {
         mano.setGanadoresRondas(ganadoresRonda);
         
         manoService = new ManoService(mano, cartaRepository);
-         
+        codigo = partida.getCodigo();
+        manoService.actualizarMano(mano, codigo);
+        
     }
 
     @Test
@@ -77,9 +80,9 @@ public class TestManoService {
     public void turnoHaciaAdelanteDe2() {
         setup(0,2);
         mano.setJugadorTurno(0);
-        manoService.siguienteTurno();
+        manoService.siguienteTurno(codigo);
         assertEquals(1, mano.getJugadorTurno());
-        manoService.siguienteTurno();
+        manoService.siguienteTurno(codigo);
         assertEquals(0, mano.getJugadorTurno());
     }
 
@@ -87,7 +90,7 @@ public class TestManoService {
     public void turnoHaciaAdelanteDe4() {
         setup(0,4);
         mano.setJugadorTurno(2);
-        manoService.siguienteTurno();
+        manoService.siguienteTurno(codigo);
         assertEquals(3, mano.getJugadorTurno());
     }
 
@@ -96,7 +99,7 @@ public class TestManoService {
         setup(0,4);
 
         mano.setJugadorTurno(3);
-        manoService.siguienteTurno();
+        manoService.siguienteTurno(codigo);
         assertEquals(0, mano.getJugadorTurno());
     }
 
@@ -104,9 +107,9 @@ public class TestManoService {
     public void turnoHaciaAtrasDe2() {
         setup(0,2);
         mano.setJugadorTurno(0);
-        manoService.anteriorTurno();
+        manoService.anteriorTurno(codigo);
         assertEquals(1, mano.getJugadorTurno());
-        manoService.anteriorTurno();
+        manoService.anteriorTurno(codigo);
         assertEquals(0, mano.getJugadorTurno());
     }
 
@@ -114,7 +117,7 @@ public class TestManoService {
     public void turnoHaciaAtrasDe4() {
         setup(0,4);
         mano.setJugadorTurno(3);
-        manoService.anteriorTurno();
+        manoService.anteriorTurno(codigo);
         assertEquals(2, mano.getJugadorTurno());
     }
 
@@ -123,7 +126,7 @@ public class TestManoService {
         setup(0,4);
 
         mano.setJugadorTurno(0);
-        manoService.anteriorTurno();
+        manoService.anteriorTurno(codigo);
         assertEquals(3, mano.getJugadorTurno());
     }
     
@@ -161,21 +164,21 @@ public class TestManoService {
     public void obtenerRondaActualRondaUno(){
         setup(3, 4);
         setupCartasDisponibles(2, 1);
-        Integer ronda = manoService.obtenerRondaActual();
+        Integer ronda = manoService.obtenerRondaActual(codigo);
         assertEquals(1, ronda);
     }
     @Test
     public void obtenerRondaActualRondaDos(){
         setup(3, 4);
         setupCartasDisponibles(2, 2);
-        Integer ronda = manoService.obtenerRondaActual();
+        Integer ronda = manoService.obtenerRondaActual(codigo);
         assertEquals(2, ronda);
     }
     @Test
     public void obtenerRondaActualRondaTres(){
         setup(3, 4);
         setupCartasDisponibles(2, 3);
-        Integer ronda = manoService.obtenerRondaActual();
+        Integer ronda = manoService.obtenerRondaActual(codigo);
         assertEquals(3, ronda);
     }
 
@@ -184,47 +187,47 @@ public class TestManoService {
     public void sePuedeCantarEnvidoDeDos(){
         setup(0, 1);
         setupCartasDisponibles(0,1);
-        assertTrue(manoService.puedeCantarEnvido());
-        manoService.siguienteTurno();
-        assertTrue( manoService.puedeCantarEnvido());
+        assertTrue(manoService.puedeCantarEnvido(codigo));
+        manoService.siguienteTurno(codigo);
+        assertTrue( manoService.puedeCantarEnvido(codigo));
     }
     @Test
     public void sePuedeCantarEnvidoNoEsPie(){
         setup(2, 4);
         setupCartasDisponibles(3,1);
-        assertFalse(manoService.puedeCantarEnvido());
+        assertFalse(manoService.puedeCantarEnvido(codigo));
     }
 
     @Test
     public void sePuedeCantarEnvidoSiEsPie(){
         setup(2, 4);
         setupCartasDisponibles(1,1);
-        assertTrue( manoService.puedeCantarEnvido());
+        assertTrue( manoService.puedeCantarEnvido(codigo));
     }
     @Test
     public void sePuedeCantarEnvidoSiEsPieOtroEquipo(){
         setup(2, 4);
         setupCartasDisponibles(0,1);
-        assertTrue(manoService.puedeCantarEnvido());
+        assertTrue(manoService.puedeCantarEnvido(codigo));
     }
     @Test
     public void sePuedeCantarEnvidoHayTruco(){
         setup(2, 4);
         setupCartasDisponibles(0,1);
         mano.setPuntosTruco(2);
-        assertFalse( manoService.puedeCantarEnvido());
+        assertFalse( manoService.puedeCantarEnvido(codigo));
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaDos(){
         setup(2, 4);
         setupCartasDisponibles(0,2);
-        assertFalse( manoService.puedeCantarEnvido());
+        assertFalse( manoService.puedeCantarEnvido(codigo));
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaTres(){
         setup(0, 4);
         setupCartasDisponibles(3,3);
-        assertFalse( manoService.puedeCantarEnvido());
+        assertFalse( manoService.puedeCantarEnvido(codigo));
     }
 
     @Test
@@ -232,7 +235,7 @@ public class TestManoService {
         setup(0, 4);
         setupCartasDisponibles(3,1);
         mano.setPuntosEnvido(2);
-        assertFalse( manoService.puedeCantarEnvido());
+        assertFalse( manoService.puedeCantarEnvido(codigo));
     }
     
     @Test
@@ -241,7 +244,7 @@ public class TestManoService {
 
         List<Integer> jugadores = new ArrayList<>();
         jugadores.add(0); jugadores.add(1);
-        Integer preferido = manoService.cercanoAMano(jugadores);
+        Integer preferido = manoService.cercanoAMano(jugadores,codigo);
         assertEquals(0, preferido);
     }
 
@@ -251,7 +254,7 @@ public class TestManoService {
 
         List<Integer> jugadores = new ArrayList<>();
         jugadores.add(1); jugadores.add(2);
-        Integer preferido = manoService.cercanoAMano(jugadores);
+        Integer preferido = manoService.cercanoAMano(jugadores,codigo);
         assertEquals(2, preferido);
     }
 
@@ -261,7 +264,7 @@ public class TestManoService {
 
         List<Integer> jugadores = new ArrayList<>();
         jugadores.add(2); jugadores.add(4);
-        Integer preferido = manoService.cercanoAMano(jugadores);
+        Integer preferido = manoService.cercanoAMano(jugadores,codigo);
         assertEquals(2, preferido);
     }
 
@@ -271,7 +274,7 @@ public class TestManoService {
 
         List<Integer> jugadores = new ArrayList<>();
         jugadores.add(3); jugadores.add(5);
-        Integer preferido = manoService.cercanoAMano(jugadores);
+        Integer preferido = manoService.cercanoAMano(jugadores,codigo);
         assertEquals(3, preferido);
     }
 
@@ -281,7 +284,7 @@ public class TestManoService {
 
         List<Integer> jugadores = new ArrayList<>();
         jugadores.add(3); jugadores.add(5);
-        Integer preferido = manoService.cercanoAMano(jugadores);
+        Integer preferido = manoService.cercanoAMano(jugadores,codigo);
         assertEquals(5, preferido);
     }
 
@@ -302,7 +305,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasLanzadas(1, 2, 14, 6);
 
-        Integer empezador = manoService.compararCartas();
+        Integer empezador = manoService.compararCartas(codigo);
         assertEquals(2, empezador);
     }
 
@@ -311,7 +314,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasLanzadas(10, 10, 6, 14);
 
-        Integer empezador = manoService.compararCartas();
+        Integer empezador = manoService.compararCartas(codigo);
         assertEquals(3, empezador);
     }
 
@@ -320,7 +323,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasLanzadas(10, 10, 6, 4);
 
-        Integer empezador = manoService.compararCartas();
+        Integer empezador = manoService.compararCartas(codigo);
         assertEquals(0, empezador);
     }
 
@@ -329,7 +332,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasLanzadas(10, 10, 10, 4);
 
-        Integer empezador = manoService.compararCartas();
+        Integer empezador = manoService.compararCartas(codigo);
         assertEquals(0, empezador);
     }
 
@@ -338,7 +341,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasLanzadas(10, 6, 10, 4);
 
-        Integer empezador = manoService.compararCartas();
+        Integer empezador = manoService.compararCartas(codigo);
         assertEquals(0, empezador);
     }
 
@@ -347,7 +350,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasLanzadas(4, 10, 6, 10);
 
-        Integer empezador = manoService.compararCartas();
+        Integer empezador = manoService.compararCartas(codigo);
         assertEquals(1, empezador);
     }
 
@@ -387,7 +390,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasDisponibles(jugadorActual,1);
 
-        manoService.tirarCarta(cartaALanzar);
+        manoService.tirarCarta(cartaALanzar, partida.getCodigo());
         Integer tamCartasDisponibles = mano.getCartasDisp().get(jugadorActual).size();
         assertEquals(2, tamCartasDisponibles);
         Boolean hayCartaLanzada = mano.getCartasLanzadasRonda().get(jugadorActual) != null;
@@ -402,7 +405,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasDisponibles(jugadorActual,1);
 
-        manoService.tirarCarta(cartaALanzar);
+        manoService.tirarCarta(cartaALanzar,partida.getCodigo());
         
         Boolean hayCartaLanzada = mano.getCartasLanzadasRonda().get(jugadorActual) != null;
         assertTrue(hayCartaLanzada);
@@ -415,7 +418,7 @@ public class TestManoService {
         setup(0,4);
         setupCartasDisponibles(jugadorActual,1);
 
-        manoService.tirarCarta(cartaALanzar);
+        manoService.tirarCarta(cartaALanzar,partida.getCodigo());
         Integer siguienteTurno = mano.getJugadorTurno();
         assertEquals(manoService.siguienteJugador(jugadorActual), siguienteTurno);
     }
@@ -430,7 +433,7 @@ public class TestManoService {
         setup(0, 4);
         setupTruco(null, null);
         mano.setJugadorTurno(3);
-        assertTrue(manoService.puedeCantarTruco());
+        assertTrue(mano.puedeCantarTruco());
     }
 
     @Test 
@@ -438,7 +441,7 @@ public class TestManoService {
         setup(0, 4);
         setupTruco(0, 2);
         mano.setJugadorTurno(3);
-        assertTrue(manoService.puedeCantarTruco());
+        assertTrue(mano.puedeCantarTruco());
     }
 
     @Test 
@@ -446,7 +449,7 @@ public class TestManoService {
         setup(0, 4);
         setupTruco(1, 2);
         mano.setJugadorTurno(3);
-        assertFalse(manoService.puedeCantarTruco());
+        assertFalse(mano.puedeCantarTruco());
     }
 
     @Test 
@@ -454,7 +457,7 @@ public class TestManoService {
         setup(0, 2);
         setupTruco(0, 2);
         mano.setJugadorTurno(1);
-        assertTrue(manoService.puedeCantarTruco());
+        assertTrue(mano.puedeCantarTruco());
     }
 
     @Test 
@@ -462,7 +465,7 @@ public class TestManoService {
         setup(0, 2);
         setupTruco(0, 2);
         mano.setJugadorTurno(0);
-        assertFalse(manoService.puedeCantarTruco());
+        assertFalse(mano.puedeCantarTruco());
     }
 
     public void setupSecuenciaCantos(Integer jugadorCantorTruco, Integer rondaTruco, Integer jugadorCantorRetruco, Integer rondaRetruco, Integer jugadorCantorValecuatro, Integer rondaValecuatro){
@@ -495,7 +498,7 @@ public class TestManoService {
         setupTruco(null, null);
         setupCartasDisponibles(0, 1);
         try {
-            manoService.cantosTruco(CantosTruco.TRUCO);
+            manoService.cantosTruco(CantosTruco.TRUCO,codigo);
             assertTrue(mano.getJugadorTurno() == 1);
             assertEquals(0, mano.getEquipoCantor());
         } catch (Exception e) {
@@ -513,7 +516,7 @@ public class TestManoService {
         setupSecuenciaCantos(1, 1, null, null, null, null);
         
         try {
-            manoService.cantosTruco(CantosTruco.RETRUCO);
+            manoService.cantosTruco(CantosTruco.RETRUCO,codigo);
             assertTrue(mano.getJugadorTurno() == 1);
             assertEquals(0, mano.getEquipoCantor());
         } catch (Exception e) {
@@ -530,7 +533,7 @@ public class TestManoService {
         
 
         try {
-            manoService.cantosTruco(CantosTruco.VALECUATRO);
+            manoService.cantosTruco(CantosTruco.VALECUATRO,codigo);
             assertTrue(mano.getJugadorTurno() == 1);
             assertEquals(0, mano.getEquipoCantor());
         } catch (Exception e) {
@@ -545,10 +548,10 @@ public class TestManoService {
         setupCartasDisponibles(0, 1);
         
         try {
-            manoService.cantosTruco(CantosTruco.TRUCO);
+            manoService.cantosTruco(CantosTruco.TRUCO,codigo);
             assertTrue(mano.getJugadorTurno() ==1);
 
-            manoService.responderTruco(RespuestasTruco.QUIERO);
+            manoService.responderTruco(RespuestasTruco.QUIERO,codigo);
             assertTrue(mano.getJugadorTurno() ==0);
             assertEquals(2, mano.getPuntosTruco());
         } catch (Exception e) {
@@ -563,10 +566,10 @@ public class TestManoService {
         setupCartasDisponibles(0, 1);
         
         try {
-            manoService.cantosTruco(CantosTruco.TRUCO);
+            manoService.cantosTruco(CantosTruco.TRUCO,codigo);
             assertTrue(mano.getJugadorTurno() ==1);
 
-            manoService.responderTruco(RespuestasTruco.NO_QUIERO);
+            manoService.responderTruco(RespuestasTruco.NO_QUIERO,codigo);
             assertEquals(1, mano.getPuntosTruco());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -581,10 +584,10 @@ public class TestManoService {
         setupSecuenciaCantos(1, 1, null, null, null, null);
         
         try {
-            manoService.cantosTruco(CantosTruco.RETRUCO);
+            manoService.cantosTruco(CantosTruco.RETRUCO,codigo);
             assertTrue(mano.getJugadorTurno() ==2);
 
-            manoService.responderTruco(RespuestasTruco.QUIERO); //QUIERO
+            manoService.responderTruco(RespuestasTruco.QUIERO,codigo); //QUIERO
             assertTrue(mano.getJugadorTurno() ==1);
             assertEquals(3, mano.getPuntosTruco());
         } catch (Exception e) {
@@ -599,10 +602,10 @@ public class TestManoService {
         setupCartasDisponibles(1, 1);
         setupSecuenciaCantos(1, 1, null, null, null, null);
         try {
-            manoService.cantosTruco(CantosTruco.RETRUCO);
+            manoService.cantosTruco(CantosTruco.RETRUCO,codigo);
             assertTrue(mano.getJugadorTurno() ==2); 
 
-            manoService.responderTruco(RespuestasTruco.NO_QUIERO); //NO QUIERO
+            manoService.responderTruco(RespuestasTruco.NO_QUIERO,codigo); //NO QUIERO
             assertEquals(2, mano.getPuntosTruco());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -616,12 +619,12 @@ public class TestManoService {
         setupSecuenciaCantos(1, 1, 0, 1, null, null);
         
         try {
-            manoService.cantosTruco(CantosTruco.VALECUATRO);
+            manoService.cantosTruco(CantosTruco.VALECUATRO,codigo);
             assertEquals(2, mano.getJugadorTurno());
             assertTrue(mano.getEsperandoRespuesta());
 
-            manoService.responderTruco(RespuestasTruco.QUIERO); //QUIERO
-            // HAY QUE SEPARAR LOS TESTS, PERO AHORA ME DA PAJA
+            manoService.responderTruco(RespuestasTruco.QUIERO,codigo); 
+            
             assertFalse(mano.getEsperandoRespuesta());
             assertTrue(mano.getJugadorTurno() ==1);
             assertEquals(4, mano.getPuntosTruco());
@@ -637,11 +640,11 @@ public class TestManoService {
         setupCartasDisponibles(1, 2);
         setupSecuenciaCantos(1, 1, 0, 1, null, null);
         try {
-            manoService.cantosTruco(CantosTruco.VALECUATRO);
+            manoService.cantosTruco(CantosTruco.VALECUATRO,codigo);
             assertTrue(mano.getJugadorTurno() ==2);
 
 
-            manoService.responderTruco(RespuestasTruco.NO_QUIERO);
+            manoService.responderTruco(RespuestasTruco.NO_QUIERO,codigo);
             assertEquals(3, mano.getPuntosTruco());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -656,14 +659,14 @@ public class TestManoService {
         setupCartasDisponibles(0, 1);
         
         try {
-            manoService.cantosTruco(CantosTruco.TRUCO);
+            manoService.cantosTruco(CantosTruco.TRUCO,codigo);
             assertTrue(mano.getJugadorTurno() == 1);
 
-            manoService.responderTruco(RespuestasTruco.SUBIR); //RETRUCO
+            manoService.responderTruco(RespuestasTruco.SUBIR,codigo); //RETRUCO
             assertEquals(2, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
 
-            manoService.responderTruco(RespuestasTruco.QUIERO); 
+            manoService.responderTruco(RespuestasTruco.QUIERO,codigo); 
             assertEquals(3, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
         } catch (Exception e) {
@@ -679,14 +682,14 @@ public class TestManoService {
         setupSecuenciaCantos(0, 1, null, null, null, null);
         
         try {
-            manoService.cantosTruco(CantosTruco.RETRUCO);
+            manoService.cantosTruco(CantosTruco.RETRUCO,codigo);
             assertTrue(mano.getJugadorTurno() == 0);
 
-            manoService.responderTruco(RespuestasTruco.SUBIR); //VALECUATRO
+            manoService.responderTruco(RespuestasTruco.SUBIR,codigo); //VALECUATRO
             assertEquals(3, mano.getPuntosTruco());
             assertEquals(3, mano.getJugadorTurno());
 
-            manoService.responderTruco(RespuestasTruco.QUIERO); 
+            manoService.responderTruco(RespuestasTruco.QUIERO,codigo); 
             assertEquals(4, mano.getPuntosTruco());
             assertEquals(3, mano.getJugadorTurno());
         } catch (Exception e) {
@@ -702,18 +705,18 @@ public class TestManoService {
         setupCartasDisponibles(0, 1);
         
         try {
-            manoService.cantosTruco(CantosTruco.TRUCO); //TRUCO
+            manoService.cantosTruco(CantosTruco.TRUCO,codigo); //TRUCO
             assertEquals(1,mano.getJugadorTurno());
 
-            manoService.responderTruco(RespuestasTruco.SUBIR);//RETRUCO
+            manoService.responderTruco(RespuestasTruco.SUBIR,codigo);//RETRUCO
             assertEquals(2, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
 
-            manoService.responderTruco(RespuestasTruco.SUBIR);//VALECUATRO
+            manoService.responderTruco(RespuestasTruco.SUBIR,codigo);//VALECUATRO
             assertEquals(3, mano.getPuntosTruco());
             assertEquals(1, mano.getJugadorTurno());
 
-            manoService.responderTruco(RespuestasTruco.QUIERO); //QUIERO
+            manoService.responderTruco(RespuestasTruco.QUIERO,codigo); //QUIERO
             assertEquals(4, mano.getPuntosTruco());
             assertEquals(0, mano.getJugadorTurno());
         } catch (Exception e) {
