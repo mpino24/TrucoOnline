@@ -18,7 +18,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
 
 @RestController
-@RequestMapping("/api/v1/mano")
+@RequestMapping("/api/v1/manos/{codigo}")
 public class ManoController {
 
 
@@ -29,11 +29,17 @@ public class ManoController {
         this.manoService = manoService;
     }
 
-    @GetMapping("/search")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Mano> actualizarMano(@RequestParam(required=true) String codigo){
+    public ResponseEntity<Mano> actualizarMano(@PathVariable String codigo){
         Mano mano = manoService.getMano(codigo);
         return new ResponseEntity<>(mano, HttpStatus.OK);
+    }
+    @PatchMapping("/tirarCarta/{cartaId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Carta> getTirarCarta(@PathVariable String codigo, @PathVariable Integer cartaId){
+        Carta carta = manoService.tirarCarta(cartaId,codigo);
+        return new ResponseEntity<>(carta, HttpStatus.OK);
     }
 
 
@@ -64,11 +70,7 @@ public class ManoController {
         return manoService.compararCartas();
     }
 
-    @PatchMapping("/tirarCarta/{idCarta}")
-    @ResponseStatus(HttpStatus.OK)
-    public void getTirarCarta(@PathVariable("idCarta") Integer idCarta){
-        manoService.tirarCarta(idCarta);
-    }
+    
 
     @PatchMapping("/cantarTruco/{canto}")
     @ResponseStatus(HttpStatus.OK)
