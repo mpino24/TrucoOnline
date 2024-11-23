@@ -28,7 +28,10 @@ const PlayingModal = forwardRef((props, ref) => {
             .then((response) => response.json())
             .then((data) => {
                 setMano(data);
-                setCartasJugador(data.cartasDisp[Number(posicion)])
+                let cartasActuales = data.cartasDisp[posicion]
+                if(cartasJugador!==cartasActuales){
+                    setCartasJugador(cartasActuales)
+                }
             })
     }
     
@@ -41,7 +44,7 @@ const PlayingModal = forwardRef((props, ref) => {
         intervalId = setInterval(fetchMano, 1000);
         
         return () => clearInterval(intervalId)
-    },[game.codigo])
+    },[game.codigo,posicion])
 
     const renderCartasJugador = () => {
         if (mano && mano.cartasDisp && posicion !== null) {
@@ -124,13 +127,14 @@ const PlayingModal = forwardRef((props, ref) => {
             <div style={{left: "20px", position: "absolute"}}>
                 {renderCartasMesa()}
             </div>
-            {mano && posicion === mano.jugadorTurno &&
+            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && 
             <div style={{ width: '150px', height: '75px', margin: '5px', left: "20px", position: "absolute", top: "200px"}}> 
                 {cartasJugador[0] && <button onClick={()=> tirarCarta(0)} >Tirar {cartasJugador[0].valor} de {cartasJugador[0].palo}</button>}
                 {cartasJugador[1] && <button onClick={()=> tirarCarta(1)} > Tirar {cartasJugador[1].valor} de {cartasJugador[1].palo}</button>}
                 {cartasJugador[2] && <button onClick={()=> tirarCarta(2)} >Tirar {cartasJugador[2].valor} de {cartasJugador[2].palo}</button>}
             </div>}
         {mano && console.log(mano)}
+        {console.log(posicion)}
         </>
     )
         
