@@ -1,7 +1,7 @@
 import { useState, forwardRef, useEffect } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
-import renderCartasVolteadas from './renderCartasVolteadas';
+import CartasVolteadas from './CartasVolteadas';
 const jwt = tokenService.getLocalAccessToken();
 
 const PlayingModal = forwardRef((props, ref) => {
@@ -67,12 +67,14 @@ const PlayingModal = forwardRef((props, ref) => {
     return (<>
             <div>
                 <h3>Cartas del Jugador {posicion + 1}</h3>
-                {renderCartasJugador()} 
+                <div style={{ position: 'fixed', bottom: '60px', left: '50%', transform: 'translateX(-50%)' }}>
+                {renderCartasJugador()}
+                </div> 
             </div>
                 
             <div>
                 <h3>Cartas voltedas otros jugadores</h3>
-                {mano && renderCartasVolteadas(mano.cartasDisp,posicion)}
+                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicion={posicion} />}
             </div>
         {console.log(mano)}
         {console.log(posicion)}</>
