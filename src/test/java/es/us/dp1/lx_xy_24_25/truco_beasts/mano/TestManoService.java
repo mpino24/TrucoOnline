@@ -45,7 +45,7 @@ public class TestManoService {
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
         
-        manoService = new ManoService(mano, cartaRepository);
+        manoService = new ManoService(cartaRepository);
         codigo = partida.getCodigo();
         manoService.actualizarMano(mano, codigo);
         

@@ -33,13 +33,13 @@ public class RespuestaSubirTruco extends RespuestaTruco{
 
     @Override
     public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs, ManoService manoService,String codigo) throws Exception {
+            List<List<Integer>> secuenciaCantos, Integer queTrucoEs) throws Exception {
         if(truco == 1){
                 manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
-                manoService.cantosTruco(CantosTruco.RETRUCO,codigo);
+                manoActual.cantosTruco(CantosTruco.RETRUCO);
         }else if(truco==2){
                 manoActual.setPuntosTruco(truco +1);
-                manoService.cantosTruco(CantosTruco.VALECUATRO,codigo);
+                manoActual.cantosTruco(CantosTruco.VALECUATRO);
         } else {
                 throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
         }
