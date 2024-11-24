@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,9 +71,13 @@ public class PartidaJugadorService {
             }
 
             partJug.setPlayer(jugadorOpt.get());
-            List<Integer> posiciones = pjRepository.lastPosition(partida.getId());
-            Integer posi = posiciones.stream().max(Comparator.naturalOrder()).orElse(-1);
-            partJug.setPosicion(posi + 1);
+            List<Integer> todasPosiciones = IntStream.range(0, partida.getNumJugadores()).boxed().toList();
+            List<Integer> posicionesOcupadas = pjRepository.lastPosition(partida.getId());
+            
+            List<Integer> posDisponibles= todasPosiciones.stream().filter(p-> !posicionesOcupadas.contains(p)).toList();
+            
+            Integer posi = posDisponibles.stream().min(Comparator.naturalOrder()).get();
+            partJug.setPosicion(posi);
             partJug.setIsCreator(isCreator);
             pjRepository.save(partJug);
         }
