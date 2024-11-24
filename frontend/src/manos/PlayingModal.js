@@ -9,8 +9,9 @@ const PlayingModal = forwardRef((props, ref) => {
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [mano, setMano] = useState(null)
-    const [draggedCarta, setDraggedCarta] = useState(null);
 
+    const [draggedCarta, setDraggedCarta] = useState(null);
+    const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
 
 
     const [posicion, setPosicion] = useFetchState(
@@ -53,17 +54,20 @@ const PlayingModal = forwardRef((props, ref) => {
 
             
             return cartasJugador.map((carta, index) => (
-                
-                <img
+                (cartasJugador &&
+                (<img
                     key={index}
                     src={carta.foto} 
                     alt={`Carta ${index + 1}`}
                     style={{ width: '50px', height: '75px', margin: '5px' }} 
                     onError={(e) => (e.target.style.display = 'none')} 
-                    draggable
-                    onDragStart={(evento)=> dragStart(evento, carta)} 
+                    draggable 
+                    onDragStart={(evento) => dragStart(evento, carta)} 
+                    onDrag={(evento) => onDrag(evento)} 
+                    onDragEnd={(evento) => onDragEnd(evento)} 
                     
-                />
+                />)
+                )
                 
             ));
         }
@@ -74,13 +78,17 @@ const PlayingModal = forwardRef((props, ref) => {
     const dragStart = (evento, carta) => {
         setDraggedCarta(carta);
         evento.dataTransfer.effectAllowed ='move';
+        
     }
+    const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
+    const onDragEnd = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY }) };
 
     const handleDrop = (evento) => {
         evento.preventDefault();
         // Aquí puedes manejar el caso de soltar la carta
         const offsetX = evento.clientX;
         const offsetY = evento.clientY;
+        setPositionCarta({ x: offsetX, y: offsetY });
         
     };
     const allowDrop = (evento) => {
@@ -92,14 +100,14 @@ const PlayingModal = forwardRef((props, ref) => {
 
 
     return (<>
-            <div>
+            <div /*  onDrop={handleDrop} onDragOver={allowDrop} */>
                 <h3>Cartas del Jugador {posicion + 1}</h3>
                 {renderCartasJugador()} 
                 {draggedCarta && 
                   <img
                   src={draggedCarta.foto} 
                   alt='Carta arrastrada'
-                  style={{ position: 'absolute', left: '178px', top: '130px', width: '50px', height: '75px' }}
+                  style={{ position: 'absolute', left: `${positionCarta.x}px`, top: `${positionCarta.y}px`, width: '50px', height: '75px' }}
                   onError={(e) => (e.target.style.display = 'none')}
                   />  }
             </div>
