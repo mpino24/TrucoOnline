@@ -10,6 +10,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador,setCartasJugador] = useState([])
     const [mano, setMano] = useState(null)
+    const [tirarTrigger, setTirarTrigger] = useState(0);
 
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
@@ -44,7 +45,11 @@ const PlayingModal = forwardRef((props, ref) => {
         intervalId = setInterval(fetchMano, 1000);
         
         return () => clearInterval(intervalId)
-    },[game.codigo,posicion])
+    },[game.codigo, posicion])
+
+    useEffect(() => {
+        fetchMano();
+    }, [tirarTrigger]);
 
     const renderCartasJugador = () => {
         if (mano && mano.cartasDisp && posicion !== null) {
@@ -58,14 +63,15 @@ const PlayingModal = forwardRef((props, ref) => {
           
 
             
-            return cartasJugador.map((carta, index) => (
-                <img
+            return cartasJugador.map((carta, index) => (<>
+                {carta &&<img
                     key={index}
                     src={carta.foto} 
                     alt={`Carta ${index + 1}`}
                     style={{ width: '50px', height: '75px', margin: '5px' }} 
                     onError={(e) => (e.target.style.display = 'none')} 
-                />
+                />}
+                </>
             ));
         }
 
@@ -112,6 +118,7 @@ const PlayingModal = forwardRef((props, ref) => {
             .then((data) => {
                 if(data){
                     console.log(data)
+                    setTirarTrigger((prev) => prev + 1);
                 }
             })
             .catch((error) => alert(error.message));
@@ -129,11 +136,12 @@ const PlayingModal = forwardRef((props, ref) => {
             </div>
             {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && 
             <div style={{ width: '150px', height: '75px', margin: '5px', left: "20px", position: "absolute", top: "200px"}}> 
-                {cartasJugador[0] && <button onClick={()=> tirarCarta(0)} >Tirar {cartasJugador[0].valor} de {cartasJugador[0].palo}</button>}
-                {cartasJugador[1] && <button onClick={()=> tirarCarta(1)} > Tirar {cartasJugador[1].valor} de {cartasJugador[1].palo}</button>}
-                {cartasJugador[2] && <button onClick={()=> tirarCarta(2)} >Tirar {cartasJugador[2].valor} de {cartasJugador[2].palo}</button>}
+                {cartasJugador[0]!== null && <button onClick={()=> tirarCarta(cartasJugador[0].id)} >Tirar {cartasJugador[0].valor} de {cartasJugador[0].palo}</button>}
+                {cartasJugador[1] !== null&& <button onClick={()=> tirarCarta(cartasJugador[1].id)} > Tirar {cartasJugador[1].valor} de {cartasJugador[1].palo}</button>}
+                {cartasJugador[2] !==null&& <button onClick={()=> tirarCarta(cartasJugador[2].id)} >Tirar {cartasJugador[2].valor} de {cartasJugador[2].palo}</button>}
             </div>}
         {mano && console.log(mano)}
+        
         {console.log(posicion)}
         </>
     )
