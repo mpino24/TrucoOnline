@@ -19,9 +19,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
-
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
-
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -66,9 +64,8 @@ public class PartidaJugadorController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public void eliminateJugadorPartida(){
-        User currentUser = userService.findCurrentUser();
-        pjService.eliminateJugadorPartida(currentUser.getId());
+    public void eliminateJugadorPartida(@RequestParam(required=false) Integer expulsadoId){
+        pjService.eliminateJugadorPartida(expulsadoId);
     }
 
     @GetMapping("/players")
