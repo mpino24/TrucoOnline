@@ -186,6 +186,8 @@ const PlayingModal = forwardRef((props, ref) => {
             {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&
             <div style={{ width: '150px', height: '75px', margin: '5px', left: "220px", position: "absolute", top: "200px"}}> 
                 {<button onClick={()=> cantarTruco("TRUCO")} >Cantar TRUCO</button>}
+                {<button onClick={()=> cantarTruco("RETRUCO")} >Cantar RETRUCO</button>}
+                {<button onClick={()=> cantarTruco("VALECUATRO")} >Cantar VALECUATRO</button>}
             </div>}
             {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&
             <div style={{ width: '150px', height: '75px', margin: '5px', left: "420px", position: "absolute", top: "200px"}}> 

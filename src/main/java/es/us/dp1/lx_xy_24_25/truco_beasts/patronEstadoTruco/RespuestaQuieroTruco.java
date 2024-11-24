@@ -34,18 +34,16 @@ public class RespuestaQuieroTruco extends RespuestaTruco{
     public Mano accionRespuestaTruco(Mano manoActual,Integer jugadorTurno,Integer jugadorAnterior, Integer truco, List<List<Integer>> secuenciaCantos,Integer queTrucoEs) {
         manoActual.setPuntosTruco(truco +1);
         if(queTrucoEs == 1){ //Es decir, Truco
-                manoActual.setJugadorTurno(jugadorAnterior);
+                manoActual.setJugadorTurno(jugadorAnterior); //Bien
         } else if( queTrucoEs == 2){
-                List<Integer> cantoEnTruco = secuenciaCantos.get(0);
-                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                Integer aQuienLeTocaAhora = manoActual.aQuienLeToca(cantoEnTruco, cantoEnRetruco, jugadorTurno);
-                manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                
+                Integer aQuienLeTocaAhora = manoActual.aQuienLeToca();
+                manoActual.setJugadorTurno(aQuienLeTocaAhora); //ver
                     
         } else {         
-                List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-                List<Integer> cantoEnValecuatro = secuenciaCantos.get(2);
-                Integer aQuienLeTocaAhora = manoActual.aQuienLeToca(cantoEnRetruco, cantoEnValecuatro, jugadorTurno);
-                manoActual.setJugadorTurno(aQuienLeTocaAhora);
+                
+                Integer aQuienLeTocaAhora = manoActual.aQuienLeToca();
+                manoActual.setJugadorTurno(aQuienLeTocaAhora); // ver
         }
         return manoActual;
     } 

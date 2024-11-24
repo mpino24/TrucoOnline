@@ -34,6 +34,7 @@ public class Mano {
     private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
+    
 
     private final Integer constanteEnvido=20;
 
@@ -297,7 +298,7 @@ public class Mano {
     }
 
     //TODO: FALTAN TEST NEGATIVOS
-    public void cantosTruco(CantosTruco canto) throws Exception{
+    public Mano cantosTruco(CantosTruco canto) throws Exception{
         Integer jugadorTurno = getJugadorTurno();
         Integer equipoCantor = getEquipoCantor();
 
@@ -333,10 +334,12 @@ public class Mano {
             }
             mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
             copiaParcialTruco(mano);
+            
             break;
         default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
         }
+        return mano;
     }
                                 
     public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
@@ -346,7 +349,9 @@ public class Mano {
         Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
         Integer rondaCanto = cantoHecho.get(0);
         Integer jugadorCanto = cantoHecho.get(1); 
-        if (rondaActual==rondaCanto && jugadorAnterior== jugadorCanto) {
+        if(partida.getNumJugadores() ==2){
+            res = jugadorSiguiente;
+        } else if (rondaActual==rondaCanto && jugadorAnterior== jugadorCanto) {
             res = jugadorAnterior;
         }else{
             res = jugadorSiguiente;
@@ -370,26 +375,33 @@ public class Mano {
             case QUIERO:
                 mano = respuestaTruco.accionRespuestaTruco(this,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);
                 copiaParcialTruco(mano);
+                
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
                     //Osea, se queda con truco -1 
                 mano = respuestaTruco.accionRespuestaTruco(this,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);
                 copiaParcialTruco(mano);
+                
                 break;
 
             case SUBIR:
 
                 mano = respuestaTruco.accionRespuestaTruco(this,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);
                 copiaParcialTruco(mano);
+                
                 break;
             default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
         }
     }
 
-    public  Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
+    public  Integer aQuienLeToca() {
         Integer res = null;
+
+        List<Integer> cantoAnterior = getSecuenciaCantoLista().get(secuenciaCantoLista.size()-2);
+        List<Integer> cantoAhora = getSecuenciaCantoLista().get(secuenciaCantoLista.size()-1);
+
         Integer rondaActual = obtenerRondaActual();
         Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
@@ -399,6 +411,11 @@ public class Mano {
 
         Integer rondaCantoAhora = cantoAhora.get(0);
         Integer jugadorCantoAhora = cantoAhora.get(1);
+
+        if(rondaActual!=rondaCantoAnterior){
+            res = jugadorAnterior;
+        }
+
         if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
             res = jugadorTurno;
         }else{

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+
 public class TestMano {
     Carta carta = new Carta();
     Mano mano = new Mano();
@@ -129,8 +131,21 @@ public class TestMano {
         assertEquals(3, mano.getMaxPuntuacion(listaPaloValoresJug2));
     }
  
- 
+    public void setup(Integer jugMano, Integer numJugadores) {
+        Partida partida = new Partida();
+        partida.setNumJugadores(numJugadores);
+        partida.setJugadorMano(jugMano);
+        partida.setCodigo("TESTS");
+        mano.setPartida(partida);
+        List<Integer> ganadoresRonda = new ArrayList<>();
+        ganadoresRonda.add(0);
+        ganadoresRonda.add(0);
+        mano.setGanadoresRondas(ganadoresRonda);
+        
+        
+    }
 
+  
     
 
     
