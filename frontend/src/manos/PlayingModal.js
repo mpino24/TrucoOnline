@@ -109,9 +109,10 @@ const PlayingModal = forwardRef((props, ref) => {
     };
 
     const dragStart = (evento, carta) => {
+        if(mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno){
         setDraggedCarta(carta);
         tirarCarta(carta.id)
-        evento.dataTransfer.effectAllowed ='move';
+        evento.dataTransfer.effectAllowed ='move';}
         
     }
     const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
@@ -166,15 +167,12 @@ const PlayingModal = forwardRef((props, ref) => {
                   onError={(e) => (e.target.style.display = 'none')}
                   />  }
             </div>
+
+
             <div style={{left: "20px", position: "absolute"}}>
                 {renderCartasMesa()}
             </div>
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && 
-            <div style={{ width: '150px', height: '75px', margin: '5px', left: "20px", position: "absolute", top: "200px"}}> 
-                {cartasJugador[0]!== null && <button onClick={()=> tirarCarta(cartasJugador[0].id)} >Tirar {cartasJugador[0].valor} de {cartasJugador[0].palo}</button>}
-                {cartasJugador[1] !== null&& <button onClick={()=> tirarCarta(cartasJugador[1].id)} > Tirar {cartasJugador[1].valor} de {cartasJugador[1].palo}</button>}
-                {cartasJugador[2] !==null&& <button onClick={()=> tirarCarta(cartasJugador[2].id)} >Tirar {cartasJugador[2].valor} de {cartasJugador[2].palo}</button>}
-            </div>}
+            
         {mano && console.log(mano)}
         
         {console.log(posicion)}
