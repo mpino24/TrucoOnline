@@ -9,13 +9,16 @@ const listaUrlCartasVacias = [
 ];
 
 const CartasVolteadas = forwardRef((props, ref) => {
-  const { cartasDispo, posicionListaCartas } = props; // Destructure props
+  const { cartasDispo, posicionListaCartas } = props; // Props
   return (
     <>
       {cartasDispo.map((cartasDisp, pos) => {
-        const cartasRestantes = cartasDisp.filter(item => item !== null).length;;
 
-        // Determine the URL of the card image
+        //Hay que filtrar las nulas porque cuando tiras carta se pone a null en lugar de quitarse de la lista
+        const cartasRestantes = cartasDisp.filter(item => item !== null).length; 
+        
+
+        //Segun las cartas que le queden al jugador se pondra una url u otra
         let urlCartaVolteadas;
 
         if (cartasRestantes === 3) 
@@ -30,7 +33,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
 
         
 
-        // EstilosSegunPosicion 
+        // Creacion de estilos segun cartas que queden y posicion 
         //La verdad que esto hay que refactorizarlo que te cagas pero funciona de puta madre
         const cartaDeUna = { position: 'fixed', transform: 'translateX(-50%)',width: '50px', height: '75px' };
         const cartaDeDos = { position: 'fixed', transform: 'translateX(-50%)',width: '75px', height: '75px' };
@@ -54,8 +57,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
         console.log("Cartas restantes: "+cartasRestantes)
 
         
-
-
+        //Evaluar que estilo se pondrá en cada caso segun cartas que queden y posicion del jugador con respecto 
+        //al que esté
         if (cartasRestantes === 3 ) {
           if((posicionListaCartas+pos)%2===0)
           estiloSegunPosicionYNumCartas = listaEstilos[8];
@@ -90,7 +93,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
         
 
 
-        // Return the JSX for this card
+        //Si la posicion es la misma que la del jugador pasado como prop no se renderiza ninguna carta volteada
         return (
           pos !== posicionListaCartas && (
             <img

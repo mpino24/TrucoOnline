@@ -102,14 +102,14 @@ const PlayingModal = forwardRef((props, ref) => {
                 return <div>No hay cartas para mostrar.</div>;
             }
     
-            // Flexbox container to hold the card elements
+            // Lo mismo que renderizar las cartas del jugador
             const containerStyle = {
                 position: 'fixed',
                 top: '50%',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
-                gap: '10px' // Adjust the gap to control spacing between cards
+                gap: '10px' 
             };
     
             const itemStyle = {
