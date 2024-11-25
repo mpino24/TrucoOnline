@@ -39,6 +39,7 @@ public class Mano {
     private Integer jugadorIniciadorDelCanto;
 
     private final Integer constanteEnvido=20;
+    private final Integer maximoPuntajeTruco = 4;
 
     private static ConverterTruco converterTruco = new ConverterTruco();
     private static ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco();
@@ -320,7 +321,7 @@ public class Mano {
 
         Mano mano = new Mano();
         if (!puedeCantarTruco()) {
-            throw new TrucoException( ); 
+            throw new TrucoException(); 
         }
         Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
 
@@ -392,6 +393,10 @@ public class Mano {
                 copiaParcialTruco(mano);
                 setEsperandoRespuesta(false);
                 setJugadorTurno(jugadorIniciadorDelCanto);
+                
+                if(getPuntosTruco() > maximoPuntajeTruco){
+                    throw new TrucoException("El máximo puntaje obtenible en el truco son " + maximoPuntajeTruco +" puntos");
+                }
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
