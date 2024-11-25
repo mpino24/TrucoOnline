@@ -162,7 +162,7 @@ const PlayingModal = forwardRef((props, ref) => {
 
     return (<>
             <div>
-                <h3>Cartas del Jugador {Number(posicion)}</h3>
+                <h3>Jugador: {Number(posicion)}</h3>
                 {renderCartasJugador()} 
             </div>
             <div style={{left: "20px", position: "absolute"}}>
@@ -176,7 +176,6 @@ const PlayingModal = forwardRef((props, ref) => {
             </div>}
 
              <div>
-                <h3>Cartas voltedas otros jugadores</h3>
                 {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} />}
             </div>
         {mano && console.log(mano)}
