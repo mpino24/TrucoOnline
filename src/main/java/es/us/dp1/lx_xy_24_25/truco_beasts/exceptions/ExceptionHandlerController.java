@@ -44,15 +44,7 @@ public class ExceptionHandlerController {
 		return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 	}
 
-//	@ExceptionHandler(value = TokenRefreshException.class)
-//	@ResponseStatus(HttpStatus.FORBIDDEN)
-//	public ResponseEntity<ErrorMessage> handleTokenRefreshException(TokenRefreshException ex, WebRequest request) {
-//		ErrorMessage message = new ErrorMessage(HttpStatus.FORBIDDEN.value(), new Date(), ex.getMessage(),
-//				request.getDescription(false));
-//
-//		return new ResponseEntity<ErrorMessage>(message, HttpStatus.FORBIDDEN);
-//	}	
-	
+
 
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
 	public final ResponseEntity<ErrorMessage> handleMethodArgumentException(MethodArgumentNotValidException ex,
@@ -84,4 +76,21 @@ public class ExceptionHandlerController {
 		return new ResponseEntity<>(message, HttpStatus.CONFLICT);
 	}
 
+
+	@ExceptionHandler(value = CartaTiradaException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<ErrorMessage> handleCartaTiradaException(CartaTiradaException ex, WebRequest request) {
+		ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage(),
+				request.getDescription(false));
+
+		return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+	}
+	@ExceptionHandler(value = TrucoException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<ErrorMessage> handleTrucoException(TrucoException ex, WebRequest request) {
+		ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage(),
+				request.getDescription(false));
+
+		return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+	}
 }

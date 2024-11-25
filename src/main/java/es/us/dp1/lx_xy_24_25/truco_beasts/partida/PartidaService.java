@@ -105,7 +105,6 @@ public class PartidaService {
 		User currentUser= userService.findCurrentUser();
 		User creadorPartida = partidaJugadorService.getGameCreator(partida);
 		manoService.crearMano(partida);
-		manoService.setManoActual(codigo);
 		if(currentUser.getId().equals(creadorPartida.getId())){
 			partida.setInstanteInicio(LocalDateTime.now());
 		}else{

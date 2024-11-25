@@ -31,12 +31,12 @@ public class TipoTruco extends Truco{
     }
 
     @Override
-    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual,ManoService manoService, String codigo ) {
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual) {
         listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
         manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
                                                              //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más) 
-        manoActual.setJugadorTurno(manoService.siguienteJugador(jugadorTurno));
+        manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));
         secuenciaCantos.add(listaRondaJugador);
         manoActual.setSecuenciaCantoLista(secuenciaCantos);
         return manoActual;
