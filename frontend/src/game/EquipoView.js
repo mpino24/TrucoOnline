@@ -2,9 +2,12 @@ import { forwardRef } from 'react';
 import JugadorView from "frontend/src/components/JugadorView.js";
 import { CiCirclePlus } from "react-icons/ci";
 import tokenService from "frontend/src/services/token.service.js";
-
+import { AiOutlineUserDelete } from "react-icons/ai";
+import { FaRegHandPointRight } from "react-icons/fa6";
+import { FaCrown } from "react-icons/fa";
 const EquipoView = forwardRef((props, ref) => {
     const usuario = tokenService.getUser();
+    const jwt = tokenService.getLocalAccessToken();
 
     function changeTeam() {
         fetch(
@@ -14,9 +17,26 @@ const EquipoView = forwardRef((props, ref) => {
             }
         )
             .then((response) => {
-                if(!response.ok){
+                if (!response.ok) {
                     alert("Error al cambiar de equipo")
                 }
+            })
+            .catch((message) => alert(message));
+
+    }
+
+    function handleExpelPlayer(playerId){
+        fetch(
+            "/api/v1/partidajugador?expulsadoId="+playerId,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                  },
+            }
+        )
+            .then((response) => response.text())
+            .then((data) => {
             })
             .catch((message) => alert(message));
 
@@ -25,8 +45,16 @@ const EquipoView = forwardRef((props, ref) => {
     function getJugadoresList() {
         const jugadoresList = props.jugadores.map(j => j.player).map((player) => {
             return (
-                <div key={player.id} style={{ marginBottom: 5, textAlign: 'left' }}>
-    
+                <div key={player.id} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+                    {props.gameCreator && props.gameCreator.id === usuario.id && player.id !== usuario.id &&
+                        <AiOutlineUserDelete style={{ width: 40, height: 40, cursor: "pointer" }} onClick={()=> handleExpelPlayer(player.id)} />
+                    }
+                    {props.gameCreator && props.gameCreator.id === player.id && player.id !== usuario.id &&
+                        <FaCrown style={{ width: 40, height: 40,color:'grey' }} />
+                    }
+                    {player.id === usuario.id &&
+                        <FaRegHandPointRight style={{ width: 40, height: 40 }} />
+                    }
                     <JugadorView
                         jugador={player}
                         isFriend={false}

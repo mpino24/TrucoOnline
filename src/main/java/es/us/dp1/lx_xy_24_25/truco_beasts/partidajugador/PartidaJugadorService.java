@@ -4,13 +4,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
@@ -46,17 +46,15 @@ public class PartidaJugadorService {
         return pjRepository.numberOfGamesConnected(jugadorId);
     }
 
-    
     @Transactional(readOnly = true)
-    public Integer getMiPosicion(Integer userId, Integer partidaId) throws ResourceNotFoundException{
+    public Integer getMiPosicion(Integer userId, Integer partidaId) throws ResourceNotFoundException {
         Partida partida = partidaRepository.findById(partidaId).get();
-        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj-> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj -> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
         if (partjugador == null) {
             throw new ResourceNotFoundException("No se encontro la partidaJugador pedida");
         }
         return partjugador.getPosicion();
     }
-
 
     @Transactional
     public void addJugadorPartida(Partida partida, Integer userId, Boolean isCreator) throws AlreadyInGameException {
@@ -73,9 +71,9 @@ public class PartidaJugadorService {
             partJug.setPlayer(jugadorOpt.get());
             List<Integer> todasPosiciones = IntStream.range(0, partida.getNumJugadores()).boxed().toList();
             List<Integer> posicionesOcupadas = pjRepository.lastPosition(partida.getId());
-            
-            List<Integer> posDisponibles= todasPosiciones.stream().filter(p-> !posicionesOcupadas.contains(p)).toList();
-            
+
+            List<Integer> posDisponibles = todasPosiciones.stream().filter(p -> !posicionesOcupadas.contains(p)).toList();
+
             Integer posi = posDisponibles.stream().min(Comparator.naturalOrder()).get();
             partJug.setPosicion(posi);
             partJug.setIsCreator(isCreator);
@@ -85,19 +83,29 @@ public class PartidaJugadorService {
     }
 
     @Transactional
-    public void eliminateJugadorPartida(Integer userId) {
-        Partida partida = getPartidaOfUserId(userId);
+    public void eliminateJugadorPartida(Integer expulsadoId) {
+        User currentUser = userService.findCurrentUser();
+        Partida partida = getPartidaOfUserId(currentUser.getId());
         List<PartidaJugador> jugadores = pjRepository.findPlayersConnectedTo(partida.getCodigo());
         Integer creadorId = jugadores.stream().filter(pj -> pj.getIsCreator()).map(pj -> pj.getPlayer().getId()).findFirst().orElse(null);
-        pjRepository.deleteByPlayerId(userId);
-        PartidaJugador nuevoCreador = jugadores.stream().filter(pj -> !pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
-        if (creadorId != null && creadorId.equals(userId) && nuevoCreador != null) {
-            nuevoCreador.setIsCreator(true);
-            pjRepository.save(nuevoCreador);
-        } else if (nuevoCreador == null) {
-            partidaRepository.delete(partida);
+        if (expulsadoId != null && !expulsadoId.equals(currentUser.getId())) {
+            if (currentUser.getId().equals(creadorId)) {
+                pjRepository.deleteByPlayerId(expulsadoId);
+            } else {
+                throw new NotAuthorizedException("No tienes permiso para eliminar a jugadores de la partida");
+            }
+        } else {    
+            pjRepository.deleteByPlayerId(currentUser.getId());
+            PartidaJugador nuevoCreador = jugadores.stream().filter(pj -> !pj.getPlayer().getId().equals(currentUser.getId())).findFirst().orElse(null);
+            if (creadorId != null && creadorId.equals(currentUser.getId()) && nuevoCreador != null) {
+                nuevoCreador.setIsCreator(true);
+                pjRepository.save(nuevoCreador);
+            } else if (nuevoCreador == null) {
+                partidaRepository.delete(partida);
+            }
         }
-    }
+    }   
+
 
 @Transactional(readOnly = true)
 public List<PartidaJugadorDTO> getPlayersConnectedTo(String partidaCode){ 
