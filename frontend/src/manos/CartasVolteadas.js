@@ -46,7 +46,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
         if (cartasRestantes === 3 ) {
           if((posicionListaCartas+pos)%2===0)
           estiloSegunPosicionYNumCartas = listaEstilos[8];
-          else if((posicionListaCartas+1===pos) || (posicionListaCartas+1>cartasDispo.length()) )
+          else if((posicionListaCartas+1===pos) || (posicionListaCartas+1>cartasDispo.length) )
             estiloSegunPosicionYNumCartas = listaEstilos[7];
           else if((posicionListaCartas-1===pos) || (posicionListaCartas-1<0))
             estiloSegunPosicionYNumCartas = listaEstilos[6];
@@ -54,15 +54,15 @@ const CartasVolteadas = forwardRef((props, ref) => {
         } else if (cartasRestantes === 2) {
           if((posicionListaCartas+pos)%2===0)
             estiloSegunPosicionYNumCartas = listaEstilos[5];
-            else if((posicionListaCartas+1===pos) || (posicionListaCartas+1>cartasDispo.length()) )
+            else if((posicionListaCartas+1===pos) || (posicionListaCartas+1>cartasDispo.length) )
               estiloSegunPosicionYNumCartas = listaEstilos[4];
             else if((posicionListaCartas-1===pos) || (posicionListaCartas-1<0))
               estiloSegunPosicionYNumCartas = listaEstilos[3];
         } else {
           if((posicionListaCartas+pos)%2===0)
             estiloSegunPosicionYNumCartas = listaEstilos[2];
-            else if(posicionListaCartas+1===pos || posicionListaCartas+1>cartasDispo.length() )
-              estiloSegunPosicionYNumCartas = listaEstilos[1];
+          else if((posicionListaCartas+1===pos) || (posicionListaCartas+1>cartasDispo.length) )
+            estiloSegunPosicionYNumCartas = listaEstilos[1];
             else if((posicionListaCartas-1===pos) || (posicionListaCartas-1<0))
               estiloSegunPosicionYNumCartas = listaEstilos[0];
         }
