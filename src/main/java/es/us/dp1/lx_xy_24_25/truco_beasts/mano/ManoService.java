@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
@@ -29,8 +31,8 @@ public class ManoService {
     private Mano manoActual;
     
     private final CartaRepository cartaRepository;
-    private static ConverterTruco converterTruco = new ConverterTruco();
-    private static ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco();
+    private static ConverterTruco converterTruco;
+    private static ConverterRespuestaTruco converterRespuestaTruco;
     
 
     @Autowired
