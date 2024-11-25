@@ -6,6 +6,8 @@ import { TbFlowerOff } from "react-icons/tb";
 import EquipoView from 'frontend/src/game/EquipoView.js'
 import LeavingGameModal from '../components/LeavingGameModal';
 import tokenService from "frontend/src/services/token.service.js";
+import { useNavigate } from 'react-router-dom'
+import ExpeledModal from './ExpeledModal';
 
 const WaitingModal = forwardRef((props, ref) => {
     const game = props.game;
@@ -15,7 +17,9 @@ const WaitingModal = forwardRef((props, ref) => {
     const [leavingModal, setLeavingModal] = useState(false);
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
-
+    const [connected,setConnected] = useState(null);
+    const [expeledView,setExpeledView]= useState(false);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -28,10 +32,13 @@ const WaitingModal = forwardRef((props, ref) => {
             )
                 .then((response) => response.json())
                 .then((data) => {
-
                     setJugadores(data)
                     setConnectedUsers(data.length)
-
+                    const isConnected = (jugadores.find(pj=> pj.player.id===usuario.id) ? true: false);
+                    if(connected && !isConnected){
+                        setExpeledView(true);
+                    }
+                    setConnected(isConnected);
                 })
         }
         fetchPlayers();
@@ -39,14 +46,14 @@ const WaitingModal = forwardRef((props, ref) => {
         const intervalId = setInterval(fetchPlayers, 500);
 
         return () => clearInterval(intervalId)
-    }, [game.codigo])
+    }, [connected, game.codigo, jugadores, navigate, usuario.id])
 
-    function iAmCreator() {
+    function getGameCreator() {
         if (jugadores.length > 0) {
-            const currentJugadorPartida = jugadores.find(pj => pj.player.id === usuario.id)
-            return currentJugadorPartida.isCreator;
+            const currentCreator = jugadores.find(pj => pj.isCreator === true)
+            return currentCreator.player;
         } else {
-            return false;
+            return null;
         }
 
 
@@ -105,7 +112,6 @@ const WaitingModal = forwardRef((props, ref) => {
                         {game.conFlor && <TbFlower style={{ verticalAlign: 'middle', marginLeft: 5 }} />}
                         {!game.conFlor && <TbFlowerOff style={{ marginLeft: 5 }} />}
                     </div>
-
                     <div style={{ columnCount: 2, textAlign: 'center' }}>
                         <div style={{
                             display: 'flex',
@@ -117,6 +123,7 @@ const WaitingModal = forwardRef((props, ref) => {
                             <EquipoView
                                 partida={game}
                                 jugadores={getJugadoresEquipo(1)}
+                                gameCreator={getGameCreator()}
                             />
                         </div>
 
@@ -130,12 +137,13 @@ const WaitingModal = forwardRef((props, ref) => {
                             <EquipoView
                                 partida={game}
                                 jugadores={getJugadoresEquipo(2)}
+                                gameCreator={getGameCreator()}
                             />
 
                         </div>
 
                     </div>
-                    {iAmCreator() && (
+                    {getGameCreator() && getGameCreator().id===usuario.id && (
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center',
@@ -157,6 +165,8 @@ const WaitingModal = forwardRef((props, ref) => {
             <LeavingGameModal
                 modalIsOpen={leavingModal}
                 setIsOpen={setLeavingModal} />
+            <ExpeledModal
+                modalIsOpen={expeledView}/>
         </>
     );
 

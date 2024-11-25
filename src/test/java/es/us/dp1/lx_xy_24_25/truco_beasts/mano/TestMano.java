@@ -22,6 +22,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+
 public class TestMano {
     Carta carta = new Carta();
     Mano mano = new Mano();
