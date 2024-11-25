@@ -32,7 +32,7 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
 
     @Override
     public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs, ManoService manoService, String codigo) {
+            List<List<Integer>> secuenciaCantos, Integer queTrucoEs) {
         
         manoActual.setPuntosTruco(truco);
         return manoActual;
