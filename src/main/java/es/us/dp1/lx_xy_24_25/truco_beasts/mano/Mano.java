@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Component;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
@@ -37,7 +36,7 @@ public class Mano {
     private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
-    
+    private Integer jugadorIniciadorDelCanto;
 
     private final Integer constanteEnvido=20;
 
@@ -311,7 +310,11 @@ public class Mano {
         Integer rondaActual = obtenerRondaActual();
         List<List<Integer>> secuenciaCantos = getSecuenciaCantoLista();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
+        if(getEsperandoRespuesta()==false){
+            jugadorIniciadorDelCanto = jugadorTurno;
+        }
         setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
+        
         listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
 
@@ -379,7 +382,7 @@ public class Mano {
         Integer queTrucoEs = secuenciaCantos.size();
 
         Mano mano = new Mano();
-        setEsperandoRespuesta(false);
+        
 
         RespuestaTruco respuestaTruco =   converterRespuestaTruco.convertToEntityAttribute(respuesta);
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
@@ -387,7 +390,8 @@ public class Mano {
             case QUIERO:
                 mano = respuestaTruco.accionRespuestaTruco(this,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);
                 copiaParcialTruco(mano);
-                
+                setEsperandoRespuesta(false);
+                setJugadorTurno(jugadorIniciadorDelCanto);
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
@@ -424,9 +428,7 @@ public class Mano {
         Integer rondaCantoAhora = cantoAhora.get(0);
         Integer jugadorCantoAhora = cantoAhora.get(1);
 
-        if(rondaActual!=rondaCantoAnterior){
-            res = jugadorAnterior;
-        }
+       
 
         if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
             res = jugadorTurno;
