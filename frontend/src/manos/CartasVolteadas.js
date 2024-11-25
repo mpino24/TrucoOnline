@@ -5,6 +5,7 @@ const listaUrlCartasVacias = [
   "http://localhost:8080/resources/images/cartas/2cartas.jpg",
   "http://localhost:8080/resources/images/cartas/3cartas.jpg",
   "http://localhost:8080/resources/images/cartas/mazo.jpg",
+  "http://localhost:8080/resources/images/cartas/SinCartas.jpg"
 ];
 
 const CartasVolteadas = forwardRef((props, ref) => {
@@ -12,18 +13,22 @@ const CartasVolteadas = forwardRef((props, ref) => {
   return (
     <>
       {cartasDispo.map((cartasDisp, pos) => {
-        const cartasRestantes = cartasDisp.length;
+        const cartasRestantes = cartasDisp.filter(item => item !== null).length;;
 
         // Determine the URL of the card image
         let urlCartaVolteadas;
 
-        if (cartasRestantes === 3) {
+        if (cartasRestantes === 3) 
           urlCartaVolteadas = listaUrlCartasVacias[2];
-        } else if (cartasRestantes === 2) {
+         else if (cartasRestantes === 2) 
           urlCartaVolteadas = listaUrlCartasVacias[1];
-        } else {
+         else if(cartasRestantes === 1) 
           urlCartaVolteadas = listaUrlCartasVacias[0];
-        }
+         else 
+         urlCartaVolteadas=listaUrlCartasVacias[4];
+
+
+        
 
         // EstilosSegunPosicion 
         //La verdad que esto hay que refactorizarlo que te cagas pero funciona de puta madre
