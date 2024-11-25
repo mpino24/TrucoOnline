@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
@@ -25,15 +26,10 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
 @Service
 public class ManoService {
 
-     private final Map<String, Mano> manosPorPartida = new HashMap<>();
+    private final Map<String, Mano> manosPorPartida = new HashMap<>();
 
-     public Mano getMano(String codigo) {
-        Mano mano=  manosPorPartida.get(codigo);
-        return mano;
-    }
-    
-    
     private Mano manoActual;
+    
     private final CartaRepository cartaRepository;
     private static ConverterTruco converterTruco;
     private static ConverterRespuestaTruco converterRespuestaTruco;
@@ -41,11 +37,34 @@ public class ManoService {
 
     @Autowired
     public ManoService(Mano mano, CartaRepository cartaRepository) {
-        manoActual = mano;
         this.cartaRepository = cartaRepository;
+        manoActual = mano;
+    }
+
+    public void setManoActual(String codigo){
+        Mano nuevaMano = getMano(codigo);
+        manoActual = nuevaMano;
 
 
     }
+    public void actualizarMano(Mano mano, String codigo){
+        Mano manoAnterior = manosPorPartida.get(codigo);
+        if(manoAnterior != null){
+            manosPorPartida.remove(codigo);
+        }
+        manosPorPartida.put(codigo, mano);
+        manoActual = mano;
+    }
+
+
+    public Mano getMano(String codigo) throws IllegalArgumentException{
+        Mano mano=  manosPorPartida.get(codigo);
+        if(mano == null){
+            throw new IllegalArgumentException("No hay una mano asociada a esa partida");
+        }
+        return mano;
+    }
+    
     
     public  Integer obtenerJugadorPie(){
         Integer pie = obtenerJugadorAnterior(manoActual.getPartida().getJugadorMano());
@@ -62,19 +81,29 @@ public class ManoService {
         return siguiente;
     }
             
-    public  void siguienteTurno() {
+    public  void siguienteTurno(String codigo) {
+        Mano manoActual = getMano(codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+            
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         manoActual.setJugadorTurno(siguiente);
+
+        actualizarMano(manoActual, codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
     }
                             
-    public  void anteriorTurno() { 
+    public  void anteriorTurno(String codigo) { 
+        Mano manoActual = getMano(codigo); 
+
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer anterior = obtenerJugadorAnterior(jugadorActual);
         manoActual.setJugadorTurno(anterior);
+
+        actualizarMano(manoActual, codigo);
     }
                             
-    public  Integer compararCartas() {
+    public  Integer compararCartas(String codigo) {
+        Mano manoActual = getMano(codigo);
+
         Integer poderMayor = 0;
         Integer empezador = null;
         List<Carta> cartasLanzadas = manoActual.getCartasLanzadasRonda();
@@ -95,17 +124,22 @@ public class ManoService {
         }
 
         
-        gestionarGanadoresRonda(empate, empezador);
+        gestionarGanadoresRonda(empate, empezador, codigo);
         
 
-        empezador = empezador != null ? empezador : cercanoAMano(empate);
+        empezador = empezador != null ? empezador : cercanoAMano(empate,codigo);
 
         manoActual.setCartasLanzadasRonda(new ArrayList<>());
-        
+        manoActual.setJugadorTurno(empezador);
+
+        actualizarMano(manoActual, codigo);
+
         return empezador;
     }
 
-    public  void gestionarGanadoresRonda(List<Integer> empates, Integer ganador){
+    public  void gestionarGanadoresRonda(List<Integer> empates, Integer ganador, String codigo){
+        Mano manoActual = getMano(codigo);
+
         List<Integer> ganadoresRonda = manoActual.getGanadoresRondas();
         Integer ganarRonda = 1;
         Integer ganadasEquipo1 = ganadoresRonda.get(0);
@@ -144,11 +178,14 @@ public class ManoService {
             ganadoresRonda.set(1, ganadasEquipo2 + ganarRonda);
         }
         manoActual.setGanadoresRondas(ganadoresRonda);
+
+        actualizarMano(manoActual, codigo);
     }
 
     
 
-    public  Integer cercanoAMano(List<Integer> jugadores) {
+    public  Integer cercanoAMano(List<Integer> jugadores, String codigo) {
+        Mano manoActual = getMano(codigo);
         Integer jugadorMano = manoActual.getPartida().getJugadorMano();
         Integer jugadorPreferencia = null;
         List<Integer> lista = new ArrayList<>();
@@ -168,22 +205,57 @@ public class ManoService {
         return jugadorPreferencia;
     }
 
-    public  void tirarCarta(Integer indiceCarta) {
+    public  Carta tirarCarta(Integer cartaId, String codigo) {
+        Mano manoActual = getMano(codigo);
         if(!manoActual.getEsperandoRespuesta()){
+            Carta cartaALanzar = cartaRepository.findById(cartaId).orElseThrow(()->  new NotFoundException("No se encontro esa carta"));
             Integer jugadorActual = manoActual.getJugadorTurno();
-            Carta carta = manoActual.getCartasDisp().get(jugadorActual).get(indiceCarta);
+            
+            List<Carta> cartasDisponibles = manoActual.getCartasDisp().get(jugadorActual);
+            Integer indice = 0;
+            for (int i=0; i < cartasDisponibles.size(); i++){
+                if(cartasDisponibles.get(i)!= null){
+                    if(cartasDisponibles.get(i).getId()==cartaALanzar.getId()){
+                        indice=i;
+                        
+                    }
+                }
+                
+            }
 
-            manoActual.getCartasDisp().get(jugadorActual).remove(carta);
-            manoActual.getCartasLanzadasRonda().set(jugadorActual, carta);
-            siguienteTurno();
+            manoActual.getCartasDisp().get(jugadorActual).set(indice,null);
+            manoActual.getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
+
+            List<Carta> listaCartasLanzadas = manoActual.getCartasLanzadasRonda();
+            if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
+                List<Carta> listaCartasLanzadasNuevo = new ArrayList<>();
+                for (int i = 0; i <manoActual.getPartida().getNumJugadores(); i++){
+                    listaCartasLanzadasNuevo.add(null);
+                }
+                manoActual.setCartasLanzadasRonda(listaCartasLanzadasNuevo);
+                actualizarMano(manoActual, codigo); //importante que se actualice antes, ya que es la que se usara en comparar cartas
+                compararCartas(codigo);
+            } else{
+                siguienteTurno(codigo);
+                actualizarMano(manoActual, codigo);
+            }
+
+            
+            
+    
+            return cartaALanzar;
+        } else{
+            throw new NotFoundException("No tenés más esa carta");
         }
         
     }
+
                             
 
-    public Boolean puedeCantarEnvido(){
+    public Boolean puedeCantarEnvido(String codigo){
+        Mano manoActual = getMano(codigo);
         Boolean sePuede = false;
-        Boolean esRondaUno = obtenerRondaActual() ==1;
+        Boolean esRondaUno = obtenerRondaActual(codigo) ==1;
         Boolean esPie = false;
         Boolean noHayTruco = manoActual.getPuntosTruco() <= 1;
         Boolean noSeCanto = manoActual.getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
@@ -198,9 +270,11 @@ public class ManoService {
         sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
     
         return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
+
     }    
 
-    public  Integer obtenerRondaActual(){
+    public  Integer obtenerRondaActual(String codigo){
+        Mano manoActual = getMano(codigo);
         Integer ronda = 0;
         List<List<Carta>> cartas = manoActual.getCartasDisp();
         Integer cartasPie = cartas.get(obtenerJugadorPie()).size();
@@ -211,11 +285,12 @@ public class ManoService {
     }
 
     //TODO: FALTAN TEST NEGATIVOS
-    public void cantosTruco(CantosTruco canto) throws Exception{
+    public void cantosTruco(CantosTruco canto, String codigo) throws Exception{
+        Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
 
-        Integer rondaActual = obtenerRondaActual();
+        Integer rondaActual = obtenerRondaActual(codigo);
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
         manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
@@ -223,7 +298,7 @@ public class ManoService {
         listaRondaJugador.add(jugadorTurno);
 
 
-        if (!puedeCantarTruco()) {
+        if (!manoActual.puedeCantarTruco()) {
             throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
         }
         Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
@@ -231,29 +306,32 @@ public class ManoService {
         switch (canto) {
             case TRUCO: 
 
-                estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual,this);
-            siguienteTurno();
+                manoActual = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual,this,codigo);
+                actualizarMano(manoActual, codigo);
+            
             break;
         case RETRUCO:
             if (manoActual.getPuntosTruco() <2) {
                 throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
             }
-            estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual,this);
+            manoActual = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual,this,codigo);
+            actualizarMano(manoActual, codigo);
             break;
         case VALECUATRO:
             if (manoActual.getPuntosTruco() <3) {
                 throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
             }
-            estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual, this);
+            manoActual = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual, this,codigo);
+            actualizarMano(manoActual, codigo);
             break;
         default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
         }
     }
                                 
-    public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+    public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno, String codigo){
         Integer res = null;
-        Integer rondaActual = obtenerRondaActual();
+        Integer rondaActual = obtenerRondaActual(codigo);
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
         Integer rondaCanto = cantoHecho.get(0);
@@ -266,7 +344,8 @@ public class ManoService {
         return res;
     }
       
-    public void responderTruco(RespuestasTruco respuesta) throws Exception{ 
+    public void responderTruco(RespuestasTruco respuesta, String codigo) throws Exception{ 
+        Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer truco = manoActual.getPuntosTruco();
@@ -279,17 +358,20 @@ public class ManoService {
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
         switch (respuesta) {
             case QUIERO:
-                respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs,this);
+                manoActual= respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs,this,codigo);
+                actualizarMano(manoActual, codigo);
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
                     //Osea, se queda con truco -1 
-                respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs,this);
+                manoActual= respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs,this,codigo);
+                actualizarMano(manoActual, codigo);
                 break;
 
             case SUBIR:
 
-                respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs,this);
+                manoActual= respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs,this,codigo);
+                actualizarMano(manoActual, codigo);
                 break;
             default:
                 throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
@@ -297,18 +379,12 @@ public class ManoService {
     }
                         
                     
-                    
-                    
-    public  Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
-        Integer equipoCantor = manoActual.getEquipoCantor();
-        Integer jugadorTurno = manoActual.getJugadorTurno();
-        return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
-    }
+                
     
 
-    public  Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno) {
+    public  Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhora, Integer jugadorTurno, String codigo) {
         Integer res = null;
-        Integer rondaActual = obtenerRondaActual();
+        Integer rondaActual = obtenerRondaActual(codigo);
         Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
 
@@ -367,13 +443,19 @@ public class ManoService {
 		ganadoresRonda.add(ganadasIniciales);
 		nuevaMano.setGanadoresRondas(ganadoresRonda);
 
+        List<Carta> listaCartasLanzadas = new ArrayList<>();
+        for (int i = 0; i <partida.getNumJugadores(); i++){
+            listaCartasLanzadas.add(null);
+        }
+        nuevaMano.setCartasLanzadasRonda(listaCartasLanzadas);
+
         manosPorPartida.put(partida.getCodigo(), nuevaMano);
 		return nuevaMano;
 	}
 	
 
 	public void terminarMano(Partida partida){
-		
+		Mano manoActual = getMano(partida.getCodigo());
 		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
 		
 		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
@@ -397,6 +479,7 @@ public class ManoService {
             manosPorPartida.remove(partida.getCodigo());
 			partida.setJugadorMano((partida.getJugadorMano() + 1) % partida.getNumJugadores());
 			crearMano(partida);
+            
 		}
 		
 		

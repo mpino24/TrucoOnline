@@ -21,7 +21,7 @@ public class Mano {
     
     private List<List<Carta>> cartasDisp; // La lista de cartas de la posicion 0 seran las cartas que tiene el jugador en la posicion 0
     private Integer jugadorTurno; // Por defecto sera el jugador mano
-    private List<Carta> cartasLanzadasRonda = new ArrayList<>(); // IMPORTANTE !!!! : se inicializa como lista de nulls y cada carta sustituye al null de la posicion de su jugador (se borran en cada ronda)
+    private List<Carta> cartasLanzadasRonda; // IMPORTANTE !!!! : se inicializa como lista de nulls y cada carta sustituye al null de la posicion de su jugador (se borran en cada ronda)
     private List<Integer> ganadoresRondas;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
@@ -35,6 +35,15 @@ public class Mano {
     @ManyToOne
     private Partida partida;
 
+
+    public  Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
+        
+        Integer equipoCantor = getEquipoCantor();
+        Integer jugadorTurno = getJugadorTurno();
+        return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
+    }
+
+    
 
      public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();

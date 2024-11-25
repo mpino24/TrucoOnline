@@ -25,7 +25,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
           urlCartaVolteadas = listaUrlCartasVacias[0];
         }
 
-        // EstilosSegunPosicion
+        // EstilosSegunPosicion 
+        //La verdad que esto hay que refactorizarlo que te cagas pero funciona de puta madre
         const cartaDeUna = { position: 'fixed', transform: 'translateX(-50%)',width: '50px', height: '75px' };
         const cartaDeDos = { position: 'fixed', transform: 'translateX(-50%)',width: '75px', height: '75px' };
         const cartaDeTres = { position: 'fixed', transform: 'translateX(-50%)',width: '100px', height: '75px' };
@@ -43,6 +44,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
           
 
         let estiloSegunPosicionYNumCartas; 
+        console.log("posicionListaCartas: "+posicionListaCartas)
+        console.log("posicion: "+pos)
+        
+
+
         if (cartasRestantes === 3 ) {
           if((posicionListaCartas+pos)%2===0)
           estiloSegunPosicionYNumCartas = listaEstilos[8];
@@ -50,6 +56,10 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[7];
           else if((posicionListaCartas-1===pos) || (posicionListaCartas-1<0))
             estiloSegunPosicionYNumCartas = listaEstilos[6];
+          else
+            estiloSegunPosicionYNumCartas = listaEstilos[7];
+
+          
 
         } else if (cartasRestantes === 2) {
           if((posicionListaCartas+pos)%2===0)
@@ -58,6 +68,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
               estiloSegunPosicionYNumCartas = listaEstilos[4];
             else if((posicionListaCartas-1===pos) || (posicionListaCartas-1<0))
               estiloSegunPosicionYNumCartas = listaEstilos[3];
+            else
+              estiloSegunPosicionYNumCartas = listaEstilos[4];
         } else {
           if((posicionListaCartas+pos)%2===0)
             estiloSegunPosicionYNumCartas = listaEstilos[2];
@@ -65,6 +77,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[1];
             else if((posicionListaCartas-1===pos) || (posicionListaCartas-1<0))
               estiloSegunPosicionYNumCartas = listaEstilos[0];
+            else
+              estiloSegunPosicionYNumCartas = listaEstilos[1];
         }
         
 
