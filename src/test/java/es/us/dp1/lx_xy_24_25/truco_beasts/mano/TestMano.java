@@ -9,14 +9,18 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
 public class TestMano {
     Carta carta = new Carta();
@@ -477,6 +481,422 @@ public class TestMano {
 
         Integer empezador = mano.compararCartas();
         assertEquals(1, empezador);
+    }
+    
+    public void setupCartasDisponibles(Integer jugadorTurno, Integer ronda) {
+        Carta c0 = new Carta();
+        Carta c1 = new Carta();
+        Carta c2 = new Carta();
+        c0.setId(0);
+        c1.setId(1);
+        c2.setId(2);
+        c0.setPoder(14);
+        c1.setPoder(13);
+        c2.setPoder(6);
+        mano.setJugadorTurno(jugadorTurno);
+        List<Carta> listaBase = new ArrayList<>();
+        
+        List<List<Carta>> cartasDisponibles = new ArrayList<>();
+        List<Carta> cartasRonda = new ArrayList<>();
+        Integer numJugadores = partida.getNumJugadores();
+        if(ronda ==1){
+            listaBase.add(c0); listaBase.add(c1); listaBase.add(c2);
+        } else if(ronda ==2){
+            listaBase.add(c0);listaBase.add(c1); 
+        } else{
+            listaBase.add(c0);
+        }
+
+        for(int i = 0;i <numJugadores; i++){
+            cartasRonda.add(null);
+            cartasDisponibles.add(listaBase);
+        }
+        mano.setCartasDisp(cartasDisponibles);
+        mano.setCartasLanzadasRonda(cartasRonda);
+    }
+
+     @Test
+    public void tirarCartaSePoneANullCartaDisponible()  {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        mano.tirarCarta(cartaIdALanzar);
+        Carta cartaLanzada = mano.getCartasDisp().get(jugadorActual).get(cartaIdALanzar);
+        assertEquals(null, cartaLanzada);
+        
+    }
+    @Test
+    public void tirarCartaHayCartaLanzada() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        mano.tirarCarta(cartaIdALanzar);
+        
+        Boolean hayCartaLanzada = mano.getCartasLanzadasRonda().get(jugadorActual) != null;
+        assertTrue(hayCartaLanzada);
+        
+    }
+    @Test
+    public void tirarCartaSeAvanzaDeTurno() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        mano.tirarCarta(cartaIdALanzar);
+        Integer siguienteTurno = mano.getJugadorTurno();
+        assertEquals(mano.siguienteJugador(jugadorActual), siguienteTurno);
+    }
+
+    @Test 
+    public void tirarCartaNoDisponible() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        mano.tirarCarta(cartaIdALanzar);
+        CartaTiradaException cartaTiradaException=assertThrows(CartaTiradaException.class,()-> mano.tirarCarta(cartaIdALanzar));
+        assertEquals("Esa carta ya fue tirada, no podés volver a hacerlo", cartaTiradaException.getMessage());
+    }
+    @Test 
+    public void tirarCartaTieneQueResponder() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+        mano.setEsperandoRespuesta(true);
+       
+        CartaTiradaException cartaTiradaException =assertThrows(CartaTiradaException.class,()-> mano.tirarCarta(cartaIdALanzar));
+        assertEquals("Tenés que responder antes de poder tirar una carta", cartaTiradaException.getMessage());
+    }
+
+    public void setupTruco(Integer equipoCantor, Integer truco){
+        if(equipoCantor!=null) mano.setEquipoCantor(equipoCantor);
+        if(truco!=null) mano.setPuntosTruco(truco);
+    }
+
+    @Test 
+    public void puedeCantarTrucoNoSeCanto(){
+        setup(0, 4);
+        setupTruco(null, null);
+        mano.setJugadorTurno(3);
+        assertTrue(mano.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoLoCantoElOtroEquipo(){
+        setup(0, 4);
+        setupTruco(0, 2);
+        mano.setJugadorTurno(3);
+        assertTrue(mano.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoNoLoCantoElOtroEquipo(){
+        setup(0, 4);
+        setupTruco(1, 2);
+        mano.setJugadorTurno(3);
+        assertFalse(mano.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoLoCantoElOtroEquipoDe2(){
+        setup(0, 2);
+        setupTruco(0, 2);
+        mano.setJugadorTurno(1);
+        assertTrue(mano.puedeCantarTruco());
+    }
+
+    @Test 
+    public void puedeCantarTrucoNoLoCantoElOtroEquipoDe2(){
+        setup(0, 2);
+        setupTruco(0, 2);
+        mano.setJugadorTurno(0);
+        assertFalse(mano.puedeCantarTruco());
+    }
+
+    public void setupSecuenciaCantos(Integer jugadorCantorTruco, Integer rondaTruco, Integer jugadorCantorRetruco, Integer rondaRetruco, Integer jugadorCantorValecuatro, Integer rondaValecuatro){
+        List<List<Integer>> secuenciaCantos = new ArrayList<>();
+        List<Integer> listaRondaJugadorTruco = new ArrayList<>();
+        listaRondaJugadorTruco.add(rondaTruco);
+        listaRondaJugadorTruco.add(jugadorCantorTruco);
+        secuenciaCantos.add(listaRondaJugadorTruco);
+        if(rondaRetruco!=null && jugadorCantorRetruco!=null){
+            List<Integer> listaRondaJugadorRetruco = new ArrayList<>();
+            listaRondaJugadorRetruco.add(rondaRetruco);
+            listaRondaJugadorRetruco.add(jugadorCantorRetruco);
+            secuenciaCantos.add(listaRondaJugadorRetruco);
+            if(rondaValecuatro!=null && jugadorCantorValecuatro!=null){
+                List<Integer> listaRondaJugadorValecuatro = new ArrayList<>();
+                listaRondaJugadorValecuatro.add(rondaValecuatro);
+                listaRondaJugadorValecuatro.add(jugadorCantorValecuatro);
+                secuenciaCantos.add(listaRondaJugadorValecuatro);
+            }
+        }
+        mano.setSecuenciaCantoLista(secuenciaCantos);
+    }
+
+    
+  
+
+    @Test 
+    public void cantaTruco() {
+        setup(0, 4);
+        setupTruco(null, null);
+        setupCartasDisponibles(0, 1);
+        
+        mano.cantosTruco(CantosTruco.TRUCO);
+        assertTrue(mano.getJugadorTurno() == 1);
+        assertEquals(0, mano.getEquipoCantor());
+       
+    }
+
+    
+
+    @Test 
+    public void cantaRetruco() {
+        setup(0, 4);
+        setupTruco(1, 2);
+        setupCartasDisponibles(0, 2);
+        setupSecuenciaCantos(1, 1, null, null, null, null);
+        
+        
+        mano.cantosTruco(CantosTruco.RETRUCO);
+        assertTrue(mano.getJugadorTurno() == 1);
+        assertEquals(0, mano.getEquipoCantor());
+        
+    }
+
+    @Test 
+    public void cantaValecuatro() {
+        setup(0, 4);
+        setupTruco(1, 3);
+        setupCartasDisponibles(0, 2);
+        setupSecuenciaCantos(0,1, 1, 1, null, null);
+        
+        mano.cantosTruco(CantosTruco.VALECUATRO);
+        assertTrue(mano.getJugadorTurno() == 1);
+        assertEquals(0, mano.getEquipoCantor());
+        
+    }
+
+    @Test
+    public void responderQuieroTruco() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto
+        setupCartasDisponibles(0, 1);
+        
+        
+        mano.cantosTruco(CantosTruco.TRUCO);
+        assertTrue(mano.getJugadorTurno() ==1);
+
+        mano.responderTruco(RespuestasTruco.QUIERO);
+        assertTrue(mano.getJugadorTurno() ==0);
+        assertEquals(2, mano.getPuntosTruco());
+        
+    }
+
+    @Test
+    public void responderNoQuieroTruco() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto
+        setupCartasDisponibles(0, 1);
+        
+        
+        mano.cantosTruco(CantosTruco.TRUCO);
+        assertTrue(mano.getJugadorTurno() ==1);
+
+        mano.responderTruco(RespuestasTruco.NO_QUIERO);
+        assertEquals(1, mano.getPuntosTruco());
+        
+    }
+
+    @Test
+    public void responderQuieroRetruco() {
+        setup(0, 4);
+        setupTruco(0, 2); //Se canto Truco
+        setupCartasDisponibles(1, 1);
+        setupSecuenciaCantos(1, 1, null, null, null, null);
+        
+       
+        mano.cantosTruco(CantosTruco.RETRUCO);
+        assertTrue(mano.getJugadorTurno() ==2);
+
+        mano.responderTruco(RespuestasTruco.QUIERO); //QUIERO
+        assertTrue(mano.getJugadorTurno() ==1);
+        assertEquals(3, mano.getPuntosTruco());
+        
+    }
+
+    @Test
+    public void responderNoQuieroRetruco() {
+        setup(0, 4);
+        setupTruco(0, 2); //Se canto Truco
+        setupCartasDisponibles(1, 1);
+        setupSecuenciaCantos(1, 1, null, null, null, null);
+        
+        mano.cantosTruco(CantosTruco.RETRUCO);
+        assertTrue(mano.getJugadorTurno() ==2); 
+
+        mano.responderTruco(RespuestasTruco.NO_QUIERO); //NO QUIERO
+        assertEquals(2, mano.getPuntosTruco());
+        
+    }
+
+    @Test
+    public void responderQuieroValecuatro() {
+        setup(0, 4);
+        setupTruco(0, 3); //Se canto Retruco
+        setupCartasDisponibles(1, 2);
+        setupSecuenciaCantos(1, 1, 0, 1, null, null);
+        
+        
+        mano.cantosTruco(CantosTruco.VALECUATRO);
+        assertEquals(2, mano.getJugadorTurno());
+        assertTrue(mano.getEsperandoRespuesta());
+
+        mano.responderTruco(RespuestasTruco.QUIERO); 
+            
+        assertFalse(mano.getEsperandoRespuesta());
+        assertTrue(mano.getJugadorTurno() ==1);
+        assertEquals(4, mano.getPuntosTruco());
+        
+    }
+
+    @Test
+    public void responderNoQuieroValecuatro(){
+        setup(0, 4);
+        setupTruco(0, 3); //Se canto Retruco
+        setupCartasDisponibles(1, 2);
+        setupSecuenciaCantos(1, 1, 0, 1, null, null);
+        
+        mano.cantosTruco(CantosTruco.VALECUATRO);
+        assertTrue(mano.getJugadorTurno() ==2);
+
+
+        mano.responderTruco(RespuestasTruco.NO_QUIERO);
+        assertEquals(3, mano.getPuntosTruco());
+        
+    }
+
+
+    @Test
+    public void responderTrucoRetrucoQuiero() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto nada
+        setupCartasDisponibles(0, 1);
+        
+       
+        mano.cantosTruco(CantosTruco.TRUCO);
+        assertTrue(mano.getJugadorTurno() == 1);
+
+        mano.responderTruco(RespuestasTruco.SUBIR); //RETRUCO
+        assertEquals(2, mano.getPuntosTruco());
+        assertEquals(0, mano.getJugadorTurno());
+
+        mano.responderTruco(RespuestasTruco.QUIERO); 
+        assertEquals(3, mano.getPuntosTruco());
+        assertEquals(0, mano.getJugadorTurno());
+        
+    }
+
+    @Test
+    public void responderRetrucoValeCuatroQuiero() {
+        setup(0, 4);
+        setupTruco(0, 2); //Se canto Truco
+        setupCartasDisponibles(3, 2);
+        setupSecuenciaCantos(0, 1, null, null, null, null);
+        
+        
+        mano.cantosTruco(CantosTruco.RETRUCO);
+        assertTrue(mano.getJugadorTurno() == 0);
+
+        mano.responderTruco(RespuestasTruco.SUBIR); //VALECUATRO
+        assertEquals(3, mano.getPuntosTruco());
+        assertEquals(3, mano.getJugadorTurno());
+
+        mano.responderTruco(RespuestasTruco.QUIERO); 
+        assertEquals(4, mano.getPuntosTruco());
+        assertEquals(3, mano.getJugadorTurno());
+        
+    }
+
+
+    @Test 
+    public void responderTrucoRetrucoValecuatroQuiero() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto nada
+        setupCartasDisponibles(0, 1);
+        
+        
+        mano.cantosTruco(CantosTruco.TRUCO); //TRUCO
+        assertEquals(1,mano.getJugadorTurno());
+
+        mano.responderTruco(RespuestasTruco.SUBIR);//RETRUCO
+        assertEquals(2, mano.getPuntosTruco());
+        assertEquals(0, mano.getJugadorTurno());
+
+        mano.responderTruco(RespuestasTruco.SUBIR);//VALECUATRO
+        assertEquals(3, mano.getPuntosTruco());
+        assertEquals(1, mano.getJugadorTurno());
+
+        mano.responderTruco(RespuestasTruco.QUIERO); //QUIERO
+        assertEquals(4, mano.getPuntosTruco());
+        assertEquals(0, mano.getJugadorTurno());
+        
+    }
+
+    @Test 
+    public void cantarTrucoNoPuede() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto nada
+        setupCartasDisponibles(0, 1);
+
+        mano.cantosTruco(CantosTruco.TRUCO); //TRUCO
+        mano.responderTruco(RespuestasTruco.QUIERO); //QUIERO
+        
+        TrucoException exception = assertThrows(TrucoException.class, 
+        () -> mano.cantosTruco(CantosTruco.TRUCO));
+    
+        
+        assertEquals("No podes cantar truco ni ninguna de sus variantes", exception.getMessage());
+    }
+    @Test 
+    public void cantarTrucoYaSeCanto() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto nada
+        setupCartasDisponibles(0, 1);
+
+        mano.cantosTruco(CantosTruco.TRUCO); //TRUCO
+        mano.responderTruco(RespuestasTruco.QUIERO); //QUIERO
+        mano.siguienteTurno();
+        assertTrue(mano.puedeCantarTruco()); //Puede cantar el retruco
+
+        TrucoException exception = assertThrows(TrucoException.class, 
+        () -> mano.cantosTruco(CantosTruco.TRUCO));
+    
+        
+        assertEquals("Ya se canto el truco", exception.getMessage());
+        
+    }
+    @Test 
+    public void cantarRetrucoNoSeCantoTruco() {
+        setup(0, 4);
+        setupTruco(null, null); //No se canto nada
+        setupCartasDisponibles(0, 1);
+
+    
+        TrucoException exception = assertThrows(TrucoException.class, 
+        () -> mano.cantosTruco(CantosTruco.RETRUCO));
+    
+        
+        assertEquals("No se cantó el truco", exception.getMessage());
+        
     }
     
 }

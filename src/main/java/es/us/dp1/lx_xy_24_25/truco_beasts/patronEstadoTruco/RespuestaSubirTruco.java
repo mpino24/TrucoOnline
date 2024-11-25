@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
-
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 
@@ -33,7 +33,7 @@ public class RespuestaSubirTruco extends RespuestaTruco{
 
     @Override
     public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs) throws Exception {
+            List<List<Integer>> secuenciaCantos, Integer queTrucoEs)  {
         if(truco == 1){
                 manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
                 manoActual =manoActual.cantosTruco(CantosTruco.RETRUCO);
@@ -41,7 +41,7 @@ public class RespuestaSubirTruco extends RespuestaTruco{
                 manoActual.setPuntosTruco(truco +1);
                 manoActual= manoActual.cantosTruco(CantosTruco.VALECUATRO);
         } else {
-                throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
+                throw new TrucoException( "No se puede subir más, capo"); 
         }
         return manoActual;
     }

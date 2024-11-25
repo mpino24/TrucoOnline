@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.stereotype.Component;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
@@ -228,12 +230,12 @@ public class Mano {
         return jugadorPreferencia;
     }
 
-    public  Carta tirarCarta(Integer cartaId) {
+    public  Carta tirarCarta(Integer cartaId){
         if(!getEsperandoRespuesta()){
             Integer jugadorActual = getJugadorTurno();
             
             List<Carta> cartasDisponibles = getCartasDisp().get(jugadorActual);
-            Integer indice = 0;
+            Integer indice = null;
             for (int i=0; i < cartasDisponibles.size(); i++){
                 if(cartasDisponibles.get(i)!= null){
                     if(cartasDisponibles.get(i).getId()==cartaId){
@@ -242,6 +244,9 @@ public class Mano {
                     }
                 }
                 
+            }
+            if(indice==null){
+                throw new CartaTiradaException();
             }
             Carta cartaALanzar = cartasDisponibles.get(indice);
 
@@ -260,7 +265,7 @@ public class Mano {
     
             return cartaALanzar;
         } else{
-            throw new NotFoundException("No tenés más esa carta");
+            throw new CartaTiradaException("Tenés que responder antes de poder tirar una carta");
         }
         
     }
@@ -298,7 +303,7 @@ public class Mano {
     }
 
     //TODO: FALTAN TEST NEGATIVOS
-    public Mano cantosTruco(CantosTruco canto) throws Exception{
+    public Mano cantosTruco(CantosTruco canto){
         Integer jugadorTurno = getJugadorTurno();
         Integer equipoCantor = getEquipoCantor();
 
@@ -311,33 +316,39 @@ public class Mano {
 
         Mano mano = new Mano();
         if (!puedeCantarTruco()) {
-            throw new Exception( "No podés cantar truco ni sus variantes"); //GESTIONAR MEJOR
+            throw new TrucoException( ); 
         }
         Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
 
         switch (canto) {
             case TRUCO: 
-
+                if(getPuntosTruco()>1){
+                    throw new TrucoException("Ya se canto el truco");
+                }
                 mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
                 copiaParcialTruco(mano);
-            break;
-        case RETRUCO:
-            if (getPuntosTruco() <2) {
-                throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
-            }
-            mano = estadoTruco.accionAlTipoTruco(this,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-            copiaParcialTruco(mano);
-            break;
-        case VALECUATRO:
-            if (getPuntosTruco() <3) {
-                throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
-            }
-            mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-            copiaParcialTruco(mano);
+                break;
+            case RETRUCO:
+                if (getPuntosTruco() <2) {
+                    throw new TrucoException( "No se cantó el truco");
+                } else if(getPuntosTruco() >2){
+                    throw new TrucoException("Ya se canto el retruco");
+                }
+                mano = estadoTruco.accionAlTipoTruco(this,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                copiaParcialTruco(mano);
+                break;
+            case VALECUATRO:
+                if (getPuntosTruco() <3) {
+                    throw new TrucoException( "No se cantó el retruco"); 
+                }else if(getPuntosTruco() >3){
+                    throw new TrucoException("Ya se canto el valecuatro");
+                }
+                mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                copiaParcialTruco(mano);
             
-            break;
-        default:
-                throw new Exception( "hubo algun error"); //GESTIONAR MEJOR
+                break;
+            default:
+                throw new TrucoException( "Canto no valido"); 
         }
         return mano;
     }
@@ -359,7 +370,7 @@ public class Mano {
         return res;
     }
       
-    public void responderTruco(RespuestasTruco respuesta) throws Exception{ 
+    public void responderTruco(RespuestasTruco respuesta) { 
         Integer jugadorTurno = getJugadorTurno();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer truco = getPuntosTruco();
@@ -392,7 +403,7 @@ public class Mano {
                 
                 break;
             default:
-                throw new Exception( "hubo algun error"); //GESTIONAR MEJOR;
+                throw new TrucoException( "Respuesta al truco no valida"); 
         }
     }
 
