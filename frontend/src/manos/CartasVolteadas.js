@@ -46,6 +46,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
         let estiloSegunPosicionYNumCartas; 
         console.log("posicionListaCartas: "+posicionListaCartas)
         console.log("posicion: "+pos)
+        console.log("Cartas restantes: "+cartasRestantes)
+
         
 
 
