@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
@@ -19,6 +20,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
 import jakarta.persistence.ManyToOne;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -231,6 +233,7 @@ public class Mano {
         return jugadorPreferencia;
     }
 
+    
     public  Carta tirarCarta(Integer cartaId){
         if(!getEsperandoRespuesta()){
             Integer jugadorActual = getJugadorTurno();
@@ -304,52 +307,62 @@ public class Mano {
     }
 
     //TODO: FALTAN TEST NEGATIVOS
-    public Mano cantosTruco(CantosTruco canto){
+    
+    public Mano cantosTruco(CantosTruco canto) throws TrucoException{
         Integer jugadorTurno = getJugadorTurno();
         Integer equipoCantor = getEquipoCantor();
 
         Integer rondaActual = obtenerRondaActual();
         List<List<Integer>> secuenciaCantos = getSecuenciaCantoLista();
+        Integer queTrucoEs = secuenciaCantos.size();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
-        if(getEsperandoRespuesta()==false){
-            jugadorIniciadorDelCanto = jugadorTurno;
+        if(getEsperandoRespuesta()==false && getJugadorIniciadorDelCanto()==null){
+            setJugadorIniciadorDelCanto(jugadorTurno);
         }
         setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
         
         listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
-
+        
         Mano mano = new Mano();
         if (!puedeCantarTruco()) {
             throw new TrucoException(); 
+            
         }
         Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
 
         switch (canto) {
             case TRUCO: 
-                if(getPuntosTruco()>1){
+                if(queTrucoEs>=1){
                     throw new TrucoException("Ya se canto el truco");
+                    
+                }else{
+                    mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    copiaParcialTruco(mano);
                 }
-                mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-                copiaParcialTruco(mano);
+                
                 break;
             case RETRUCO:
                 if (getPuntosTruco() <2) {
                     throw new TrucoException( "No se cantó el truco");
-                } else if(getPuntosTruco() >2){
+                } else if(queTrucoEs>=2){
                     throw new TrucoException("Ya se canto el retruco");
+                }else{
+                    mano = estadoTruco.accionAlTipoTruco(this,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    copiaParcialTruco(mano);
                 }
-                mano = estadoTruco.accionAlTipoTruco(this,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-                copiaParcialTruco(mano);
+                
                 break;
             case VALECUATRO:
                 if (getPuntosTruco() <3) {
                     throw new TrucoException( "No se cantó el retruco"); 
-                }else if(getPuntosTruco() >3){
+                }else if(queTrucoEs >=3){
                     throw new TrucoException("Ya se canto el valecuatro");
+                }else{
+                    mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    copiaParcialTruco(mano);
                 }
-                mano = estadoTruco.accionAlTipoTruco(this, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-                copiaParcialTruco(mano);
+                
             
                 break;
             default:
@@ -375,7 +388,7 @@ public class Mano {
         return res;
     }
       
-    public void responderTruco(RespuestasTruco respuesta) { 
+    public void responderTruco(RespuestasTruco respuesta) throws TrucoException{ 
         Integer jugadorTurno = getJugadorTurno();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer truco = getPuntosTruco();
@@ -389,14 +402,15 @@ public class Mano {
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
         switch (respuesta) {
             case QUIERO:
+                if(getPuntosTruco() == maximoPuntajeTruco){
+                    throw new TrucoException("El máximo puntaje obtenible en el truco son " + maximoPuntajeTruco +" puntos");
+                }
                 mano = respuestaTruco.accionRespuestaTruco(this,jugadorTurno, jugadorAnterior, truco, secuenciaCantos, queTrucoEs);
                 copiaParcialTruco(mano);
                 setEsperandoRespuesta(false);
                 setJugadorTurno(jugadorIniciadorDelCanto);
+                setJugadorIniciadorDelCanto(null);
                 
-                if(getPuntosTruco() > maximoPuntajeTruco){
-                    throw new TrucoException("El máximo puntaje obtenible en el truco son " + maximoPuntajeTruco +" puntos");
-                }
                 break;
             case NO_QUIERO:
                 //iria un terminarMano()
