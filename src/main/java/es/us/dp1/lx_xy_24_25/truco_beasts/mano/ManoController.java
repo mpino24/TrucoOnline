@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
-import io.micrometer.core.ipc.http.HttpSender.Response;
+
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 
 
 
@@ -38,7 +40,7 @@ public class ManoController {
     }
     @PatchMapping("/tirarCarta/{cartaId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Carta> patchTirarCarta(@PathVariable String codigo, @PathVariable Integer cartaId){
+    public ResponseEntity<Carta> patchTirarCarta(@PathVariable String codigo, @PathVariable Integer cartaId) throws CartaTiradaException{
         Mano mano = manoService.getMano(codigo);
         Carta carta = mano.tirarCarta(cartaId);
         manoService.actualizarMano(mano, codigo);
@@ -47,7 +49,7 @@ public class ManoController {
 
     @PatchMapping("/cantarTruco/{cantoTruco}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<CantosTruco> patchCantarTruco(@PathVariable String codigo, @PathVariable CantosTruco cantoTruco) throws Exception {
+    public ResponseEntity<CantosTruco> patchCantarTruco(@PathVariable String codigo, @PathVariable CantosTruco cantoTruco) throws TrucoException {
         Mano mano = manoService.getMano(codigo);
         mano.cantosTruco(cantoTruco);
         manoService.actualizarMano(mano, codigo);
@@ -56,7 +58,7 @@ public class ManoController {
     
     @PatchMapping("/responderTruco/{respuestasTruco}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RespuestasTruco> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws Exception {
+    public ResponseEntity<RespuestasTruco> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws TrucoException {
         Mano mano = manoService.getMano(codigo);
         mano.responderTruco(respuestasTruco);
         manoService.actualizarMano(mano, codigo);

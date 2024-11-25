@@ -116,14 +116,14 @@ public class TestMano {
     }
 
     @Test
-    public List<Integer> envidosListaLlena(){
+    public void envidosListaLlena(){
         
         List<List<Carta>> listaCartasDispo = setUpListaCartasDispo(3);
         setUpCartas(listaCartasDispo);
         List<Integer> listaResultante = List.of(25,3,32,6);
         List<Integer> listaEnvidosRegistrados = mano.listaEnvidos(mano.getCartasDisp());
         assertEquals(listaResultante, listaEnvidosRegistrados);
-        return listaEnvidosRegistrados;
+        
     }
 
     @Test
