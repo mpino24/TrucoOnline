@@ -42,14 +42,14 @@ const CartasVolteadas = forwardRef((props, ref) => {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
+    width: '140%',
+    height: '140%',
     background: `
       radial-gradient(
         circle at 50% 50%, 
-        rgba(255, 223, 186, 0.4) 0%, 
-        rgba(255, 183, 76, 0.4) 40%, 
-        rgba(255, 140, 0, 0.3) 70%
+        rgba(255, 223, 186, 0.5) 0%, 
+        rgba(255, 183, 76, 0.5) 40%, 
+        rgba(255, 140, 0, 0.6) 70%
       )
     `,
     backgroundSize: '400% 400%',
@@ -137,14 +137,14 @@ const CartasVolteadas = forwardRef((props, ref) => {
           },
           {
             ...cartaDeTres,
-            top: '50%',
-            left: '10%',
+            top: '40%',
+            left: '20%',
             rotate: '90deg',
           },
           {
             ...cartaDeTres,
-            top: '50%',
-            right: '10%',
+            top: '40%',
+            right: '20%',
             rotate: '270deg',
           },
           {
@@ -228,8 +228,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
                     src={urlCartaVolteadas}
                     alt={`Quedan ${cartasRestantes}`}
                     style={{
-                      width: '100%',
-                      height: '100%',
+                      width: '140%',
+                      height: '140%',
                       display: 'block',
                       borderRadius: '8px', // Optional: match overlay's border radius
                     }}
