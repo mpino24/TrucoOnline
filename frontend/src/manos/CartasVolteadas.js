@@ -133,7 +133,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
           {
             ...cartaDeUna,
             top: '70px',
-            left: '40%',
+            left: '50%',
             rotate: '180deg',
           },
           {

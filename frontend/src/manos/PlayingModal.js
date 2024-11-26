@@ -1,16 +1,15 @@
-import { useState, forwardRef, useEffect, useRef } from 'react';
+import { useState, forwardRef, useEffect } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
 const jwt = tokenService.getLocalAccessToken();
 
 const PlayingModal = forwardRef((props, ref) => {
-    const game = props.game
+    const game = props.game;
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [cartasJugador,setCartasJugador] = useState([])
-    const [mano, setMano] = useState(null)
-    
+    const [cartasJugador, setCartasJugador] = useState([]);
+    const [mano, setMano] = useState(null);
 
     const [draggedCarta, setDraggedCarta] = useState(null);
     const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
@@ -20,47 +19,47 @@ const PlayingModal = forwardRef((props, ref) => {
 
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
-      );
-     function fetchMano() {
-            
+    );
+
+    function fetchMano() {
         fetch(
-            '/api/v1/manos/'+game.codigo,
+            '/api/v1/manos/' + game.codigo,
             {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                  },
+                },
             }
         )
             .then((response) => response.json())
             .then((data) => {
                 setMano(data);
-                let cartasActuales = data.cartasDisp[posicion]
-                if(cartasJugador!==cartasActuales){
-                    setCartasJugador(cartasActuales)
+                let cartasActuales = data.cartasDisp[posicion];
+                if (cartasJugador !== cartasActuales) {
+                    setCartasJugador(cartasActuales);
                 }
             })
+            .catch((error) => {
+                console.error("Error fetching mano:", error);
+                setMessage("Error fetching mano.");
+                setVisible(true);
+            });
     }
-    
+
     useEffect(() => {
         let intervalId;
         fetchMano();
         intervalId = setInterval(fetchMano, 1000);
-        return () => clearInterval(intervalId)
-    },[game.codigo, posicion])
+        return () => clearInterval(intervalId);
+    }, [game.codigo, posicion]);
 
     useEffect(() => {
-        fetchMano()
+        fetchMano();
     }, [tirarTrigger]);
 
     useEffect(() => {
-              
         fetchMano();
-        
     }, [trucoTrigger]);
-
-
-
 
     useEffect(() => {
         const styleSheet = document.createElement('style');
@@ -104,7 +103,7 @@ const PlayingModal = forwardRef((props, ref) => {
         `,
         backgroundSize: '400% 400%',
         animation: 'holoGlow 3s ease-in-out infinite',
-        mixBlendMode: 'overlay', 
+        mixBlendMode: 'overlay',
         pointerEvents: 'none', // Ensure overlay doesn't block interactions
         borderRadius: '8px', // Optional: match card's border radius if any
     };
@@ -165,14 +164,14 @@ const PlayingModal = forwardRef((props, ref) => {
                     {cartasJugador.map((carta, index) => (
                         carta && (
                             <div
-                                    key={index}
-                                    style={{
-                                        ...(esTurnoValido ? swirlStyle : {}),
-                                        position: 'relative',
-                                        width: '100px',
-                                        height: '150px',
-                                    }}
-                                >
+                                key={index}
+                                style={{
+                                    ...(esTurnoValido ? swirlStyle : {}),
+                                    position: 'relative',
+                                    width: '100px',
+                                    height: '150px',
+                                }}
+                            >
                                 <div
                                     style={{
                                         ...baseCardStyle,
@@ -193,7 +192,6 @@ const PlayingModal = forwardRef((props, ref) => {
                                             {
                                                 transform: 'rotateY(-10deg)', // Restaurar rotación original
                                                 boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
-
                                             }
                                         )
                                     }
@@ -224,23 +222,19 @@ const PlayingModal = forwardRef((props, ref) => {
                     ))}
                 </div>
             );
-           
         }
 
         return <div>Cargando cartas...</div>;
     };
 
-    
-    
-    
     const renderCartasMesa = () => {
         if (mano && mano.cartasLanzadasRonda) {
             const cartasLanzadas = mano.cartasLanzadasRonda;
-    
+
             if (!cartasLanzadas || cartasLanzadas.length === 0) {
                 return <div>No hay cartas para mostrar.</div>;
             }
-    
+
             // Container styles remain the same
             const containerStyle = {
                 position: 'fixed',
@@ -250,7 +244,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 display: 'flex',
                 gap: '10px',
             };
-    
+
             // Style for each card container
             const cardContainerStyle = {
                 position: 'relative', // To position the overlay correctly
@@ -259,7 +253,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 borderRadius: '8px', // Match the border radius
                 overflow: 'hidden',  // Hide overflow from the overlay
             };
-    
+
             // Style for the overlay with the glow animation
             const overlayStyle = {
                 position: 'absolute',
@@ -281,7 +275,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 pointerEvents: 'none', // Ensure overlay doesn't block interactions
                 borderRadius: '8px',   // Match the card's border radius
             };
-    
+
             return (
                 <div style={containerStyle} >
                     {cartasLanzadas.map((carta, index) => (
@@ -304,49 +298,42 @@ const PlayingModal = forwardRef((props, ref) => {
         return <div>Cargando cartas lanzadas...</div>;
     }; 
 
-    
-
     const dragStart = (evento, carta) => {
         if(mano  && cartasJugador && Number(posicion) === mano.jugadorTurno){
             setDraggedCarta(carta);
-            evento.dataTransfer.effectAllowed ='move';
+            evento.dataTransfer.effectAllowed = 'move';
         }
-        
-    }
-    const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
-    const onDragEnd = (evento, carta) => { setPositionCarta({ x: evento.clientX, y: evento.clientY }); 
-                                            tirarCarta(carta.id); 
-                                            setDraggedCarta(null);  
-                                         };
-
-    
-
-     function tirarCarta(cartaId) {
-        
-            fetch(`/api/v1/manos/${game.codigo}/tirarCarta/${cartaId}`, {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-            }).then((response) => response.text())
-            .then((data) => {
-                if(data){
-                    setTirarTrigger((prev) => prev + 1);
-                    
-                     
-                }
-            })
-            .catch((error) => alert(error.message));
-
-          
     }
 
-            
+    const onDrag = (evento) => { 
+        setPositionCarta({ x: evento.clientX, y: evento.clientY });
+    }
+
+    const onDragEnd = (evento, carta) => { 
+        setPositionCarta({ x: evento.clientX, y: evento.clientY }); 
+        tirarCarta(carta.id); 
+        setDraggedCarta(null);  
+    };
+
+    function tirarCarta(cartaId) {
+        fetch(`/api/v1/manos/${game.codigo}/tirarCarta/${cartaId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data){
+                setTirarTrigger((prev) => prev + 1);
+            }
+        })
+        .catch((error) => alert(error.message));
+    }
 
     function cantarTruco(truco) {
-        
         fetch(`/api/v1/manos/${game.codigo}/cantarTruco/${truco}`, {
             method: "PATCH",
             headers: {
@@ -354,7 +341,8 @@ const PlayingModal = forwardRef((props, ref) => {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-        }).then((response) => response.text())
+        })
+        .then((response) => response.text())
         .then((data) => {
             if(data){
                 console.log(data)
@@ -365,7 +353,6 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function responderTruco(respuesta) {
-        
         fetch(`/api/v1/manos/${game.codigo}/responderTruco/${respuesta}`, {
             method: "PATCH",
             headers: {
@@ -373,7 +360,8 @@ const PlayingModal = forwardRef((props, ref) => {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-        }).then((response) => response.text())
+        })
+        .then((response) => response.text())
         .then((data) => {
             if(data){
                 console.log(data)
@@ -383,28 +371,69 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
 
-    return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
-
+    return (
+        <div 
+            style={{ 
+                backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',
+                backgroundSize: 'cover', 
+                backgroundRepeat: 'no-repeat', 
+                backgroundPosition: 'center', 
+                height: '100vh', 
+                width: '100vw',
+                position: 'relative', // To position the dragged card relative to this container
+            }}
+        >
             <div>
-            <h3 style={{ color: 'orange' }}>
-             Jugador: {Number(posicion)}
-            </h3>
+                <h3 style={{ color: 'orange' }}>
+                    Jugador: {Number(posicion)}
+                </h3>
                 {renderCartasJugador()} 
+                
+                {/* Render the dragged card */}
                 {draggedCarta && 
-                  <img
-                  src={draggedCarta.foto} 
-                  alt='Carta arrastrada'
-                  style={{ position: 'absolute', left: `${positionCarta.x}px`, top: `${positionCarta.y}px`, width: '50px', height: '75px' }}
-                  onError={(e) => (e.target.style.display = 'none')}
-                  />  } 
-                
-                
-                    <div style={{left: "20px", position: "absolute"}}>
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: `${positionCarta.x}px`,
+                            top: `${positionCarta.y}px`,
+                            width: '100px',
+                            height: '150px',
+                            transform: 'translate(-50%, -50%)', // Center the card at cursor
+                            zIndex: 1000, // Ensure it's on top
+                            pointerEvents: 'none', // Allow interactions to pass through
+                            borderRadius: '8px',
+                            boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
+                            backgroundColor: '#fff',
+                            border: '1px solid #ccc',
+                            position: 'absolute',
+                            overflow: 'hidden',
+                            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                            // Apply swirl animation if necessary
+                            ...(mano && cartasJugador && Number(posicion) === mano.jugadorTurno ? swirlStyle : {}),
+                        }}
+                    >
+                        <img
+                            src={draggedCarta.foto}
+                            alt='Carta arrastrada'
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'block',
+                                borderRadius: '8px',
+                            }}
+                            onError={(e) => (e.target.style.display = 'none')}
+                        />
+                        {/* Overlay de resplandor holográfico */}
+                        <div style={sunsetOverlay}></div>
+                    </div>
+                } 
+
+                <div style={{left: "20px", position: "absolute"}}>
                     {renderCartasMesa()}
-                    </div> 
-                
-                
+                </div> 
             </div>
+            
+            {/* Buttons for cantarTruco and responderTruco */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta ? (
                 <div
                     style={{
@@ -418,31 +447,47 @@ const PlayingModal = forwardRef((props, ref) => {
                     }}
                 >
                 </div>
-                ) : null}
+            ) : null}
 
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&  !mano.esperandoRespuesta &&
-            <div style={{ width: '150px', height: '75px', margin: '5px', left: "80%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
-                {<button onClick={()=> cantarTruco("TRUCO")} >Cantar TRUCO</button>}
-                {<button onClick={()=> cantarTruco("RETRUCO")} >Cantar RETRUCO</button>}
-                {<button onClick={()=> cantarTruco("VALECUATRO")} >Cantar VALECUATRO</button>}
-            </div>}
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&
-            <div style={{ width: '150px', height: '75px', margin: '5px', left: "80%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
-                {<button onClick={()=> responderTruco("QUIERO")} >Quiero</button>}
-                {<button onClick={()=> responderTruco("NO_QUIERO")} >No quiero</button>}
-                {<button onClick={()=> responderTruco("SUBIR")} >Subir la apuesta</button>}
-            </div>}
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta &&
+                <div style={{ 
+                    width: '150px', 
+                    height: '75px', 
+                    margin: '5px', 
+                    left: "80%", 
+                    position: "fixed",
+                    transform: 'translateX(-50%)', 
+                    top: "70%"
+                }}> 
+                    <button onClick={() => cantarTruco("TRUCO")} >Cantar TRUCO</button>
+                    <button onClick={() => cantarTruco("RETRUCO")} >Cantar RETRUCO</button>
+                    <button onClick={() => cantarTruco("VALECUATRO")} >Cantar VALECUATRO</button>
+                </div>
+            }
 
-             <div>
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&
+                <div style={{ 
+                    width: '150px', 
+                    height: '75px', 
+                    margin: '5px', 
+                    left: "80%", 
+                    position: "fixed",
+                    transform: 'translateX(-50%)', 
+                    top: "70%"
+                }}> 
+                    <button onClick={() => responderTruco("QUIERO")} >Quiero</button>
+                    <button onClick={() => responderTruco("NO_QUIERO")} >No quiero</button>
+                    <button onClick={() => responderTruco("SUBIR")} >Subir la apuesta</button>
+                </div>
+            }
+
+            <div>
                 {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} jugadorMano={game.jugadorMano} />}
             </div>
-        {mano && console.log(mano)}
-        
-        {console.log(posicion)}
+            {mano && console.log(mano)}
+            {console.log(posicion)}
         </div>
     )
-        
-    
-
 });
+
 export default PlayingModal;
