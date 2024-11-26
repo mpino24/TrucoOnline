@@ -10,6 +10,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador,setCartasJugador] = useState([])
     const [mano, setMano] = useState(null)
+    const [visibleDuplicado, setvisibleDuplicado] = useState(false)
 
 
     const [draggedCarta, setDraggedCarta] = useState(null);
@@ -54,7 +55,14 @@ const PlayingModal = forwardRef((props, ref) => {
     },[game.codigo, posicion])
 
     useEffect(() => {
+        let intervalId;
+
+        
         fetchMano();
+
+        intervalId = setInterval(fetchMano, 1000);
+        
+        return () => clearInterval(intervalId)
     }, [tirarTrigger]);
 
     useEffect(() => {
@@ -199,9 +207,9 @@ const PlayingModal = forwardRef((props, ref) => {
                                             }
                                         )
                                     }
-                                    onClick={() =>
+                                    /* onClick={() =>
                                         esTurnoValido && tirarCarta(carta.id)
-                                    } // Desactiva clic si no es el turno
+                                    }  */// Desactiva clic si no es el turno
                                 >
                                     <img
                                         src={carta.foto}
@@ -218,7 +226,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         draggable 
                                         onDragStart={(evento) => dragStart(evento, carta)} 
                                         onDrag={(evento) => onDrag(evento)} 
-                                        onDragEnd={(evento) => onDragEnd(evento)} 
+                                        onDragEnd={(evento) => onDragEnd(evento, carta)} 
 
                                     />
                                     {/* Overlay de resplandor holográfico */}
@@ -264,7 +272,7 @@ const PlayingModal = forwardRef((props, ref) => {
             };
     
             return (
-                <div style={containerStyle}>
+                <div style={containerStyle} >
                     {cartasLanzadas.map((carta, index) => (
                         carta && (
                             <img
@@ -279,7 +287,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 </div>
             );
         }
-    
+        
         return <div>Cargando cartas lanzadas...</div>;
     };
     
@@ -287,24 +295,27 @@ const PlayingModal = forwardRef((props, ref) => {
     const dragStart = (evento, carta) => {
         if(mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno){
         setDraggedCarta(carta);
-        tirarCarta(carta.id)
         evento.dataTransfer.effectAllowed ='move';}
         
     }
     const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
-    const onDragEnd = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY }) };
+    const onDragEnd = (evento, carta) => { setPositionCarta({ x: evento.clientX, y: evento.clientY }); 
+                                            tirarCarta(carta.id); 
+                                            renderCartasMesa();
+                                            setDraggedCarta(null); };
 
-    const handleDrop = (evento) => {
+/*     const handleDrop = (evento) => {
         evento.preventDefault();
         // Aquí puedes manejar el caso de soltar la carta
         const offsetX = evento.clientX;
         const offsetY = evento.clientY;
         setPositionCarta({ x: offsetX, y: offsetY });
         
+        
     };
     const allowDrop = (evento) => {
         evento.preventDefault();
-    };
+    }; */
 
     
 
@@ -369,9 +380,8 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
-            <div /* onDrop={handleDrop} onDragOver={allowDrop} */>
+            <div  >
                 <h3>Jugador: {Number(posicion)}</h3>
-
                 {renderCartasJugador()} 
                 {draggedCarta && 
                   <img
@@ -379,13 +389,15 @@ const PlayingModal = forwardRef((props, ref) => {
                   alt='Carta arrastrada'
                   style={{ position: 'absolute', left: `${positionCarta.x}px`, top: `${positionCarta.y}px`, width: '50px', height: '75px' }}
                   onError={(e) => (e.target.style.display = 'none')}
-                  />  }
+                  />  } 
+                
+                
             </div>
 
 
-            <div style={{left: "20px", position: "absolute"}}>
+            {/* <div style={{left: "20px", position: "absolute"}}>
                 {renderCartasMesa()}
-            </div>
+            </div> */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta ? (
                 <div
                     style={{
