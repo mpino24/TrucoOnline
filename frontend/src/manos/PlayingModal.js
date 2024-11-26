@@ -57,10 +57,9 @@ const PlayingModal = forwardRef((props, ref) => {
     }, [tirarTrigger]);
 
     useEffect(() => {
-        let intervalId;        
+              
         fetchMano();
-        intervalId = setInterval(fetchMano, 1000);  
-        return () => clearInterval(intervalId)
+        
     }, [trucoTrigger]);
 
 
@@ -311,9 +310,10 @@ const PlayingModal = forwardRef((props, ref) => {
     
 
     const dragStart = (evento, carta) => {
-        if(mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno){
-        setDraggedCarta(carta);
-        evento.dataTransfer.effectAllowed ='move';}
+        if(mano  && cartasJugador && Number(posicion) === mano.jugadorTurno){
+            setDraggedCarta(carta);
+            evento.dataTransfer.effectAllowed ='move';
+        }
         
     }
     const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
@@ -387,6 +387,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
+
             <div>
             <h3 style={{ color: 'orange' }}>
              Jugador: {Number(posicion)}
