@@ -33,8 +33,8 @@ public class ManoService {
     
     private final CartaRepository cartaRepository;
 
-	private static ConverterTruco converterTruco = new ConverterTruco();
-    private static ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco();
+	private final ConverterTruco converterTruco = new ConverterTruco();
+    private final ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco(this);
 
 	private final Integer maximoPuntajeTruco=4;
     
@@ -226,14 +226,18 @@ public class ManoService {
         // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
         switch (respuesta) {
             case QUIERO:
+                
                 mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco, secuenciaCantos, queTrucoEs);
                 manoActual.copiaParcialTruco(mano);
                 manoActual.setEsperandoRespuesta(false);
                 manoActual.setJugadorTurno(manoActual.getJugadorIniciadorDelCanto());
-                
+                puntosTruco= manoActual.getPuntosTruco();
                 if(puntosTruco > maximoPuntajeTruco){
+                    manoActual.setPuntosTruco(maximoPuntajeTruco);
                     throw new TrucoException("El máximo puntaje obtenible en el truco son " + maximoPuntajeTruco +" puntos");
                 }
+                
+                
                 break;
             case NO_QUIERO: 
                 mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco, secuenciaCantos, queTrucoEs);

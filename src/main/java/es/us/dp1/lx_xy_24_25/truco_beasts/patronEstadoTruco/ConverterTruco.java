@@ -1,8 +1,11 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
+import org.jpatterns.gof.CompositePattern.Component;
+
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Convert;
 
+@Component
 @Convert
 public class ConverterTruco implements AttributeConverter<Truco, CantosTruco>{
 

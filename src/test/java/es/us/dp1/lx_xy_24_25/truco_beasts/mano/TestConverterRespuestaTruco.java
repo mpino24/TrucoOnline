@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaNoQuieroTruco;
@@ -16,11 +17,13 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 public class TestConverterRespuestaTruco {
 
     ConverterRespuestaTruco convertidorRespuestaTruco;
-
+    
+    @Autowired
+    ManoService manoService ;
     
     @Before
     public void setUp() {
-        convertidorRespuestaTruco = new ConverterRespuestaTruco(); 
+        convertidorRespuestaTruco = new ConverterRespuestaTruco(manoService); 
     } 
     
     @Test
@@ -39,7 +42,7 @@ public class TestConverterRespuestaTruco {
 
     @Test
     public void devuelveTipoRespuestaSubirTruco(){
-        RespuestaTruco respuestaTruco= new RespuestaSubirTruco();
+        RespuestaTruco respuestaTruco= new RespuestaSubirTruco(manoService);
         RespuestasTruco resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
         assertEquals(RespuestasTruco.SUBIR, resultado);
     }
@@ -61,7 +64,7 @@ public class TestConverterRespuestaTruco {
     @Test public void devuelveEntidadTipoRespuestaSubirTruco() { 
         RespuestasTruco respuesta = RespuestasTruco.SUBIR; 
         RespuestaTruco resultado = convertidorRespuestaTruco.convertToEntityAttribute(respuesta); 
-        assertEquals(new RespuestaSubirTruco(), resultado); 
+        assertEquals(new RespuestaSubirTruco(manoService), resultado); 
     } 
 
 

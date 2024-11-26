@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = ManoController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
 public class TestManoController {
 
-    private static final String BASE_URL = "/api/v1/mano";
+    private static final String BASE_URL = "/api/v1/manos/{codigo}";
 
     @Autowired
     private MockMvc mockMvc;
