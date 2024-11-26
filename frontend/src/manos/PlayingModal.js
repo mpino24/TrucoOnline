@@ -155,7 +155,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (<>
-            <div>
+            <div /* onDrop={handleDrop} onDragOver={allowDrop} */>
                 <h3>Cartas del Jugador {Number(posicion)}</h3>
 
                 {renderCartasJugador()} 
