@@ -98,11 +98,7 @@ const PlayingModal = forwardRef((props, ref) => {
         `,
         backgroundSize: '400% 400%',
         animation: 'holoGlow 3s ease-in-out infinite',
-        mixBlendMode: 'overlay', // Blend mode to create a subtle glow
-        //mix-blend-mode: normal | multiply | screen | overlay | darken | lighten 
-        //| color-dodge | color-burn | hard-light | soft-light 
-        //| difference | exclusion | hue | saturation | color |
-        // luminosity | plus-darker | plus-lighter;
+        mixBlendMode: 'overlay', 
         pointerEvents: 'none', // Ensure overlay doesn't block interactions
         borderRadius: '8px', // Optional: match card's border radius if any
     };
@@ -236,34 +232,60 @@ const PlayingModal = forwardRef((props, ref) => {
                 return <div>No hay cartas para mostrar.</div>;
             }
     
-            // Lo mismo que renderizar las cartas del jugador
+            // Container styles remain the same
             const containerStyle = {
                 position: 'fixed',
                 top: '39%',
                 left: '49%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
-                gap: '10px' ,
-                
-                
+                gap: '10px',
             };
     
-            const itemStyle = {
+            // Style for each card container
+            const cardContainerStyle = {
+                position: 'relative', // To position the overlay correctly
                 width: '83px',
-                height: '120px'
+                height: '120px',
+                borderRadius: '8px', // Match the border radius
+                overflow: 'hidden',  // Hide overflow from the overlay
+            };
+    
+            // Style for the overlay with the glow animation
+            const overlayStyle = {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: `
+                    radial-gradient(
+                        circle at 50% 50%, 
+                        rgba(255, 223, 186, 0.5) 0%, 
+                        rgba(255, 183, 76, 0.5) 40%, 
+                        rgba(255, 140, 0, 0.6) 70%
+                    )
+                `,
+                backgroundSize: '400% 400%',
+                animation: 'holoGlow 3s ease-in-out infinite',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none', // Ensure overlay doesn't block interactions
+                borderRadius: '8px',   // Match the card's border radius
             };
     
             return (
                 <div style={containerStyle}>
                     {cartasLanzadas.map((carta, index) => (
                         carta && (
-                            <img
-                                key={index}
-                                src={carta.foto}
-                                alt={`Carta ${index + 1}`}
-                                style={itemStyle}
-                                onError={(e) => (e.target.style.display = 'none')}
-                            />
+                            <div key={index} style={cardContainerStyle}>
+                                <img
+                                    src={carta.foto}
+                                    alt={`Carta ${index + 1}`}
+                                    style={{ width: '100%', height: '100%' }}
+                                    onError={(e) => (e.target.style.display = 'none')}
+                                />
+                                <div style={overlayStyle}></div>
+                            </div>
                         )
                     ))}
                 </div>
@@ -272,6 +294,7 @@ const PlayingModal = forwardRef((props, ref) => {
     
         return <div>Cargando cartas lanzadas...</div>;
     };
+    
     
 
 
@@ -336,7 +359,9 @@ const PlayingModal = forwardRef((props, ref) => {
 
     return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
             <div>
-                <h3>Jugador: {Number(posicion)}</h3>
+            <h3 style={{ color: 'orange' }}>
+             Jugador: {Number(posicion)}
+            </h3>
                 {renderCartasJugador()} 
             </div>
             <div style={{left: "20px", position: "absolute"}}>
