@@ -8,9 +8,8 @@ const listaUrlCartasVacias = [
   "http://localhost:8080/resources/images/cartas/SinCartas.jpg",
 ];
 
-
 const CartasVolteadas = forwardRef((props, ref) => {
-  const { cartasDispo, posicionListaCartas } = props;
+  const { cartasDispo, posicionListaCartas, jugadorMano } = props;
 
   // Inject keyframes for holoGlow and swirl animations once
   useEffect(() => {
@@ -65,6 +64,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
     animation: 'slightSwirl 5s ease-in-out infinite',
   };
 
+  let posicionMazo={width:'0px'};
+
   return (
     <>
       {cartasDispo.map((cartasDisp, pos) => {
@@ -73,21 +74,21 @@ const CartasVolteadas = forwardRef((props, ref) => {
 
         // Determine which card image to use
         let urlCartaVolteadas;
-        let urlMazo=listaUrlCartasVacias[3];
+        let urlMazo = listaUrlCartasVacias[3];
         if (cartasRestantes === 3)
           urlCartaVolteadas = listaUrlCartasVacias[2];
         else if (cartasRestantes === 2)
           urlCartaVolteadas = listaUrlCartasVacias[1];
         else if (cartasRestantes === 1)
           urlCartaVolteadas = listaUrlCartasVacias[0];
-        else urlCartaVolteadas = listaUrlCartasVacias[4];
+        else
+          urlCartaVolteadas = listaUrlCartasVacias[4];
 
         // Define card sizes
         const cartaDeUna = {
           width: '50px',
           height: '75px',
         };
-        
 
         const cartaDeDos = {
           width: '75px',
@@ -98,9 +99,13 @@ const CartasVolteadas = forwardRef((props, ref) => {
           width: '100px',
           height: '75px',
         };
-        const estiloMazo = {
-          width: '50px',
-          height: '75px',
+        const estiloMazoPropio = {
+          width: '75px',
+          height: '100px',
+        };
+        const estiloMazoOtro = {
+          width: '75px',
+          height: '100px',
         };
         // Define positions and rotations
         const listaEstilos = [
@@ -119,68 +124,72 @@ const CartasVolteadas = forwardRef((props, ref) => {
           {
             ...cartaDeUna,
             top: '70px',
-            left: '46%',
-            rotate: '180deg',
-          },
-          {
-            ...cartaDeDos,
-            top: '40%',
-            left: '20%',
-            rotate: '90deg',
-          },
-          {
-            ...cartaDeDos,
-            top: '40%',
-            right: '20%',
-            rotate: '270deg',
-          },
-          {
-            ...cartaDeDos,
-            top: '70px',
-            left: '46%',
-            rotate: '180deg',
-          },
-          {
-            ...cartaDeTres,
-            top: '40%',
-            left: '20%',
-            rotate: '90deg',
-          },
-          {
-            ...cartaDeTres,
-            top: '40%',
-            right: '20%',
-            rotate: '270deg',
-          },
-          {
-            ...cartaDeTres,
-            top: '70px',
-            left: '46%',
-            rotate: '180deg',
-          },
-          {
-            ...estiloMazo,
-            top: '30%',
-            left: '20%',
-            rotate: '90deg',
-          },
-          {
-            ...estiloMazo,
-            top: '30%',
-            right: '20%',
-            rotate: '270deg',
-          },
-          {
-            ...estiloMazo,
-            top: '70px',
             left: '40%',
             rotate: '180deg',
+          },
+          {
+            ...cartaDeDos,
+            top: '40%',
+            left: '20%',
+            rotate: '90deg',
+          },
+          {
+            ...cartaDeDos,
+            top: '40%',
+            right: '20%',
+            rotate: '270deg',
+          },
+          {
+            ...cartaDeDos,
+            top: '70px',
+            left: '50%',
+            rotate: '180deg',
+          },
+          {
+            ...cartaDeTres,
+            top: '40%',
+            left: '20%',
+            rotate: '90deg',
+          },
+          {
+            ...cartaDeTres,
+            top: '40%',
+            right: '20%',
+            rotate: '270deg',
+          },
+          {
+            ...cartaDeTres,
+            top: '70px',
+            left: '50%',
+            rotate: '180deg',
+          },
+          {
+            ...estiloMazoOtro,
+            top: '20%',
+            left: '21%',
+            rotate: '90deg',
+          },
+          {
+            ...estiloMazoOtro,
+            top: '20%',
+            right: '21%',
+            rotate: '270deg',
+          },
+          {
+            ...estiloMazoOtro,
+            top: '70px',
+            left: '38%',
+            rotate: '180deg',
+          },
+          {
+            ...estiloMazoPropio,
+            top: '81%',
+            left: '30%',
           }
         ];
 
         // Determine style based on position and number of cards
         let estiloSegunPosicionYNumCartas;
-
         if (cartasRestantes === 3) {
           if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[8];
@@ -191,7 +200,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[7];
           else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
             estiloSegunPosicionYNumCartas = listaEstilos[6];
-          else estiloSegunPosicionYNumCartas = listaEstilos[7];
+          else
+            estiloSegunPosicionYNumCartas = listaEstilos[7];
         } else if (cartasRestantes === 2) {
           if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[5];
@@ -202,7 +212,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[4];
           else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
             estiloSegunPosicionYNumCartas = listaEstilos[3];
-          else estiloSegunPosicionYNumCartas = listaEstilos[4];
+          else
+            estiloSegunPosicionYNumCartas = listaEstilos[4];
         } else {
           if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[2];
@@ -213,8 +224,29 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[1];
           else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
             estiloSegunPosicionYNumCartas = listaEstilos[0];
-          else estiloSegunPosicionYNumCartas = listaEstilos[1];
+          else
+            estiloSegunPosicionYNumCartas = listaEstilos[1];
         }
+
+        if (pos === jugadorMano) {
+          if (posicionListaCartas === jugadorMano)
+            posicionMazo = listaEstilos[12];
+          else if ((posicionListaCartas + pos) % 2 === 0)
+            posicionMazo = listaEstilos[11];
+          else if (
+            posicionListaCartas + 1 === pos ||
+            posicionListaCartas + 1 > cartasDispo.length
+          )
+            posicionMazo = listaEstilos[10];
+          else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
+            posicionMazo = listaEstilos[9];
+       
+          else
+            posicionMazo = listaEstilos[10];
+        }
+
+        console.log("Posicion mazo: " + posicionMazo.right);
+        console.log("Jugador mano: " + jugadorMano);
 
         // Combine styles for the outer div
         const cardStyle = {
@@ -228,40 +260,49 @@ const CartasVolteadas = forwardRef((props, ref) => {
           transform: 'translateX(-50%)', // Translation only
           ...swirlStyle, // Apply swirl animation
         };
+        const mazoStyle = {
+          position: 'fixed',
+          margin: '5px',
+          top: posicionMazo.top,
+          left: posicionMazo.left,
+          right: posicionMazo.right,
+          width: posicionMazo.width,
+          height: posicionMazo.height,
+          transform: 'translateX(-50%)', // Translation only
+          ...swirlStyle, // The mazo also has swirl animation
+        };
 
-        // Render the card with sunset-like glow and swirl animation
+        // Render either the carta or the mazo image based on position
         return (
-          pos !== posicionListaCartas && (
-            <div key={pos} style={cardStyle}>
+          <div key={pos} style={pos !== posicionListaCartas ? cardStyle : mazoStyle}>
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                transform: `rotate(${pos !== posicionListaCartas ? estiloSegunPosicionYNumCartas.rotate : posicionMazo.rotate || '0deg'})`, // Apply static rotation if applicable
+              }}
+            >
               <div
                 style={{
+                  position: 'relative',
                   width: '100%',
                   height: '100%',
-                  transform: `rotate(${estiloSegunPosicionYNumCartas.rotate})`, // Apply static rotation
                 }}
               >
-                <div
+                <img
+                  src={pos !== posicionListaCartas ? urlCartaVolteadas : urlMazo}
+                  alt={pos !== posicionListaCartas ? `Quedan ${cartasRestantes}` : 'Mazo'}
                   style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
+                    width: '140%',
+                    height: '140%',
+                    display: 'block',
+                    borderRadius: '8px', // Optional: match overlay's border radius
                   }}
-                >
-                  <img
-                    src={urlCartaVolteadas}
-                    alt={`Quedan ${cartasRestantes}`}
-                    style={{
-                      width: '140%',
-                      height: '140%',
-                      display: 'block',
-                      borderRadius: '8px', // Optional: match overlay's border radius
-                    }}
-                  />
-                  <div style={sunsetOverlay}></div>
-                </div>
+                />
+                <div style={sunsetOverlay}></div>
               </div>
             </div>
-          )
+          </div>
         );
       })}
     </>
