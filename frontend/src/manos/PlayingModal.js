@@ -1,4 +1,4 @@
-import { useState, forwardRef, useEffect } from 'react';
+import { useState, forwardRef, useEffect, useRef } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
@@ -10,6 +10,11 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador,setCartasJugador] = useState([])
     const [mano, setMano] = useState(null)
+    
+
+    const [draggedCarta, setDraggedCarta] = useState(null);
+    const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
+
     const [tirarTrigger, setTirarTrigger] = useState(0);
     const [trucoTrigger, setTrucoTrigger] = useState(0);
 
@@ -39,22 +44,23 @@ const PlayingModal = forwardRef((props, ref) => {
     
     useEffect(() => {
         let intervalId;
-
-        
         fetchMano();
-
         intervalId = setInterval(fetchMano, 1000);
-        
         return () => clearInterval(intervalId)
     },[game.codigo, posicion])
 
     useEffect(() => {
-        fetchMano();
+        fetchMano()
     }, [tirarTrigger]);
 
     useEffect(() => {
+              
         fetchMano();
+        
     }, [trucoTrigger]);
+
+
+
 
     useEffect(() => {
         const styleSheet = document.createElement('style');
@@ -191,9 +197,6 @@ const PlayingModal = forwardRef((props, ref) => {
                                             }
                                         )
                                     }
-                                    onClick={() =>
-                                        esTurnoValido && tirarCarta(carta.id)
-                                    } // Desactiva clic si no es el turno
                                 >
                                     <img
                                         src={carta.foto}
@@ -207,6 +210,11 @@ const PlayingModal = forwardRef((props, ref) => {
                                         onError={(e) =>
                                             (e.target.style.display = 'none')
                                         }
+                                        draggable 
+                                        onDragStart={(evento) => dragStart(evento, carta)} 
+                                        onDrag={(evento) => onDrag(evento)} 
+                                        onDragEnd={(evento) => onDragEnd(evento, carta)} 
+
                                     />
                                     {/* Overlay de resplandor holográfico */}
                                     <div style={sunsetOverlay}></div>
@@ -216,6 +224,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     ))}
                 </div>
             );
+           
         }
 
         return <div>Cargando cartas...</div>;
@@ -274,7 +283,7 @@ const PlayingModal = forwardRef((props, ref) => {
             };
     
             return (
-                <div style={containerStyle}>
+                <div style={containerStyle} >
                     {cartasLanzadas.map((carta, index) => (
                         carta && (
                             <div key={index} style={cardContainerStyle}>
@@ -291,12 +300,26 @@ const PlayingModal = forwardRef((props, ref) => {
                 </div>
             );
         }
-    
+        
         return <div>Cargando cartas lanzadas...</div>;
-    };
-    
+    }; 
+
     
 
+    const dragStart = (evento, carta) => {
+        if(mano  && cartasJugador && Number(posicion) === mano.jugadorTurno){
+            setDraggedCarta(carta);
+            evento.dataTransfer.effectAllowed ='move';
+        }
+        
+    }
+    const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
+    const onDragEnd = (evento, carta) => { setPositionCarta({ x: evento.clientX, y: evento.clientY }); 
+                                            tirarCarta(carta.id); 
+                                            setDraggedCarta(null);  
+                                         };
+
+    
 
      function tirarCarta(cartaId) {
         
@@ -310,14 +333,17 @@ const PlayingModal = forwardRef((props, ref) => {
             }).then((response) => response.text())
             .then((data) => {
                 if(data){
-                    console.log(data)
                     setTirarTrigger((prev) => prev + 1);
+                    
+                     
                 }
             })
             .catch((error) => alert(error.message));
 
           
     }
+
+            
 
     function cantarTruco(truco) {
         
@@ -358,14 +384,26 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
+
             <div>
             <h3 style={{ color: 'orange' }}>
              Jugador: {Number(posicion)}
             </h3>
                 {renderCartasJugador()} 
-            </div>
-            <div style={{left: "20px", position: "absolute"}}>
-                {renderCartasMesa()}
+                {draggedCarta && 
+                  <img
+                  src={draggedCarta.foto} 
+                  alt='Carta arrastrada'
+                  style={{ position: 'absolute', left: `${positionCarta.x}px`, top: `${positionCarta.y}px`, width: '50px', height: '75px' }}
+                  onError={(e) => (e.target.style.display = 'none')}
+                  />  } 
+                
+                
+                    <div style={{left: "20px", position: "absolute"}}>
+                    {renderCartasMesa()}
+                    </div> 
+                
+                
             </div>
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta ? (
                 <div
