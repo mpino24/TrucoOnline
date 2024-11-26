@@ -108,11 +108,7 @@ const PlayingModal = forwardRef((props, ref) => {
         `,
         backgroundSize: '400% 400%',
         animation: 'holoGlow 3s ease-in-out infinite',
-        mixBlendMode: 'overlay', // Blend mode to create a subtle glow
-        //mix-blend-mode: normal | multiply | screen | overlay | darken | lighten 
-        //| color-dodge | color-burn | hard-light | soft-light 
-        //| difference | exclusion | hue | saturation | color |
-        // luminosity | plus-darker | plus-lighter;
+        mixBlendMode: 'overlay', 
         pointerEvents: 'none', // Ensure overlay doesn't block interactions
         borderRadius: '8px', // Optional: match card's border radius if any
     };
@@ -128,7 +124,7 @@ const PlayingModal = forwardRef((props, ref) => {
         height: '150px',
         backgroundColor: '#fff',
         border: '1px solid #ccc',
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)',
+        boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
         transformOrigin: 'center',
         transition: 'transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease',
         cursor: 'pointer',
@@ -140,7 +136,7 @@ const PlayingModal = forwardRef((props, ref) => {
     // Estilo adicional al pasar el ratón
     const cardHoverStyle = {
         transform: 'rotateY(10deg)',
-        boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.5)',
+        boxShadow: '10px 4px 8px rgba(243, 126, 24, 1)',
     };
 
     const renderCartasJugador = () => {
@@ -200,7 +196,8 @@ const PlayingModal = forwardRef((props, ref) => {
                                             e.currentTarget.style,
                                             {
                                                 transform: 'rotateY(-10deg)', // Restaurar rotación original
-                                                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)',
+                                                boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
+
                                             }
                                         )
                                     }
@@ -248,34 +245,60 @@ const PlayingModal = forwardRef((props, ref) => {
                 return <div>No hay cartas para mostrar.</div>;
             }
     
-            // Lo mismo que renderizar las cartas del jugador
+            // Container styles remain the same
             const containerStyle = {
                 position: 'fixed',
                 top: '39%',
                 left: '49%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
-                gap: '10px' ,
-                
-                
+                gap: '10px',
             };
     
-            const itemStyle = {
+            // Style for each card container
+            const cardContainerStyle = {
+                position: 'relative', // To position the overlay correctly
                 width: '83px',
-                height: '120px'
+                height: '120px',
+                borderRadius: '8px', // Match the border radius
+                overflow: 'hidden',  // Hide overflow from the overlay
+            };
+    
+            // Style for the overlay with the glow animation
+            const overlayStyle = {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: `
+                    radial-gradient(
+                        circle at 50% 50%, 
+                        rgba(255, 223, 186, 0.5) 0%, 
+                        rgba(255, 183, 76, 0.5) 40%, 
+                        rgba(255, 140, 0, 0.6) 70%
+                    )
+                `,
+                backgroundSize: '400% 400%',
+                animation: 'holoGlow 3s ease-in-out infinite',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none', // Ensure overlay doesn't block interactions
+                borderRadius: '8px',   // Match the card's border radius
             };
     
             return (
                 <div style={containerStyle} >
                     {cartasLanzadas.map((carta, index) => (
                         carta && (
-                            <img
-                                key={index}
-                                src={carta.foto}
-                                alt={`Carta ${index + 1}`}
-                                style={itemStyle}
-                                onError={(e) => (e.target.style.display = 'none')}
-                            />
+                            <div key={index} style={cardContainerStyle}>
+                                <img
+                                    src={carta.foto}
+                                    alt={`Carta ${index + 1}`}
+                                    style={{ width: '100%', height: '100%' }}
+                                    onError={(e) => (e.target.style.display = 'none')}
+                                />
+                                <div style={overlayStyle}></div>
+                            </div>
                         )
                     ))}
                 </div>
@@ -364,8 +387,10 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
-            <div  >
-                <h3>Jugador: {Number(posicion)}</h3>
+            <div>
+            <h3 style={{ color: 'orange' }}>
+             Jugador: {Number(posicion)}
+            </h3>
                 {renderCartasJugador()} 
                 {draggedCarta && 
                   <img
@@ -394,11 +419,10 @@ const PlayingModal = forwardRef((props, ref) => {
                         top: '70%',
                     }}
                 >
-                    <h3>Es tu turno</h3>
                 </div>
                 ) : null}
 
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&
+            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&  !mano.esperandoRespuesta &&
             <div style={{ width: '150px', height: '75px', margin: '5px', left: "80%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
                 {<button onClick={()=> cantarTruco("TRUCO")} >Cantar TRUCO</button>}
                 {<button onClick={()=> cantarTruco("RETRUCO")} >Cantar RETRUCO</button>}
@@ -412,7 +436,7 @@ const PlayingModal = forwardRef((props, ref) => {
             </div>}
 
              <div>
-                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} />}
+                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} jugadorMano={game.jugadorMano} />}
             </div>
         {mano && console.log(mano)}
         
