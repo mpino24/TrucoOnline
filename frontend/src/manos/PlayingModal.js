@@ -56,48 +56,173 @@ const PlayingModal = forwardRef((props, ref) => {
         fetchMano();
     }, [trucoTrigger]);
 
+    useEffect(() => {
+        const styleSheet = document.createElement('style');
+        styleSheet.type = 'text/css';
+        styleSheet.innerText = `
+          @keyframes holoGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+          }
+
+          @keyframes slightSwirl {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-2deg); }
+            100% { transform: rotate(0deg); }
+          }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // Cleanup on unmount
+        return () => {
+            document.head.removeChild(styleSheet);
+        };
+    }, []);
+
+    // Define the sunset-like overlay style
+    const sunsetOverlay = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: `
+          radial-gradient(
+            circle at 50% 50%, 
+            rgba(255, 223, 186, 0.5) 0%, 
+            rgba(255, 183, 76, 0.5) 40%, 
+            rgba(255, 140, 0, 0.6) 70%
+          )
+        `,
+        backgroundSize: '400% 400%',
+        animation: 'holoGlow 3s ease-in-out infinite',
+        mixBlendMode: 'overlay', 
+        pointerEvents: 'none', // Ensure overlay doesn't block interactions
+        borderRadius: '8px', // Optional: match card's border radius if any
+    };
+
+    // Swirl animation style
+    const swirlStyle = {
+        animation: 'slightSwirl 5s ease-in-out infinite',
+    };
+
+    // Estilo base de las cartas
+    const baseCardStyle = {
+        width: '100px',
+        height: '150px',
+        backgroundColor: '#fff',
+        border: '1px solid #ccc',
+        boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
+        transformOrigin: 'center',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease',
+        cursor: 'pointer',
+        filter: 'none', // We'll handle filter based on esTurnoValido
+        borderRadius: '8px', // Asegura que coincide con el overlay
+        position: 'relative', // Para posicionar el overlay
+    };
+
+    // Estilo adicional al pasar el ratón
+    const cardHoverStyle = {
+        transform: 'rotateY(10deg)',
+        boxShadow: '10px 4px 8px rgba(243, 126, 24, 1)',
+    };
+
     const renderCartasJugador = () => {
         if (mano && mano.cartasDisp && posicion !== null) {
             const cartasJugador = mano.cartasDisp[posicion];
-    
+            const esTurnoValido =
+                mano &&
+                cartasJugador &&
+                Number(posicion) === mano.jugadorTurno &&
+                !mano.esperandoRespuesta;
+
             if (!cartasJugador) {
                 return <div>No hay cartas para mostrar.</div>;
             }
-    
-            //Creamos un contenedor donde meter las 3 cartas
+
+            // Estilo del contenedor con efecto 3D
             const containerStyle = {
                 position: 'fixed',
                 top: '80%',
                 left: '50%',
-                transform: 'translateX(-50%)',
+                transform: 'translateX(-50%) rotateX(25deg)',
                 display: 'flex',
-                gap: '10px' //Y con un gap establecemos el espacio entre ellas
+                gap: '10px',
+                perspective: '800px',
+                transformOrigin: 'center bottom',
             };
-    
-            const itemStyle = {
-                width: '50px',
-                height: '75px'
-            };
-    
+
             return (
                 <div style={containerStyle}>
                     {cartasJugador.map((carta, index) => (
                         carta && (
-                            <img
-                                key={index}
-                                src={carta.foto}
-                                alt={`Carta ${index + 1}`}
-                                style={itemStyle}
-                                onError={(e) => (e.target.style.display = 'none')}
-                            />
+                            <div
+                                    key={index}
+                                    style={{
+                                        ...(esTurnoValido ? swirlStyle : {}),
+                                        position: 'relative',
+                                        width: '100px',
+                                        height: '150px',
+                                    }}
+                                >
+                                <div
+                                    style={{
+                                        ...baseCardStyle,
+                                        transform: 'rotateY(-10deg)', // Rotación estática original
+                                        cursor: esTurnoValido ? 'pointer' : 'not-allowed',
+                                        filter: esTurnoValido ? 'none' : 'grayscale(80%) brightness(0.5)',
+                                        // Aplicar hover styles mediante eventos
+                                    }}
+                                    onMouseEnter={(e) =>
+                                        Object.assign(
+                                            e.currentTarget.style,
+                                            cardHoverStyle
+                                        )
+                                    }
+                                    onMouseLeave={(e) =>
+                                        Object.assign(
+                                            e.currentTarget.style,
+                                            {
+                                                transform: 'rotateY(-10deg)', // Restaurar rotación original
+                                                boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
+
+                                            }
+                                        )
+                                    }
+                                    onClick={() =>
+                                        esTurnoValido && tirarCarta(carta.id)
+                                    } // Desactiva clic si no es el turno
+                                >
+                                    <img
+                                        src={carta.foto}
+                                        alt={`Carta ${index + 1}`}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'block',
+                                            borderRadius: '8px', // Asegura que coincide con el overlay
+                                        }}
+                                        onError={(e) =>
+                                            (e.target.style.display = 'none')
+                                        }
+                                    />
+                                    {/* Overlay de resplandor holográfico */}
+                                    <div style={sunsetOverlay}></div>
+                                </div>
+                            </div>
                         )
                     ))}
                 </div>
             );
         }
-    
+
         return <div>Cargando cartas...</div>;
     };
+
+    
+    
     
     const renderCartasMesa = () => {
         if (mano && mano.cartasLanzadasRonda) {
@@ -107,32 +232,60 @@ const PlayingModal = forwardRef((props, ref) => {
                 return <div>No hay cartas para mostrar.</div>;
             }
     
-            // Flexbox container to hold the card elements
+            // Container styles remain the same
             const containerStyle = {
                 position: 'fixed',
-                top: '50%',
-                left: '50%',
+                top: '39%',
+                left: '49%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
-                gap: '10px' // Adjust the gap to control spacing between cards
+                gap: '10px',
             };
     
-            const itemStyle = {
-                width: '50px',
-                height: '75px'
+            // Style for each card container
+            const cardContainerStyle = {
+                position: 'relative', // To position the overlay correctly
+                width: '83px',
+                height: '120px',
+                borderRadius: '8px', // Match the border radius
+                overflow: 'hidden',  // Hide overflow from the overlay
+            };
+    
+            // Style for the overlay with the glow animation
+            const overlayStyle = {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: `
+                    radial-gradient(
+                        circle at 50% 50%, 
+                        rgba(255, 223, 186, 0.5) 0%, 
+                        rgba(255, 183, 76, 0.5) 40%, 
+                        rgba(255, 140, 0, 0.6) 70%
+                    )
+                `,
+                backgroundSize: '400% 400%',
+                animation: 'holoGlow 3s ease-in-out infinite',
+                mixBlendMode: 'overlay',
+                pointerEvents: 'none', // Ensure overlay doesn't block interactions
+                borderRadius: '8px',   // Match the card's border radius
             };
     
             return (
                 <div style={containerStyle}>
                     {cartasLanzadas.map((carta, index) => (
                         carta && (
-                            <img
-                                key={index}
-                                src={carta.foto}
-                                alt={`Carta ${index + 1}`}
-                                style={itemStyle}
-                                onError={(e) => (e.target.style.display = 'none')}
-                            />
+                            <div key={index} style={cardContainerStyle}>
+                                <img
+                                    src={carta.foto}
+                                    alt={`Carta ${index + 1}`}
+                                    style={{ width: '100%', height: '100%' }}
+                                    onError={(e) => (e.target.style.display = 'none')}
+                                />
+                                <div style={overlayStyle}></div>
+                            </div>
                         )
                     ))}
                 </div>
@@ -141,6 +294,7 @@ const PlayingModal = forwardRef((props, ref) => {
     
         return <div>Cargando cartas lanzadas...</div>;
     };
+    
     
 
 
@@ -203,41 +357,51 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
 
-    return (<>
+    return (<div style={{ backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw'}}>
             <div>
-                <h3>Cartas del Jugador {Number(posicion)}</h3>
+            <h3 style={{ color: 'orange' }}>
+             Jugador: {Number(posicion)}
+            </h3>
                 {renderCartasJugador()} 
             </div>
             <div style={{left: "20px", position: "absolute"}}>
                 {renderCartasMesa()}
             </div>
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta &&
-            <div style={{ width: '150px', height: '75px', margin: '5px', left: "70%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
-                {cartasJugador[0]!== null && <button onClick={()=> tirarCarta(cartasJugador[0].id)} >Tirar {cartasJugador[0].valor} de {cartasJugador[0].palo}</button>}
-                {cartasJugador[1] !== null&& <button onClick={()=> tirarCarta(cartasJugador[1].id)} > Tirar {cartasJugador[1].valor} de {cartasJugador[1].palo}</button>}
-                {cartasJugador[2] !==null&& <button onClick={()=> tirarCarta(cartasJugador[2].id)} >Tirar {cartasJugador[2].valor} de {cartasJugador[2].palo}</button>}
-            </div>}
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&
-            <div style={{ width: '150px', height: '75px', margin: '5px', left: "220px", position: "absolute", top: "200px"}}> 
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta ? (
+                <div
+                    style={{
+                        width: '150px',
+                        height: '75px',
+                        margin: '5px',
+                        left: '70%',
+                        position: 'fixed',
+                        transform: 'translateX(-50%)',
+                        top: '70%',
+                    }}
+                >
+                </div>
+                ) : null}
+
+            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&  !mano.esperandoRespuesta &&
+            <div style={{ width: '150px', height: '75px', margin: '5px', left: "80%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
                 {<button onClick={()=> cantarTruco("TRUCO")} >Cantar TRUCO</button>}
                 {<button onClick={()=> cantarTruco("RETRUCO")} >Cantar RETRUCO</button>}
                 {<button onClick={()=> cantarTruco("VALECUATRO")} >Cantar VALECUATRO</button>}
             </div>}
             {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&
-            <div style={{ width: '150px', height: '75px', margin: '5px', left: "420px", position: "absolute", top: "200px"}}> 
+            <div style={{ width: '150px', height: '75px', margin: '5px', left: "80%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
                 {<button onClick={()=> responderTruco("QUIERO")} >Quiero</button>}
                 {<button onClick={()=> responderTruco("NO_QUIERO")} >No quiero</button>}
                 {<button onClick={()=> responderTruco("SUBIR")} >Subir la apuesta</button>}
             </div>}
 
              <div>
-                <h3>Cartas voltedas otros jugadores</h3>
-                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} />}
+                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} jugadorMano={mano.jugadorMano} />}
             </div>
         {mano && console.log(mano)}
         
         {console.log(posicion)}
-        </>
+        </div>
     )
         
     
