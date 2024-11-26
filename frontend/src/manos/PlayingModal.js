@@ -50,10 +50,7 @@ const PlayingModal = forwardRef((props, ref) => {
     },[game.codigo, posicion])
 
     useEffect(() => {
-        let intervalId;        
-        fetchMano();
-        intervalId = setInterval(fetchMano, 1000);  
-        return () => clearInterval(intervalId)
+        fetchMano()
     }, [tirarTrigger]);
 
     useEffect(() => {
