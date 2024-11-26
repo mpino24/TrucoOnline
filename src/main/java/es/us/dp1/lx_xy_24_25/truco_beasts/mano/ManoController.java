@@ -49,7 +49,7 @@ public class ManoController {
     @PatchMapping("/cantarTruco/{cantoTruco}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CantosTruco> patchCantarTruco(@PathVariable String codigo, @PathVariable CantosTruco cantoTruco) throws TrucoException {
-        Mano mano = manoService.getMano(codigo);
+        
         manoService.cantosTruco(codigo, cantoTruco);
         return new ResponseEntity<>(cantoTruco, HttpStatus.OK);
     }
@@ -57,7 +57,7 @@ public class ManoController {
     @PatchMapping("/responderTruco/{respuestasTruco}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RespuestasTruco> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws TrucoException {
-        Mano mano = manoService.getMano(codigo);
+        
         manoService.responderTruco(codigo, respuestasTruco);
         return new ResponseEntity<>(respuestasTruco, HttpStatus.OK);
     }
