@@ -58,6 +58,9 @@ const CartasVolteadas = forwardRef((props, ref) => {
     pointerEvents: 'none', // Ensure overlay doesn't block interactions
     borderRadius: '8px', // Optional: match card's border radius if any
   };
+  
+
+  
 
   // Swirl animation style
   const swirlStyle = {
@@ -104,8 +107,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
           height: '100px',
         };
         const estiloMazoOtro = {
-          width: '75px',
-          height: '100px',
+          width: '60px',
+          height: '85px',
         };
         // Define positions and rotations
         const listaEstilos = [
