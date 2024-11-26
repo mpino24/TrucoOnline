@@ -482,7 +482,7 @@ const PlayingModal = forwardRef((props, ref) => {
             }
 
             <div>
-                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} jugadorMano={game.jugadorMano} />}
+                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} jugadorMano={game.jugadorMano}  />}
             </div>
             {mano && console.log(mano)}
             {console.log(posicion)}

@@ -9,7 +9,7 @@ const listaUrlCartasVacias = [
 ];
 
 const CartasVolteadas = forwardRef((props, ref) => {
-  const { cartasDispo, posicionListaCartas, jugadorMano } = props;
+  const { cartasDispo, posicionListaCartas, jugadorMano, numJugadores } = props;
 
   // Inject keyframes for animations once
   useEffect(() => {
@@ -236,8 +236,10 @@ const CartasVolteadas = forwardRef((props, ref) => {
           else
             estiloSegunPosicionYNumCartas = listaEstilos[1];
         }
+        
 
         if (pos === jugadorMano) {
+
           if (posicionListaCartas === jugadorMano)
             posicionMazo = listaEstilos[12];
           else if ((posicionListaCartas + pos) % 2 === 0)
@@ -247,11 +249,16 @@ const CartasVolteadas = forwardRef((props, ref) => {
             posicionListaCartas + 1 > cartasDispo.length
           )
             posicionMazo = listaEstilos[10];
-          else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
+          else if (posicionListaCartas - 1 == pos || posicionListaCartas - 1 < 0)
+            
             posicionMazo = listaEstilos[9];
-          else
-            posicionMazo = listaEstilos[10];
         }
+        
+        else //Ni idea pero tiene que estar aqui 
+        posicionMazo = listaEstilos[10];
+
+       /*  else if (cartasDispo.length===2)
+          posicionMazo = listaEstilos[11]; */
 
         // Combine styles for the outer div
         const cardStyle = {
