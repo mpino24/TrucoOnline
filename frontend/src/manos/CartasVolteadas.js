@@ -11,7 +11,7 @@ const listaUrlCartasVacias = [
 const CartasVolteadas = forwardRef((props, ref) => {
   const { cartasDispo, posicionListaCartas, jugadorMano } = props;
 
-  // Inject keyframes for holoGlow and swirl animations once
+  // Inject keyframes for animations once
   useEffect(() => {
     const styleSheet = document.createElement('style');
     styleSheet.type = 'text/css';
@@ -27,6 +27,15 @@ const CartasVolteadas = forwardRef((props, ref) => {
         50% { transform: rotate(0deg); }
         75% { transform: rotate(-2deg); }
         100% { transform: rotate(0deg); }
+      }
+
+      @keyframes dropShadowGlow {
+        0%, 100% {
+          filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
+        }
+        50% {
+          filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
+        }
       }
     `;
     document.head.appendChild(styleSheet);
@@ -54,9 +63,9 @@ const CartasVolteadas = forwardRef((props, ref) => {
     `,
     backgroundSize: '400% 400%',
     animation: 'holoGlow 3s ease-in-out infinite',
-    mixBlendMode: 'overlay', // Blend mode to create a subtle glow
-    pointerEvents: 'none', // Ensure overlay doesn't block interactions
-    borderRadius: '8px', // Optional: match card's border radius if any
+    mixBlendMode: 'overlay',
+    pointerEvents: 'none',
+    borderRadius: '8px',
   };
 
   // Swirl animation style
@@ -64,7 +73,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
     animation: 'slightSwirl 5s ease-in-out infinite',
   };
 
-  let posicionMazo={width:'0px'};
+  let posicionMazo = { width: '0px' };
 
   return (
     <>
@@ -104,8 +113,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
           height: '100px',
         };
         const estiloMazoOtro = {
-          width: '75px',
-          height: '100px',
+          width: '60px',
+          height: '85px',
         };
         // Define positions and rotations
         const listaEstilos = [
@@ -185,7 +194,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
             ...estiloMazoPropio,
             top: '81%',
             left: '30%',
-          }
+          },
         ];
 
         // Determine style based on position and number of cards
@@ -240,13 +249,9 @@ const CartasVolteadas = forwardRef((props, ref) => {
             posicionMazo = listaEstilos[10];
           else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
             posicionMazo = listaEstilos[9];
-       
           else
             posicionMazo = listaEstilos[10];
         }
-
-        console.log("Posicion mazo: " + posicionMazo.right);
-        console.log("Jugador mano: " + jugadorMano);
 
         // Combine styles for the outer div
         const cardStyle = {
@@ -257,8 +262,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
           right: estiloSegunPosicionYNumCartas.right,
           width: estiloSegunPosicionYNumCartas.width,
           height: estiloSegunPosicionYNumCartas.height,
-          transform: 'translateX(-50%)', // Translation only
-          ...swirlStyle, // Apply swirl animation
+          transform: 'translateX(-50%)',
+          ...swirlStyle,
         };
         const mazoStyle = {
           position: 'fixed',
@@ -268,8 +273,21 @@ const CartasVolteadas = forwardRef((props, ref) => {
           right: posicionMazo.right,
           width: posicionMazo.width,
           height: posicionMazo.height,
-          transform: 'translateX(-50%)', // Translation only
-          ...swirlStyle, // The mazo also has swirl animation
+          transform: 'translateX(-50%)',
+          ...swirlStyle,
+        };
+
+        // Image styles
+        const imageStyle = {
+          width: '140%',
+          height: '140%',
+          display: 'block',
+          borderRadius: '8px',
+        };
+
+        const mazoImageStyle = {
+          ...imageStyle,
+          animation: 'dropShadowGlow 3s ease-in-out infinite',
         };
 
         // Render either the carta or the mazo image based on position
@@ -279,7 +297,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
               style={{
                 width: '100%',
                 height: '100%',
-                transform: `rotate(${pos !== posicionListaCartas ? estiloSegunPosicionYNumCartas.rotate : posicionMazo.rotate || '0deg'})`, // Apply static rotation if applicable
+                transform: `rotate(${
+                  pos !== posicionListaCartas
+                    ? estiloSegunPosicionYNumCartas.rotate
+                    : posicionMazo.rotate || '0deg'
+                })`,
               }}
             >
               <div
@@ -292,14 +314,9 @@ const CartasVolteadas = forwardRef((props, ref) => {
                 <img
                   src={pos !== posicionListaCartas ? urlCartaVolteadas : urlMazo}
                   alt={pos !== posicionListaCartas ? `Quedan ${cartasRestantes}` : 'Mazo'}
-                  style={{
-                    width: '140%',
-                    height: '140%',
-                    display: 'block',
-                    borderRadius: '8px', // Optional: match overlay's border radius
-                  }}
+                  style={pos !== posicionListaCartas ? imageStyle : mazoImageStyle}
                 />
-                <div style={sunsetOverlay}></div>
+                {pos !== posicionListaCartas && <div style={sunsetOverlay}></div>}
               </div>
             </div>
           </div>
