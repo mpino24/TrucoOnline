@@ -215,6 +215,10 @@ const PlayingModal = forwardRef((props, ref) => {
                                         onError={(e) =>
                                             (e.target.style.display = 'none')
                                         }
+                                        draggable 
+                                        onDragStart={(evento) => dragStart(evento, carta)} 
+                                        onDrag={(evento) => onDrag(evento)} 
+                                        onDragEnd={(evento) => onDragEnd(evento)} 
 
                                     />
                                     {/* Overlay de resplandor holográfico */}
@@ -225,20 +229,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     ))}
                 </div>
             );
-            return cartasJugador.map((carta, index) => (<>
-                {carta &&<img
-                    key={index}
-                    src={carta.foto} 
-                    alt={`Carta ${index + 1}`}
-                    style={{ width: '50px', height: '75px', margin: '5px' }} 
-                    onError={(e) => (e.target.style.display = 'none')} 
-                    draggable 
-                    onDragStart={(evento) => dragStart(evento, carta)} 
-                    onDrag={(evento) => onDrag(evento)} 
-                    onDragEnd={(evento) => onDragEnd(evento)} 
-                />}
-                </>
-            ));
+           
         }
 
         return <div>Cargando cartas...</div>;
