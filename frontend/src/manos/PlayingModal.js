@@ -10,8 +10,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador,setCartasJugador] = useState([])
     const [mano, setMano] = useState(null)
-    const [visibleDuplicado, setvisibleDuplicado] = useState(false)
-
+    
 
     const [draggedCarta, setDraggedCarta] = useState(null);
     const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
@@ -45,29 +44,27 @@ const PlayingModal = forwardRef((props, ref) => {
     
     useEffect(() => {
         let intervalId;
-
-        
         fetchMano();
-
         intervalId = setInterval(fetchMano, 1000);
-        
         return () => clearInterval(intervalId)
     },[game.codigo, posicion])
 
     useEffect(() => {
-        let intervalId;
-
-        
+        let intervalId;        
         fetchMano();
-
-        intervalId = setInterval(fetchMano, 1000);
-        
+        intervalId = setInterval(fetchMano, 1000);  
         return () => clearInterval(intervalId)
     }, [tirarTrigger]);
 
     useEffect(() => {
+        let intervalId;        
         fetchMano();
+        intervalId = setInterval(fetchMano, 1000);  
+        return () => clearInterval(intervalId)
     }, [trucoTrigger]);
+
+
+
 
     useEffect(() => {
         const styleSheet = document.createElement('style');
@@ -207,9 +204,6 @@ const PlayingModal = forwardRef((props, ref) => {
                                             }
                                         )
                                     }
-                                    /* onClick={() =>
-                                        esTurnoValido && tirarCarta(carta.id)
-                                    }  */// Desactiva clic si no es el turno
                                 >
                                     <img
                                         src={carta.foto}
@@ -289,7 +283,8 @@ const PlayingModal = forwardRef((props, ref) => {
         }
         
         return <div>Cargando cartas lanzadas...</div>;
-    };
+    }; 
+
     
 
     const dragStart = (evento, carta) => {
@@ -301,24 +296,10 @@ const PlayingModal = forwardRef((props, ref) => {
     const onDrag = (evento) => { setPositionCarta({ x: evento.clientX, y: evento.clientY })};
     const onDragEnd = (evento, carta) => { setPositionCarta({ x: evento.clientX, y: evento.clientY }); 
                                             tirarCarta(carta.id); 
-                                            renderCartasMesa();
-                                            setDraggedCarta(null); };
-
-/*     const handleDrop = (evento) => {
-        evento.preventDefault();
-        // Aquí puedes manejar el caso de soltar la carta
-        const offsetX = evento.clientX;
-        const offsetY = evento.clientY;
-        setPositionCarta({ x: offsetX, y: offsetY });
-        
-        
-    };
-    const allowDrop = (evento) => {
-        evento.preventDefault();
-    }; */
+                                            setDraggedCarta(null);  
+                                         };
 
     
-
 
      function tirarCarta(cartaId) {
         
@@ -332,14 +313,17 @@ const PlayingModal = forwardRef((props, ref) => {
             }).then((response) => response.text())
             .then((data) => {
                 if(data){
-                    console.log(data)
                     setTirarTrigger((prev) => prev + 1);
+                    
+                     
                 }
             })
             .catch((error) => alert(error.message));
 
           
     }
+
+            
 
     function cantarTruco(truco) {
         
@@ -392,12 +376,12 @@ const PlayingModal = forwardRef((props, ref) => {
                   />  } 
                 
                 
+                    <div style={{left: "20px", position: "absolute"}}>
+                    {renderCartasMesa()}
+                    </div> 
+                
+                
             </div>
-
-
-            {/* <div style={{left: "20px", position: "absolute"}}>
-                {renderCartasMesa()}
-            </div> */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta ? (
                 <div
                     style={{
