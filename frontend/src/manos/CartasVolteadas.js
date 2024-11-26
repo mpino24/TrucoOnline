@@ -4,9 +4,10 @@ const listaUrlCartasVacias = [
   "http://localhost:8080/resources/images/cartas/1carta.jpg",
   "http://localhost:8080/resources/images/cartas/2cartas.jpg",
   "http://localhost:8080/resources/images/cartas/3cartas.jpg",
-  "http://localhost:8080/resources/images/cartas/mazo.jpg",
+  "http://localhost:8080/resources/images/cartas/mazo.png",
   "http://localhost:8080/resources/images/cartas/SinCartas.jpg",
 ];
+
 
 const CartasVolteadas = forwardRef((props, ref) => {
   const { cartasDispo, posicionListaCartas } = props;
@@ -72,7 +73,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
 
         // Determine which card image to use
         let urlCartaVolteadas;
-
+        let urlMazo=listaUrlCartasVacias[3];
         if (cartasRestantes === 3)
           urlCartaVolteadas = listaUrlCartasVacias[2];
         else if (cartasRestantes === 2)
@@ -86,6 +87,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
           width: '50px',
           height: '75px',
         };
+        
 
         const cartaDeDos = {
           width: '75px',
@@ -96,37 +98,40 @@ const CartasVolteadas = forwardRef((props, ref) => {
           width: '100px',
           height: '75px',
         };
-
+        const estiloMazo = {
+          width: '50px',
+          height: '75px',
+        };
         // Define positions and rotations
         const listaEstilos = [
           {
             ...cartaDeUna,
-            top: '50%',
-            left: '10%',
+            top: '40%',
+            left: '20%',
             rotate: '90deg',
           },
           {
             ...cartaDeUna,
-            top: '50%',
-            right: '10%',
+            top: '40%',
+            right: '20%',
             rotate: '270deg',
           },
           {
             ...cartaDeUna,
             top: '70px',
-            left: '50%',
+            left: '40%',
             rotate: '180deg',
           },
           {
             ...cartaDeDos,
-            top: '50%',
-            left: '10%',
+            top: '40%',
+            left: '20%',
             rotate: '90deg',
           },
           {
             ...cartaDeDos,
-            top: '50%',
-            right: '10%',
+            top: '40%',
+            right: '20%',
             rotate: '270deg',
           },
           {
@@ -153,6 +158,24 @@ const CartasVolteadas = forwardRef((props, ref) => {
             left: '50%',
             rotate: '180deg',
           },
+          {
+            ...estiloMazo,
+            top: '30%',
+            left: '20%',
+            rotate: '90deg',
+          },
+          {
+            ...estiloMazo,
+            top: '30%',
+            right: '20%',
+            rotate: '270deg',
+          },
+          {
+            ...estiloMazo,
+            top: '70px',
+            left: '40%',
+            rotate: '180deg',
+          }
         ];
 
         // Determine style based on position and number of cards

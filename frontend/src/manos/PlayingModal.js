@@ -118,7 +118,7 @@ const PlayingModal = forwardRef((props, ref) => {
         height: '150px',
         backgroundColor: '#fff',
         border: '1px solid #ccc',
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)',
+        boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
         transformOrigin: 'center',
         transition: 'transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease',
         cursor: 'pointer',
@@ -130,7 +130,7 @@ const PlayingModal = forwardRef((props, ref) => {
     // Estilo adicional al pasar el ratón
     const cardHoverStyle = {
         transform: 'rotateY(10deg)',
-        boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.5)',
+        boxShadow: '10px 4px 8px rgba(243, 126, 24, 1)',
     };
 
     const renderCartasJugador = () => {
@@ -190,7 +190,8 @@ const PlayingModal = forwardRef((props, ref) => {
                                             e.currentTarget.style,
                                             {
                                                 transform: 'rotateY(-10deg)', // Restaurar rotación original
-                                                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)',
+                                                boxShadow: '5px 4px 8px rgba(227, 128, 41, 1)',
+
                                             }
                                         )
                                     }
@@ -353,11 +354,10 @@ const PlayingModal = forwardRef((props, ref) => {
                         top: '70%',
                     }}
                 >
-                    <h3>Es tu turno</h3>
                 </div>
                 ) : null}
 
-            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&
+            {mano  &&cartasJugador && Number(posicion) === mano.jugadorTurno &&  !mano.esperandoRespuesta &&
             <div style={{ width: '150px', height: '75px', margin: '5px', left: "80%", position: "fixed",transform: 'translateX(-50%)', top: "70%"}}> 
                 {<button onClick={()=> cantarTruco("TRUCO")} >Cantar TRUCO</button>}
                 {<button onClick={()=> cantarTruco("RETRUCO")} >Cantar RETRUCO</button>}
@@ -371,7 +371,7 @@ const PlayingModal = forwardRef((props, ref) => {
             </div>}
 
              <div>
-                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} />}
+                {mano && <CartasVolteadas cartasDispo={mano.cartasDisp} posicionListaCartas={posicion} jugadorMano={mano.jugadorMano} />}
             </div>
         {mano && console.log(mano)}
         
