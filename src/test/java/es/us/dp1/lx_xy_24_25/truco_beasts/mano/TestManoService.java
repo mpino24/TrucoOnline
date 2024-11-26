@@ -7,6 +7,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -16,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 
 
@@ -76,6 +79,97 @@ public class TestManoService {
     
     }
 
+    public void setupCartasDisponibles(Integer jugadorTurno, Integer ronda) {
+        Carta c0 = new Carta();
+        Carta c1 = new Carta();
+        Carta c2 = new Carta();
+        c0.setId(0);
+        c1.setId(1);
+        c2.setId(2);
+        c0.setPoder(14);
+        c1.setPoder(13);
+        c2.setPoder(6);
+        mano.setJugadorTurno(jugadorTurno);
+        List<Carta> listaBase = new ArrayList<>();
+        
+        List<List<Carta>> cartasDisponibles = new ArrayList<>();
+        List<Carta> cartasRonda = new ArrayList<>();
+        Integer numJugadores = partida.getNumJugadores();
+        if(ronda ==1){
+            listaBase.add(c0); listaBase.add(c1); listaBase.add(c2);
+        } else if(ronda ==2){
+            listaBase.add(c0);listaBase.add(c1); 
+        } else{
+            listaBase.add(c0);
+        }
+
+        for(int i = 0;i <numJugadores; i++){
+            cartasRonda.add(null);
+            cartasDisponibles.add(listaBase);
+        }
+        mano.setCartasDisp(cartasDisponibles);
+        mano.setCartasLanzadasRonda(cartasRonda);
+    }
+
+    @Test
+    public void tirarCartaSePoneANullCartaDisponible()  {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        manoService.tirarCarta(codigo, cartaIdALanzar);
+        Carta cartaLanzada = mano.getCartasDisp().get(jugadorActual).get(cartaIdALanzar);
+        assertEquals(null, cartaLanzada);
+        
+    }
+    @Test
+    public void tirarCartaHayCartaLanzada() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        manoService.tirarCarta(codigo, cartaIdALanzar);
+        
+        Boolean hayCartaLanzada = mano.getCartasLanzadasRonda().get(jugadorActual) != null;
+        assertTrue(hayCartaLanzada);
+        
+    }
+    @Test
+    public void tirarCartaSeAvanzaDeTurno() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        manoService.tirarCarta(codigo, cartaIdALanzar);
+        Integer siguienteTurno = mano.getJugadorTurno();
+        assertEquals(mano.siguienteJugador(jugadorActual), siguienteTurno);
+    }
+
+    @Test 
+    public void tirarCartaNoDisponible() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+
+        manoService.tirarCarta(codigo, cartaIdALanzar);
+        CartaTiradaException cartaTiradaException=assertThrows(CartaTiradaException.class,()-> manoService.tirarCarta(codigo, cartaIdALanzar));
+        assertEquals("Esa carta ya fue tirada, no podés volver a hacerlo", cartaTiradaException.getMessage());
+    }
+    @Test 
+    public void tirarCartaTieneQueResponder() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,4);
+        setupCartasDisponibles(jugadorActual,1);
+        mano.setEsperandoRespuesta(true);
+       
+        CartaTiradaException cartaTiradaException =assertThrows(CartaTiradaException.class,()-> manoService.tirarCarta(codigo, cartaIdALanzar));
+        assertEquals("Tenés que responder antes de poder tirar una carta", cartaTiradaException.getMessage());
+    }
 
 
 }

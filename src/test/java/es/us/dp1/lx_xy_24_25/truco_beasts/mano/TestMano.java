@@ -517,66 +517,6 @@ public class TestMano {
         mano.setCartasLanzadasRonda(cartasRonda);
     }
 
-     @Test
-    public void tirarCartaSePoneANullCartaDisponible()  {
-        Integer jugadorActual = 0;
-        Integer cartaIdALanzar = 0;
-        setup(0,4);
-        setupCartasDisponibles(jugadorActual,1);
-
-        mano.tirarCarta(cartaIdALanzar);
-        Carta cartaLanzada = mano.getCartasDisp().get(jugadorActual).get(cartaIdALanzar);
-        assertEquals(null, cartaLanzada);
-        
-    }
-    @Test
-    public void tirarCartaHayCartaLanzada() {
-        Integer jugadorActual = 0;
-        Integer cartaIdALanzar = 0;
-        setup(0,4);
-        setupCartasDisponibles(jugadorActual,1);
-
-        mano.tirarCarta(cartaIdALanzar);
-        
-        Boolean hayCartaLanzada = mano.getCartasLanzadasRonda().get(jugadorActual) != null;
-        assertTrue(hayCartaLanzada);
-        
-    }
-    @Test
-    public void tirarCartaSeAvanzaDeTurno() {
-        Integer jugadorActual = 0;
-        Integer cartaIdALanzar = 0;
-        setup(0,4);
-        setupCartasDisponibles(jugadorActual,1);
-
-        mano.tirarCarta(cartaIdALanzar);
-        Integer siguienteTurno = mano.getJugadorTurno();
-        assertEquals(mano.siguienteJugador(jugadorActual), siguienteTurno);
-    }
-
-    @Test 
-    public void tirarCartaNoDisponible() {
-        Integer jugadorActual = 0;
-        Integer cartaIdALanzar = 0;
-        setup(0,4);
-        setupCartasDisponibles(jugadorActual,1);
-
-        mano.tirarCarta(cartaIdALanzar);
-        CartaTiradaException cartaTiradaException=assertThrows(CartaTiradaException.class,()-> mano.tirarCarta(cartaIdALanzar));
-        assertEquals("Esa carta ya fue tirada, no podés volver a hacerlo", cartaTiradaException.getMessage());
-    }
-    @Test 
-    public void tirarCartaTieneQueResponder() {
-        Integer jugadorActual = 0;
-        Integer cartaIdALanzar = 0;
-        setup(0,4);
-        setupCartasDisponibles(jugadorActual,1);
-        mano.setEsperandoRespuesta(true);
-       
-        CartaTiradaException cartaTiradaException =assertThrows(CartaTiradaException.class,()-> mano.tirarCarta(cartaIdALanzar));
-        assertEquals("Tenés que responder antes de poder tirar una carta", cartaTiradaException.getMessage());
-    }
-
     public void setupTruco(Integer equipoCantor, Integer truco){
         if(equipoCantor!=null) mano.setEquipoCantor(equipoCantor);
         if(truco!=null) mano.setPuntosTruco(truco);

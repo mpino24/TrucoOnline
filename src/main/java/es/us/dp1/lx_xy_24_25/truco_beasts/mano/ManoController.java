@@ -36,14 +36,13 @@ public class ManoController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Mano> actualizarMano(@PathVariable String codigo){
         Mano mano = manoService.getMano(codigo);
+        if(mano.getTerminada()) mano = manoService.terminarMano(codigo, mano);
         return new ResponseEntity<>(mano, HttpStatus.OK);
     }
     @PatchMapping("/tirarCarta/{cartaId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Carta> patchTirarCarta(@PathVariable String codigo, @PathVariable Integer cartaId) throws CartaTiradaException{
-        Mano mano = manoService.getMano(codigo);
-        Carta carta = mano.tirarCarta(cartaId);
-        manoService.actualizarMano(mano, codigo);
+        Carta carta = manoService.tirarCarta(codigo, cartaId);
         return new ResponseEntity<>(carta, HttpStatus.OK);
     }
 
@@ -51,8 +50,7 @@ public class ManoController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CantosTruco> patchCantarTruco(@PathVariable String codigo, @PathVariable CantosTruco cantoTruco) throws TrucoException {
         Mano mano = manoService.getMano(codigo);
-        mano.cantosTruco(cantoTruco);
-        manoService.actualizarMano(mano, codigo);
+        manoService.cantosTruco(codigo, cantoTruco);
         return new ResponseEntity<>(cantoTruco, HttpStatus.OK);
     }
     
@@ -60,8 +58,7 @@ public class ManoController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RespuestasTruco> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws TrucoException {
         Mano mano = manoService.getMano(codigo);
-        mano.responderTruco(respuestasTruco);
-        manoService.actualizarMano(mano, codigo);
+        manoService.responderTruco(codigo, respuestasTruco);
         return new ResponseEntity<>(respuestasTruco, HttpStatus.OK);
     }
 }
