@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
+
 
 
 @StatePattern.ConcreteState
@@ -33,15 +33,15 @@ public class RespuestaSubirTruco extends RespuestaTruco{
 
     @Override
     public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs, ManoService manoService,String codigo) throws Exception {
+            List<List<Integer>> secuenciaCantos, Integer queTrucoEs)  {
         if(truco == 1){
                 manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
-                manoService.cantosTruco(CantosTruco.RETRUCO,codigo);
+                manoActual =manoActual.cantosTruco(CantosTruco.RETRUCO);
         }else if(truco==2){
                 manoActual.setPuntosTruco(truco +1);
-                manoService.cantosTruco(CantosTruco.VALECUATRO,codigo);
+                manoActual= manoActual.cantosTruco(CantosTruco.VALECUATRO);
         } else {
-                throw new Exception( "No se puede subir más, capo"); //GESTIONAR MEJOR
+                throw new TrucoException( "No se puede subir más, capo"); 
         }
         return manoActual;
     }
