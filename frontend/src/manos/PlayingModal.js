@@ -2,6 +2,7 @@ import { useState, forwardRef, useEffect } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
+
 const jwt = tokenService.getLocalAccessToken();
 
 const PlayingModal = forwardRef((props, ref) => {
@@ -10,10 +11,14 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
-
+    const puntosSinTruco = 1;
+    const puntosConTruco = 2;
+    const puntosConRetruco = 3;
+    const [puntosTrucoActuales, setPuntosTrucoActuales] = useState(puntosSinTruco)
     const [draggedCarta, setDraggedCarta] = useState(null);
     const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
 
+  
     const [tirarTrigger, setTirarTrigger] = useState(0);
     const [trucoTrigger, setTrucoTrigger] = useState(0);
 
@@ -37,6 +42,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 let cartasActuales = data.cartasDisp[posicion];
                 if (cartasJugador !== cartasActuales) {
                     setCartasJugador(cartasActuales);
+                    setPuntosTrucoActuales(mano.puntosTruco)
                 }
             })
             .catch((error) => {
@@ -49,17 +55,26 @@ const PlayingModal = forwardRef((props, ref) => {
     useEffect(() => {
         let intervalId;
         fetchMano();
-        intervalId = setInterval(fetchMano, 1000);
-        return () => clearInterval(intervalId);
-    }, [game.codigo, posicion]);
+        intervalId = setInterval(fetchMano, 1000)
+        return () => clearInterval(intervalId)  
+    }, [game.codigo, posicion]) 
+
 
     useEffect(() => {
         fetchMano();
+        
     }, [tirarTrigger]);
 
     useEffect(() => {
         fetchMano();
+        
     }, [trucoTrigger]);
+
+    useEffect(()=> {
+        if(mano && puntosTrucoActuales){
+            setPuntosTrucoActuales(mano.puntosTruco)
+        }
+    }, [mano])
 
     useEffect(() => {
         const styleSheet = document.createElement('style');
@@ -365,7 +380,9 @@ const PlayingModal = forwardRef((props, ref) => {
         .then((data) => {
             if(data){
                 console.log(data)
+                
                 setTrucoTrigger((prev) => prev + 1);
+                
             }
         })
         .catch((error) => alert(error.message));
@@ -383,6 +400,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 position: 'relative', // To position the dragged card relative to this container
             }}
         >
+           
             <div>
                 <h3 style={{ color: 'orange' }}>
                     Jugador: {Number(posicion)}
@@ -449,7 +467,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 </div>
             ) : null}
 
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta &&
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales &&
                 <div style={{ 
                     width: '150px', 
                     height: '75px', 
@@ -459,13 +477,13 @@ const PlayingModal = forwardRef((props, ref) => {
                     transform: 'translateX(-50%)', 
                     top: "70%"
                 }}> 
-                    <button onClick={() => cantarTruco("TRUCO")} >Cantar TRUCO</button>
-                    <button onClick={() => cantarTruco("RETRUCO")} >Cantar RETRUCO</button>
-                    <button onClick={() => cantarTruco("VALECUATRO")} >Cantar VALECUATRO</button>
+                    {puntosTrucoActuales === puntosSinTruco && <button onClick={() => cantarTruco("TRUCO")} >Cantar TRUCO</button>}
+                    {puntosTrucoActuales === puntosConTruco && <button onClick={() => cantarTruco("RETRUCO")} >Cantar RETRUCO</button>}
+                    {puntosTrucoActuales === puntosConRetruco &&<button onClick={() => cantarTruco("VALECUATRO")} >Cantar VALECUATRO</button>}
                 </div>
             }
 
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales &&
                 <div style={{ 
                     width: '150px', 
                     height: '75px', 
@@ -477,7 +495,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 }}> 
                     <button onClick={() => responderTruco("QUIERO")} >Quiero</button>
                     <button onClick={() => responderTruco("NO_QUIERO")} >No quiero</button>
-                    <button onClick={() => responderTruco("SUBIR")} >Subir la apuesta</button>
+                    {puntosTrucoActuales !== puntosConRetruco && <button onClick={() => responderTruco("SUBIR")} >{puntosTrucoActuales === puntosSinTruco ? "Retruco" : "Valecuatro" }</button>}
                 </div>
             }
 

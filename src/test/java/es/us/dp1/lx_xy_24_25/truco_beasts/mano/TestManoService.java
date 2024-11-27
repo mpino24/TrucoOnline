@@ -452,7 +452,7 @@ public class TestManoService {
         manoService.cantosTruco(codigo,CantosTruco.TRUCO); //TRUCO
         manoService.responderTruco(codigo,RespuestasTruco.QUIERO); //QUIERO
         mano.siguienteTurno();
-        assertTrue(mano.puedeCantarTruco()); //Puede cantar el retruco
+        assertTrue(mano.comprobarSiPuedeCantarTruco()); //Puede cantar el retruco
 
         TrucoException exception = assertThrows(TrucoException.class, 
         () -> manoService.cantosTruco(codigo,CantosTruco.TRUCO));

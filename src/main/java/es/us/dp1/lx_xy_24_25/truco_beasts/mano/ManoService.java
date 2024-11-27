@@ -147,7 +147,7 @@ public class ManoService {
             } else{
                 manoActual.siguienteTurno();
             }
-
+            manoActual.comprobarSiPuedeCantarTruco();
             actualizarMano(manoActual, codigo);
             return cartaALanzar;
         } else{
@@ -175,7 +175,7 @@ public class ManoService {
 
         Mano mano = new Mano();
         try {
-            if (!manoActual.puedeCantarTruco()) {
+            if (!manoActual.comprobarSiPuedeCantarTruco()) {
                 throw new TrucoException(); 
             }
             Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
@@ -216,6 +216,7 @@ public class ManoService {
             manoActual.setEsperandoRespuesta(false);
             throw e;
         }
+        manoActual.comprobarSiPuedeCantarTruco();
 		actualizarMano(manoActual, codigo);
         return manoActual;
     }
@@ -263,7 +264,8 @@ public class ManoService {
             default:
                 throw new TrucoException( "Respuesta al truco no valida"); 
         }
-		actualizarMano(mano, codigo);
+        manoActual.comprobarSiPuedeCantarTruco();
+		actualizarMano(manoActual, codigo);
     }
 
 	public Mano terminarMano(Mano manoActual){
