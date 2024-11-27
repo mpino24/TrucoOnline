@@ -174,44 +174,49 @@ public class ManoService {
         listaRondaJugador.add(jugadorTurno);
 
         Mano mano = new Mano();
-        if (!manoActual.puedeCantarTruco()) {
-            throw new TrucoException(); 
-        }
-        Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
+        try {
+            if (!manoActual.puedeCantarTruco()) {
+                throw new TrucoException(); 
+            }
+            Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
 
-		Integer puntosTruco = manoActual.getPuntosTruco();
-		Integer puntosNoHayTruco = 1; Integer puntosHayTruco = 2; Integer puntosHayRetruco = 3;
-        switch (canto) {
-            case TRUCO: 
-                if(puntosTruco > puntosNoHayTruco){
-                    throw new TrucoException("Ya se canto el truco");
-                }
-                mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-                manoActual.copiaParcialTruco(mano);
-                break;
-            case RETRUCO:
-                if (puntosTruco < puntosHayTruco) {
-                    throw new TrucoException( "No se cantó el truco");
-                } else if(puntosTruco>puntosHayTruco){
-                    throw new TrucoException("Ya se canto el retruco");
-                }
-                mano = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-                manoActual.copiaParcialTruco(mano);
-                break;
-            case VALECUATRO:
-                if (puntosTruco < puntosHayRetruco) {
-                    throw new TrucoException( "No se cantó el retruco"); 
-                }else if(puntosTruco > puntosHayRetruco){
-                    throw new TrucoException("Ya se canto el valecuatro");
-                }
-                mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
-                manoActual.copiaParcialTruco(mano);
-            
-                break;
-            default:
-                throw new TrucoException( "Canto no valido"); 
+            Integer puntosTruco = manoActual.getPuntosTruco();
+            Integer puntosNoHayTruco = 1; Integer puntosHayTruco = 2; Integer puntosHayRetruco = 3;
+            switch (canto) {
+                case TRUCO: 
+                    if(puntosTruco > puntosNoHayTruco){
+                        throw new TrucoException("Ya se canto el truco");
+                    }
+                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    manoActual.copiaParcialTruco(mano);
+                    break;
+                case RETRUCO:
+                    if (puntosTruco < puntosHayTruco) {
+                        throw new TrucoException( "No se cantó el truco");
+                    } else if(puntosTruco>puntosHayTruco){
+                        throw new TrucoException("Ya se canto el retruco");
+                    }
+                    mano = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    manoActual.copiaParcialTruco(mano);
+                    break;
+                case VALECUATRO:
+                    if (puntosTruco < puntosHayRetruco) {
+                        throw new TrucoException( "No se cantó el retruco"); 
+                    }else if(puntosTruco > puntosHayRetruco){
+                        throw new TrucoException("Ya se canto el valecuatro");
+                    }
+                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    manoActual.copiaParcialTruco(mano);
+                
+                    break;
+                default:
+                    throw new TrucoException( "Canto no valido"); 
+            }
+        } catch (Exception e) {
+            manoActual.setEsperandoRespuesta(false);
+            throw e;
         }
-		actualizarMano(mano, codigo);
+		actualizarMano(manoActual, codigo);
         return manoActual;
     }
 
