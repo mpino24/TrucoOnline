@@ -323,6 +323,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
                     position: 'relative',
                     width: '100%',
                     height: '100%',
+                    
                   }}
                 >
                   <img
