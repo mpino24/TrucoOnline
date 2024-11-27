@@ -73,7 +73,112 @@ const CartasVolteadas = forwardRef((props, ref) => {
     animation: 'slightSwirl 5s ease-in-out infinite',
   };
 
-  let posicionMazo = { width: '0px' };
+  // Define card sizes
+  const cartaDeUna = {
+    width: '50px',
+    height: '75px',
+  };
+
+  const cartaDeDos = {
+    width: '75px',
+    height: '75px',
+  };
+
+  const cartaDeTres = {
+    width: '100px',
+    height: '75px',
+  };
+
+  const estiloMazoPropio = {
+    width: '75px',
+    height: '100px',
+  };
+
+  const estiloMazoOtro = {
+    width: '60px',
+    height: '85px',
+  };
+
+  // Define positions and rotations
+  const listaEstilos = [
+    {
+      ...cartaDeUna,
+      top: '40%',
+      left: '20%',
+      rotate: '90deg',
+    },
+    {
+      ...cartaDeUna,
+      top: '40%',
+      right: '20%',
+      rotate: '270deg',
+    },
+    {
+      ...cartaDeUna,
+      top: '70px',
+      left: '50%',
+      rotate: '180deg',
+    },
+    {
+      ...cartaDeDos,
+      top: '40%',
+      left: '20%',
+      rotate: '90deg',
+    },
+    {
+      ...cartaDeDos,
+      top: '40%',
+      right: '20%',
+      rotate: '270deg',
+    },
+    {
+      ...cartaDeDos,
+      top: '70px',
+      left: '50%',
+      rotate: '180deg',
+    },
+    {
+      ...cartaDeTres,
+      top: '40%',
+      left: '20%',
+      rotate: '90deg',
+    },
+    {
+      ...cartaDeTres,
+      top: '40%',
+      right: '20%',
+      rotate: '270deg',
+    },
+    {
+      ...cartaDeTres,
+      top: '70px',
+      left: '50%',
+      rotate: '180deg',
+    },
+    {
+      ...estiloMazoOtro,
+      top: '20%',
+      left: '21%',
+      rotate: '90deg',
+    },
+    {
+      ...estiloMazoOtro,
+      top: '20%',
+      right: '21%',
+      rotate: '270deg',
+    },
+    {
+      ...estiloMazoOtro,
+      top: '70px',
+      left: '38%',
+      rotate: '180deg',
+    },
+    {
+      ...estiloMazoPropio,
+      top: '81%',
+      left: '30%',
+    },
+  ];
 
   return (
     <>
@@ -92,110 +197,6 @@ const CartasVolteadas = forwardRef((props, ref) => {
           urlCartaVolteadas = listaUrlCartasVacias[0];
         else
           urlCartaVolteadas = listaUrlCartasVacias[4];
-
-        // Define card sizes
-        const cartaDeUna = {
-          width: '50px',
-          height: '75px',
-        };
-
-        const cartaDeDos = {
-          width: '75px',
-          height: '75px',
-        };
-
-        const cartaDeTres = {
-          width: '100px',
-          height: '75px',
-        };
-        const estiloMazoPropio = {
-          width: '75px',
-          height: '100px',
-        };
-        const estiloMazoOtro = {
-          width: '60px',
-          height: '85px',
-        };
-        // Define positions and rotations
-        const listaEstilos = [
-          {
-            ...cartaDeUna,
-            top: '40%',
-            left: '20%',
-            rotate: '90deg',
-          },
-          {
-            ...cartaDeUna,
-            top: '40%',
-            right: '20%',
-            rotate: '270deg',
-          },
-          {
-            ...cartaDeUna,
-            top: '70px',
-            left: '50%',
-            rotate: '180deg',
-          },
-          {
-            ...cartaDeDos,
-            top: '40%',
-            left: '20%',
-            rotate: '90deg',
-          },
-          {
-            ...cartaDeDos,
-            top: '40%',
-            right: '20%',
-            rotate: '270deg',
-          },
-          {
-            ...cartaDeDos,
-            top: '70px',
-            left: '50%',
-            rotate: '180deg',
-          },
-          {
-            ...cartaDeTres,
-            top: '40%',
-            left: '20%',
-            rotate: '90deg',
-          },
-          {
-            ...cartaDeTres,
-            top: '40%',
-            right: '20%',
-            rotate: '270deg',
-          },
-          {
-            ...cartaDeTres,
-            top: '70px',
-            left: '50%',
-            rotate: '180deg',
-          },
-          {
-            ...estiloMazoOtro,
-            top: '20%',
-            left: '21%',
-            rotate: '90deg',
-          },
-          {
-            ...estiloMazoOtro,
-            top: '20%',
-            right: '21%',
-            rotate: '270deg',
-          },
-          {
-            ...estiloMazoOtro,
-            top: '70px',
-            left: '38%',
-            rotate: '180deg',
-          },
-          {
-            ...estiloMazoPropio,
-            top: '81%',
-            left: '30%',
-          },
-        ];
 
         // Determine style based on position and number of cards
         let estiloSegunPosicionYNumCartas;
@@ -236,9 +237,21 @@ const CartasVolteadas = forwardRef((props, ref) => {
           else
             estiloSegunPosicionYNumCartas = listaEstilos[1];
         }
-        
+
+        // Logging for debugging
+        console.log("Eres el jugador: " + posicionListaCartas);
+        console.log("Posicion siendo recorrida: " + pos);
+        console.log("");
+        console.log("Resultado de la condicion: ", posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0);
+        console.log("Deberia entrar al bucle de mano?: ", pos === jugadorMano);
+        console.log("");
+
+        // Initialize posicionMazo with default values
+        let posicionMazo = { width: '0px' };
 
         if (pos === jugadorMano) {
+          console.log("Efectivamente ha entrado en el bucle de la mano");
+          console.log("");
 
           if (posicionListaCartas === jugadorMano)
             posicionMazo = listaEstilos[12];
@@ -246,21 +259,16 @@ const CartasVolteadas = forwardRef((props, ref) => {
             posicionMazo = listaEstilos[11];
           else if (
             posicionListaCartas + 1 === pos ||
-            posicionListaCartas + 1 > cartasDispo.length
+            posicionListaCartas + 2 > cartasDispo.length
           )
             posicionMazo = listaEstilos[10];
-          else if (posicionListaCartas - 1 == pos || posicionListaCartas - 1 < 0)
-            
+          else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
+            posicionMazo = listaEstilos[9];
+          else
             posicionMazo = listaEstilos[9];
         }
-        
-        else //Ni idea pero tiene que estar aqui 
-        posicionMazo = listaEstilos[10];
 
-       /*  else if (cartasDispo.length===2)
-          posicionMazo = listaEstilos[11]; */
-
-        // Combine styles for the outer div
+        // Combine styles for the cartasVolteadas (cards)
         const cardStyle = {
           position: 'fixed',
           margin: '5px',
@@ -272,6 +280,8 @@ const CartasVolteadas = forwardRef((props, ref) => {
           transform: 'translateX(-50%)',
           ...swirlStyle,
         };
+
+        // Combine styles for the mazo (deck)
         const mazoStyle = {
           position: 'fixed',
           margin: '5px',
@@ -297,36 +307,62 @@ const CartasVolteadas = forwardRef((props, ref) => {
           animation: 'dropShadowGlow 3s ease-in-out infinite',
         };
 
-        // Render either the carta or the mazo image based on position
         return (
-          <div key={pos} style={pos !== posicionListaCartas ? cardStyle : mazoStyle}>
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                transform: `rotate(${
-                  pos !== posicionListaCartas
-                    ? estiloSegunPosicionYNumCartas.rotate
-                    : posicionMazo.rotate || '0deg'
-                })`,
-              }}
-            >
+          <React.Fragment key={pos}>
+            {/* Always render the mazo */}
+            <div style={mazoStyle}>
               <div
                 style={{
-                  position: 'relative',
                   width: '100%',
                   height: '100%',
+                  transform: `rotate(${posicionMazo.rotate || '0deg'})`,
                 }}
               >
-                <img
-                  src={pos !== posicionListaCartas ? urlCartaVolteadas : urlMazo}
-                  alt={pos !== posicionListaCartas ? `Quedan ${cartasRestantes}` : 'Mazo'}
-                  style={pos !== posicionListaCartas ? imageStyle : mazoImageStyle}
-                />
-                {pos !== posicionListaCartas && <div style={sunsetOverlay}></div>}
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    
+                  }}
+                >
+                  <img
+                    src={urlMazo}
+                    alt="Mazo"
+                    style={mazoImageStyle}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Conditionally render cartasVolteadas */}
+            {pos !== posicionListaCartas && (
+              <div style={cardStyle}>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    transform: `rotate(${estiloSegunPosicionYNumCartas.rotate})`,
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    <img
+                      src={urlCartaVolteadas}
+                      alt={`Quedan ${cartasRestantes}`}
+                      style={imageStyle}
+                    />
+                    <div style={sunsetOverlay}></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </React.Fragment>
         );
       })}
     </>
