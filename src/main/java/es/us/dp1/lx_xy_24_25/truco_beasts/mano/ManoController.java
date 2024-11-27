@@ -55,9 +55,10 @@ public class ManoController {
     
     @PatchMapping("/responderTruco/{respuestasTruco}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RespuestasTruco> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws TrucoException {
+    public ResponseEntity<Integer> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws TrucoException {
         
         manoService.responderTruco(codigo, respuestasTruco);
-        return new ResponseEntity<>(respuestasTruco, HttpStatus.OK);
+        Integer puntosActualesTruco = manoService.getMano(codigo).getPuntosTruco();
+        return new ResponseEntity<>(puntosActualesTruco, HttpStatus.OK);
     }
 }

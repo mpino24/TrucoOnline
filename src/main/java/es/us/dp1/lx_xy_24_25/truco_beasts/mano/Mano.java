@@ -33,8 +33,10 @@ public class Mano {
     private Boolean esperandoRespuesta = false;
     private Integer jugadorIniciadorDelCanto;
     private Boolean terminada = false;
+    private Boolean puedeCantarTruco = true;
 
     private final Integer constanteEnvido=20;
+    private final Integer puntosMaximosDelTruco = 4;
     private final Integer rondasMaximasGanables = 2;
     
 
@@ -50,11 +52,19 @@ public class Mano {
         this.puntosTruco = mano.getPuntosTruco();
     }
 
-    public  Boolean puedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
+    public  Boolean comprobarSiPuedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
+        Boolean res;
+        if(getPuntosMaximosDelTruco() == getPuntosTruco()){
+            res = false;
+        } else{
+            Integer equipoCantor = getEquipoCantor();
+            Integer jugadorTurno = getJugadorTurno();
+            res =(equipoCantor == null || jugadorTurno % 2 != equipoCantor);
+            setPuedeCantarTruco(res);
+        }
+
         
-        Integer equipoCantor = getEquipoCantor();
-        Integer jugadorTurno = getJugadorTurno();
-        return (equipoCantor == null || jugadorTurno % 2 != equipoCantor);
+        return res;
     }
 
     

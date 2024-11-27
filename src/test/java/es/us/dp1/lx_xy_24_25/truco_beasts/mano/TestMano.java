@@ -324,6 +324,7 @@ public class TestMano {
         setup(2, 4);
         setUpCartas(setUpListaCartasDispo(2));
         mano.setJugadorTurno(0);
+        mano.setRondaActual(2);
         assertFalse(mano.puedeCantarEnvido()); 
     }
     @Test
@@ -331,6 +332,7 @@ public class TestMano {
         setup(0, 4);
         setUpCartas(setUpListaCartasDispo(1));
         mano.setJugadorTurno(3);
+        mano.setRondaActual(2);
         assertFalse(mano.puedeCantarEnvido());
     }
 
@@ -501,7 +503,7 @@ public class TestMano {
         setup(0, 4);
         setupTruco(null, null);
         mano.setJugadorTurno(3);
-        assertTrue(mano.puedeCantarTruco());
+        assertTrue(mano.comprobarSiPuedeCantarTruco());
     }
 
     @Test 
@@ -509,7 +511,7 @@ public class TestMano {
         setup(0, 4);
         setupTruco(0, 2);
         mano.setJugadorTurno(3);
-        assertTrue(mano.puedeCantarTruco());
+        assertTrue(mano.comprobarSiPuedeCantarTruco());
     }
 
     @Test 
@@ -517,7 +519,7 @@ public class TestMano {
         setup(0, 4);
         setupTruco(1, 2);
         mano.setJugadorTurno(3);
-        assertFalse(mano.puedeCantarTruco());
+        assertFalse(mano.comprobarSiPuedeCantarTruco());
     }
 
     @Test 
@@ -525,7 +527,7 @@ public class TestMano {
         setup(0, 2);
         setupTruco(0, 2);
         mano.setJugadorTurno(1);
-        assertTrue(mano.puedeCantarTruco());
+        assertTrue(mano.comprobarSiPuedeCantarTruco());
     }
 
     @Test 
@@ -533,7 +535,7 @@ public class TestMano {
         setup(0, 2);
         setupTruco(0, 2);
         mano.setJugadorTurno(0);
-        assertFalse(mano.puedeCantarTruco());
+        assertFalse(mano.comprobarSiPuedeCantarTruco());
     }
    
 }
