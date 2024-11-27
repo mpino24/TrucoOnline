@@ -25,6 +25,7 @@ public class Mano {
     private Integer jugadorTurno; // Por defecto sera el jugador mano
     private List<Carta> cartasLanzadasRonda; // IMPORTANTE !!!! : se inicializa como lista de nulls y cada carta sustituye al null de la posicion de su jugador (se borran en cada ronda)
     private List<Integer> ganadoresRondas;
+    private Integer rondaActual = 1;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
     private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
@@ -34,7 +35,7 @@ public class Mano {
     private Boolean terminada = false;
 
     private final Integer constanteEnvido=20;
-
+    private final Integer rondasMaximasGanables = 2;
     
 
     private List<Integer> envidos = new ArrayList<>();
@@ -129,7 +130,7 @@ public class Mano {
         Integer empezador = null;
         List<Carta> cartasLanzadas = getCartasLanzadasRonda();
         List<Integer> empate = new ArrayList<>();
-        
+
         for (int i = 0; i < cartasLanzadas.size(); i++) {
             Integer poder = cartasLanzadas.get(i).getPoder();
             if (poderMayor < poder) {
@@ -144,26 +145,35 @@ public class Mano {
             }
         }
 
-        
         gestionarGanadoresRonda(empate, empezador);
         
-
         empezador = empezador != null ? empezador : cercanoAMano(empate);
 
-        if(obtenerRondaActual()==3) {
-            setTerminada(true);
-        }else{
-            List<Carta> listaCartasLanzadasNuevo = new ArrayList<>();
-            for (int i = 0; i < getPartida().getNumJugadores(); i++){
-                listaCartasLanzadasNuevo.add(null);
-            }
-            setCartasLanzadasRonda(listaCartasLanzadasNuevo);
-            setJugadorTurno(empezador);
+        setRondaActual(getRondaActual()+1);
+
+        haTerminadoLaMano();
+        List<Carta> listaCartasLanzadasNuevo = new ArrayList<>();
+        for (int i = 0; i < getPartida().getNumJugadores(); i++){
+            listaCartasLanzadasNuevo.add(null);
         }
+        setCartasLanzadasRonda(listaCartasLanzadasNuevo);
+        setJugadorTurno(empezador);
         return empezador;
     }
 
-    public  void gestionarGanadoresRonda(List<Integer> empates, Integer ganador){
+    public void haTerminadoLaMano() {
+        Boolean res = false;
+        Integer rondasEquipo1 = getGanadoresRondas().get(0);
+        Integer rondasEquipo2 = getGanadoresRondas().get(1);
+        if(getRondaActual()==4) {
+            res = true;
+        } else if(getGanadoresRondas().contains(rondasMaximasGanables) && rondasEquipo1+rondasEquipo2!=4) {
+            res = true;
+        }
+        setTerminada(res);
+    }
+
+    public void gestionarGanadoresRonda(List<Integer> empates, Integer ganador){
 
         List<Integer> ganadoresRonda = getGanadoresRondas();
         Integer ganarRonda = 1;
@@ -191,7 +201,6 @@ public class Mano {
                 }
             }
 
-            
         }
 
         if(hayEquipo1 && hayEquipo2){
@@ -232,7 +241,7 @@ public class Mano {
     public Boolean puedeCantarEnvido(){
 
         Boolean sePuede = false;
-        Boolean esRondaUno = obtenerRondaActual() ==1;
+        Boolean esRondaUno = getRondaActual() ==1;
         Boolean esPie = false;
         Boolean noHayTruco = getPuntosTruco() <= 1;
         Boolean noSeCanto = getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
@@ -249,56 +258,18 @@ public class Mano {
         return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
 
     }
-
-    public  Integer obtenerRondaActual(){
-
-        Integer ronda = 0;
-        Integer ganadores = getGanadoresRondas().get(0) + getGanadoresRondas().get(1);
-        if (ganadores == 0) ronda = 1;
-        else if(ganadores == 1) ronda = 2;
-        else ronda = 3;
-        return ronda;
-    }
                                 
     public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
         Integer res = null;
-        Integer rondaActual = obtenerRondaActual();
+        Integer rondaActual = getRondaActual();
         Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
         Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
         Integer rondaCanto = cantoHecho.get(0);
-        Integer jugadorCanto = cantoHecho.get(1); 
-        if(partida.getNumJugadores() ==2){
-            res = jugadorSiguiente;
-        } else if (rondaActual==rondaCanto && jugadorAnterior== jugadorCanto) {
+        Integer jugadorCanto = getJugadorIniciadorDelCanto(); 
+        if(jugadorCanto==jugadorAnterior && rondaActual==rondaCanto){
             res = jugadorAnterior;
         }else{
             res = jugadorSiguiente;
-        }
-        return res;
-    }
-
-    public  Integer aQuienLeToca() {
-        Integer res = null;
-
-        List<Integer> cantoAnterior = getSecuenciaCantoLista().get(secuenciaCantoLista.size()-2);
-        List<Integer> cantoAhora = getSecuenciaCantoLista().get(secuenciaCantoLista.size()-1);
-
-        Integer rondaActual = obtenerRondaActual();
-        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
-        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
-
-        Integer rondaCantoAnterior = cantoAnterior.get(0);
-        Integer jugadorCantoAnterior = cantoAnterior.get(1);
-
-        Integer rondaCantoAhora = cantoAhora.get(0);
-        Integer jugadorCantoAhora = cantoAhora.get(1);
-
-       
-
-        if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
-            res = jugadorTurno;
-        }else{
-            res = jugadorAnterior;
         }
         return res;
     }

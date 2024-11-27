@@ -36,7 +36,6 @@ public class ManoController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Mano> actualizarMano(@PathVariable String codigo){
         Mano mano = manoService.getMano(codigo);
-        if(mano.getTerminada()) mano = manoService.terminarMano(codigo, mano);
         return new ResponseEntity<>(mano, HttpStatus.OK);
     }
     @PatchMapping("/tirarCarta/{cartaId}")

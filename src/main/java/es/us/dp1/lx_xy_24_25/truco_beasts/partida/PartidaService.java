@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import jakarta.validation.Valid;
 
 @Service
 public class PartidaService {
@@ -28,13 +28,11 @@ public class PartidaService {
 
 	UserService userService;
 	PartidaJugadorService partidaJugadorService;
-	ManoService manoService;
 
 
 	@Autowired
-	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService, ManoService manoService) {
+	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService) {
 		this.partidaRepository = partidaRepository;
-		this.manoService = manoService;
 		this.userService = userService;
 		this.partidaJugadorService = partidaJugadorService;
 
@@ -74,6 +72,15 @@ public class PartidaService {
 		return partida;
 	}
 
+	@Transactional
+	public Partida updatePartida(@Valid Partida partida, Integer idToUpdate) {
+		Partida toUpdate = findPartidaById(idToUpdate);
+	
+		BeanUtils.copyProperties(partida, toUpdate, "id");
+		partidaRepository.save(toUpdate);
+		return toUpdate;
+	}
+
 	@Transactional(readOnly = true)
 	public Partida findPartidaById(int id) throws DataAccessException{
 		return partidaRepository.findById(id).get();
@@ -104,7 +111,6 @@ public class PartidaService {
 		partida.setJugadorMano(jugadorMano);
 		User currentUser= userService.findCurrentUser();
 		User creadorPartida = partidaJugadorService.getGameCreator(partida);
-		manoService.crearMano(partida);
 		if(currentUser.getId().equals(creadorPartida.getId())){
 			partida.setInstanteInicio(LocalDateTime.now());
 		}else{

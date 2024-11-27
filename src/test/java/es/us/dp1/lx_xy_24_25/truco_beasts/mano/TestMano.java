@@ -281,29 +281,6 @@ public class TestMano {
     }
 
     @Test
-    public void obtenerRondaActualRondaUno(){
-        setup(3, 4);
-        setUpCartas(setUpListaCartasDispo(3));
-        Integer ronda = mano.obtenerRondaActual();
-        assertEquals(1, ronda);
-    }
-    @Test
-    public void obtenerRondaActualRondaDos(){
-        setup(3, 4);
-        setUpCartas(setUpListaCartasDispo(2));
-        Integer ronda = mano.obtenerRondaActual();
-        assertEquals(2, ronda);
-    }
-    @Test
-    public void obtenerRondaActualRondaTres(){
-        setup(3, 4);
-        setUpCartas(setUpListaCartasDispo(1));
-        Integer ronda = mano.obtenerRondaActual();
-        assertEquals(3, ronda);
-    }
-
-
-    @Test
     public void sePuedeCantarEnvidoDeDos(){
         setup(0, 1);
         setUpCartas(setUpListaCartasDispo(3));

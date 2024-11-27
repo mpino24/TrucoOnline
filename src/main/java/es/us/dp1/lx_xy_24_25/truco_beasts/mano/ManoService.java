@@ -18,6 +18,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
@@ -33,6 +34,8 @@ public class ManoService {
     
     private final CartaRepository cartaRepository;
 
+    private final PartidaService partidaService;
+
 	private final ConverterTruco converterTruco = new ConverterTruco();
     private final ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco(this);
 
@@ -40,8 +43,9 @@ public class ManoService {
     
 
     @Autowired
-    public ManoService(CartaRepository cartaRepository) {
+    public ManoService(CartaRepository cartaRepository, PartidaService partidaService) {
         this.cartaRepository = cartaRepository;
+        this.partidaService = partidaService;
     }
 
     public void actualizarMano(Mano mano, String codigo){
@@ -56,8 +60,8 @@ public class ManoService {
     public Mano getMano(String codigo) throws IllegalArgumentException{
         Mano mano=  manosPorPartida.get(codigo);
         if(mano == null){
-            throw new IllegalArgumentException("No hay una mano asociada a esa partida");
-        }
+            crearMano(partidaService.findPartidaByCodigo(codigo));
+        } else if(mano.getTerminada()) mano = terminarMano(mano);
         return mano;
     }
 
@@ -158,7 +162,7 @@ public class ManoService {
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
 
-        Integer rondaActual = manoActual.obtenerRondaActual();
+        Integer rondaActual = manoActual.getRondaActual();
         List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
         List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
         if(manoActual.getEsperandoRespuesta()==false){
@@ -229,8 +233,7 @@ public class ManoService {
                 
                 mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco, secuenciaCantos, queTrucoEs);
                 manoActual.copiaParcialTruco(mano);
-                manoActual.setEsperandoRespuesta(false);
-                manoActual.setJugadorTurno(manoActual.getJugadorIniciadorDelCanto());
+                
                 puntosTruco= manoActual.getPuntosTruco();
                 if(puntosTruco > maximoPuntajeTruco){
                     manoActual.setPuntosTruco(maximoPuntajeTruco);
@@ -258,23 +261,26 @@ public class ManoService {
 		actualizarMano(mano, codigo);
     }
 
-	public Mano terminarMano(String codigo, Mano manoActual){
+	public Mano terminarMano(Mano manoActual){
 		Partida partida = manoActual.getPartida();
 		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
 		
 		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
 
+        Integer puntosEquipo1 = partida.getPuntosEquipo1();
+        Integer puntosEquipo2 = partida.getPuntosEquipo2();
+
 		if(ganadoresRondaActual.get(0) == ganadoresRondaActual.get(1)){ // si hay empate, gana el mano
 
-			if (equipoMano ==0)  partida.setPuntosEquipo1(manoActual.getPuntosTruco());
+			if (equipoMano ==0)  partida.setPuntosEquipo1(puntosEquipo1+manoActual.getPuntosTruco());
 
-			else partida.setPuntosEquipo2(manoActual.getPuntosTruco());
+			else partida.setPuntosEquipo2(puntosEquipo2+manoActual.getPuntosTruco());
 			
-		} else if (ganadoresRondaActual.get(0) >  ganadoresRondaActual.get(1)){
-			partida.setPuntosEquipo1(manoActual.getPuntosTruco());
+		} else if (ganadoresRondaActual.get(0) > ganadoresRondaActual.get(1)){
+			partida.setPuntosEquipo1(puntosEquipo1+manoActual.getPuntosTruco());
 
 		} else {
-			partida.setPuntosEquipo2(manoActual.getPuntosTruco());
+			partida.setPuntosEquipo2(puntosEquipo2+manoActual.getPuntosTruco());
 		}
 
 		if (partida.getEstado() == Estado.FINISHED) {
@@ -282,8 +288,8 @@ public class ManoService {
 		} else {
             manosPorPartida.remove(partida.getCodigo());
 			partida.setJugadorMano((partida.getJugadorMano() + 1) % partida.getNumJugadores());
+            partidaService.updatePartida(partida, partida.getId());
 			return crearMano(partida);
-            
 		}
 		
 		

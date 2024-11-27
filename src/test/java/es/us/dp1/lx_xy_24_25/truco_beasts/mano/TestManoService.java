@@ -21,6 +21,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
@@ -39,6 +40,7 @@ public class TestManoService {
 
    
     CartaRepository cartaRepository;
+    PartidaService partidaService;
 
 
     public void setup(Integer jugMano, Integer numJugadores) {
@@ -51,7 +53,7 @@ public class TestManoService {
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
         
-        manoService = new ManoService(cartaRepository);
+        manoService = new ManoService(cartaRepository, partidaService);
         codigo = partida.getCodigo();
         manoService.actualizarMano(mano, codigo);
         
@@ -73,7 +75,7 @@ public class TestManoService {
 
         when(cartaRepository.findById(anyInt())).thenReturn(Optional.of(carta));
         
-        manoService = new ManoService(cartaRepository);
+        manoService = new ManoService(cartaRepository, partidaService);
     
         List<List<Carta>> cartasRepartidas = manoService.repartirCartas(partida);
     
@@ -110,6 +112,7 @@ public class TestManoService {
             listaBase.add(c0);
             
         }
+        mano.setRondaActual(ronda);
 
         for(int i = 0;i <numJugadores; i++){
             cartasRonda.add(null);
@@ -177,6 +180,17 @@ public class TestManoService {
        
         CartaTiradaException cartaTiradaException =assertThrows(CartaTiradaException.class,()-> manoService.tirarCarta(codigo, cartaIdALanzar));
         assertEquals("Tenés que responder antes de poder tirar una carta", cartaTiradaException.getMessage());
+    }
+    @Test
+    public void tirarCartaCambiaDeRonda() {
+        Integer jugadorActual = 0;
+        Integer cartaIdALanzar = 0;
+        setup(0,2);
+        setupCartasDisponibles(jugadorActual,1);
+        manoService.tirarCarta(codigo, cartaIdALanzar);
+        cartaIdALanzar = 1;
+        manoService.tirarCarta(codigo, cartaIdALanzar);
+        assertEquals(2, mano.getRondaActual());
     }
 
     public void setupTruco(Integer equipoCantor, Integer truco){
