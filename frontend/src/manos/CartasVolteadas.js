@@ -148,7 +148,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
       top: '40%',
       right: '20%',
       rotate: '270deg',
-    },
+    }, //7
     {
       ...cartaDeTres,
       top: '70px',
@@ -166,7 +166,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
       top: '20%',
       right: '21%',
       rotate: '270deg',
-    },
+    }, //10
     {
       ...estiloMazoOtro,
       top: '70px',
@@ -257,13 +257,13 @@ const CartasVolteadas = forwardRef((props, ref) => {
             posicionMazo = listaEstilos[12];
           else if ((posicionListaCartas + pos) % 2 === 0)
             posicionMazo = listaEstilos[11];
+          else if (posicionListaCartas - 1 === pos || (posicionListaCartas - 1 < 0 && jugadorMano!=1))
+            posicionMazo = listaEstilos[9];
           else if (
             posicionListaCartas + 1 === pos ||
             posicionListaCartas + 2 > cartasDispo.length
           )
             posicionMazo = listaEstilos[10];
-          else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
-            posicionMazo = listaEstilos[9];
           else
             posicionMazo = listaEstilos[9];
         }
