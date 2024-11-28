@@ -52,6 +52,7 @@
   .swirl-glow-text {
     display: inline-block;
     animation: slightSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+    color:aliceblue
   }
   
   /* Base Card Styles */
@@ -165,19 +166,23 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    
   }
   
   /* Truco Buttons */
   .truco-button-container button {
     padding: 10px;
-    border: none;
+    border: 3px solid rgb(212, 113, 0);
     border-radius: 5px;
-    background-color: orange;
+    background-color: rgba(255, 166, 0, 0.382);
     color: white;
     font-weight: bold;
     cursor: pointer;
     position: relative;
     z-index: 1; /* Ensure text is above overlay */
+    animation: dropShadowGlow 3s ease-in-out infinite;
+
+    
   }
   
   .truco-button-container button:hover {
@@ -201,11 +206,20 @@
     cursor: pointer;
     position: relative;
     z-index: 1;
+    animation: none;
+
   }
+
+  
   
   .responder-truco-buttons button:hover {
     background-color: darkorange;
   }
+
+  .animated-button {
+    animation: dropShadowGlow 3s ease-in-out infinite;
+}
+  
   
   /* Player Heading */
   .player-heading {

@@ -227,6 +227,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (
+        <>
         <div style={{ 
             backgroundImage: 'url(/fondos/fondoPlayingModal.jpg)',
             backgroundSize: 'cover', 
@@ -235,7 +236,10 @@ const PlayingModal = forwardRef((props, ref) => {
             height: '100vh', 
             width: '100vw',
             position: 'relative', // To position the dragged card relative to this container
+            zIndex:-1
         }}>
+            </div>
+            <div>
             <div>
                 <h3 className="player-heading">
                     Jugador: {Number(posicion)}
@@ -287,16 +291,19 @@ const PlayingModal = forwardRef((props, ref) => {
 
             {/* Responder Truco Buttons */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales &&
+            <div>
                 <div className="truco-button-container responder-truco-buttons"> 
                     <button onClick={() => responderTruco("QUIERO")} >Quiero</button>
                     <button onClick={() => responderTruco("NO_QUIERO")} >No quiero</button>
-                    <button onClick={() => responderTruco('SUBIR')}>
+                    <button style={{animation: 'dropShadowGlow 3s ease-in-out infinite'}}
+                     onClick={() => responderTruco('SUBIR')}>
                         <span className="swirl-glow-text">
                             {puntosTrucoActuales === puntosSinTruco
                                 ? '¡Retruco!'
                                 : '¡Vale Cuatro!'}
                         </span>
                     </button>
+                   </div> 
                 </div>
             }
 
@@ -306,6 +313,7 @@ const PlayingModal = forwardRef((props, ref) => {
             {mano && console.log(mano)}
             {console.log(posicion)}
         </div>
+        </>
     )
 });
 
