@@ -335,7 +335,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     <button onClick={() => responderTruco("NO_QUIERO")}>No quiero</button>
                     {puntosTrucoActuales==puntosConRetruco && 
                         <button style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }} 
-                            onClick={() => responderTruco("QUIERO")}>Quiero</button>}
+                            onClick={() => responderTruco("QUIERO")}><span className="swirl-glow-text"> ¡Quiero!</span></button>}
 
                     {puntosTrucoActuales!=puntosConRetruco && <button
                         style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
