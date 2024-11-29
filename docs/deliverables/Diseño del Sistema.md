@@ -899,7 +899,7 @@ Map creado:
 ```Java
 private final Map<String, Mano> manosPorPartida = new HashMap<>();
 ```
-Método actualizar mano creado para actualizar el Map:
+Método actualizarMano creado para actualizar la mano correcta:
 ```Java
 public void actualizarMano(Mano mano, String codigo){
         Mano manoAnterior = manosPorPartida.get(codigo);
