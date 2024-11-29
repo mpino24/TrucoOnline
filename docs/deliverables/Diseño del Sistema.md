@@ -1025,4 +1025,45 @@ Sobrecargábamos el servicio con funciones que no eran necesarias realizar ahí.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 El código de ManoService es más reducido y muchos de sus métodos, al estar ahora en la clase Mano, no requieren del código de la partida a la que pertenece la mano en cuestión.
 
-
+### Refactorización para eliminar obtenerRondaActual y quienResponde: 
+En esta refactorización hemos conseguido simplificar mucho el código eliminando obtenerRondaActual y quienResponde (funciones de la clase Mano). La segunda función (de nombre no tan intuitivo como la primera) era usada para saber a qué jugador le tocaba tirar carta tras una secuencia de cantos de truco, retruco y valecuatro.
+#### Estado inicial del código
+```Java
+public  Integer obtenerRondaActual(){
+        Integer ronda = 0;
+        Integer ganadores = getGanadoresRondas().get(0) + getGanadoresRondas().get(1);
+        if (ganadores == 0) ronda = 1;
+        else if(ganadores == 1) ronda = 2;
+        else ronda = 3;
+        return ronda;
+}
+public  Integer aQuienLeToca() {
+        Integer res = null;
+        List<Integer> cantoAnterior = getSecuenciaCantoLista().get(secuenciaCantoLista.size()-2);
+        List<Integer> cantoAhora = getSecuenciaCantoLista().get(secuenciaCantoLista.size()-1);
+        Integer rondaActual = obtenerRondaActual();
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        Integer rondaCantoAnterior = cantoAnterior.get(0);
+        Integer jugadorCantoAnterior = cantoAnterior.get(1);
+        Integer rondaCantoAhora = cantoAhora.get(0);
+        Integer jugadorCantoAhora = cantoAhora.get(1);
+       
+        if ((rondaCantoAnterior == rondaActual && rondaCantoAhora == rondaActual) && (jugadorCantoAnterior==jugadorTurno && jugadorCantoAhora== jugadorSiguiente)){
+            res = jugadorTurno;
+        }else{
+            res = jugadorAnterior;
+        }
+        return res;
+}
+```
+#### Estado del código refactorizado
+Ahora esas funciones no existen y hemos creado dos nuevas propiedades para la clase mano que nos dan el resultado esperado:
+```Java
+private Integer rondaActual = 1;
+private Integer jugadorIniciadorDelCanto;
+```
+#### Problema que nos hizo realizar la refactorización
+La función obtenerRondaActual sólo calculaba la ronda actual para casos específicos en los que el jugador pie (el que está a la izquierda del jugador mano) era el último en tirar una carta, cosa que no siempre es así. La función quienResponde tampoco funcionaba para todos los casos porque era bastante complicado tratar de contemplar todas las posibilidades.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ya no es necesario calcular ni la ronda actual ni el jugador al que le toca tirar carta tras una secuencia de cantos mediante funciones.
