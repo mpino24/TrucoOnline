@@ -94,7 +94,7 @@ public class PartidaJugadorService {
             } else {
                 throw new NotAuthorizedException("No tienes permiso para eliminar a jugadores de la partida");
             }
-        } else {    
+        } else {
             pjRepository.deleteByPlayerId(currentUser.getId());
             PartidaJugador nuevoCreador = jugadores.stream().filter(pj -> !pj.getPlayer().getId().equals(currentUser.getId())).findFirst().orElse(null);
             if (creadorId != null && creadorId.equals(currentUser.getId()) && nuevoCreador != null) {
@@ -104,35 +104,34 @@ public class PartidaJugadorService {
                 partidaRepository.delete(partida);
             }
         }
-    }   
-
-
-@Transactional(readOnly = true)
-public List<PartidaJugadorDTO> getPlayersConnectedTo(String partidaCode){ 
-        return pjRepository.findPlayersConnectedTo(partidaCode).stream().map(pj-> new PartidaJugadorDTO(pj)).toList();
     }
 
     @Transactional(readOnly = true)
-public Partida getPartidaOfUserId(Integer userId){
-        Optional<Partida> res= pjRepository.findPartidaByUserId(userId);
-        if(res.isEmpty()){
+    public List<PartidaJugadorDTO> getPlayersConnectedTo(String partidaCode) {
+        return pjRepository.findPlayersConnectedTo(partidaCode).stream().map(pj -> new PartidaJugadorDTO(pj)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Partida getPartidaOfUserId(Integer userId) {
+        Optional<Partida> res = pjRepository.findPartidaByUserId(userId);
+        if (res.isEmpty()) {
             throw new ResourceNotFoundException("El usuario no está en ninguna partida.");
-        }else{
+        } else {
             return res.get();
         }
     }
 
     @Transactional
-public void changeTeamOfUser(Integer userId) throws TeamIsFullException{
+    public void changeTeamOfUser(Integer userId) throws TeamIsFullException {
         Partida partida = getPartidaOfUserId(userId);
-        List<Integer> posiciones =pjRepository.lastPosition(partida.getId());
-        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj-> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
-        if(partjugador==null){
+        List<Integer> posiciones = pjRepository.lastPosition(partida.getId());
+        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj -> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+        if (partjugador == null) {
             throw new ResourceNotFoundException("El usuario no pertenece a la partida");
         }
         Integer posInicial = partjugador.getPosicion();
-        Integer posNueva = IntStream.range(0, partida.getNumJugadores()).boxed().filter(p->!posiciones.contains(p)).filter(p->posInicial%2!=p%2).findFirst().orElse(null);
-        if(posNueva==null){
+        Integer posNueva = IntStream.range(0, partida.getNumJugadores()).boxed().filter(p -> !posiciones.contains(p)).filter(p -> posInicial % 2 != p % 2).findFirst().orElse(null);
+        if (posNueva == null) {
             throw new TeamIsFullException();
         }
         partjugador.setPosicion(posNueva);
@@ -140,13 +139,13 @@ public void changeTeamOfUser(Integer userId) throws TeamIsFullException{
     }
 
     @Transactional(readOnly = true)
-public User getGameCreator(Partida p){
+    public User getGameCreator(Partida p) {
         Optional<PartidaJugador> pj = pjRepository.findCreator(p.getId());
-        if(pj.isEmpty()){
+        if (pj.isEmpty()) {
             throw new ResourceNotFoundException("Creador de la partida no encontrado");
         }
         return userService.findUser(pj.get().getPlayer().getId());
 
     }
-    
+
 }

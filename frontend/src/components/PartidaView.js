@@ -59,7 +59,7 @@ const PartidaView = forwardRef((props, ref) => {
             <div style={{ display: 'flex', alignItems: 'center' }}>
             <p>{connectedUsers}/{game.numJugadores} jugadores</p>
             {
-                connectedUsers < game.numJugadores &&
+                game && connectedUsers < game.numJugadores &&
                     <Link
                         to={`/partidas?partidaCode=${game.codigo}`}
                         style={{ textDecoration: "none" }}
@@ -69,6 +69,7 @@ const PartidaView = forwardRef((props, ref) => {
                     </Link> 
             }
             </div>
+            {game && 
             <Link
                 to={`/partidas?partidaCode=${game.codigo}`}
                 style={{ textDecoration: "none" }}
@@ -76,6 +77,7 @@ const PartidaView = forwardRef((props, ref) => {
                     Ver
                 </button>
             </Link>
+            }
 
         </div>
     )
