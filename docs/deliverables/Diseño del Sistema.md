@@ -937,3 +937,92 @@ Sin la refactorización no era posible relacionar las manos que se juegan al mis
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora es posible que distintos jugadores juegen partidas simultáneamente sin que las acciones realizadas en la mano de una partida afecten en las de las otras partidas.
 
+### Refactorización para mover funciones de ManoService a Mano: 
+En esta refactorización hemos movido la mayoría de las funciones de ManoService a Mano, pues hemos considerado que todas ellas son funciones que puede realizar un objeto Mano sobre sí mismo sin necesidad de un servicio que requiera además del código de la partida a la que pertenece la mano sobre la que está trabajando.
+#### Estado inicial del código
+Ejemplos de funciones que estaban en ManoService:
+```Java
+public  void siguienteTurno(String codigo) {
+        Mano manoActual = getMano(codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+            
+        Integer jugadorActual = manoActual.getJugadorTurno();
+        Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
+        manoActual.setJugadorTurno(siguiente);
+        actualizarMano(manoActual, codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+}
+public  Integer compararCartas(String codigo) {
+        Mano manoActual = getMano(codigo);
+        Integer poderMayor = 0;
+        Integer empezador = null;
+        List<Carta> cartasLanzadas = manoActual.getCartasLanzadasRonda();
+        List<Integer> empate = new ArrayList<>();
+        
+        for (int i = 0; i < cartasLanzadas.size(); i++) {
+            Integer poder = cartasLanzadas.get(i).getPoder();
+            if (poderMayor < poder) {
+                poderMayor = poder;
+                empezador = i;
+            } else if (poderMayor == poder) {
+                empate.add(i);
+                if (empate.size() == 1) {
+                    empate.add(empezador);
+                }
+                empezador = null;
+            }
+        }
+        
+        gestionarGanadoresRonda(empate, empezador, codigo);
+        
+        empezador = empezador != null ? empezador : cercanoAMano(empate,codigo);
+        manoActual.setCartasLanzadasRonda(new ArrayList<>());
+        manoActual.setJugadorTurno(empezador);
+        actualizarMano(manoActual, codigo);
+        return empezador;
+}
+```
+#### Estado del código refactorizado
+Las funciones anteriores en Mano:
+```Java
+public  void siguienteTurno() {      
+        Integer jugadorActual = getJugadorTurno();
+        Integer siguiente = (jugadorActual + 1) % getPartida().getNumJugadores();
+        setJugadorTurno(siguiente);
+    }
+public  Integer compararCartas() {
+        Integer poderMayor = 0;
+        Integer empezador = null;
+        List<Carta> cartasLanzadas = getCartasLanzadasRonda();
+        List<Integer> empate = new ArrayList<>();
+        
+        for (int i = 0; i < cartasLanzadas.size(); i++) {
+            Integer poder = cartasLanzadas.get(i).getPoder();
+            if (poderMayor < poder) {
+                poderMayor = poder;
+                empezador = i;
+            } else if (poderMayor == poder) {
+                empate.add(i);
+                if (empate.size() == 1) {
+                    empate.add(empezador);
+                }
+                empezador = null;
+            }
+        }
+        
+        gestionarGanadoresRonda(empate, empezador);
+        
+        empezador = empezador != null ? empezador : cercanoAMano(empate);
+        List<Carta> listaCartasLanzadasNuevo = new ArrayList<>();
+        for (int i = 0; i < getPartida().getNumJugadores(); i++){
+            listaCartasLanzadasNuevo.add(null);
+        }
+        setCartasLanzadasRonda(listaCartasLanzadasNuevo);
+        setJugadorTurno(empezador);
+        return empezador;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Sobrecargábamos el servicio con funciones que no eran necesarias realizar ahí.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+El código de ManoService es más reducido y muchos de sus métodos, al estar ahora en la clase Mano, no requieren del código de la partida a la que pertenece la mano en cuestión.
+
+
