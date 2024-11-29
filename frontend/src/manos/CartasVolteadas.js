@@ -1,4 +1,5 @@
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef } from 'react';
+import './CartasVolteadas.css';
 
 const listaUrlCartasVacias = [
   "http://localhost:8080/resources/images/cartas/1carta.jpg",
@@ -11,93 +12,12 @@ const listaUrlCartasVacias = [
 const CartasVolteadas = forwardRef((props, ref) => {
   const { cartasDispo, posicionListaCartas, jugadorMano, numJugadores } = props;
 
-  // Inject keyframes for animations once
-  useEffect(() => {
-    const styleSheet = document.createElement('style');
-    styleSheet.type = 'text/css';
-    styleSheet.innerText = `
-      @keyframes holoGlow {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
-      }
-
-      @keyframes slightSwirl {
-        0% { transform: rotate(0deg); }
-        25% { transform: rotate(2deg); }
-        50% { transform: rotate(0deg); }
-        75% { transform: rotate(-2deg); }
-        100% { transform: rotate(0deg); }
-      }
-
-      @keyframes dropShadowGlow {
-        0%, 100% {
-          filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
-        }
-        50% {
-          filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
-        }
-      }
-    `;
-    document.head.appendChild(styleSheet);
-
-    // Cleanup on unmount
-    return () => {
-      document.head.removeChild(styleSheet);
-    };
-  }, []);
-
-  // Define the sunset-like overlay style
-  const sunsetOverlay = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '140%',
-    height: '140%',
-    background: `
-      radial-gradient(
-        circle at 50% 50%, 
-        rgba(255, 223, 186, 0.5) 0%, 
-        rgba(255, 183, 76, 0.5) 40%, 
-        rgba(255, 140, 0, 0.6) 70%
-      )
-    `,
-    backgroundSize: '400% 400%',
-    animation: 'holoGlow 3s ease-in-out infinite',
-    mixBlendMode: 'overlay',
-    pointerEvents: 'none',
-    borderRadius: '8px',
-  };
-
-  // Swirl animation style
-  const swirlStyle = {
-    animation: 'slightSwirl 5s ease-in-out infinite',
-  };
-
   // Define card sizes
-  const cartaDeUna = {
-    width: '50px',
-    height: '75px',
-  };
-
-  const cartaDeDos = {
-    width: '75px',
-    height: '75px',
-  };
-
-  const cartaDeTres = {
-    width: '100px',
-    height: '75px',
-  };
-
-  const estiloMazoPropio = {
-    width: '75px',
-    height: '100px',
-  };
-
-  const estiloMazoOtro = {
-    width: '60px',
-    height: '85px',
-  };
+  const cartaDeUna = { width: '50px', height: '75px' };
+  const cartaDeDos = { width: '75px', height: '75px' };
+  const cartaDeTres = { width: '100px', height: '75px' };
+  const estiloMazoPropio = { width: '75px', height: '100px' };
+  const estiloMazoOtro = { width: '60px', height: '85px' };
 
   // Define positions and rotations
   const listaEstilos = [
@@ -242,7 +162,10 @@ const CartasVolteadas = forwardRef((props, ref) => {
         console.log("Eres el jugador: " + posicionListaCartas);
         console.log("Posicion siendo recorrida: " + pos);
         console.log("");
-        console.log("Resultado de la condicion: ", posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0);
+        console.log(
+          "Resultado de la condicion: ",
+          posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0
+        );
         console.log("Deberia entrar al bucle de mano?: ", pos === jugadorMano);
         console.log("");
 
@@ -257,7 +180,10 @@ const CartasVolteadas = forwardRef((props, ref) => {
             posicionMazo = listaEstilos[12];
           else if ((posicionListaCartas + pos) % 2 === 0)
             posicionMazo = listaEstilos[11];
-          else if (posicionListaCartas - 1 === pos || (posicionListaCartas - 1 < 0 && jugadorMano!=1))
+          else if (
+            posicionListaCartas - 1 === pos ||
+            (posicionListaCartas - 1 < 0 && jugadorMano !== 1)
+          )
             posicionMazo = listaEstilos[9];
           else if (
             posicionListaCartas + 1 === pos ||
@@ -268,68 +194,30 @@ const CartasVolteadas = forwardRef((props, ref) => {
             posicionMazo = listaEstilos[9];
         }
 
-        // Combine styles for the cartasVolteadas (cards)
-        const cardStyle = {
-          position: 'fixed',
-          margin: '5px',
-          top: estiloSegunPosicionYNumCartas.top,
-          left: estiloSegunPosicionYNumCartas.left,
-          right: estiloSegunPosicionYNumCartas.right,
-          width: estiloSegunPosicionYNumCartas.width,
-          height: estiloSegunPosicionYNumCartas.height,
-          transform: 'translateX(-50%)',
-          ...swirlStyle,
-        };
-
-        // Combine styles for the mazo (deck)
-        const mazoStyle = {
-          position: 'fixed',
-          margin: '5px',
-          top: posicionMazo.top,
-          left: posicionMazo.left,
-          right: posicionMazo.right,
-          width: posicionMazo.width,
-          height: posicionMazo.height,
-          transform: 'translateX(-50%)',
-          ...swirlStyle,
-        };
-
-        // Image styles
-        const imageStyle = {
-          width: '140%',
-          height: '140%',
-          display: 'block',
-          borderRadius: '8px',
-        };
-
-        const mazoImageStyle = {
-          ...imageStyle,
-          animation: 'dropShadowGlow 3s ease-in-out infinite',
-        };
-
         return (
           <React.Fragment key={pos}>
             {/* Always render the mazo */}
-            <div style={mazoStyle}>
+            <div
+              className="mazoStyle swirlStyle"
+              style={{
+                top: posicionMazo.top,
+                left: posicionMazo.left,
+                right: posicionMazo.right,
+                width: posicionMazo.width,
+                height: posicionMazo.height,
+              }}
+            >
               <div
+                className="fullSize"
                 style={{
-                  width: '100%',
-                  height: '100%',
                   transform: `rotate(${posicionMazo.rotate || '0deg'})`,
                 }}
               >
-                <div
-                  style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    
-                  }}
-                >
+                <div className="relativeContainer">
                   <img
                     src={urlMazo}
                     alt="Mazo"
-                    style={mazoImageStyle}
+                    className="mazoImageStyle"
                   />
                 </div>
               </div>
@@ -337,27 +225,29 @@ const CartasVolteadas = forwardRef((props, ref) => {
 
             {/* Conditionally render cartasVolteadas */}
             {pos !== posicionListaCartas && (
-              <div style={cardStyle}>
+              <div
+                className="cardStyle swirlStyle"
+                style={{
+                  top: estiloSegunPosicionYNumCartas.top,
+                  left: estiloSegunPosicionYNumCartas.left,
+                  right: estiloSegunPosicionYNumCartas.right,
+                  width: estiloSegunPosicionYNumCartas.width,
+                  height: estiloSegunPosicionYNumCartas.height,
+                }}
+              >
                 <div
+                  className="fullSize"
                   style={{
-                    width: '100%',
-                    height: '100%',
                     transform: `rotate(${estiloSegunPosicionYNumCartas.rotate})`,
                   }}
                 >
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      height: '100%',
-                    }}
-                  >
+                  <div className="relativeContainer">
                     <img
                       src={urlCartaVolteadas}
                       alt={`Quedan ${cartasRestantes}`}
-                      style={imageStyle}
+                      className="imageStyle"
                     />
-                    <div style={sunsetOverlay}></div>
+                    <div className="sunsetOverlay"></div>
                   </div>
                 </div>
               </div>

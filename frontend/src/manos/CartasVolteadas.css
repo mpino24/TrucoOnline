@@ -1,70 +1,77 @@
-/* CartasVolteadas.css */
-
-/* Keyframe Animations */
 @keyframes holoGlow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes slightSwirl {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes dropShadowGlow2 {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
   }
-  
-  @keyframes slightSwirl {
-    0% { --swirl-rotation: 0deg; }
-    25% { --swirl-rotation: 2deg; }
-    50% { --swirl-rotation: 0deg; }
-    75% { --swirl-rotation: -2deg; }
-    100% { --swirl-rotation: 0deg; }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
   }
-  
-  @keyframes dropShadowGlow {
-    0%, 100% {
-      filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
-    }
-    50% {
-      filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
-    }
-  }
-  
-  /* Base Styles */
-  .card, .mazo {
-    position: fixed;
-    margin: 5px;
-    transform: translateX(-50%);
-  }
-  
-  .card img, .mazo img {
-    width: 140%;
-    height: 140%;
-    display: block;
-    border-radius: 8px;
-  }
-  
-  .mazo img {
-    animation: dropShadowGlow 3s ease-in-out infinite;
-  }
-  
-  .card-inner {
-    width: 100%;
-    height: 100%;
-    /* Combine static rotation and animated swirl rotation */
-    transform: rotate(calc(var(--rotate, 0deg) + var(--swirl-rotation, 0deg)));
-    animation: slightSwirl 5s ease-in-out infinite;
-  }
-  
-  .sunset-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 140%;
-    height: 140%;
-    background: radial-gradient(
-      circle at 50% 50%, 
-      rgba(255, 223, 186, 0.5) 0%, 
-      rgba(255, 183, 76, 0.5) 40%, 
-      rgba(255, 140, 0, 0.6) 70%
-    );
-    background-size: 400% 400%;
-    animation: holoGlow 3s ease-in-out infinite;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    border-radius: 8px;
-  }
-  
+}
+
+.sunsetOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    rgba(255, 223, 186, 0.5) 0%, 
+    rgba(255, 183, 76, 0.5) 40%, 
+    rgba(255, 140, 0, 0.6) 70%
+  );
+  background-size: 400% 400%;
+  animation: holoGlow 3s ease-in-out infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.swirlStyle {
+  animation: slightSwirl 5s ease-in-out infinite;
+}
+
+.imageStyle {
+  width: 140%;
+  height: 140%;
+  display: block;
+  border-radius: 8px;
+}
+
+.mazoImageStyle {
+  width: 140%;
+  height: 140%;
+  display: block;
+  border-radius: 8px;
+  animation: dropShadowGlow2 3s ease-in-out infinite;
+}
+
+.cardStyle {
+  position: fixed;
+  margin: 5px;
+  transform: translateX(-50%);
+}
+
+.mazoStyle {
+  position: fixed;
+  margin: 5px;
+  transform: translateX(-50%);
+}
+
+.relativeContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

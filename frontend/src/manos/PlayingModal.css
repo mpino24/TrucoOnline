@@ -13,6 +13,13 @@
     75% { transform: rotate(-2deg); }
     100% { transform: rotate(0deg); }
   }
+  @keyframes slighterSwirl {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-1deg); }
+    100% { transform: rotate(0deg); }
+  }
   
   @keyframes dropShadowGlow {
     0%, 100% {
@@ -20,6 +27,15 @@
     }
     50% {
       text-shadow: 0 0 20px rgba(255, 183, 76, 1);
+    }
+  }
+
+  @keyframes dropShadowGlowContainer {
+    0%, 100% {
+      filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
+    }
+    50% {
+      filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
     }
   }
   
@@ -180,7 +196,7 @@
     cursor: pointer;
     position: relative;
     z-index: 1; /* Ensure text is above overlay */
-    animation: dropShadowGlow 3s ease-in-out infinite;
+    animation: dropShadowGlowContainer 3s ease-in-out infinite;
 
     
   }
@@ -217,14 +233,19 @@
   }
 
   .animated-button {
-    animation: dropShadowGlow 3s ease-in-out infinite;
+    animation: dropShadowGlowContainer 3s ease-in-out infinite;
 }
   
   
   /* Player Heading */
   .player-heading {
     color: orange;
-    text-align: left;
+    top:5%;
+    left: 7%;
+    font-style: italic;
+    position: fixed;
+    animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+
   }
   
   /* Card Positioning for Mesa */
