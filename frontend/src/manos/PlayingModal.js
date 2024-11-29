@@ -330,16 +330,21 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Responder Truco Buttons */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && (
                 <div className="truco-button-container responder-truco-buttons"> 
-                    <button onClick={() => responderTruco("QUIERO")}>Quiero</button>
+                     {puntosTrucoActuales!=puntosConRetruco && 
+                        <button onClick={() => responderTruco("QUIERO")}>Quiero</button>}
                     <button onClick={() => responderTruco("NO_QUIERO")}>No quiero</button>
-                    <button
+                    {puntosTrucoActuales==puntosConRetruco && 
+                        <button style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }} 
+                            onClick={() => responderTruco("QUIERO")}>Quiero</button>}
+
+                    {puntosTrucoActuales!=puntosConRetruco && <button
                         style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
                         onClick={() => responderTruco('SUBIR')}
                     >
                         <span className="swirl-glow-text">
                             {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
                         </span>
-                    </button>
+                    </button>}
                 </div>
             )}
 
