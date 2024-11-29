@@ -872,3 +872,68 @@ export default LeavingGameModal;
 Sin la refactorización no era viable reutilzar el modal, pues sería copiar y pegar el mismo código en distintas zonas del proyecto.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Permite reutilizar el modal en todas las zonas del código que la necesiten, pudiendo modificarlo desde un mismo sitio.
+
+### Refactorización para relacionar una mano con su correspondiente partida: 
+En esta refactorización hemos añadido en ManoService un Map que tiene como claves los códigos de las partidas y como valores las manos actuales de las partidas. Los métodos que no necesitaban ningún parámetro para hacer referencia a la partida a la que pertenece una mano ahora usan el código para encontrar en el Map la partida a la que pertenece cada mano que se juega en la aplicación.
+#### Estado inicial del código
+Ejemplos:
+```Java
+public  void siguienteTurno() {
+        Integer jugadorActual = manoActual.getJugadorTurno();
+        Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
+        manoActual.setJugadorTurno(siguiente);
+}
+public void tirarCarta(Integer indiceCarta) {
+      if(!manoActual.getEsperandoRespuesta()){
+            Integer jugadorActual = manoActual.getJugadorTurno();
+            Carta carta = manoActual.getCartasDisp().get(jugadorActual).get(indiceCarta);
+            manoActual.getCartasDisp().get(jugadorActual).remove(carta);
+            manoActual.getCartasLanzadasRonda().set(jugadorActual, carta);
+            siguienteTurno();
+      }
+}
+```
+
+#### Estado del código refactorizado
+Map creado:
+```Java
+private final Map<String, Mano> manosPorPartida = new HashMap<>();
+```
+Método actualizar mano creado para actualizar el Map:
+```Java
+public void actualizarMano(Mano mano, String codigo){
+        Mano manoAnterior = manosPorPartida.get(codigo);
+        if(manoAnterior != null){
+            manosPorPartida.remove(codigo);
+        }
+        manosPorPartida.put(codigo, mano);
+        manoActual = mano;
+}
+```
+Ejemplos:
+```Java
+public  void siguienteTurno(String codigo) {
+        Mano manoActual = getMano(codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+
+        Integer jugadorActual = manoActual.getJugadorTurno();
+        Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
+        manoActual.setJugadorTurno(siguiente);
+  
+        actualizarMano(manoActual, codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+}
+public Carta tirarCarta(Integer indiceCarta, String codigo) {
+
+            manoActual.getCartasDisp().get(jugadorActual).remove(carta);
+            manoActual.getCartasLanzadasRonda().set(jugadorActual, carta);
+            siguienteTurno();
+            siguienteTurno(codigo);
+            manosPorPartida.remove(codigo);
+            manosPorPartida.put(codigo, manoActual);
+            setManoActual(codigo);
+}
+```
+#### Problema que nos hizo realizar la refactorización
+Sin la refactorización no era posible relacionar las manos que se juegan al mismo tiempo (en distintas partidas) con sus partidas correspondientes, haciendo que el servicio actualizase una mano incorrecta en la mayoría de las ocasiones.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora es posible que distintos jugadores juegen partidas simultáneamente sin que las acciones realizadas en la mano de una partida afecten en las de las otras partidas.
+
