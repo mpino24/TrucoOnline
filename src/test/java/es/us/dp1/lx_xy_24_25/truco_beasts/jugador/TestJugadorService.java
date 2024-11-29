@@ -44,11 +44,11 @@ public class TestJugadorService {
         assertEquals(jugador.getFirstName(), jugadorService.findAmigosByUserId(jugador2.getUser().getId()).get(0).getFirstName());
     }
 
+
+    
     @Test
-    void testCheckIfAreFriends() {
-
+    void testCheckIfAreFriends(){   
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
-
         assertTrue(jugadorService.checkIfAreFriends(jugador.getUser().getUsername(), jugador2.getUser().getId()));
     }
 
@@ -56,9 +56,11 @@ public class TestJugadorService {
     void testfindJugadorByUserName() {
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
+    
+
 
     @Test
-    void testAddFriendAgainFallo() {
+    void testAddFriendAgainFallo(){
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
 
@@ -97,4 +99,43 @@ public class TestJugadorService {
         assertEquals(0, jugadorService.findAmigosByUserId(jugador.getUser().getId()).size());
 
     }
+    @Test
+    void testComprobarExistenciaSolicitud(){
+        jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
+        assertTrue(jugadorService.comprobarExistenciaSolicitud(jugador.getUser().getUsername(), jugador2.getUser().getId()));
+    }
+    @Test
+    void testCrearSolicitud(){
+        jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
+
+        jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
+        assertEquals(1, jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).size());
+
+    }
+    
+    @Test
+    void testDeleteSolicitud(){
+        jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
+
+        jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
+        assertEquals(1, jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).size());
+        
+        jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
+        assertEquals(0, jugadorService.findSolicitudesByUserId(jugador.getUser().getId()).size());
+
+    }
+
+    @Test
+    void testCrearSolicitudNotFoundPlayerFallo(){
+        assertThrows(ResourceNotFoundException.class,() -> jugadorService.crearSolicitud(jugador.getUser().getId(),50));
+    }
+    @Test
+    void testFindSolicitudByUserId(){
+        jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
+        jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
+
+        assertEquals(jugador.getFirstName(), jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).get(0).getFirstName());
+    }
+
+
 }

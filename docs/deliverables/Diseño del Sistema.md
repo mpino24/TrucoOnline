@@ -705,3 +705,170 @@ public Integer aQuienLeToca(List<Integer> cantoAnterior, List<Integer> cantoAhor
 Como en el caso anterior, había código que se repetía y era difícil de comprender, un claro code smell.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora separado es mucho más fácil de mantener y se entiende mejor su funcionalidad.
+
+### Refactorización Modal Abandonar Partida: 
+En esta refactorización unificamos en un único componente de React dos modales iguales que se encontraban en distintos puntos del código y que aparecen cuando quieres abandonar una partida
+#### Estado inicial del código
+Este mismo código se encontraba en WaitingModal.js y en AppNavbar.js
+```Java
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                style={customModalStyles}
+                ariaHideApp={false}
+            >
+                <h2 style={{ marginBottom: '20px', color: '#333' }}>¿Quieres abandonar la partida?</h2>
+                <img src="https://c.tenor.com/vkvU9Fi4uOsAAAAC/tenor.gif" alt="Mono GIF" style={{ width: '100%', height: 'auto', marginBottom: '20px' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <button
+                        onClick={leaveGame}
+                        style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#ff4d4d',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            transition: 'background-color 0.3s ease',
+                            marginRight: '10px'
+                        }}
+                        onMouseEnter={(e) => (e.target.style.backgroundColor = '#ff3333')}
+                        onMouseLeave={(e) => (e.target.style.backgroundColor = '#ff4d4d')}
+                    >
+                        Sí, abandonar partida
+                    </button>
+                    <button
+                        onClick={closeModal}
+                        style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#4CAF50',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            transition: 'background-color 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => (e.target.style.backgroundColor = '#45a049')}
+                        onMouseLeave={(e) => (e.target.style.backgroundColor = '#4CAF50')}
+                    >
+                        No, me quedo
+                    </button>
+                </div>
+            </Modal>
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+import { forwardRef } from 'react';
+import Modal from 'react-modal';
+import tokenService from 'frontend/src/services/token.service.js';
+import { useNavigate } from 'react-router-dom'
+
+
+
+const LeavingGameModal = forwardRef((props, ref) => {
+    const navigate = useNavigate();
+    const jwt = tokenService.getLocalAccessToken();
+    function closeModal() {
+        props.setIsOpen(false);
+    }
+
+    function leaveGame() {
+        fetch(
+            "/api/v1/partidajugador",
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                  },
+            }
+        )
+            .then((response) => response.text())
+            .then((data) => {
+                closeModal();
+                navigate("/home");
+            })
+            .catch((message) => alert(message));
+    }
+
+    const customModalStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '400px',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+            textAlign: 'center',
+            border: 'none',
+
+        },
+        overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.6)'
+        }
+    };
+
+
+
+    return (
+        <Modal
+            isOpen={props.modalIsOpen}
+            onRequestClose={closeModal}
+            style={customModalStyles}
+            ariaHideApp={false}
+        >
+            <h2 style={{ marginBottom: '20px', color: '#333' }}>¿Quieres abandonar la partida?</h2>
+            <img src="https://c.tenor.com/vkvU9Fi4uOsAAAAC/tenor.gif" alt="Mono GIF" style={{ width: '100%', height: 'auto', marginBottom: '20px' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <button
+                    onClick={leaveGame}
+                    style={{
+                        padding: '10px 20px',
+                        backgroundColor: '#ff4d4d',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        transition: 'background-color 0.3s ease',
+                        marginRight: '10px'
+                    }}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = '#ff3333')}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#ff4d4d')}
+                >
+                    Sí, abandonar partida
+                </button>
+                <button
+                    onClick={closeModal}
+                    style={{
+                        padding: '10px 20px',
+                        backgroundColor: '#4CAF50',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        transition: 'background-color 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = '#45a049')}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#4CAF50')}
+                >
+                    No, me quedo
+                </button>
+            </div>
+        </Modal>
+    );
+});
+export default LeavingGameModal;
+```
+#### Problema que nos hizo realizar la refactorización
+Sin la refactorización no era viable reutilzar el modal, pues sería copiar y pegar el mismo código en distintas zonas del proyecto.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Permite reutilizar el modal en todas las zonas del código que la necesiten, pudiendo modificarlo desde un mismo sitio.
