@@ -69,6 +69,10 @@ export default function Home() {
 
 
     const toggleJoinModal = useCallback(() => {
+        const audio = new Audio("/duck.mp3");
+        audio.play().catch((error) => {
+            console.error('Error al reproducir el sonido:', error);
+          });
         setJoinModalView((current) => !current);
     }, []);
 
