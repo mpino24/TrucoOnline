@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidaJugador;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -59,6 +60,8 @@ public class PartidaJugadorServiceTest {
 
     @Test
     public void getNumberOfGamesConnected() {
+        partida.setInstanteFin(LocalDateTime.now());
+        partidaService.savePartida(partida);
         Integer res = pjService.getNumberOfGamesConnected(9);
         assertTrue(res.equals(0));
 

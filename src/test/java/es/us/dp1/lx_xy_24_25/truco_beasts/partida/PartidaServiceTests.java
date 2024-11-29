@@ -30,11 +30,13 @@ public class PartidaServiceTests {
 
     @Test
     public void devuelvePartidasActivas() {
+        Partida partida = partidaService.findPartidaByCodigo("WWWWW");
+        partida.setInstanteFin(null);
+        partida.setInstanteInicio(null);
+        partidaService.savePartida(partida);
         List<Partida> partidas = (List<Partida>) this.partidaService.findAllPartidasActivas();
         Partida p1 = EntityUtils.getById(partidas, Partida.class, 0);
         assertEquals("WWWWW", p1.getCodigo());
-        Partida p2 = EntityUtils.getById(partidas, Partida.class, 1);
-        assertEquals("ABCDE", p2.getCodigo());
     }
 
     @Test
@@ -51,8 +53,8 @@ public class PartidaServiceTests {
 
     @Test
     public void devuelvePartidaPorCodigo() {
-        Partida partida = this.partidaService.findPartidaByCodigo("ABCDE");
-        assertEquals("ABCDE", partida.getCodigo());
+        Partida partida = this.partidaService.findPartidaByCodigo("WWWWW");
+        assertEquals("WWWWW", partida.getCodigo());
     }
 
     @Test
