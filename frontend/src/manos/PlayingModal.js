@@ -101,10 +101,18 @@ const PlayingModal = forwardRef((props, ref) => {
 
 
     const handleVolumeChange = (event) => {
-        const newVolume = event.target.value;
-        setVolume(newVolume);
+        const sliderValue = event.target.value;
+    
+        
+        const minLog = 0.01; // Volumen más bajo (casi mudo)
+        const maxLog = 1;    // Volumen más alto (máximo)
+        
+        
+        const logVolume = Math.pow(10, (sliderValue / 100) * (Math.log10(maxLog) - Math.log10(minLog)) + Math.log10(minLog));
+    
+        setVolume(sliderValue); 
         if (audioRef.current) {
-            audioRef.current.volume = newVolume / 100;
+            audioRef.current.volume = logVolume; 
         }
     };
 
