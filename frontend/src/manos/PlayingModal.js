@@ -1,8 +1,9 @@
-import { useState, forwardRef, useEffect, useRef } from 'react';
+import React, { useState, forwardRef, useEffect, useRef } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
 import './PlayingModal.css';
+import backgroundMusic from 'frontend/src/static/audios/musicaPartida2.mp3';
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -23,10 +24,14 @@ const PlayingModal = forwardRef((props, ref) => {
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
     );
 
+    const audioRef = useRef(null);
     const dropAreaRef = useRef(null);
     const [isOverDropArea, setIsOverDropArea] = useState(false);
     const [draggedCarta, setDraggedCarta] = useState(null);
     const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
+
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [volume, setVolume] = useState(50); // Default volume at 50%
 
     function fetchMano() {
         fetch('/api/v1/manos/' + game.codigo, {
@@ -67,6 +72,41 @@ const PlayingModal = forwardRef((props, ref) => {
             setPuntosTrucoActuales(mano.puntosTruco);
         }
     }, [mano]);
+
+    // Set initial volume when component mounts or volume changes
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume / 100;
+        }
+    }, [volume]);
+
+    const handlePlayMusic = () => {
+        if (audioRef.current) {
+            audioRef.current.play()
+                .then(() => {
+                    setIsPlaying(true);
+                })
+                .catch((error) => {
+                    console.error("Error playing audio:", error);
+                });
+        }
+    };
+
+    const handlePauseMusic = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            setIsPlaying(false);
+        }
+    };
+
+
+    const handleVolumeChange = (event) => {
+        const newVolume = event.target.value;
+        setVolume(newVolume);
+        if (audioRef.current) {
+            audioRef.current.volume = newVolume / 100;
+        }
+    };
 
     const renderCartasJugador = () => {
         if (mano && mano.cartasDisp && posicion !== null) {
@@ -190,7 +230,6 @@ const PlayingModal = forwardRef((props, ref) => {
         setDraggedCarta(null);  
         setIsOverDropArea(false);
     };
-    
 
     function tirarCarta(cartaId) {
         fetch(`/api/v1/manos/${game.codigo}/tirarCarta/${cartaId}`, {
@@ -274,6 +313,39 @@ const PlayingModal = forwardRef((props, ref) => {
                 {/* Visual indicator for drop area (optional) */}
             </div>
 
+            {/* Play Music Button */}
+            {!isPlaying && (
+                <button onClick={handlePlayMusic} className="play-music-button">
+                     <span className="swirl-glow-text"> 🎵
+                     </span>                 
+                </button>
+            )}
+
+            {/* Volume Slider */}
+            {isPlaying && (
+                    <>
+                        <button onClick={handlePauseMusic} className="play-music-button">
+                        ⏸
+                        </button>
+                        <div className="volume-slider-container">
+                            <label htmlFor="volume-slider">Volume:</label>
+                            <input
+                                type="range"
+                                id="volume-slider"
+                                min="0"
+                                max="100"
+                                value={volume}
+                                onChange={handleVolumeChange}
+                            />
+                            <span>{volume}%</span>
+                        </div>
+                    </>
+                )}
+            
+
+          
+            <audio ref={audioRef} src={backgroundMusic} loop /> 
+
             {/* Player's Cards */}
             {renderCartasJugador()}
 
@@ -330,21 +402,24 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Responder Truco Buttons */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && (
                 <div className="truco-button-container responder-truco-buttons"> 
-                     {puntosTrucoActuales!=puntosConRetruco && 
+                    {puntosTrucoActuales !== puntosConRetruco && 
                         <button onClick={() => responderTruco("QUIERO")}>Quiero</button>}
                     <button onClick={() => responderTruco("NO_QUIERO")}>No quiero</button>
-                    {puntosTrucoActuales==puntosConRetruco && 
+                    {puntosTrucoActuales === puntosConRetruco && 
                         <button style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }} 
-                            onClick={() => responderTruco("QUIERO")}><span className="swirl-glow-text"> ¡Quiero!</span></button>}
-
-                    {puntosTrucoActuales!=puntosConRetruco && <button
-                        style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
-                        onClick={() => responderTruco('SUBIR')}
-                    >
-                        <span className="swirl-glow-text">
-                            {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
-                        </span>
-                    </button>}
+                            onClick={() => responderTruco("QUIERO")}>
+                            <span className="swirl-glow-text"> ¡Quiero!</span>
+                        </button>}
+    
+                    {puntosTrucoActuales !== puntosConRetruco && 
+                        <button
+                            style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
+                            onClick={() => responderTruco('SUBIR')}
+                        >
+                            <span className="swirl-glow-text">
+                                {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
+                            </span>
+                        </button>}
                 </div>
             )}
 
@@ -360,4 +435,4 @@ const PlayingModal = forwardRef((props, ref) => {
     );
 });
 
-export default PlayingModal;
+    export default PlayingModal;

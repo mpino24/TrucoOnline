@@ -300,3 +300,67 @@
     z-index: 1;
     /* Optional: Add background color or other styles */
 }
+
+.play-music-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border: 3px solid rgb(212, 113, 0);
+  border-radius: 5px;
+  background-color: rgba(255, 166, 0, 0.382);
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1;
+  animation: dropShadowGlowContainer 3s ease-in-out infinite;
+}
+
+.play-music-button:hover {
+  background-color: darkorange;
+}
+
+.volume-slider-container {
+  position: absolute;
+  top: 15px;
+  right: 80px;
+  display: flex;
+  align-items: center;
+  color: rgb(0, 0, 0);
+  gap: 10px;
+  z-index: 2000; /* Ensure it's above other elements */
+  background-color: rgba(255, 166, 0, 0.382);
+  padding: 5px 10px;
+  border: 3px solid rgb(212, 113, 0);
+  animation: dropShadowGlowContainer 3s ease-in-out infinite;
+  border-radius: 5px;
+}
+.volume-slider-container:hover {
+  background-color: darkorange;
+}
+/* Volume Slider */
+#volume-slider {
+  -webkit-appearance: none; /* Override default CSS styles */
+  width: 150px; /* Adjust the width as needed */
+  height: 8px; /* Thickness of the slider track */
+  background: #000000; /* Default track color */
+  outline: none; /* Remove outline on focus */
+  border-radius: 4px; /* Rounded corners for the track */
+  margin: 0 10px; /* Optional: Add some horizontal margin */
+}
+
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default thumb styling */
+  appearance: none;
+  width: 17px; /* Width of the thumb */
+  height: 17px; /* Height of the thumb */
+  border-radius: 50%; /* Make it circular */
+  background: rgb(145, 94, 0);
+  cursor: pointer; /* Cursor on hover */
+  border: 3px solid rgb(212, 113, 0);
+}
+
+#volume-slider::-webkit-slider-thumb:hover {
+  background: rgba(255, 166, 0, 1);
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
