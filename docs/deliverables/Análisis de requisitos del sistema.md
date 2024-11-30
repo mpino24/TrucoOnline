@@ -45,8 +45,8 @@ A continuación se definen  todas las historias de usuario a implementar:
 ### HU-1(NOISSUE): Poder loggearme
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
 ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
- ### HU-2(NOISSUE): Poder borrar la cuenta ([[https://github.com/gii](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/159)])
-Como jugador quiero poder borrar la cuenta para dejar de jugar si me canso.
+ ### HU-2(NOISSUE): Poder editar y borrar tu cuenta  ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/159])
+Como jugador quiero poder editar y borrar mi cuenta.
  ### HU-3(NOISSUE): Poder cerrar sesion ([])
 Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
 ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
