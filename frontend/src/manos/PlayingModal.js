@@ -3,9 +3,13 @@ import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
 import './PlayingModal.css';
+
+
 import backgroundMusic from 'frontend/src/static/audios/musicaPartida2.mp3';
+import PuntosComponente from './PuntosComponente';
 
 const jwt = tokenService.getLocalAccessToken();
+
 
 const PlayingModal = forwardRef((props, ref) => {
     const game = props.game;
@@ -13,6 +17,9 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
+
+
+
     const puntosSinTruco = 1;
     const puntosConTruco = 2;
     const puntosConRetruco = 3;
@@ -33,6 +40,8 @@ const PlayingModal = forwardRef((props, ref) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(50); // Default volume at 50%
 
+
+
     function fetchMano() {
         fetch('/api/v1/manos/' + game.codigo, {
             method: "GET",
@@ -44,10 +53,14 @@ const PlayingModal = forwardRef((props, ref) => {
         .then((data) => {
             setMano(data);
             let cartasActuales = data.cartasDisp[posicion];
+        
             if (cartasJugador !== cartasActuales) {
                 setCartasJugador(cartasActuales);
                 setPuntosTrucoActuales(data.puntosTruco);
-            }
+ 
+                
+            }          
+
         })
         .catch((error) => {
             console.error("Error fetching mano:", error);
@@ -303,8 +316,23 @@ const PlayingModal = forwardRef((props, ref) => {
                 <h3 className="player-heading">
                     Jugador: {Number(posicion)}
                 </h3>
+                
             </div>
-
+            <h4 className={"puntos-nuestros"}>Nos:</h4>
+            <h4 className={"puntos-ellos"}>Ellos:</h4>
+            {mano &&  puntosTrucoActuales &&
+            (
+                <> 
+                <PuntosComponente  estiloFotoPunto={"puntaje-EquipoNuestro"} 
+                                    posicion={posicion} puntosEquipo1={game.puntosEquipo1} puntosEquipo2={game.puntosEquipo2}
+                                    />
+               
+                <PuntosComponente estiloFotoPunto={"puntaje-EquipoEllos"} 
+                                    posicion={posicion} puntosEquipo1={game.puntosEquipo2} puntosEquipo2={game.puntosEquipo1}
+                                />
+                </>
+            )}
+                
             {/* Drop Area */}
             <div
                 ref={dropAreaRef}
@@ -431,6 +459,8 @@ const PlayingModal = forwardRef((props, ref) => {
                     jugadorMano={game.jugadorMano}
                 />
             )}
+        
+                
         </>
     );
 });

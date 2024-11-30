@@ -1,4 +1,5 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
+import Puntos0 from 'frontend/src/static/imagenesPuntos/Puntos0.png';
 import Puntos1 from 'frontend/src/static/imagenesPuntos/Puntos1.png';
 import Puntos2 from'frontend/src/static/imagenesPuntos/Puntos2.png';
 import Puntos3 from'frontend/src/static/imagenesPuntos/Puntos3.png';
@@ -33,6 +34,7 @@ import Puntos30 from'frontend/src/static/imagenesPuntos/Puntos30.png';
 
 
 const imagenesPuntos = {
+    0:Puntos0,
     1: Puntos1,
     2: Puntos2,
     3: Puntos3,
@@ -66,13 +68,12 @@ const imagenesPuntos = {
 }
 
 const PuntosComponente = forwardRef((props, ref) => {
-
     const imagenEquipo1 = imagenesPuntos[props.puntosEquipo1];
     const imagenEquipo2 = imagenesPuntos[props.puntosEquipo2];
 
+
     return (
         <div>
-        <h4 className={props.stiloTexto}>{props.texto}:</h4>
         <h6 className={props.estiloFotoPunto}> {props.posicion%2==0?
                 <img
                     src={imagenEquipo1}
@@ -85,7 +86,6 @@ const PuntosComponente = forwardRef((props, ref) => {
                     alt={`Puntos ${props.puntosEquipo2}`}
                     onError={(e) => (e.target.style.display = 'none')}
                     />}</h6>
-              {/*   {mano.puntosTruco && <h6 className="ganaPunto-EquipoNuestro"> {"+"+ mano.puntosTruco}</h6>} */}
                 
             </div>
     )
