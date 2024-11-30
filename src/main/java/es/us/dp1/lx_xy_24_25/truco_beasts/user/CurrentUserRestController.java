@@ -4,18 +4,24 @@ import java.security.Principal;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.PerfilJugadorUsuario;
+import es.us.dp1.lx_xy_24_25.truco_beasts.util.RestPreconditions;
 import jakarta.validation.Valid;
 
 @RestController
@@ -48,26 +54,33 @@ public class CurrentUserRestController {
 
     
     @PutMapping("/edit")
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
+        User user = perfil.getUser();
+        Jugador jugador = perfil.getJugador();
+    
+        User currentUser = userService.findCurrentUser();
+    
+        Boolean mismoUsername = user.getUsername().equals(currentUser.getUsername());
+        Boolean mismaContraseña = (user.getPassword()==null || user.getPassword().isEmpty());
+    
+        jugadorService.updateJugador(jugador, currentUser);
+        userService.updateCurrentUser(user);
 
-public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
-    User user = perfil.getUser();
-    Jugador jugador = perfil.getJugador();
-    
-    User currentUser = userService.findCurrentUser();
-    
-    Boolean mismoUsername = user.getUsername().equals(currentUser.getUsername());
-    Boolean mismaContraseña = (user.getPassword()==null || user.getPassword().isEmpty());
-    
-    jugadorService.updateJugador(jugador, currentUser);
-    userService.updateCurrentUser(user);
-
-    if(!mismoUsername || !mismaContraseña) {    
-        return ResponseEntity.ok(relog);
-    } else {
-        return ResponseEntity.ok(home);
+        if(!mismoUsername || !mismaContraseña) {    
+            return ResponseEntity.ok(relog);
+        } else {
+            return ResponseEntity.ok(home);
+        }
     }
-}
 
+    @DeleteMapping("/borrarMiCuenta")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<MessageResponse> borrarMiCuenta() {
+		Integer userId = userService.findCurrentUser().getId();
+		jugadorService.deleteJugadorByUserId(userId);
+		return ResponseEntity.ok(new MessageResponse("¡Tu cuenta fue borrada con éxito!"));
+		
+	}
     
 
 

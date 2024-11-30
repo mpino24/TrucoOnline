@@ -1,14 +1,15 @@
 import "../../static/css/auth/authButton.css";
 import "../../static/css/auth/authPage.css";
+
 import tokenService from "../../services/token.service";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import { registerFormInputs } from "./form/registerForm";
 import { useRef, useState } from "react";
 
+
 export default function Register() {
   let [type, setType] = useState(null);
   let [authority, setAuthority] = useState(null);
-
 
   const registerFormRef = useRef();
 
@@ -21,13 +22,11 @@ export default function Register() {
   }
 
   function handleSubmit({ values }) {
-
-    if(!registerFormRef.current.validate()) return;
+    if (!registerFormRef.current.validate()) return;
 
     const request = values;
     request["authority"] = authority;
     let state = "";
-
 
     fetch("/api/v1/auth/signup", {
       headers: { "Content-Type": "application/json" },
@@ -71,31 +70,69 @@ export default function Register() {
       .catch((message) => {
         alert(message);
       });
-  }  
+  }
 
   if (type) {
     return (
-      <div className="auth-page-container"  >
-        <h1>Registrarse</h1>
-        <div className="auth-form-container">
-          <FormGenerator
-            ref={registerFormRef}
-            inputs={
-              registerFormInputs
-            }
-            onSubmit={handleSubmit}
-            numberOfColumns={1}
-            listenEnterKey
-            buttonText="Save"
-            buttonClassName="auth-button"
-          />
+      <div 
+        style={{ 
+          backgroundImage: 'url(/fondos/fondoRegistrarse.jpg)', 
+          backgroundSize: 'cover', 
+          backgroundRepeat: 'no-repeat', 
+          backgroundPosition: 'center', 
+          height: '100vh', 
+          width: '100vw' 
+        }}
+      >
+        <div 
+          className="auth-page-container" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'flex-start', 
+            alignItems: 'center', 
+            paddingTop: '50px', 
+            paddingBottom: '30px' 
+          }}
+        >
+          <h1>Registrarse</h1>
+          <div className="auth-form-container" style={{ width: '100%', maxWidth: '400px' }}>  
+            <FormGenerator
+              ref={registerFormRef}
+              inputs={registerFormInputs}
+              onSubmit={handleSubmit}
+              numberOfColumns={1}
+              listenEnterKey
+              buttonText="Save"
+              buttonClassName="auth-button"
+            />
+          </div>
         </div>
       </div>
     );
   } else {
     return (
-      <div className="auth-page-container">
-        <div className="auth-form-container">
+      <div 
+        style={{ 
+          backgroundImage: 'url(/fondos/fondoRegistrarse.jpg)', 
+          backgroundSize: 'cover', 
+          backgroundRepeat: 'no-repeat', 
+          backgroundPosition: 'center', 
+          height: '100vh', 
+          width: '100vw' 
+        }}
+      >
+        <div 
+          className="auth-page-container" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'flex-start', 
+            alignItems: 'center', 
+            paddingTop: '50px', // Espaciado en la parte superior para no solapar
+            paddingBottom: '30px'  // Espaciado inferior para el layout general
+          }}
+        >
           <h1>Registrarse</h1>
           <h2 className="text-center text-md">
             ¿Cuál será la autoridad de tu usuario?
@@ -114,7 +151,7 @@ export default function Register() {
               onClick={handleButtonClick}
             >
               Administrador
-            </button>            
+            </button>
           </div>
         </div>
       </div>
