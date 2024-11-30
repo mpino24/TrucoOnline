@@ -246,12 +246,66 @@
 /* Player Heading */
 .player-heading {
   color: orange;
-  top: 5%;
+  top: 2%;
   left: 7%;
   font-style: italic;
   position: fixed;
   animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
 }
+
+.puntos-nuestros {
+  color: orange;
+  top: 10%;
+  left: 7%;
+  font-style: italic;
+  position: fixed;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
+
+.puntos-ellos {
+  color: orange;
+  top: 10%;
+  left: 75%;
+  font-style: italic;
+  position: fixed;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
+.puntaje-EquipoNuestro img {
+  width: 100px; /* Ajusta el tamaño de la imagen */
+  height: 60px; /* Mantén la relación de aspecto correcta */
+  position: absolute; /* Para que la imagen se posicione en el lugar correcto */
+  top: 6%;
+  left: 12%;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
+
+/* Estilo para las imágenes del equipo contrario */
+.puntaje-EquipoEllos img {
+  width: 100px; /* Ajusta el tamaño de la imagen */
+  height: 60px; /* Mantén la relación de aspecto correcta */
+  position: absolute; /* Posiciona la imagen de manera similar */
+  top: 6%;
+  left: 82%;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
+
+.ganaPunto-EquipoNuestro{
+  color: rgb(255, 0, 0);
+  top: 13%;
+  left: 12%;
+  font-style: italic;
+  position: fixed;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
+.ganaPunto-EquipoEllos{
+  color: rgb(255, 0, 0);
+  top: 13%;
+  left: 82%;
+  font-style: italic;
+  position: fixed;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
+
 
 /* Card Positioning for Mesa */
 .cartas-mesa-position {
