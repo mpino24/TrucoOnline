@@ -26,7 +26,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [puntosTrucoActuales, setPuntosTrucoActuales] = useState(puntosSinTruco);
     const [tirarTrigger, setTirarTrigger] = useState(0);
     const [trucoTrigger, setTrucoTrigger] = useState(0);
-
+    const [envidoTrigger, setEnvidoTrigger] = useState(0);
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
     );
@@ -78,7 +78,7 @@ const PlayingModal = forwardRef((props, ref) => {
 
     useEffect(() => {
         fetchMano();
-    }, [tirarTrigger, trucoTrigger]);
+    }, [tirarTrigger, trucoTrigger, envidoTrigger]);
 
     useEffect(() => {
         if (mano && puntosTrucoActuales) {
@@ -306,6 +306,24 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
 
+    function cantarEnvido(respuesta) {
+        fetch(`/api/v1/manos/${game.codigo}/cantarEnvido/${respuesta}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if (data) {
+                setEnvidoTrigger((prev) => prev + 1);
+            }
+        })
+        .catch((error) => alert(error.message));
+    }
+
     return (
         <>
             {/* Background */}
@@ -434,6 +452,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     )}
                 </div>
             )}
+            
 
             {/* Responder Truco Buttons */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && (
@@ -456,6 +475,25 @@ const PlayingModal = forwardRef((props, ref) => {
                                 {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
                             </span>
                         </button>}
+                </div>
+            )}
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido && (
+                <div className="truco-button-container"> 
+                    {puntosTrucoActuales === puntosSinTruco && (
+                        <button onClick={() => cantarEnvido('ENVIDO')}>
+                            <span className="swirl-glow-text">envido</span>
+                        </button>
+                    )}
+                    {puntosTrucoActuales === puntosConTruco && (
+                        <button onClick={() => cantarTruco('RETRUCO')}>
+                            <span className="swirl-glow-text">¡Retruco!</span>
+                        </button>
+                    )}
+                    {puntosTrucoActuales === puntosConRetruco && (
+                        <button onClick={() => cantarTruco('VALECUATRO')}>
+                            <span className="swirl-glow-text">¡Vale cuatro!</span>
+                        </button>
+                    )}
                 </div>
             )}
 

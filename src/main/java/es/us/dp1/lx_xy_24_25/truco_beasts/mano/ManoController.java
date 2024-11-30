@@ -16,6 +16,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 
 
@@ -60,5 +61,12 @@ public class ManoController {
         manoService.responderTruco(codigo, respuestasTruco);
         Integer puntosActualesTruco = manoService.getMano(codigo).getPuntosTruco();
         return new ResponseEntity<>(puntosActualesTruco, HttpStatus.OK);
+    }
+
+    @PatchMapping("/cantarEnvido/{cantoEnvido}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<CantosEnvido> patchCantarEnvido(@PathVariable String codigo, @PathVariable CantosEnvido cantoEnvido) throws EnvidoException {
+        manoService.cantosEnvido(codigo, cantoEnvido);
+        return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
     }
 }
