@@ -22,7 +22,7 @@ const Logout = () => {
           Are you sure you want to log out?
         </h2>
         <div className="options-row">
-          <Link className="auth-button" to="/" style={{textDecoration: "none"}}>
+          <Link className="auth-button" to="/home" style={{textDecoration: "none"}}>
             No
           </Link>
           <button className="auth-button" onClick={() => sendLogoutRequest()}>
