@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
@@ -101,6 +102,12 @@ public class ManoService {
 		nuevaMano.setPartida(partida);
 		nuevaMano.setJugadorTurno(partida.getJugadorMano());
 		nuevaMano.setCartasDisp(repartirCartas(partida));
+        Integer tiposDeEnvido = 3;
+        Integer envidosIniciales=0;
+        List<Integer> envidos = new ArrayList<>();
+        for(int i = 0; i<tiposDeEnvido;i++){
+            envidos.add(envidosIniciales);
+        }
 		Integer ganadasIniciales = 0;
 		List<Integer> ganadoresRonda = new ArrayList<>();
 		ganadoresRonda.add(ganadasIniciales);
@@ -148,12 +155,95 @@ public class ManoService {
                 manoActual.siguienteTurno();
             }
             manoActual.comprobarSiPuedeCantarTruco();
+            manoActual.comprobarSiPuedeCantarEnvido(true);
             actualizarMano(manoActual, codigo);
             return cartaALanzar;
         } else{
             throw new CartaTiradaException("Tenés que responder antes de poder tirar una carta");
         }
         
+    }
+
+    public Mano cantosEnvido(String codigo, CantosEnvido canto){
+        Mano manoActual = getMano(codigo);
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        List<Integer> envidosCantados = manoActual.getEnvidosCantados();
+        
+        if(manoActual.getEsperandoRespuesta()==false){
+            manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
+        }
+        manoActual.setEsperandoRespuesta(true);
+        Integer quienResponde = manoActual.quienRespondeEnvido();
+        try {
+        Integer queEnvidoPuedoCantar = manoActual.getQueEnvidoPuedeCantar();
+        
+            switch (canto) {
+                case ENVIDO:
+                    if (queEnvidoPuedoCantar<3) {
+                        throw new EnvidoException("No podés cantar más veces envido");
+                    }
+                    Integer envidos = envidosCantados.get(0);
+                    envidosCantados.set(0, envidos+1);
+                    manoActual.setJugadorTurno(quienResponde);
+                    break;
+                case REAL_ENVIDO:
+                    if(queEnvidoPuedoCantar<2){
+                        throw new EnvidoException("No podés cantar más veces real envido");
+                    }
+                    Integer realEnvidos = envidosCantados.get(1);
+                    envidosCantados.set(1, realEnvidos+1);
+                    manoActual.setJugadorTurno(quienResponde);
+                    break;
+                case FALTA_ENVIDO:
+                    if(queEnvidoPuedoCantar<1){
+                        throw new EnvidoException("No podés cantar más veces falta envido");
+                    }
+                    Integer faltaEnvidos = envidosCantados.get(2);
+                    envidosCantados.set(2, faltaEnvidos+1);
+                    manoActual.setJugadorTurno(quienResponde);
+                    break;
+                default:
+                    throw new EnvidoException("Canto no valido");
+            }
+        } catch (Exception e) {
+            manoActual.setEsperandoRespuesta(false);
+            throw e;
+        }
+        manoActual.setPuedeCantarTruco(false);
+        manoActual.comprobarSiPuedeCantarEnvido(false);
+        actualizarMano(manoActual, codigo);
+        return manoActual;
+    }
+
+    public void responderEnvido(String codigo, CantosEnvido respuesta){
+        Mano manoActual = getMano(codigo);
+        Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
+        
+        switch (respuesta) {
+            case QUIERO:
+                
+                manoActual.setPuedeCantarEnvido(false);
+                manoActual.setQueEnvidoPuedeCantar(0);
+
+                manoActual.gestionarPuntosEnvido(false);
+                
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.comprobarSiPuedeCantarTruco();
+                break;
+            case NO_QUIERO:
+                manoActual.setPuedeCantarEnvido(false);
+                manoActual.setQueEnvidoPuedeCantar(0);
+                manoActual.gestionarPuntosEnvido(true);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.comprobarSiPuedeCantarTruco();
+                break;
+
+            default:
+                cantosEnvido(codigo, respuesta);
+                break;
+        }
+        manoActual.comprobarSiPuedeCantarEnvido(false);
+        actualizarMano(manoActual, codigo);
     }
 
 	//TODO: FALTAN TEST NEGATIVOS
@@ -217,6 +307,8 @@ public class ManoService {
             throw e;
         }
         manoActual.comprobarSiPuedeCantarTruco();
+        manoActual.comprobarSiPuedeCantarEnvido(false);
+
 		actualizarMano(manoActual, codigo);
         return manoActual;
     }
@@ -233,7 +325,7 @@ public class ManoService {
         
 
         RespuestaTruco respuestaTruco =   converterRespuestaTruco.convertToEntityAttribute(respuesta);
-        // Boolean puedeEnvido = puedeCantarEnvido(); // TODO: IMPORTANTE VER COMO AGREGAR ESTA POSIBILIDAD
+        Boolean puedeEnvido = mano.getPuedeCantarEnvido(); 
         switch (respuesta) {
             case QUIERO:
                 

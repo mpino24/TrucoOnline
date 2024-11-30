@@ -29,18 +29,20 @@ public class Mano {
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
     private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
+    
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
     private Integer jugadorIniciadorDelCanto;
     private Boolean terminada = false;
     private Boolean puedeCantarTruco = true;
-
+    private Boolean puedeCantarEnvido = false;
+    private Integer queEnvidoPuedeCantar = 2; //1 -> solo falta envido, 2 -> falta y real, 3 -> falta, real y envido, otro -> nada
+    private Integer equipoGanadorEnvido;
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
     private final Integer rondasMaximasGanables = 2;
     
-
-    private List<Integer> envidos = new ArrayList<>();
+    private List<Integer> envidosCantados;
     @ManyToOne
     private Partida partida;
 
@@ -60,25 +62,127 @@ public class Mano {
             Integer equipoCantor = getEquipoCantor();
             Integer jugadorTurno = getJugadorTurno();
             res =(equipoCantor == null || jugadorTurno % 2 != equipoCantor);
-            setPuedeCantarTruco(res);
+            
         }
-
+        setPuedeCantarTruco(res);
         
         return res;
     }
+    final Integer maximosEnvido = 2;
+    final Integer maximosRealEnvido =1;
+    final Integer maximosFaltaEnvido = 1; 
 
-    
+    public Boolean comprobarSiPuedeCantarEnvido(Boolean fueraDeCantos) { //O SUS OTRAS POSIBILIDADES
+        Boolean res;
+        if(getRondaActual() != 1 || getPuntosEnvido() !=0){
+            res = false;
+        } else{
+            List<Integer> listaEnvidos = getEnvidosCantados();
+            Integer envidos = listaEnvidos.get(0);
+            Integer realEnvido = listaEnvidos.get(1);
+            Integer faltaEnvido = listaEnvidos.get(2);
+            if(faltaEnvido ==maximosFaltaEnvido){
+                res=false;
+                setQueEnvidoPuedeCantar(0);
+            } else if(realEnvido ==maximosRealEnvido){
+                res =true;
+                setQueEnvidoPuedeCantar(1);
+            } else if (envidos == maximosEnvido) {
+                res = true;
+                setQueEnvidoPuedeCantar(2);
+            } else{
+                res =true;
+                setQueEnvidoPuedeCantar(3);
+            }
+            Integer jugador = getJugadorTurno();
+            Integer jugadorPie = obtenerJugadorPie();
+            Boolean esPie = jugador==jugadorPie || siguienteJugador(jugador) == jugadorPie;
+            if(fueraDeCantos){
+                res = res &&  esPie;
+            }
+             
+        }
+        setPuedeCantarEnvido(res);
+        return res;
+    }
 
-     public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
+
+
+   
+
+     public List<Integer> listaEnvidos(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
-        for(int i=0; i<cartasDisp.size(); i++){
+        for(int i=0; i<getCartasDisp().size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
             listaEnvidosCadaJugador.add(i, sumaJugador);
         }
+
+        Integer jugadorMano = getJugadorTurno(); //Como esta funcion se llama al principio, será el mano
+        List<Integer> nuevaLista = listaEnvidosCadaJugador;
+    
+        Integer equipoQueVaGanando = jugadorMano % 2;
+        Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
+        for(int i = siguienteJugador(jugadorMano); i<obtenerJugadorAnterior(jugadorMano);i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
+            if(i%2 == equipoQueVaGanando){
+                nuevaLista.set(i, null);
+            } else{
+                if(listaEnvidosCadaJugador.get(i) >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS NI SI HAY EMPATE (LLAMARIA A CERCANO A MANO)
+                    equipoQueVaGanando = i%2;
+                    puntajeGanador = listaEnvidosCadaJugador.get(i);
+                }else{
+                    nuevaLista.set(i, null);
+                }
+            }
+        }
+        setEquipoGanadorEnvido(equipoQueVaGanando);
         return listaEnvidosCadaJugador;
     }
 
+    public Integer gestionarPuntosEnvido(Boolean noQuiero){
+        Integer res = getPuntosEnvido(); //Siempre sera cero en un principio
+        Partida partida = getPartida();
+        Integer puntosEquipo1 = partida.getPuntosEquipo1();
+        Integer puntosEquipo2 = partida.getPuntosEquipo2();
+        Integer puntosMaximos = partida.getPuntosMaximos();
+        
+
+        Integer multiplicadorEnvido = 2;
+        Integer multiplicadorRealEnvido = 3;
+
+        List<Integer> envidoCantados = getEnvidosCantados();
+        Integer equipoGanadorEnvido = getEquipoGanadorEnvido();
+
+        Integer cantidadFaltaEnvidos = envidoCantados.get(2);
+        Integer cantidadEnvidos = envidoCantados.get(0);
+        Integer cantidadRealEnvidos = envidoCantados.get(1);
+
+        Integer maximoPuntaje = cantidadEnvidos*multiplicadorEnvido + cantidadRealEnvidos*multiplicadorRealEnvido;
+        
+        if(noQuiero){
+            if(cantidadFaltaEnvidos==maximosFaltaEnvido){
+                res =maximoPuntaje;
+            } else if(cantidadRealEnvidos==maximosRealEnvido){
+                res = cantidadEnvidos*multiplicadorEnvido;
+            }else if(cantidadEnvidos == maximosEnvido) {
+                res = (cantidadEnvidos -1) *multiplicadorEnvido;
+            } else{
+                res = 1;
+            }
+            
+        }else{
+            if(cantidadFaltaEnvidos == maximosFaltaEnvido){
+                res = equipoGanadorEnvido ==0 ? puntosMaximos-puntosEquipo1 : puntosMaximos-puntosEquipo2;
+            }
+            else{
+                res = maximoPuntaje;
+            }
+            
+        }
+        setPuntosEnvido(res);
+        return res;
+        
+    }
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
         List< Integer> listaSumasPalo= new ArrayList<>();
         for(Map.Entry<Palo, List<Carta>> cartasPaloJugador : diccCartasPaloJugador.entrySet()){
@@ -248,26 +352,7 @@ public class Mano {
 
     
 
-    public Boolean puedeCantarEnvido(){
 
-        Boolean sePuede = false;
-        Boolean esRondaUno = getRondaActual() ==1;
-        Boolean esPie = false;
-        Boolean noHayTruco = getPuntosTruco() <= 1;
-        Boolean noSeCanto = getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
-
-        Integer jugTurno = getJugadorTurno();
-        Integer pie = obtenerJugadorPie();
-        Integer otroPie = obtenerJugadorAnterior(pie);
-
-        if(jugTurno == pie || jugTurno == otroPie) esPie = true;
-
-
-        sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
-
-        return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
-
-    }
                                 
     public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
         Integer res = null;
@@ -283,4 +368,19 @@ public class Mano {
         }
         return res;
     }
+
+    public Integer quienRespondeEnvido(){
+        Integer jugadorQueResponde;
+        Integer jugadorIniciador = getJugadorIniciadorDelCanto();
+        Integer jugadorSiguiente = siguienteJugador(jugadorIniciador);
+        Integer jugadorActual = getJugadorTurno();
+        if(jugadorActual==jugadorIniciador){
+            jugadorQueResponde = jugadorSiguiente;
+        }else{
+            jugadorQueResponde=jugadorIniciador;
+        }
+        return jugadorQueResponde;
+    }
 }
+
+
