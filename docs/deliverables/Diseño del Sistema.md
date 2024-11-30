@@ -231,8 +231,8 @@ _Ej: Ahora podemos añadir arbitrariamente los datos que nos hagan falta al cont
 ### Refactorización Botón Ver: 
 En esta refactorización cambiamos nuestro código para que quedase mas legible, en lugar de tener dos veces la misma declaración del boton Ver (para poder ver partidas), ya solo aparece una vez.
 #### Estado inicial del código
-```jsx
-
+```JSX
+            {
                 <Link
                         to={`/partidas/${game.codigo}`}
                         style={{ textDecoration: "none" }}
@@ -258,7 +258,7 @@ En esta refactorización cambiamos nuestro código para que quedase mas legible,
 
 ```
 #### Estado del código refactorizado
-```Jsx
+```JSX
 {
                 connectedUsers < game.numJugadores &&
                     <Link
@@ -424,7 +424,7 @@ Al cambiar el enfoque y determinar la posicion del ganador en lugar de comparar 
 ### Refactorización de las funciones utiles de getCreationModal: 
 En esta refactorización externalizamos las funciones de generación de código de partida y la de parseo de partida.
 #### Estado inicial del código
-```Java
+```JSX
 getCreationModal.js
 
 const GetCreationModal=forwardRef(
@@ -465,7 +465,7 @@ export default GetCreationModal
 
 #### Estado del código refactorizado
 
-```Java
+```JSX
 generateRandomCode.js
 export default function generateRandomCode() { 
     const length = 5;
@@ -710,7 +710,7 @@ Ahora separado es mucho más fácil de mantener y se entiende mejor su funcional
 En esta refactorización unificamos en un único componente de React dos modales iguales que se encontraban en distintos puntos del código y que aparecen cuando quieres abandonar una partida
 #### Estado inicial del código
 Este mismo código se encontraba en WaitingModal.js y en AppNavbar.js
-```Java
+```JSX
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -761,7 +761,7 @@ Este mismo código se encontraba en WaitingModal.js y en AppNavbar.js
 
 #### Estado del código refactorizado
 
-```Java
+```JSX
 import { forwardRef } from 'react';
 import Modal from 'react-modal';
 import tokenService from 'frontend/src/services/token.service.js';
@@ -981,7 +981,7 @@ public  Integer compararCartas(String codigo) {
 }
 ```
 #### Estado del código refactorizado
-Las funciones anteriores en Mano:
+Las funciones anteriores ahora en Mano:
 ```Java
 public  void siguienteTurno() {      
         Integer jugadorActual = getJugadorTurno();
@@ -1067,3 +1067,90 @@ private Integer jugadorIniciadorDelCanto;
 La función obtenerRondaActual sólo calculaba la ronda actual para casos específicos en los que el jugador pie (el que está a la izquierda del jugador mano) era el último en tirar una carta, cosa que no siempre es así. La función quienResponde tampoco funcionaba para todos los casos porque era bastante complicado tratar de contemplar todas las posibilidades.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ya no es necesario calcular ni la ronda actual ni el jugador al que le toca tirar carta tras una secuencia de cantos mediante funciones.
+
+
+### Refactorización para mover funciones de Mano a ManoService: 
+En esta refactorización movimos algunas funciones de Mano a ManoService, más especificamente aquellas en las que toman acción los jugadores como la de tirar cartas, cantar truco o responder al mismo. Esto debido a que son funciones de lógica que corresponden al Service, ya que en ellas, entre otras cosas, es donde pueden manejarse las exceptions y son las que son llamadas en el ManoController.
+#### Estado inicial del código
+Ejemplo de funcion que estaba en Mano:
+```Java
+ public  Carta tirarCarta(Integer cartaId){
+        if(!getEsperandoRespuesta()){
+            Integer jugadorActual = getJugadorTurno();
+            
+            List<Carta> cartasDisponibles = getCartasDisp().get(jugadorActual);
+            Integer indice = null;
+            for (int i=0; i < cartasDisponibles.size(); i++){
+                if(cartasDisponibles.get(i)!= null){
+                    if(cartasDisponibles.get(i).getId()==cartaId){
+                        indice=i;
+                        
+                    }
+                }
+                
+            }
+            if(indice==null){
+                throw new CartaTiradaException();
+            }
+            Carta cartaALanzar = cartasDisponibles.get(indice);
+            getCartasDisp().get(jugadorActual).set(indice,null);
+            getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
+            List<Carta> listaCartasLanzadas = getCartasLanzadasRonda();
+            if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
+                compararCartas();
+            } else{
+                siguienteTurno();
+            }
+            
+            
+
+            return cartaALanzar;
+        } else{
+            throw new CartaTiradaException("Tenés que responder antes de poder tirar una carta");
+        }
+        
+    }
+```
+#### Estado del código refactorizado
+Las funciones anteriores ahora adaptadas en ManoService:
+```Java
+     public Carta tirarCarta(String codigo, Integer cartaId){
+		Mano manoActual = getMano(codigo);
+        if(!manoActual.getEsperandoRespuesta()){
+            Integer jugadorActual = manoActual.getJugadorTurno();
+            
+            List<Carta> cartasDisponibles = manoActual.getCartasDisp().get(jugadorActual);
+            Integer indice = null;
+            for (int i=0; i < cartasDisponibles.size(); i++){
+                if(cartasDisponibles.get(i)!= null){
+                    if(cartasDisponibles.get(i).getId()==cartaId){
+                        indice=i;
+                        
+                    }
+                }
+                
+            }
+            if(indice==null){
+                throw new CartaTiradaException();
+            }
+            Carta cartaALanzar = cartasDisponibles.get(indice);
+            manoActual.getCartasDisp().get(jugadorActual).set(indice,null);
+            manoActual.getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
+            List<Carta> listaCartasLanzadas = manoActual.getCartasLanzadasRonda();
+            if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
+                manoActual.compararCartas();
+            } else{
+                manoActual.siguienteTurno();
+            }
+            actualizarMano(manoActual, codigo);
+            return cartaALanzar;
+        } else{
+            throw new CartaTiradaException("Tenés que responder antes de poder tirar una carta");
+        }
+        
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Las exceptions no funcionaban y además este tipo de funciones es más correcto que se encuentren ahí.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+El código de Mano no hace nada que tenga que ver con una acción del jugador en su turno, lo que permite una mejor separación de las propiedades de cada clase.
