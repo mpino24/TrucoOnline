@@ -77,7 +77,7 @@ public class Mano {
 
     public Boolean comprobarSiPuedeCantarEnvido(Boolean fueraDeCantos) { //O SUS OTRAS POSIBILIDADES
         Boolean res;
-        if(getRondaActual() != 1 || getPuntosEnvido() !=0){
+        if(getRondaActual() != 1 || getPuntosEnvido() !=0 || getPuntosTruco() > 1){
             res = false;
         } else{
             List<Integer> listaEnvidos = getEnvidosCantados();

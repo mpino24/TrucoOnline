@@ -223,7 +223,8 @@ public class ManoService {
     public void responderEnvido(String codigo, CantosEnvido respuesta){
         Mano manoActual = getMano(codigo);
         Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
-        
+        manoActual.setEquipoCantor(null);
+        manoActual.setSecuenciaCantoLista(new ArrayList<>());
         switch (respuesta) {
             case QUIERO:
                 
@@ -233,6 +234,7 @@ public class ManoService {
                 gestionarPuntosEnvido(false, codigo);
                 manoActual.setSeQuizoEnvido(true);
                 manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
                 break;
             case NO_QUIERO:
@@ -241,6 +243,7 @@ public class ManoService {
                 gestionarPuntosEnvido(true, codigo);
                 manoActual.setEsperandoRespuesta(false);
                 manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
                 break;
 
@@ -432,6 +435,11 @@ public class ManoService {
                 
                 break;
             default:
+                if(puedeEnvido){
+                    CantosEnvido respuestaEnvido = CantosEnvido.valueOf(respuesta.toString());
+                    cantosEnvido(codigo, respuestaEnvido);
+
+                }
                 throw new TrucoException( "Respuesta al truco no valida"); 
         }
         manoActual.comprobarSiPuedeCantarTruco();

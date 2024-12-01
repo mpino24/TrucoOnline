@@ -532,7 +532,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 </div>
             )}
             {/* Cantar envido */}
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido && (
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido &&   (
                 <div className="truco-button-container" > 
                     {mano.queEnvidoPuedeCantar >=3  && (
                         <button onClick={() => cantarEnvido('ENVIDO')}>
@@ -573,6 +573,26 @@ const PlayingModal = forwardRef((props, ref) => {
                                 {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
                             </span>
                         </button>}
+                        
+                        {mano.puedeCantarEnvido && (  
+                        <div>
+                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
+                            <button onClick={() => responderEnvido('ENVIDO')}>
+                                <span className="swirl-glow-text">Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
+                            <button onClick={() => responderEnvido('REAL_ENVIDO')}>
+                                <span className="swirl-glow-text">Real Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
+                            <button onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                                <span className="swirl-glow-text">Falta Envido</span>
+                            </button>
+                        )}
+                        </div>
+                    )}
                 </div>
             )}
             
