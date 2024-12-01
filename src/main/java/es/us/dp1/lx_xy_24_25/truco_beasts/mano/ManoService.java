@@ -176,8 +176,9 @@ public class ManoService {
         manoActual.setEsperandoRespuesta(true);
         Integer quienResponde = manoActual.quienRespondeEnvido();
         try {
+        manoActual.comprobarSiPuedeCantarEnvido(false);
         Integer queEnvidoPuedoCantar = manoActual.getQueEnvidoPuedeCantar();
-        
+        manoActual.setEsTrucoEnvidoFlor(1);
             switch (canto) {
                 case ENVIDO:
                     if (queEnvidoPuedoCantar<3) {
@@ -225,7 +226,7 @@ public class ManoService {
                 
                 manoActual.setPuedeCantarEnvido(false);
                 manoActual.setQueEnvidoPuedeCantar(0);
-
+                manoActual.setEsperandoRespuesta(false);
                 manoActual.gestionarPuntosEnvido(false);
                 
                 manoActual.setJugadorTurno(jugadorIniciador);
@@ -235,6 +236,7 @@ public class ManoService {
                 manoActual.setPuedeCantarEnvido(false);
                 manoActual.setQueEnvidoPuedeCantar(0);
                 manoActual.gestionarPuntosEnvido(true);
+                manoActual.setEsperandoRespuesta(false);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.comprobarSiPuedeCantarTruco();
                 break;
@@ -263,7 +265,7 @@ public class ManoService {
         
         listaRondaJugador.add(rondaActual);
         listaRondaJugador.add(jugadorTurno);
-
+        manoActual.setEsTrucoEnvidoFlor(0);
         Mano mano = new Mano();
         try {
             if (!manoActual.comprobarSiPuedeCantarTruco()) {

@@ -474,17 +474,17 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Cantar envido */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido && (
                 <div className="truco-button-container" > 
-                    {mano.queEnvidoPuedeCantar > 1 && (
+                    {mano.queEnvidoPuedeCantar >=3  && (
                         <button onClick={() => cantarEnvido('ENVIDO')}>
                             <span className="swirl-glow-text">Envido</span>
                         </button>
                     )}
-                    {mano.queEnvidoPuedeCantar >=1 && (
+                    {mano.queEnvidoPuedeCantar >=2 && (
                         <button onClick={() => cantarEnvido('REAL_ENVIDO')}>
                             <span className="swirl-glow-text">Real Envido</span>
                         </button>
                     )}
-                    {mano.queEnvidoPuedeCantar > 0 && (
+                    {mano.queEnvidoPuedeCantar >= 1 && (
                         <button onClick={() => cantarEnvido('FALTA_ENVIDO')}>
                             <span className="swirl-glow-text">Falta Envido</span>
                         </button>
@@ -493,7 +493,7 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
             </div>
             {/* Responder Truco Buttons */}
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && (
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && mano.esTrucoEnvidoFlor ===0 && (
                 <div className="truco-button-container responder-truco-buttons"> 
                     {puntosTrucoActuales !== puntosConRetruco && 
                         <button onClick={() => responderTruco("QUIERO")}>Quiero</button>}
@@ -517,24 +517,24 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
             
         {/*Responder envido */}
-        {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && (
+        {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&mano.esTrucoEnvidoFlor ===1 &&  (
                 <div className="truco-button-container responder-truco-buttons"> 
                     
                         <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
                         <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
                     
                     
-                        {mano.queEnvidoPuedeCantar > 1 &&mano.puedeCantarEnvido && (
+                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
                         <button onClick={() => responderEnvido('ENVIDO')}>
                             <span className="swirl-glow-text">Envido</span>
                         </button>
                     )}
-                    {mano.queEnvidoPuedeCantar >1 && mano.puedeCantarEnvido &&(
+                    {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
                         <button onClick={() => responderEnvido('REAL_ENVIDO')}>
                             <span className="swirl-glow-text">Real Envido</span>
                         </button>
                     )}
-                    {mano.queEnvidoPuedeCantar > 0 &&mano.puedeCantarEnvido && (
+                    {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
                         <button onClick={() => responderEnvido('FALTA_ENVIDO')}>
                             <span className="swirl-glow-text">Falta Envido</span>
                         </button>

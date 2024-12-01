@@ -29,7 +29,7 @@ public class Mano {
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
     private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
-    
+    private Integer esTrucoEnvidoFlor = 0; // 0 -> Truco, 1 -> envido, 2 -> flor
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
     private Integer jugadorIniciadorDelCanto;
@@ -139,6 +139,7 @@ public class Mano {
         return listaEnvidosCadaJugador;
     }
 
+    //TODO: PROBABLEMENTE SEA MÁS CONVENIENTE EN MANOSERVICE
     public Integer gestionarPuntosEnvido(Boolean noQuiero){
         Integer res = getPuntosEnvido(); //Siempre sera cero en un principio
         Partida partida = getPartida();
