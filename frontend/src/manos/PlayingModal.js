@@ -533,7 +533,7 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
             {/* Cantar envido */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido &&   (
-                <div className="truco-button-container" > 
+                <div className="truco-button-container" style={{display:'flex', flexDirection: 'row', marginTop: '60px'}} > 
                     {mano.queEnvidoPuedeCantar >=3  && (
                         <button onClick={() => cantarEnvido('ENVIDO')}>
                             <span className="swirl-glow-text">Envido</span>
