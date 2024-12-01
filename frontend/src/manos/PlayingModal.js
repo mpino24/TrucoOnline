@@ -68,7 +68,7 @@ const PlayingModal = forwardRef((props, ref) => {
             if (mano && mano.envidosCadaJugador) {
                 setEnvidosJugadores(mano.envidosCadaJugador.map((envido) => envido === null ? 'Son buenas' : envido));
             }
-            if(mano.puntosEnvido !== 0 && mano.seQuizoEnvido){
+            if(mano && mano.puntosEnvido !== 0 && mano.seQuizoEnvido){
                 setResolucionEnvido(true)
                 
             } else{

@@ -124,11 +124,19 @@ public class Mano {
         Integer jugadorMano = getJugadorTurno(); //Como esta funcion se llama al principio, será el mano
         List<Integer> nuevaLista = listaEnvidosCadaJugador;
     
-        Integer equipoQueVaGanando = jugadorMano % 2;
+        Integer equipoMano = jugadorMano % 2;
+        Integer equipoQueVaGanando = equipoMano;
+        
         Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
         for(int i = siguienteJugador(jugadorMano); i<jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
             Integer puntajeNuevoJugador = listaEnvidosCadaJugador.get(i);
-            if(puntajeNuevoJugador >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS NI SI HAY EMPATE (LLAMARIA A CERCANO A MANO)
+            if(puntajeNuevoJugador == puntajeGanador){
+                if(equipoQueVaGanando == equipoMano){
+                    nuevaLista.set(i, null);
+                } else {
+                    equipoQueVaGanando = equipoMano;
+                }
+            } else if(puntajeNuevoJugador >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS (CREO QUE NO LO VAMOS A HACER)
                 equipoQueVaGanando = i%2;
                 puntajeGanador = puntajeNuevoJugador;
             }else{
@@ -137,6 +145,7 @@ public class Mano {
             
         }
         setEquipoGanadorEnvido(equipoQueVaGanando);
+        setEnvidosCadaJugador(listaEnvidosCadaJugador);
         return listaEnvidosCadaJugador;
     }
 
