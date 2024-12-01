@@ -62,7 +62,7 @@ public class ManoService {
         Mano mano=  manosPorPartida.get(codigo);
         if(mano == null){
             crearMano(partidaService.findPartidaByCodigo(codigo));
-        } else if(mano.getTerminada()) mano = terminarMano(mano);
+        } else if(mano.getTerminada()) mano = terminarMano(mano, codigo);
         return mano;
     }
 
@@ -102,6 +102,7 @@ public class ManoService {
 		nuevaMano.setPartida(partida);
 		nuevaMano.setJugadorTurno(partida.getJugadorMano());
 		nuevaMano.setCartasDisp(repartirCartas(partida));
+
         Integer tiposDeEnvido = 3;
         Integer envidosIniciales=0;
         List<Integer> envidos = new ArrayList<>();
@@ -109,6 +110,8 @@ public class ManoService {
             envidos.add(envidosIniciales);
         }
         nuevaMano.setEnvidosCantados(envidos);
+        nuevaMano.setEnvidosCadaJugador(nuevaMano.listaTantosCadaJugador());
+
 		Integer ganadasIniciales = 0;
 		List<Integer> ganadoresRonda = new ArrayList<>();
 		ganadoresRonda.add(ganadasIniciales);
@@ -227,15 +230,15 @@ public class ManoService {
                 manoActual.setPuedeCantarEnvido(false);
                 manoActual.setQueEnvidoPuedeCantar(0);
                 manoActual.setEsperandoRespuesta(false);
-                manoActual.gestionarPuntosEnvido(false);
-                
+                gestionarPuntosEnvido(false, codigo);
+                manoActual.setSeQuizoEnvido(true);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.comprobarSiPuedeCantarTruco();
                 break;
             case NO_QUIERO:
                 manoActual.setPuedeCantarEnvido(false);
                 manoActual.setQueEnvidoPuedeCantar(0);
-                manoActual.gestionarPuntosEnvido(true);
+                gestionarPuntosEnvido(true, codigo);
                 manoActual.setEsperandoRespuesta(false);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.comprobarSiPuedeCantarTruco();
@@ -248,6 +251,78 @@ public class ManoService {
     
         actualizarMano(manoActual, codigo);
     }
+
+    //TODO: PROBABLEMENTE SEA MÁS CONVENIENTE EN MANOSERVICE
+    public Integer gestionarPuntosEnvido(Boolean noQuiero, String codigo){
+        Mano manoActual = getMano(codigo);
+
+        
+        Integer res = manoActual.getPuntosEnvido(); //Siempre sera cero en un principio
+        Partida partida = partidaService.findPartidaByCodigo(codigo);
+
+        Integer equipoRespondedor = manoActual.getJugadorTurno() %2;
+
+        Integer puntosEquipo1 = partida.getPuntosEquipo1();
+        Integer puntosEquipo2 = partida.getPuntosEquipo2();
+        Integer puntosMaximos = partida.getPuntosMaximos();
+        final Integer maximosEnvido = 2;
+        final Integer maximosRealEnvido =1;
+        final Integer maximosFaltaEnvido = 1; 
+
+        Integer multiplicadorEnvido = 2;
+        Integer multiplicadorRealEnvido = 3;
+
+        List<Integer> envidoCantados = manoActual.getEnvidosCantados();
+        Integer equipoGanadorEnvido = manoActual.getEquipoGanadorEnvido();
+
+        Integer cantidadFaltaEnvidos = envidoCantados.get(2);
+        Integer cantidadEnvidos = envidoCantados.get(0);
+        Integer cantidadRealEnvidos = envidoCantados.get(1);
+
+        Integer maximoPuntaje = cantidadEnvidos*multiplicadorEnvido + cantidadRealEnvidos*multiplicadorRealEnvido;
+        
+        if(noQuiero){
+            if(cantidadFaltaEnvidos==maximosFaltaEnvido){
+                res =maximoPuntaje;
+            } else if(cantidadRealEnvidos==maximosRealEnvido){
+                res = cantidadEnvidos*multiplicadorEnvido;
+            }else if(cantidadEnvidos == maximosEnvido) {
+                res = (cantidadEnvidos -1) *multiplicadorEnvido;
+            } else{
+                res = 1;
+            }
+
+            if(equipoRespondedor==0){
+                partida.setPuntosEquipo2(puntosEquipo2 + res);
+            }else{
+                partida.setPuntosEquipo1(puntosEquipo1 + res);
+            }
+            
+        }else{
+            if(cantidadFaltaEnvidos == maximosFaltaEnvido){
+                res = equipoGanadorEnvido ==0 ? puntosMaximos-puntosEquipo1 : puntosMaximos-puntosEquipo2;
+            }
+            else{
+                res = maximoPuntaje;
+            }
+
+            if(equipoGanadorEnvido==0){
+                partida.setPuntosEquipo1(puntosEquipo1 + res);
+            }else{
+                partida.setPuntosEquipo2(puntosEquipo2 + res);
+            }
+            
+        }
+        manoActual.setPuntosEnvido(res);
+        
+        
+        
+        partidaService.updatePartida(partida, partida.getId());
+        return res;
+        
+    }
+
+
 
 	//TODO: FALTAN TEST NEGATIVOS
     public Mano cantosTruco(String codigo, CantosTruco canto){
@@ -363,8 +438,8 @@ public class ManoService {
 		actualizarMano(manoActual, codigo);
     }
 
-	public Mano terminarMano(Mano manoActual){
-		Partida partida = manoActual.getPartida();
+	public Mano terminarMano(Mano manoActual, String codigo){
+		Partida partida = partidaService.findPartidaByCodigo(codigo);
 		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
 		
 		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1

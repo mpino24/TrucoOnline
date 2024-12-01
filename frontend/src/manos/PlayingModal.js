@@ -18,6 +18,10 @@ const PlayingModal = forwardRef((props, ref) => {
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
 
+    const[resolucionEnvido, setResolucionEnvido] = useState(false)
+      // TODO: CAMBIAR PORQUE ES TOTALMENTE PAUPERRIMO ESTO, PERO NO SE ME OCURRE OTRA OPCION XD
+    const [envidosJugadores, setEnvidosJugadores] = useState([]);
+
 
 
     const puntosSinTruco = 1;
@@ -59,7 +63,17 @@ const PlayingModal = forwardRef((props, ref) => {
                 setPuntosTrucoActuales(data.puntosTruco);
  
                 
-            }          
+            }
+            
+            if (mano && mano.envidosCadaJugador) {
+                setEnvidosJugadores(mano.envidosCadaJugador.map((envido) => envido === null ? 'Son buenas' : envido));
+            }
+            if(mano.puntosEnvido !== 0 && mano.seQuizoEnvido){
+                setResolucionEnvido(true)
+                
+            } else{
+                setResolucionEnvido(false)
+            }
 
         })
         .catch((error) => {
@@ -206,6 +220,7 @@ const PlayingModal = forwardRef((props, ref) => {
         return <div>Cargando cartas lanzadas...</div>;
     };
 
+
     const dragStart = (evento, carta) => {
         if (mano && cartasJugador && Number(posicion) === mano.jugadorTurno) {
             setDraggedCarta(carta);
@@ -324,6 +339,9 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
     function responderEnvido(respuesta) {
+        if(respuesta === 'QUIERO'){
+            setResolucionEnvido(true)
+        }
         fetch(`/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
             method: "PATCH",
             headers: {
@@ -377,6 +395,8 @@ const PlayingModal = forwardRef((props, ref) => {
                 </>
             )}
                 
+                
+
             {/* Drop Area */}
             <div
                 ref={dropAreaRef}
@@ -448,8 +468,48 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Table Cards */}
             <div className="cartas-mesa-position">
                 {renderCartasMesa()}
+                
             </div>
 
+            {/* Cuadto del envido*/}
+            <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
+            {mano && resolucionEnvido && (
+                            <div 
+                                className="confirmation-dialog"
+                                style={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+                                    maxWidth: "800px",
+                                    margin: "0 auto",
+                                    textAlign: "center",
+                                    
+                                }}
+                            >
+                                <h3 style={{ color: "black" }}>Resolución de Envido</h3>
+                                <h5>{mano.equipoGanadorEnvido %2 === posicion%2 ? "Ganaste" : "Perdiste" }</h5>
+                                {envidosJugadores.map((envido, index) => (
+                                    <p key={index}>Jugador {index}: {envido}</p>
+                                ))}
+                                
+                                <button
+                                    onClick={() => setResolucionEnvido(false)}
+                                    style={{
+                                        backgroundColor: "red",
+                                        color: "white",
+                                        padding: "10px",
+                                        marginTop: "10px",
+                                        border: "none",
+                                        borderRadius: "10px",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        )}
+                        </div>
             {/* Truco Buttons */}
             <div style={{display:'flex', flexDirection: 'row'}}>
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales && (

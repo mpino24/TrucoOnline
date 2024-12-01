@@ -38,10 +38,13 @@ public class Mano {
     private Boolean puedeCantarEnvido = false;
     private Integer queEnvidoPuedeCantar = 2; //1 -> solo falta envido, 2 -> falta y real, 3 -> falta, real y envido, otro -> nada
     private Integer equipoGanadorEnvido;
+    private Boolean seQuizoEnvido = false;
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
     private final Integer rondasMaximasGanables = 2;
     
+    List<Integer> envidosCadaJugador;
+
     private List<Integer> envidosCantados;
     @ManyToOne
     private Partida partida;
@@ -110,7 +113,7 @@ public class Mano {
 
    
 
-     public List<Integer> listaEnvidos(){ 
+     public List<Integer> listaTantosCadaJugador(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
         for(int i=0; i<getCartasDisp().size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
@@ -124,66 +127,20 @@ public class Mano {
         Integer equipoQueVaGanando = jugadorMano % 2;
         Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
         for(int i = siguienteJugador(jugadorMano); i<obtenerJugadorAnterior(jugadorMano);i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
-            if(i%2 == equipoQueVaGanando){
+            Integer puntajeNuevoJugador = listaEnvidosCadaJugador.get(i);
+            if(puntajeNuevoJugador >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS NI SI HAY EMPATE (LLAMARIA A CERCANO A MANO)
+                equipoQueVaGanando = i%2;
+                puntajeGanador = puntajeNuevoJugador;
+            }else{
                 nuevaLista.set(i, null);
-            } else{
-                if(listaEnvidosCadaJugador.get(i) >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS NI SI HAY EMPATE (LLAMARIA A CERCANO A MANO)
-                    equipoQueVaGanando = i%2;
-                    puntajeGanador = listaEnvidosCadaJugador.get(i);
-                }else{
-                    nuevaLista.set(i, null);
-                }
             }
+            
         }
         setEquipoGanadorEnvido(equipoQueVaGanando);
         return listaEnvidosCadaJugador;
     }
 
-    //TODO: PROBABLEMENTE SEA MÁS CONVENIENTE EN MANOSERVICE
-    public Integer gestionarPuntosEnvido(Boolean noQuiero){
-        Integer res = getPuntosEnvido(); //Siempre sera cero en un principio
-        Partida partida = getPartida();
-        Integer puntosEquipo1 = partida.getPuntosEquipo1();
-        Integer puntosEquipo2 = partida.getPuntosEquipo2();
-        Integer puntosMaximos = partida.getPuntosMaximos();
-        
-
-        Integer multiplicadorEnvido = 2;
-        Integer multiplicadorRealEnvido = 3;
-
-        List<Integer> envidoCantados = getEnvidosCantados();
-        Integer equipoGanadorEnvido = getEquipoGanadorEnvido();
-
-        Integer cantidadFaltaEnvidos = envidoCantados.get(2);
-        Integer cantidadEnvidos = envidoCantados.get(0);
-        Integer cantidadRealEnvidos = envidoCantados.get(1);
-
-        Integer maximoPuntaje = cantidadEnvidos*multiplicadorEnvido + cantidadRealEnvidos*multiplicadorRealEnvido;
-        
-        if(noQuiero){
-            if(cantidadFaltaEnvidos==maximosFaltaEnvido){
-                res =maximoPuntaje;
-            } else if(cantidadRealEnvidos==maximosRealEnvido){
-                res = cantidadEnvidos*multiplicadorEnvido;
-            }else if(cantidadEnvidos == maximosEnvido) {
-                res = (cantidadEnvidos -1) *multiplicadorEnvido;
-            } else{
-                res = 1;
-            }
-            
-        }else{
-            if(cantidadFaltaEnvidos == maximosFaltaEnvido){
-                res = equipoGanadorEnvido ==0 ? puntosMaximos-puntosEquipo1 : puntosMaximos-puntosEquipo2;
-            }
-            else{
-                res = maximoPuntaje;
-            }
-            
-        }
-        setPuntosEnvido(res);
-        return res;
-        
-    }
+    
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
         List< Integer> listaSumasPalo= new ArrayList<>();
         for(Map.Entry<Palo, List<Carta>> cartasPaloJugador : diccCartasPaloJugador.entrySet()){
