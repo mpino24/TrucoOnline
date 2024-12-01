@@ -108,6 +108,7 @@ public class ManoService {
         for(int i = 0; i<tiposDeEnvido;i++){
             envidos.add(envidosIniciales);
         }
+        nuevaMano.setEnvidosCantados(envidos);
 		Integer ganadasIniciales = 0;
 		List<Integer> ganadoresRonda = new ArrayList<>();
 		ganadoresRonda.add(ganadasIniciales);
@@ -119,7 +120,7 @@ public class ManoService {
             listaCartasLanzadas.add(null);
         }
         nuevaMano.setCartasLanzadasRonda(listaCartasLanzadas);
-
+        nuevaMano.comprobarSiPuedeCantarEnvido(true);
         manosPorPartida.put(partida.getCodigo(), nuevaMano);
 		return nuevaMano;
 	}
@@ -242,7 +243,7 @@ public class ManoService {
                 cantosEnvido(codigo, respuesta);
                 break;
         }
-        manoActual.comprobarSiPuedeCantarEnvido(false);
+    
         actualizarMano(manoActual, codigo);
     }
 

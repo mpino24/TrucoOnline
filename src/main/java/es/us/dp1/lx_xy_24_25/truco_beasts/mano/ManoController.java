@@ -69,4 +69,11 @@ public class ManoController {
         manoService.cantosEnvido(codigo, cantoEnvido);
         return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
     }
+
+    @PatchMapping("/responderEnvido/{cantoEnvido}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<CantosEnvido> patchResponderEnvido(@PathVariable String codigo, @PathVariable CantosEnvido cantoEnvido) throws EnvidoException {
+        manoService.responderEnvido(codigo, cantoEnvido);
+        return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
+    }
 }
