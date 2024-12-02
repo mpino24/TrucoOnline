@@ -360,7 +360,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (
-        <>
+        <div className="playing-modal-container">
             {console.log(mano)}
             {/* Background */}
             <div
@@ -369,7 +369,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     backgroundSize: 'cover', 
                     backgroundRepeat: 'no-repeat', 
                     backgroundPosition: 'center', 
-                    height: '100vh', 
+                    height: '99910vh', 
                     width: '100vw',
                     position: 'relative', // To position the dragged card relative to this container
                     zIndex: -1
@@ -631,7 +631,7 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
         
                 
-        </>
+        </div>
     );
 });
 
