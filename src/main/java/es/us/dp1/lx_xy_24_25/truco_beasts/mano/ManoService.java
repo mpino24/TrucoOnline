@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
@@ -414,7 +413,7 @@ public class ManoService {
                     manoActual.setPuntosTruco(maximoPuntajeTruco);
                     throw new TrucoException("El máximo puntaje obtenible en el truco son " + maximoPuntajeTruco +" puntos");
                 }
-                
+                manoActual.comprobarSiPuedeCantarEnvido(false);
                 
                 break;
             case NO_QUIERO: 

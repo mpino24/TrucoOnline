@@ -384,7 +384,7 @@ const PlayingModal = forwardRef((props, ref) => {
             <h4 className={"puntos-ellos"}>Ellos:</h4>
             {mano &&  puntosTrucoActuales &&
             (
-                <> 
+                <div style={{overflow:'hidden'}}> 
                 <PuntosComponente  estiloFotoPunto={"puntaje-EquipoNuestro"} 
                                     posicion={posicion} puntosEquipo1={game.puntosEquipo1} puntosEquipo2={game.puntosEquipo2}
                                     />
@@ -392,7 +392,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 <PuntosComponente estiloFotoPunto={"puntaje-EquipoEllos"} 
                                     posicion={posicion} puntosEquipo1={game.puntosEquipo2} puntosEquipo2={game.puntosEquipo1}
                                 />
-                </>
+                </div>
             )}
                 
                 
@@ -533,19 +533,19 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
             {/* Cantar envido */}
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido &&   (
-                <div className="truco-button-container" style={{display:'flex', flexDirection: 'row', marginTop: '60px'}} > 
+                <div className="envido-button-container"> 
                     {mano.queEnvidoPuedeCantar >=3  && (
                         <button onClick={() => cantarEnvido('ENVIDO')}>
-                            <span className="swirl-glow-text">Envido</span>
+                            <span>Envido</span>
                         </button>
                     )}
                     {mano.queEnvidoPuedeCantar >=2 && (
                         <button onClick={() => cantarEnvido('REAL_ENVIDO')}>
-                            <span className="swirl-glow-text">Real Envido</span>
+                            <span >Real Envido</span>
                         </button>
                     )}
                     {mano.queEnvidoPuedeCantar >= 1 && (
-                        <button onClick={() => cantarEnvido('FALTA_ENVIDO')}>
+                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' }} onClick={() => cantarEnvido('FALTA_ENVIDO')}>
                             <span className="swirl-glow-text">Falta Envido</span>
                         </button>
                     )}
@@ -575,19 +575,19 @@ const PlayingModal = forwardRef((props, ref) => {
                         </button>}
                         
                         {mano.puedeCantarEnvido && (  
-                        <div>
+                        <div className='envido-button-container'>
                         {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
                             <button onClick={() => responderEnvido('ENVIDO')}>
-                                <span className="swirl-glow-text">Envido</span>
+                                <span>Envido</span>
                             </button>
                         )}
                         {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
                             <button onClick={() => responderEnvido('REAL_ENVIDO')}>
-                                <span className="swirl-glow-text">Real Envido</span>
+                                <span>Real Envido</span>
                             </button>
                         )}
                         {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
-                            <button onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                            <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
                                 <span className="swirl-glow-text">Falta Envido</span>
                             </button>
                         )}
@@ -598,7 +598,7 @@ const PlayingModal = forwardRef((props, ref) => {
             
         {/*Responder envido */}
         {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&mano.esTrucoEnvidoFlor ===1 &&  (
-                <div className="truco-button-container responder-truco-buttons"> 
+                <div className="envido-button-container" style={{left:'70%', position:'fixed'}}> 
                     
                         <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
                         <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
@@ -606,16 +606,16 @@ const PlayingModal = forwardRef((props, ref) => {
                     
                         {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
                         <button onClick={() => responderEnvido('ENVIDO')}>
-                            <span className="swirl-glow-text">Envido</span>
+                            <span>Envido</span>
                         </button>
                     )}
                     {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
                         <button onClick={() => responderEnvido('REAL_ENVIDO')}>
-                            <span className="swirl-glow-text">Real Envido</span>
+                            <span>Real Envido</span>
                         </button>
                     )}
                     {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
-                        <button onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
                             <span className="swirl-glow-text">Falta Envido</span>
                         </button>
                     )}
