@@ -18,6 +18,10 @@ const PlayingModal = forwardRef((props, ref) => {
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
 
+    const[resolucionEnvido, setResolucionEnvido] = useState(false)
+      // TODO: CAMBIAR PORQUE ES TOTALMENTE PAUPERRIMO ESTO, PERO NO SE ME OCURRE OTRA OPCION XD
+    const [envidosJugadores, setEnvidosJugadores] = useState([]);
+
 
 
     const puntosSinTruco = 1;
@@ -26,7 +30,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [puntosTrucoActuales, setPuntosTrucoActuales] = useState(puntosSinTruco);
     const [tirarTrigger, setTirarTrigger] = useState(0);
     const [trucoTrigger, setTrucoTrigger] = useState(0);
-
+    const [envidoTrigger, setEnvidoTrigger] = useState(0);
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
     );
@@ -59,7 +63,17 @@ const PlayingModal = forwardRef((props, ref) => {
                 setPuntosTrucoActuales(data.puntosTruco);
  
                 
-            }          
+            }
+            
+            if (mano && mano.envidosCadaJugador) {
+                setEnvidosJugadores(mano.envidosCadaJugador.map((envido) => envido === null ? 'Son buenas' : envido));
+            }
+            if(mano && mano.puntosEnvido !== 0 && mano.seQuizoEnvido){
+                setResolucionEnvido(true)
+                
+            } else{
+                setResolucionEnvido(false)
+            }
 
         })
         .catch((error) => {
@@ -78,7 +92,7 @@ const PlayingModal = forwardRef((props, ref) => {
 
     useEffect(() => {
         fetchMano();
-    }, [tirarTrigger, trucoTrigger]);
+    }, [tirarTrigger, trucoTrigger, envidoTrigger]);
 
     useEffect(() => {
         if (mano && puntosTrucoActuales) {
@@ -114,10 +128,18 @@ const PlayingModal = forwardRef((props, ref) => {
 
 
     const handleVolumeChange = (event) => {
-        const newVolume = event.target.value;
-        setVolume(newVolume);
+        const sliderValue = event.target.value;
+    
+        
+        const minLog = 0.01; // Volumen más bajo (casi mudo)
+        const maxLog = 1;    // Volumen más alto (máximo)
+        
+        
+        const logVolume = Math.pow(10, (sliderValue / 100) * (Math.log10(maxLog) - Math.log10(minLog)) + Math.log10(minLog));
+    
+        setVolume(sliderValue); 
         if (audioRef.current) {
-            audioRef.current.volume = newVolume / 100;
+            audioRef.current.volume = logVolume; 
         }
     };
 
@@ -197,6 +219,7 @@ const PlayingModal = forwardRef((props, ref) => {
         
         return <div>Cargando cartas lanzadas...</div>;
     };
+
 
     const dragStart = (evento, carta) => {
         if (mano && cartasJugador && Number(posicion) === mano.jugadorTurno) {
@@ -298,8 +321,47 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
 
+    function cantarEnvido(respuesta) {
+        fetch(`/api/v1/manos/${game.codigo}/cantarEnvido/${respuesta}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if (data) {
+                setEnvidoTrigger((prev) => prev + 1);
+            }
+        })
+        .catch((error) => alert(error.message));
+    }
+    function responderEnvido(respuesta) {
+        if(respuesta === 'QUIERO'){
+            setResolucionEnvido(true)
+        }
+        fetch(`/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if (data) {
+                setEnvidoTrigger((prev) => prev + 1);
+            }
+        })
+        .catch((error) => alert(error.message));
+    }
+
     return (
-        <>
+        <div className="playing-modal-container">
+            {console.log(mano)}
             {/* Background */}
             <div
                 style={{ 
@@ -307,7 +369,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     backgroundSize: 'cover', 
                     backgroundRepeat: 'no-repeat', 
                     backgroundPosition: 'center', 
-                    height: '100vh', 
+                    height: '99910vh', 
                     width: '100vw',
                     position: 'relative', // To position the dragged card relative to this container
                     zIndex: -1
@@ -322,7 +384,7 @@ const PlayingModal = forwardRef((props, ref) => {
             <h4 className={"puntos-ellos"}>Ellos:</h4>
             {mano &&  puntosTrucoActuales &&
             (
-                <> 
+                <div style={{overflow:'hidden'}}> 
                 <PuntosComponente  estiloFotoPunto={"puntaje-EquipoNuestro"} 
                                     posicion={posicion} puntosEquipo1={game.puntosEquipo1} puntosEquipo2={game.puntosEquipo2}
                                     />
@@ -330,9 +392,11 @@ const PlayingModal = forwardRef((props, ref) => {
                 <PuntosComponente estiloFotoPunto={"puntaje-EquipoEllos"} 
                                     posicion={posicion} puntosEquipo1={game.puntosEquipo2} puntosEquipo2={game.puntosEquipo1}
                                 />
-                </>
+                </div>
             )}
                 
+                
+
             {/* Drop Area */}
             <div
                 ref={dropAreaRef}
@@ -404,9 +468,50 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Table Cards */}
             <div className="cartas-mesa-position">
                 {renderCartasMesa()}
+                
             </div>
 
+            {/* Cuadto del envido*/}
+            <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
+            {mano && resolucionEnvido && (
+                            <div 
+                                className="confirmation-dialog"
+                                style={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+                                    maxWidth: "800px",
+                                    margin: "0 auto",
+                                    textAlign: "center",
+                                    
+                                }}
+                            >
+                                <h3 style={{ color: "black" }}>Resolución de Envido</h3>
+                                <h5>{mano.equipoGanadorEnvido %2 === posicion%2 ? "Ganaste" : "Perdiste" }</h5>
+                                {envidosJugadores.map((envido, index) => (
+                                    <p key={index}>Jugador {index}: {envido}</p>
+                                ))}
+                                
+                                <button
+                                    onClick={() => setResolucionEnvido(false)}
+                                    style={{
+                                        backgroundColor: "red",
+                                        color: "white",
+                                        padding: "10px",
+                                        marginTop: "10px",
+                                        border: "none",
+                                        borderRadius: "10px",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        )}
+                        </div>
             {/* Truco Buttons */}
+            <div style={{display:'flex', flexDirection: 'row'}}>
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales && (
                 <div className="truco-button-container"> 
                     {puntosTrucoActuales === puntosSinTruco && (
@@ -426,9 +531,29 @@ const PlayingModal = forwardRef((props, ref) => {
                     )}
                 </div>
             )}
-
+            {/* Cantar envido */}
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido &&   (
+                <div className="envido-button-container"> 
+                    {mano.queEnvidoPuedeCantar >=3  && (
+                        <button onClick={() => cantarEnvido('ENVIDO')}>
+                            <span>Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >=2 && (
+                        <button onClick={() => cantarEnvido('REAL_ENVIDO')}>
+                            <span >Real Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >= 1 && (
+                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' }} onClick={() => cantarEnvido('FALTA_ENVIDO')}>
+                            <span className="swirl-glow-text">Falta Envido</span>
+                        </button>
+                    )}
+                </div>
+            )}
+            </div>
             {/* Responder Truco Buttons */}
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && (
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && mano.esTrucoEnvidoFlor ===0 && (
                 <div className="truco-button-container responder-truco-buttons"> 
                     {puntosTrucoActuales !== puntosConRetruco && 
                         <button onClick={() => responderTruco("QUIERO")}>Quiero</button>}
@@ -439,7 +564,7 @@ const PlayingModal = forwardRef((props, ref) => {
                             <span className="swirl-glow-text"> ¡Quiero!</span>
                         </button>}
     
-                    {puntosTrucoActuales !== puntosConRetruco && 
+                    {puntosTrucoActuales !== puntosConRetruco && mano.puedeCantarTruco && 
                         <button
                             style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
                             onClick={() => responderTruco('SUBIR')}
@@ -448,9 +573,54 @@ const PlayingModal = forwardRef((props, ref) => {
                                 {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
                             </span>
                         </button>}
+                        
+                        {mano.puedeCantarEnvido && (  
+                        <div className='envido-button-container'>
+                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
+                            <button onClick={() => responderEnvido('ENVIDO')}>
+                                <span>Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
+                            <button onClick={() => responderEnvido('REAL_ENVIDO')}>
+                                <span>Real Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
+                            <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                                <span className="swirl-glow-text">Falta Envido</span>
+                            </button>
+                        )}
+                        </div>
+                    )}
                 </div>
             )}
-
+            
+        {/*Responder envido */}
+        {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&mano.esTrucoEnvidoFlor ===1 &&  (
+                <div className="envido-button-container" style={{left:'70%', position:'fixed'}}> 
+                    
+                        <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
+                        <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
+                    
+                    
+                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
+                        <button onClick={() => responderEnvido('ENVIDO')}>
+                            <span>Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
+                        <button onClick={() => responderEnvido('REAL_ENVIDO')}>
+                            <span>Real Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
+                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                            <span className="swirl-glow-text">Falta Envido</span>
+                        </button>
+                    )}
+                </div>
+            )}
             {/* Cartas Volteadas */}
             {mano && (
                 <CartasVolteadas
@@ -461,7 +631,7 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
         
                 
-        </>
+        </div>
     );
 });
 

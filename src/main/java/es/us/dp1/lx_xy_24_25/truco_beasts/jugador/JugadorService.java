@@ -201,4 +201,10 @@ public class JugadorService {
             throw new ResourceNotFoundException("Usuarios no encontrados");
         }
     }
+
+    @Transactional
+    public void deleteJugadorByUserId(Integer userId){
+        Jugador jugador =  jugadorRepository.findByUserId(userId).orElseThrow(()-> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
+        jugadorRepository.delete(jugador);
+    }
 }

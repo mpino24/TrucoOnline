@@ -135,17 +135,17 @@ Al haber creado la clase Jugador y la clase Partida que tienen una relación Man
 *Alternativa 1*: Poner el atributo posicion en partida y que se evalue cual es la posición de cada jugador en esa partida especifica.
 
 *Ventajas:*
-•	Solucion inmediata y pudiendo aprovechar la creacion de tablas automaticas de JPA.
+• Solucion inmediata y pudiendo aprovechar la creacion de tablas automaticas de JPA.
 *Inconvenientes:*
-•	Implementación mucho más complicada para obtener las posiciones de cada jugador especifico en cada partida.
+• Implementación mucho más complicada para obtener las posiciones de cada jugador especifico en cada partida.
 • Se necesitarian funciones auxiliares para que funcione como es debido.
 
 *Alternativa 2*: Crear una clase llamada PartidaJugador intermedia que tenga un ManyToOne a Partida y a Jugador y el atributo de la posición, siendo así uno solo especifico por Jugador en cada Partida.
 
 *Ventajas:*
-•	Obtenemos una clase más con los datos necesarios y faciles de acceder.
+• Obtenemos una clase más con los datos necesarios y faciles de acceder.
 *Inconvenientes:*
-•	Se crea una entidad más en la base de datos.
+• Se crea una entidad más en la base de datos.
 
 #### Justificación de la solución adoptada
 Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posicion de un jugador en una partida especifica de una manera más sencilla, ya que su implementación en otra clase no nos permitiria utilizar este atributo como lo necesitamos.
@@ -156,23 +156,23 @@ Elegimos la alternativa 2 ya que está nos facilitará la obtención de la posic
 En el juego tenemos que poder evaluar los cambios de puntaje y cuando se puede cantar el truco y quien debe dar respuesta al mismo. Surgieron varias maneras de abordarlo.
 
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: Crear una única funcion que se encargara del cante y la respuest.
+*Alternativa 1*: Crear una única funcion que se encargara del cante y la respuesta.
 
 *Ventajas:*
-•	Simplicidad conceptual
+• Simplicidad conceptual.
 • Más cohesionada.
 *Inconvenientes:*
-•	La implementacion de todos los posibles casos se acomplejaba más de lo que debería.
+• La implementacion de todos los posibles casos se acomplejaba más de lo que debería.
 • Demasiadas funcionalidades agrupadas en una sola (bloater).
 
 *Alternativa 2*: Crear dos funciones separadas, una encargada de la gestión del cante y otra de la respuesta.
 
 *Ventajas:*
-•	Se tienen en cuenta todos los casos.
+• Se tienen en cuenta todos los casos.
 • Separacion de funcionalidades.
-• Potencial de reutilizacion (en el envido por ejemplo)
+• Potencial de reutilizacion (en el envido por ejemplo).
 *Inconvenientes:*
-•	Mayor abstracción, por ende complicada de entender.
+• Mayor abstracción, por ende complicada de entender.
 • Cantidad de código elevada incluso para haber dividido las funcionalidades.
 
 #### Justificación de la solución adoptada
@@ -182,27 +182,58 @@ Después de un acalorado debate y lluvia de ideas, nos decantamos por la alterna
 #### Descripción del problema:
 Como grupo no teniamos claro como abordar los apartados de creación y unión de partidas.
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: : Crear páginas nuevas para ambos apartados
+*Alternativa 1*: : Crear páginas nuevas para ambos apartados.
 
 *Ventajas:*
-• Separación mas clara de los apartados de página
-• Personalización individual de cada apartado
+• Separación mas clara de los apartados de página.
+• Personalización individual de cada apartado.
 *Inconvenientes:*
-•	Recargas constantes debido a las redirecciones  
-• Aumento de carga en memoria y de tiempo de espera 
+• Recargas constantes debido a las redirecciones.
+• Aumento de carga en memoria y de tiempo de espera .
 
 *Alternativa 2*: Crear dos funciones separadas, una encargada de la gestión del cante y otra de la respuesta.
 *Ventajas:*
-•	Interfaz mas limpia y dinámica
-• Omisión de recargas
-• Menor carga en memoria y tiempo de espera
+• Interfaz mas limpia y dinámica.
+• Omisión de recargas.
+• Menor carga en memoria y tiempo de espera.
 *Inconvenientes:*
-•	Mayor complejidad en la implementacíon
-• Falta de personalización
+• Mayor complejidad en la implementacíon.
+• Falta de personalización.
 
 
 #### Justificación de la solución adoptada
 Al emplear modales en lugar de páginas, la UX es más dinámica y limpia.
+
+### Decisión 4: Creación de un Map<String, Mano> manosPorPartida en ManoService
+#### Descripción del problema:
+A la hora de gestionar las manos de una partida, teniamos que tener en cuenta que pueden estarse gestionando varias partidas simultaneamente teniendo en cuenta que las manos no son algo que queremos guardar en base de datos ya que tienen mucha información irrelevante, por lo que surgieron bastantes dudas.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: : Tener una Mano llamada manoActual que sea la mano con la que se construye el ManoService.
+
+*Ventajas:*
+• Solución más simple de ver (de hecho en un principio estaba así).
+• Haciamos las funciones en base a esa manoActual.
+*Inconvenientes:*
+• A la hora de tener más de una partida simultamente no podriamos saber a qué partida pertenecia.
+
+
+*Alternativa 2*: Crear un Map<String, Mano> manosPorPartida que tenga de clave el codigo de la partida y de valor su Mano asociada.
+*Ventajas:*
+• Cada partida va a poder tener su Mano actual en el ManoService.
+• Es más fácil encontrar desde el ManoService cual es la Mano de esa partida.
+*Inconvenientes:*
+• Tenemos que agregar una función llamada getMano(String codigo) en el ManoService y debe ser llamada en todos los metodos del mismo para poder actuar sobre esa partida.
+
+*Alternativa 3*: Poner Mano en la base de datos y buscarla a partir de su partida asociada.
+*Ventajas:*
+• Se gestiona el problema de las partidas simultaneas.
+*Inconvenientes:*
+• Igual que en la alternativa 2 tendriamos que agregar en cada función un getMano además de su repository asociado.
+• Guardamos toda la información de todas las manos jugadas, y puede haber muchas por partida, siendoUna acumulación innecesaria de información irrelevante en la base de datos.
+• Las llamadas a base de datos para cada una de las funciones podrían relentizar de manera significativa las partidas.
+
+#### Justificación de la solución adoptada
+Cómo se puede leer en la Refactorización 7, optamos por la alternativa 2, ya que a la hora de gestionar varias partidas simultaneas es mucho más útil y segura.
 
 ## Refactorizaciones aplicadas
 
@@ -228,11 +259,11 @@ _Ej: Era difícil añadir información para implementar la lógica de negocio en
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 _Ej: Ahora podemos añadir arbitrariamente los datos que nos hagan falta al contexto de la partida para que sea más sencillo llevar a cabo los turnos y jugadas_
 
-### Refactorización Botón Ver: 
+### Refactorización 1: Botón Ver 
 En esta refactorización cambiamos nuestro código para que quedase mas legible, en lugar de tener dos veces la misma declaración del boton Ver (para poder ver partidas), ya solo aparece una vez.
 #### Estado inicial del código
-```jsx
-
+```JSX
+            {
                 <Link
                         to={`/partidas/${game.codigo}`}
                         style={{ textDecoration: "none" }}
@@ -258,7 +289,7 @@ En esta refactorización cambiamos nuestro código para que quedase mas legible,
 
 ```
 #### Estado del código refactorizado
-```Jsx
+```JSX
 {
                 connectedUsers < game.numJugadores &&
                     <Link
@@ -286,13 +317,13 @@ Esta duplicación en el código podía generar dudas entre nosotros (los desarro
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora la visualización de las partidas queda bastante más claro y no genera iopción de duda.
 
-### Refactorización Canto Truco: 
+### Refactorización 2: Canto Truco 
 En esta refactorización retocamos la funcion de cantarTruco para dividirla en su canto y su respuesta en casos separados
 #### Estado inicial del código
 ```Java
 public void cantar(Boolean respuesta)
 {
-  *logica del truco y sus casos segun la respuesta*
+  *lógica del truco y sus casos segun la respuesta*
 }
 ``` 
 
@@ -300,10 +331,10 @@ public void cantar(Boolean respuesta)
 
 ```Java
 public void cantarTruco(CantosTruco canto){
-*logica del truco*
+    *lógica del truco*
 }
 public void responderTruco(Respuestas respuesta){
-*logica de los casos de las respuestas del truco*
+    *lógica de los casos de las respuestas del truco*
 }
 ```
 #### Problema que nos hizo realizar la refactorización
@@ -336,7 +367,7 @@ else if (jugadorActual%2 == 1){
             }
            }
     }
-    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ // Lo veo bastante bien, lo que no es necesario pasarle esa lista, las cartas de cada equipo son las que sean j%2==jugMano%2
+    public Integer comprobarValor(List<List<Carta>> cartasEquipo){ 
         Integer puntos=0;
         for(int i=0; i<cartasEquipo.size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = cartasEquipo.get(i).stream().collect(Collectors.groupingBy(Carta::getPalo));
@@ -421,10 +452,10 @@ Había muchos calculos innecesarios, lo que dificultaba tanto la lectura como la
 Al cambiar el enfoque y determinar la posicion del ganador en lugar de comparar los puntos entre equipos nos ahorramos una llamada a la funcion, aumentando dicha legibilidad y eficacia.
 
 
-### Refactorización de las funciones utiles de getCreationModal: 
+### Refactorización 3: Funciones utiles de getCreationModal 
 En esta refactorización externalizamos las funciones de generación de código de partida y la de parseo de partida.
 #### Estado inicial del código
-```Java
+```JSX
 getCreationModal.js
 
 const GetCreationModal=forwardRef(
@@ -440,7 +471,7 @@ const GetCreationModal=forwardRef(
         code += characters.charAt(randomIndex);
     }
     return code;
-}
+})
 ...
    function handleSubmit(event) {
         if(partida.conFlor){
@@ -458,14 +489,14 @@ const GetCreationModal=forwardRef(
     fetch("/api/v1/partida", {
       method:  "POST",
     ...
-    )
+   })
 }
 export default GetCreationModal
 ```
 
 #### Estado del código refactorizado
 
-```Java
+```JSX
 generateRandomCode.js
 export default function generateRandomCode() { 
     const length = 5;
@@ -508,7 +539,7 @@ Se delegaban demasiadas responsabilidades al componente gerCreationModal haciend
 Al tener las funciones generateRandomCode y parseSubmit separadas queda mas claro que el componente getCreationModal se encarga de crear la partida. Además si estas funciones se necesitan en un futuro se encuentran disponibles como utils. 
 
 
-### Refactorización Obtener el jugador que responde al truco: 
+### Refactorización 4: Obtener el jugador que responde al truco 
 En esta refactorización se separo la logica de obtener el jugador que responde del metodo que gestiona el truco:
 #### Estado inicial del código
 ```Java 
@@ -564,7 +595,7 @@ public void cantosTruco(CantosTruco canto) throws Exception{
     ....
             case RETRUCO:
                 if (manoActual.getPuntosTruco() <2) {
-                    throw new Exception( "No se canto truco"); //GESTIONAR MEJOR
+                    throw new Exception( "No se canto truco"); 
                 }
                 List<Integer> cantoEnTruco = secuenciaCantos.get(0);
                 Integer elQueRespondeAlRetruco = quienResponde(cantoEnTruco, jugadorTurno);
@@ -576,7 +607,7 @@ public void cantosTruco(CantosTruco canto) throws Exception{
                 break;
             case VALECUATRO:
                 if (manoActual.getPuntosTruco() <3) {
-                    throw new Exception( "No se canto retruco"); //GESTIONAR MEJOR
+                    throw new Exception( "No se canto retruco"); 
                 }
                 List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
                 Integer elQueResponde = quienResponde(cantoEnRetruco, jugadorTurno);
@@ -608,7 +639,7 @@ El código era demasiado largo y se podía ver claramente que la lógica se repe
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Se puede visualizar facilmente lo que hace el codigo y al estar separado es más sencillo mantenerlo.
 
-### Refactorización Obtener el jugador al que le toca luego de responder un truco: 
+### Refactorización 5: Obtener el jugador al que le toca luego de responder un truco 
 En esta refactorización se separo la obtención del que debe jugar ahora después de decir "Quiero" al Retruco y/o Valecuatro.
 #### Estado inicial del código
 ```Java 
@@ -706,11 +737,11 @@ Como en el caso anterior, había código que se repetía y era difícil de compr
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora separado es mucho más fácil de mantener y se entiende mejor su funcionalidad.
 
-### Refactorización Modal Abandonar Partida: 
+### Refactorización 6: Modal Abandonar Partida 
 En esta refactorización unificamos en un único componente de React dos modales iguales que se encontraban en distintos puntos del código y que aparecen cuando quieres abandonar una partida
 #### Estado inicial del código
 Este mismo código se encontraba en WaitingModal.js y en AppNavbar.js
-```Java
+```JSX
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -761,7 +792,7 @@ Este mismo código se encontraba en WaitingModal.js y en AppNavbar.js
 
 #### Estado del código refactorizado
 
-```Java
+```JSX
 import { forwardRef } from 'react';
 import Modal from 'react-modal';
 import tokenService from 'frontend/src/services/token.service.js';
@@ -873,11 +904,13 @@ Sin la refactorización no era viable reutilzar el modal, pues sería copiar y p
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Permite reutilizar el modal en todas las zonas del código que la necesiten, pudiendo modificarlo desde un mismo sitio.
 
-### Refactorización para relacionar una mano con su correspondiente partida: 
+### Refactorización 7: Relacionar una mano con su correspondiente partida 
 En esta refactorización hemos añadido en ManoService un Map que tiene como claves los códigos de las partidas y como valores las manos actuales de las partidas. Los métodos que no necesitaban ningún parámetro para hacer referencia a la partida a la que pertenece una mano ahora usan el código para encontrar en el Map la partida a la que pertenece cada mano que se juega en la aplicación.
 #### Estado inicial del código
 Ejemplos:
 ```Java
+private final Mano manoActual;
+
 public  void siguienteTurno() {
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
@@ -907,29 +940,27 @@ public void actualizarMano(Mano mano, String codigo){
             manosPorPartida.remove(codigo);
         }
         manosPorPartida.put(codigo, mano);
-        manoActual = mano;
 }
 ```
 Ejemplos:
 ```Java
 public  void siguienteTurno(String codigo) {
-        Mano manoActual = getMano(codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+        Mano manoActual = getMano(codigo); 
 
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         manoActual.setJugadorTurno(siguiente);
   
-        actualizarMano(manoActual, codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+        actualizarMano(manoActual, codigo); 
 }
 public Carta tirarCarta(Integer indiceCarta, String codigo) {
 
-            manoActual.getCartasDisp().get(jugadorActual).remove(carta);
-            manoActual.getCartasLanzadasRonda().set(jugadorActual, carta);
-            siguienteTurno();
-            siguienteTurno(codigo);
-            manosPorPartida.remove(codigo);
-            manosPorPartida.put(codigo, manoActual);
-            setManoActual(codigo);
+        manoActual.getCartasDisp().get(jugadorActual).remove(carta);
+        manoActual.getCartasLanzadasRonda().set(jugadorActual, carta);
+        siguienteTurno();
+        siguienteTurno(codigo);
+        manosPorPartida.remove(codigo);
+        manosPorPartida.put(codigo, manoActual);
 }
 ```
 #### Problema que nos hizo realizar la refactorización
@@ -937,18 +968,18 @@ Sin la refactorización no era posible relacionar las manos que se juegan al mis
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora es posible que distintos jugadores juegen partidas simultáneamente sin que las acciones realizadas en la mano de una partida afecten en las de las otras partidas.
 
-### Refactorización para mover funciones de ManoService a Mano: 
+### Refactorización 8: Mover funciones de ManoService a Mano
 En esta refactorización hemos movido la mayoría de las funciones de ManoService a Mano, pues hemos considerado que todas ellas son funciones que puede realizar un objeto Mano sobre sí mismo sin necesidad de un servicio que requiera además del código de la partida a la que pertenece la mano sobre la que está trabajando.
 #### Estado inicial del código
 Ejemplos de funciones que estaban en ManoService:
 ```Java
 public  void siguienteTurno(String codigo) {
-        Mano manoActual = getMano(codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+        Mano manoActual = getMano(codigo); 
             
         Integer jugadorActual = manoActual.getJugadorTurno();
         Integer siguiente = (jugadorActual + 1) % manoActual.getPartida().getNumJugadores();
         manoActual.setJugadorTurno(siguiente);
-        actualizarMano(manoActual, codigo); //TODO: seguro hay un patrón de diseño para no tener que hacer esto con todos los metodos.
+        actualizarMano(manoActual, codigo); 
 }
 public  Integer compararCartas(String codigo) {
         Mano manoActual = getMano(codigo);
@@ -981,7 +1012,7 @@ public  Integer compararCartas(String codigo) {
 }
 ```
 #### Estado del código refactorizado
-Las funciones anteriores en Mano:
+Las funciones anteriores ahora en Mano:
 ```Java
 public  void siguienteTurno() {      
         Integer jugadorActual = getJugadorTurno();
@@ -1025,7 +1056,7 @@ Sobrecargábamos el servicio con funciones que no eran necesarias realizar ahí.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 El código de ManoService es más reducido y muchos de sus métodos, al estar ahora en la clase Mano, no requieren del código de la partida a la que pertenece la mano en cuestión.
 
-### Refactorización para eliminar obtenerRondaActual y quienResponde: 
+### Refactorización 9: Eliminar obtenerRondaActual y quienResponde 
 En esta refactorización hemos conseguido simplificar mucho el código eliminando obtenerRondaActual y quienResponde (funciones de la clase Mano). La segunda función (de nombre no tan intuitivo como la primera) era usada para saber a qué jugador le tocaba tirar carta tras una secuencia de cantos de truco, retruco y valecuatro.
 #### Estado inicial del código
 ```Java
@@ -1067,3 +1098,252 @@ private Integer jugadorIniciadorDelCanto;
 La función obtenerRondaActual sólo calculaba la ronda actual para casos específicos en los que el jugador pie (el que está a la izquierda del jugador mano) era el último en tirar una carta, cosa que no siempre es así. La función quienResponde tampoco funcionaba para todos los casos porque era bastante complicado tratar de contemplar todas las posibilidades.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ya no es necesario calcular ni la ronda actual ni el jugador al que le toca tirar carta tras una secuencia de cantos mediante funciones.
+
+
+### Refactorización 10: Mover funciones de Mano a ManoService 
+En esta refactorización movimos algunas funciones de Mano a ManoService, más especificamente aquellas en las que toman acción los jugadores como la de tirar cartas, cantar truco o responder al mismo. Esto debido a que son funciones de lógica que corresponden al Service, ya que en ellas, entre otras cosas, es donde pueden manejarse las exceptions y son las que son llamadas en el ManoController.
+#### Estado inicial del código
+Ejemplo de funcion que estaba en Mano:
+```Java
+ public  Carta tirarCarta(Integer cartaId){
+        if(!getEsperandoRespuesta()){
+            Integer jugadorActual = getJugadorTurno();
+            
+            List<Carta> cartasDisponibles = getCartasDisp().get(jugadorActual);
+            Integer indice = null;
+            for (int i=0; i < cartasDisponibles.size(); i++){
+                if(cartasDisponibles.get(i)!= null){
+                    if(cartasDisponibles.get(i).getId()==cartaId){
+                        indice=i;
+                        
+                    }
+                }
+                
+            }
+            if(indice==null){
+                throw new CartaTiradaException();
+            }
+            Carta cartaALanzar = cartasDisponibles.get(indice);
+            getCartasDisp().get(jugadorActual).set(indice,null);
+            getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
+            List<Carta> listaCartasLanzadas = getCartasLanzadasRonda();
+            if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
+                compararCartas();
+            } else{
+                siguienteTurno();
+            }
+            
+            
+
+            return cartaALanzar;
+        } else{
+            throw new CartaTiradaException("Tenés que responder antes de poder tirar una carta");
+        }
+        
+    }
+```
+#### Estado del código refactorizado
+Las funciones anteriores ahora adaptadas en ManoService:
+```Java
+     public Carta tirarCarta(String codigo, Integer cartaId){
+		Mano manoActual = getMano(codigo);
+        if(!manoActual.getEsperandoRespuesta()){
+            Integer jugadorActual = manoActual.getJugadorTurno();
+            
+            List<Carta> cartasDisponibles = manoActual.getCartasDisp().get(jugadorActual);
+            Integer indice = null;
+            for (int i=0; i < cartasDisponibles.size(); i++){
+                if(cartasDisponibles.get(i)!= null){
+                    if(cartasDisponibles.get(i).getId()==cartaId){
+                        indice=i;
+                        
+                    }
+                }
+                
+            }
+            if(indice==null){
+                throw new CartaTiradaException();
+            }
+            Carta cartaALanzar = cartasDisponibles.get(indice);
+            manoActual.getCartasDisp().get(jugadorActual).set(indice,null);
+            manoActual.getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
+            List<Carta> listaCartasLanzadas = manoActual.getCartasLanzadasRonda();
+            if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
+                manoActual.compararCartas();
+            } else{
+                manoActual.siguienteTurno();
+            }
+            actualizarMano(manoActual, codigo);
+            return cartaALanzar;
+        } else{
+            throw new CartaTiradaException("Tenés que responder antes de poder tirar una carta");
+        }
+        
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Las exceptions no funcionaban y además este tipo de funciones es más correcto que se encuentren ahí.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+El código de Mano no hace nada que tenga que ver con una acción del jugador en su turno, lo que permite una mejor separación de las propiedades de cada clase.
+
+### Refactorización 11: Quien responde?
+Cambiamos la función quien responde para poder hacerla más general utilizando la propiedad de la mano jugadorIniciadorCanto y así reutilizarla en otros cantos.
+#### Estado inicial del código
+```Java
+public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+        Integer res = null;
+        Integer rondaActual = getRondaActual();
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer rondaCanto = cantoHecho.get(0);
+        Integer jugadorCanto = getJugadorIniciadorDelCanto(); 
+        if(jugadorCanto==jugadorAnterior && rondaActual==rondaCanto){
+            res = jugadorAnterior;
+        }else{
+            res = jugadorSiguiente;
+        }
+        return res;
+        
+        
+    }
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+public Integer quienResponde(){
+        Integer jugadorQueResponde;
+        Integer jugadorIniciador = getJugadorIniciadorDelCanto();
+        Integer jugadorSiguiente = siguienteJugador(jugadorIniciador);
+        Integer jugadorActual = getJugadorTurno();
+        if(jugadorActual==jugadorIniciador){
+            jugadorQueResponde = jugadorSiguiente;
+        }else{
+            jugadorQueResponde=jugadorIniciador;
+        }
+        return jugadorQueResponde;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Anteriormente solo contemplaba los casos del truco y dependia de una lista llamada secuenciaCantos que no permitia que fuera reutilizable en el caso del envido y flor.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora podemos usar esa quienResponde tanto para el truco como para el envido, sin necesidad de crear dos funciones que hagan esencialmente lo mismo pero con distintas aproximaciones.
+
+
+### Refactorización 11.5: Secuencia Cantos
+A consecuencia del cambio anterior, el atributo secuenciaCantosLista de la mano se convirtió en "legacy code", siendo obsoleto y borrado en todos los archivos que se utilizaba.
+#### Estado inicial del código
+```Java Ejemplo en tipoTruco y el setUpSecuencia cantos de los tests (hay más casos):
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual) {
+        listaRondaJugador.add(rondaActual);
+        listaRondaJugador.add(jugadorTurno);
+        manoActual.setEquipoCantor(getEquipo(jugadorTurno));
+                                                             
+        manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));
+        secuenciaCantos.add(listaRondaJugador);
+        manoActual.setSecuenciaCantoLista(secuenciaCantos);
+        return manoActual;
+    }
+
+    ....
+
+    public void setupSecuenciaCantos(Integer jugadorCantorTruco, Integer rondaTruco, Integer jugadorCantorRetruco, Integer rondaRetruco, Integer jugadorCantorValecuatro, Integer rondaValecuatro){
+        List<List<Integer>> secuenciaCantos = new ArrayList<>();
+        List<Integer> listaRondaJugadorTruco = new ArrayList<>();
+        listaRondaJugadorTruco.add(rondaTruco);
+        listaRondaJugadorTruco.add(jugadorCantorTruco);
+        secuenciaCantos.add(listaRondaJugadorTruco);
+        if(rondaRetruco!=null && jugadorCantorRetruco!=null){
+            List<Integer> listaRondaJugadorRetruco = new ArrayList<>();
+            listaRondaJugadorRetruco.add(rondaRetruco);
+            listaRondaJugadorRetruco.add(jugadorCantorRetruco);
+            secuenciaCantos.add(listaRondaJugadorRetruco);
+            if(rondaValecuatro!=null && jugadorCantorValecuatro!=null){
+                List<Integer> listaRondaJugadorValecuatro = new ArrayList<>();
+                listaRondaJugadorValecuatro.add(rondaValecuatro);
+                listaRondaJugadorValecuatro.add(jugadorCantorValecuatro);
+                secuenciaCantos.add(listaRondaJugadorValecuatro);
+            }
+        }
+        mano.setSecuenciaCantoLista(secuenciaCantos);
+    }
+
+    // Ejemplo inicio de test
+    public void testsTruco(){
+        setup(0, 4);
+        setupTruco(0, 3); 
+        setupCartasDisponibles(1, 2);
+
+        setupSecuenciaCantos(1, 1, 0, 1, null, null);
+        
+    } 
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, Integer rondaActual) {
+        manoActual.setEquipoCantor(getEquipo(jugadorTurno));                                                     
+        manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));
+        return manoActual;
+    }
+
+    ....
+
+    public void setupTruco(Integer equipoCantor, Integer truco, Integer jugadorIniciadorCanto){ // FUNCION YA EXISTENTE + lo de jugadorIniciadorCanto
+        if(equipoCantor!=null) mano.setEquipoCantor(equipoCantor);
+        if(truco!=null) mano.setPuntosTruco(truco);
+
+        if(jugadorIniciadorCanto !=null){ // De ponerlo en otro valor que no sea null, quiere decir que estamos en un "ida y vuelta" de cantos
+            mano.setJugadorIniciadorDelCanto(jugadorIniciadorCanto); 
+        }
+    }
+
+    // Ejemplo inicio de test nuevo
+    public void testsTruco(){
+        setup(0, 4);
+        setupTruco(0, 3, 0); // <- Atributo nuevo 
+        setupCartasDisponibles(1, 2);
+
+        
+    } 
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Como ya dijimos anteriormente, la necesidad de secuenciaCantos en la función de quien responde implicaba que solo contemplara los casos del truco. Además, el recargo de todas las posibilidades a través de ese setup tan enorme en el test era un claro code smell de que no era el camino más apropiado. 
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+No solo quienResponde está generalizado sino que también tenemos menos atributos en mano, funciones más compactas y hasta tests mucho más cortos. 
+
+### Refactorización 12: Enum Cantos
+Por el ansia de modularizar y separa las cosas creamos dos enums, uno para el truco y otro para sus respuestas. El problema es que llegados al envido surgia la necesidad de crear otros dos enums más. Esto claramente no tenía sentido ya que se utilizan practicamente los mismos cantos (además que en el truco también existe la posibilidad de decir "Envido" según el caso) así que fueron borrados y unidos en un solo enum.
+#### Estado inicial del código
+```Java 
+    public enum CantosTruco {
+        TRUCO, RETRUCO, VALECUATRO
+    }
+    public enum CantosEnvido {
+        ENVIDO, REAL_ENVIDO, FALTA_ENVIDO, QUIERO, NO_QUIERO
+    }
+
+    public enum RespuestasTruco {
+        QUIERO, NO_QUIERO, SUBIR, ENVIDO, REAL_ENVIDO,FALTA_ENVIDO
+    }
+
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    public enum Cantos {
+        TRUCO, RETRUCO, VALECUATRO, ENVIDO, REAL_ENVIDO, FALTA_ENVIDO, FLOR, CONTRAFLOR, CONTRAFLOR_AL_RESTO, QUIERO, NO_QUIERO, SUBIR
+    } 
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Tener enums para diferenciarlos era una forma simple de ordenarlos, pero en la práctica solo generaba que haya que volver a escribir las mismas cosas en varios enums y comprobaciones más complejas para que correspondan los nombres.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Todo está fácil de encontrar en un mismo lugar y además a la hora de hacer el caso de la flor va a ser una implementación más sencilla.
+

@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+@ResponseStatus(value = HttpStatus.CONFLICT)
 @Getter
 
-public class EnvidoException extends Exception {
+public class EnvidoException extends RuntimeException {
     public EnvidoException() {
         super("Solo pueden cantar envido el ultimo miembro de cada equipo");
     }

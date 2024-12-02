@@ -1,10 +1,11 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
-import java.util.List;
+
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 
@@ -26,13 +27,13 @@ public class RespuestaQuieroTruco extends RespuestaTruco{
     }
 
     @Override
-    public RespuestasTruco getTipoRespuestaTruco() {
-        return RespuestasTruco.QUIERO;
+    public Cantos getTipoRespuestaTruco() {
+        return Cantos.QUIERO;
     }
 
     @Override
-    public Mano accionRespuestaTruco(Mano manoActual,Integer jugadorTurno,Integer jugadorAnterior, Integer truco, List<List<Integer>> secuenciaCantos,Integer queTrucoEs) {
-        manoActual.setPuntosTruco(truco +1);
+    public Mano accionRespuestaTruco(Mano manoActual,Integer jugadorTurno,Integer jugadorAnterior, Integer puntosTruco) {
+        manoActual.setPuntosTruco(puntosTruco +1);
         manoActual.setEsperandoRespuesta(false);
         manoActual.setJugadorTurno(manoActual.getJugadorIniciadorDelCanto());
         return manoActual;

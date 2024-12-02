@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -69,6 +70,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).permitAll() //Cambiar a authenticated ????
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).permitAll() //Cambiar a authenticated ????
 			.requestMatchers("/api/v1/profile/edit").authenticated()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/profile/borrarMiCuenta")).authenticated()
 			.anyRequest().authenticated())					
 			
 			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);		
