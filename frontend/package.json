@@ -38,7 +38,7 @@
     "source-map-loader": "^4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --host 0.0.0.0",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "coverage": "react-scripts test --coverage --watchAll --collectCoverageFrom='!src/{index,reportWebVitals,error-page,App}.{js,jsx}'",
