@@ -28,7 +28,7 @@ public class Mano {
     private Integer rondaActual = 1;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
-    private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
+    
     private Integer esTrucoEnvidoFlor = 0; // 0 -> Truco, 1 -> envido, 2 -> flor
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
@@ -53,7 +53,6 @@ public class Mano {
         this.equipoCantor = mano.getEquipoCantor();
         this.esperandoRespuesta = mano.getEsperandoRespuesta();
         this.jugadorTurno = mano.getJugadorTurno();
-        this.secuenciaCantoLista = mano.getSecuenciaCantoLista();
         this.puntosTruco = mano.getPuntosTruco();
     }
 
@@ -321,22 +320,9 @@ public class Mano {
 
 
                                 
-    public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
-        Integer res = null;
-        Integer rondaActual = getRondaActual();
-        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
-        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
-        Integer rondaCanto = cantoHecho.get(0);
-        Integer jugadorCanto = getJugadorIniciadorDelCanto(); 
-        if(jugadorCanto==jugadorAnterior && rondaActual==rondaCanto){
-            res = jugadorAnterior;
-        }else{
-            res = jugadorSiguiente;
-        }
-        return res;
-    }
+    
 
-    public Integer quienRespondeEnvido(){
+    public Integer quienResponde(){
         Integer jugadorQueResponde;
         Integer jugadorIniciador = getJugadorIniciadorDelCanto();
         Integer jugadorSiguiente = siguienteJugador(jugadorIniciador);

@@ -31,10 +31,9 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
     }
 
     @Override
-    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs) {
+    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer puntosTruco) {
         
-        manoActual.setPuntosTruco(truco);
+        manoActual.setPuntosTruco(puntosTruco);
         return manoActual;
     }
     

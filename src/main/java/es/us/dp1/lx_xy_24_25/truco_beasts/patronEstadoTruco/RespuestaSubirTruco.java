@@ -42,14 +42,13 @@ public class RespuestaSubirTruco extends RespuestaTruco{
     }
 
     @Override
-    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs)  {
+    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer puntosTruco)  {
         String codigo = manoActual.getPartida().getCodigo();
-        if(truco == 1){
-                manoActual.setPuntosTruco(truco+1); //Declaramos como un "quiero" el truco
+        if(puntosTruco == 1){
+                manoActual.setPuntosTruco(puntosTruco+1); //Declaramos como un "quiero" el truco
                 manoActual =manoService.cantosTruco(codigo,CantosTruco.RETRUCO);
-        }else if(truco==2){
-                manoActual.setPuntosTruco(truco +1);
+        }else if(puntosTruco==2){
+                manoActual.setPuntosTruco(puntosTruco +1);
                 manoActual= manoService.cantosTruco(codigo,CantosTruco.VALECUATRO);
         } else {
                 throw new TrucoException( "No se puede subir más, capo"); 

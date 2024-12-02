@@ -29,14 +29,13 @@ public class TipoValeCuatro extends Truco{
     }
 
     @Override
-    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos,
-            List<Integer> listaRondaJugador, Integer rondaActual) {
-        List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-        Integer elQueResponde = manoActual.quienResponde(cantoEnRetruco, jugadorTurno);
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor) {
+        
+        Integer elQueResponde = manoActual.quienResponde();
         manoActual.setJugadorTurno(elQueResponde);
         manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-        secuenciaCantos.add(listaRondaJugador);
-        manoActual.setSecuenciaCantoLista(secuenciaCantos);
+        
+        
         return manoActual;
     }
     

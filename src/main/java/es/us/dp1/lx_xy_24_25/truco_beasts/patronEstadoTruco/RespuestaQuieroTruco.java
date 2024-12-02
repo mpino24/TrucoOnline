@@ -31,8 +31,8 @@ public class RespuestaQuieroTruco extends RespuestaTruco{
     }
 
     @Override
-    public Mano accionRespuestaTruco(Mano manoActual,Integer jugadorTurno,Integer jugadorAnterior, Integer truco, List<List<Integer>> secuenciaCantos,Integer queTrucoEs) {
-        manoActual.setPuntosTruco(truco +1);
+    public Mano accionRespuestaTruco(Mano manoActual,Integer jugadorTurno,Integer jugadorAnterior, Integer puntosTruco) {
+        manoActual.setPuntosTruco(puntosTruco +1);
         manoActual.setEsperandoRespuesta(false);
         manoActual.setJugadorTurno(manoActual.getJugadorIniciadorDelCanto());
         return manoActual;

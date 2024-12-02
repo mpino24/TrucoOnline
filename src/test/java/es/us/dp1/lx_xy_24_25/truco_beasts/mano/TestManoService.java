@@ -49,22 +49,26 @@ public class TestManoService {
         partida.setCodigo("TESTS");
         mano.setPartida(partida);
         List<Integer> ganadoresRonda = new ArrayList<>();
+        
         ganadoresRonda.add(0);
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
+
+        Integer tiposDeEnvido = 3;
+        Integer envidosIniciales=0;
+        List<Integer> envidos = new ArrayList<>();
+        for(int i = 0; i<tiposDeEnvido;i++){
+            envidos.add(envidosIniciales);
+        }
+        mano.setEnvidosCantados(envidos);
         
+
         manoService = new ManoService(cartaRepository, partidaService);
         codigo = partida.getCodigo();
         manoService.actualizarMano(mano, codigo);
         
     }
     
-
-   
-
-   
-    
-
 
     @Test
     public void testRepartirCartas() {
@@ -193,36 +197,19 @@ public class TestManoService {
         assertEquals(2, mano.getRondaActual());
     }
 
-    public void setupTruco(Integer equipoCantor, Integer truco){
+    public void setupTruco(Integer equipoCantor, Integer truco, Integer jugadorIniciadorCanto){
         if(equipoCantor!=null) mano.setEquipoCantor(equipoCantor);
         if(truco!=null) mano.setPuntosTruco(truco);
-    }
 
-    public void setupSecuenciaCantos(Integer jugadorCantorTruco, Integer rondaTruco, Integer jugadorCantorRetruco, Integer rondaRetruco, Integer jugadorCantorValecuatro, Integer rondaValecuatro){
-        List<List<Integer>> secuenciaCantos = new ArrayList<>();
-        List<Integer> listaRondaJugadorTruco = new ArrayList<>();
-        listaRondaJugadorTruco.add(rondaTruco);
-        listaRondaJugadorTruco.add(jugadorCantorTruco);
-        secuenciaCantos.add(listaRondaJugadorTruco);
-        if(rondaRetruco!=null && jugadorCantorRetruco!=null){
-            List<Integer> listaRondaJugadorRetruco = new ArrayList<>();
-            listaRondaJugadorRetruco.add(rondaRetruco);
-            listaRondaJugadorRetruco.add(jugadorCantorRetruco);
-            secuenciaCantos.add(listaRondaJugadorRetruco);
-            if(rondaValecuatro!=null && jugadorCantorValecuatro!=null){
-                List<Integer> listaRondaJugadorValecuatro = new ArrayList<>();
-                listaRondaJugadorValecuatro.add(rondaValecuatro);
-                listaRondaJugadorValecuatro.add(jugadorCantorValecuatro);
-                secuenciaCantos.add(listaRondaJugadorValecuatro);
-            }
+        if(jugadorIniciadorCanto !=null){ // De ponerlo en otro valor que no sea null, quiere decir que estamos en un "ida y vuelta" de cantos
+            mano.setJugadorIniciadorDelCanto(jugadorIniciadorCanto); 
         }
-        mano.setSecuenciaCantoLista(secuenciaCantos);
     }
     
     @Test 
     public void cantaTruco() {
         setup(0, 4);
-        setupTruco(null, null);
+        setupTruco(null, null, null);
         setupCartasDisponibles(0, 1);
         
         manoService.cantosTruco(codigo,CantosTruco.TRUCO);
@@ -236,9 +223,9 @@ public class TestManoService {
     @Test 
     public void cantaRetruco() {
         setup(0, 4);
-        setupTruco(1, 2);
+        setupTruco(1, 2,null);
         setupCartasDisponibles(0, 2);
-        setupSecuenciaCantos(1, 1, null, null, null, null);
+        
         
         
         manoService.cantosTruco(codigo,CantosTruco.RETRUCO);
@@ -250,9 +237,9 @@ public class TestManoService {
     @Test 
     public void cantaValecuatro() {
         setup(0, 4);
-        setupTruco(1, 3);
+        setupTruco(1, 3,null);
         setupCartasDisponibles(0, 2);
-        setupSecuenciaCantos(0,1, 1, 1, null, null);
+        
         
         manoService.cantosTruco(codigo,CantosTruco.VALECUATRO);
         assertTrue(mano.getJugadorTurno() == 1);
@@ -263,7 +250,7 @@ public class TestManoService {
     @Test
     public void responderQuieroTruco() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto
+        setupTruco(null, null, null); //No se canto
         setupCartasDisponibles(0, 1);
         
         
@@ -279,7 +266,7 @@ public class TestManoService {
     @Test
     public void responderNoQuieroTruco() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto
+        setupTruco(null, null, null); //No se canto
         setupCartasDisponibles(0, 1);
         
         
@@ -294,15 +281,15 @@ public class TestManoService {
     @Test
     public void responderQuieroRetruco() {
         setup(0, 4);
-        setupTruco(0, 2); //Se canto Truco
+        setupTruco(0, 2,null); //Se canto Truco
         setupCartasDisponibles(1, 1);
-        setupSecuenciaCantos(1, 1, null, null, null, null);
+        
         
        
         manoService.cantosTruco(codigo,CantosTruco.RETRUCO);
         assertTrue(mano.getJugadorTurno() ==2);
 
-        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); //QUIERO
+        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); 
         assertTrue(mano.getJugadorTurno() ==1);
         assertEquals(3, mano.getPuntosTruco());
         
@@ -311,14 +298,14 @@ public class TestManoService {
     @Test
     public void responderNoQuieroRetruco() {
         setup(0, 4);
-        setupTruco(0, 2); //Se canto Truco
+        setupTruco(0, 2,null); //Se canto Truco
         setupCartasDisponibles(1, 1);
-        setupSecuenciaCantos(1, 1, null, null, null, null);
+        
         
         manoService.cantosTruco(codigo,CantosTruco.RETRUCO);
         assertTrue(mano.getJugadorTurno() ==2); 
 
-        manoService.responderTruco(codigo,RespuestasTruco.NO_QUIERO); //NO QUIERO
+        manoService.responderTruco(codigo,RespuestasTruco.NO_QUIERO); 
         assertEquals(2, mano.getPuntosTruco());
         
     }
@@ -326,14 +313,14 @@ public class TestManoService {
     @Test
     public void responderQuieroValecuatro() {
         setup(0, 4);
-        setupTruco(0, 3); //Se canto Retruco
+        setupTruco(0, 3,0); //el jugador anterior le canto Retruco 
         setupCartasDisponibles(1, 2);
 
-        setupSecuenciaCantos(1, 1, 0, 1, null, null);
+    
         
         
         manoService.cantosTruco(codigo,CantosTruco.VALECUATRO);
-        assertEquals(2, mano.getJugadorTurno()); //ESTE ERROR SE SOLUCIONARÁ CUANDO SE ARREGLE EL OBTENER RONDA ACTUAL
+        assertEquals(2, mano.getJugadorTurno()); 
         assertTrue(mano.getEsperandoRespuesta());
 
         manoService.responderTruco(codigo,RespuestasTruco.QUIERO); 
@@ -347,13 +334,13 @@ public class TestManoService {
     @Test
     public void responderNoQuieroValecuatro(){
         setup(0, 4);
-        setupTruco(0, 3); //Se canto Retruco
+        setupTruco(0, 3,0); //el jugador anterior le canto Retruco 
         setupCartasDisponibles(1, 2);
-        setupSecuenciaCantos(1, 1, 0, 1, null, null);
+        
         
         manoService.cantosTruco(codigo,CantosTruco.VALECUATRO);
 
-        assertEquals(2,mano.getJugadorTurno()); //ESTE ERROR SE SOLUCIONARÁ CUANDO SE ARREGLE EL OBTENER RONDA ACTUAL
+        assertEquals(2,mano.getJugadorTurno()); 
 
 
         manoService.responderTruco(codigo,RespuestasTruco.NO_QUIERO);
@@ -365,14 +352,14 @@ public class TestManoService {
     @Test
     public void responderTrucoRetrucoQuiero() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto nada
+        setupTruco(null, null, null); //No se canto nada
         setupCartasDisponibles(0, 1);
         
        
         manoService.cantosTruco(codigo,CantosTruco.TRUCO);
         assertTrue(mano.getJugadorTurno() == 1);
 
-        manoService.responderTruco(codigo,RespuestasTruco.SUBIR); //RETRUCO
+        manoService.responderTruco(codigo,RespuestasTruco.SUBIR); 
         assertEquals(2, mano.getPuntosTruco());
         assertEquals(0, mano.getJugadorTurno());
 
@@ -385,15 +372,15 @@ public class TestManoService {
     @Test
     public void responderRetrucoValeCuatroQuiero() {
         setup(0, 4);
-        setupTruco(0, 2); //Se canto Truco
+        setupTruco(0, 2,null); //Se canto Truco
         setupCartasDisponibles(3, 2);
-        setupSecuenciaCantos(0, 1, null, null, null, null);
+        
         
         
         manoService.cantosTruco(codigo,CantosTruco.RETRUCO);
         assertTrue(mano.getJugadorTurno() == 0);
 
-        manoService.responderTruco(codigo,RespuestasTruco.SUBIR); //VALECUATRO
+        manoService.responderTruco(codigo,RespuestasTruco.SUBIR); 
         assertEquals(3, mano.getPuntosTruco());
         assertEquals(3, mano.getJugadorTurno());
 
@@ -407,22 +394,22 @@ public class TestManoService {
     @Test 
     public void responderTrucoRetrucoValecuatroQuiero() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto nada
+        setupTruco(null, null,null); //No se canto nada
         setupCartasDisponibles(0, 1);
         
         
-        manoService.cantosTruco(codigo,CantosTruco.TRUCO); //TRUCO
+        manoService.cantosTruco(codigo,CantosTruco.TRUCO); 
         assertEquals(1,mano.getJugadorTurno());
 
-        manoService.responderTruco(codigo,RespuestasTruco.SUBIR);//RETRUCO
+        manoService.responderTruco(codigo,RespuestasTruco.SUBIR);
         assertEquals(2, mano.getPuntosTruco());
         assertEquals(0, mano.getJugadorTurno());
 
-        manoService.responderTruco(codigo,RespuestasTruco.SUBIR);//VALECUATRO
+        manoService.responderTruco(codigo,RespuestasTruco.SUBIR);
         assertEquals(3, mano.getPuntosTruco());
         assertEquals(1, mano.getJugadorTurno());
 
-        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); //QUIERO
+        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); 
         assertEquals(4, mano.getPuntosTruco());
         assertEquals(0, mano.getJugadorTurno());
         
@@ -431,11 +418,11 @@ public class TestManoService {
     @Test 
     public void cantarTrucoNoPuede() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto nada
+        setupTruco(null, null,null); //No se canto nada
         setupCartasDisponibles(0, 1);
 
-        manoService.cantosTruco(codigo,CantosTruco.TRUCO); //TRUCO
-        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); //QUIERO
+        manoService.cantosTruco(codigo,CantosTruco.TRUCO); 
+        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); 
         
         TrucoException exception = assertThrows(TrucoException.class, 
         () -> manoService.cantosTruco(codigo,CantosTruco.TRUCO));
@@ -446,13 +433,13 @@ public class TestManoService {
     @Test 
     public void cantarTrucoYaSeCanto() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto nada
+        setupTruco(null, null,null); //No se canto nada
         setupCartasDisponibles(0, 1);
 
-        manoService.cantosTruco(codigo,CantosTruco.TRUCO); //TRUCO
-        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); //QUIERO
+        manoService.cantosTruco(codigo,CantosTruco.TRUCO); 
+        manoService.responderTruco(codigo,RespuestasTruco.QUIERO); 
         mano.siguienteTurno();
-        assertTrue(mano.comprobarSiPuedeCantarTruco()); //Puede cantar el retruco
+        assertTrue(mano.comprobarSiPuedeCantarTruco()); 
 
         TrucoException exception = assertThrows(TrucoException.class, 
         () -> manoService.cantosTruco(codigo,CantosTruco.TRUCO));
@@ -464,7 +451,7 @@ public class TestManoService {
     @Test 
     public void cantarRetrucoNoSeCantoTruco() {
         setup(0, 4);
-        setupTruco(null, null); //No se canto nada
+        setupTruco(null, null, null); //No se canto nada
         setupCartasDisponibles(0, 1);
 
     

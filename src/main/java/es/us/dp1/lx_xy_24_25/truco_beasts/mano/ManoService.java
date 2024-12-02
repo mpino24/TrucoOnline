@@ -177,7 +177,7 @@ public class ManoService {
             manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
         }
         manoActual.setEsperandoRespuesta(true);
-        Integer quienResponde = manoActual.quienRespondeEnvido();
+        Integer quienResponde = manoActual.quienResponde();
         try {
         manoActual.comprobarSiPuedeCantarEnvido(false);
         Integer queEnvidoPuedoCantar = manoActual.getQueEnvidoPuedeCantar();
@@ -224,7 +224,7 @@ public class ManoService {
         Mano manoActual = getMano(codigo);
         Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
         manoActual.setEquipoCantor(null);
-        manoActual.setSecuenciaCantoLista(new ArrayList<>());
+        
         switch (respuesta) {
             case QUIERO:
                 
@@ -334,15 +334,13 @@ public class ManoService {
         Integer equipoCantor = manoActual.getEquipoCantor();
 
         Integer rondaActual = manoActual.getRondaActual();
-        List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
-        List<Integer> listaRondaJugador = new ArrayList<>(); //Valores en el orden del nombre
+        
         if(manoActual.getEsperandoRespuesta()==false){
             manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
         }
         manoActual.setEsperandoRespuesta(true); // PARA PODER CONFIRMAR QUE EL QUE DICE QUIERO NO TIRA CARTA
         
-        listaRondaJugador.add(rondaActual);
-        listaRondaJugador.add(jugadorTurno);
+        
         manoActual.setEsTrucoEnvidoFlor(0);
         Mano mano = new Mano();
         try {
@@ -358,7 +356,7 @@ public class ManoService {
                     if(puntosTruco > puntosNoHayTruco){
                         throw new TrucoException("Ya se canto el truco");
                     }
-                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
                     manoActual.copiaParcialTruco(mano);
                     break;
                 case RETRUCO:
@@ -367,7 +365,7 @@ public class ManoService {
                     } else if(puntosTruco>puntosHayTruco){
                         throw new TrucoException("Ya se canto el retruco");
                     }
-                    mano = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    mano = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor);
                     manoActual.copiaParcialTruco(mano);
                     break;
                 case VALECUATRO:
@@ -376,7 +374,7 @@ public class ManoService {
                     }else if(puntosTruco > puntosHayRetruco){
                         throw new TrucoException("Ya se canto el valecuatro");
                     }
-                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor, secuenciaCantos, listaRondaJugador, rondaActual);
+                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
                     manoActual.copiaParcialTruco(mano);
                 
                     break;
@@ -399,8 +397,8 @@ public class ManoService {
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer jugadorAnterior = manoActual.obtenerJugadorAnterior(jugadorTurno);
         Integer puntosTruco = manoActual.getPuntosTruco();
-        List<List<Integer>> secuenciaCantos = manoActual.getSecuenciaCantoLista();
-        Integer queTrucoEs = secuenciaCantos.size();
+        
+        
 
         Mano mano = new Mano();
         
@@ -410,7 +408,7 @@ public class ManoService {
         switch (respuesta) {
             case QUIERO:
                 
-                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco, secuenciaCantos, queTrucoEs);
+                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco);
                 manoActual.copiaParcialTruco(mano);
                 
                 puntosTruco= manoActual.getPuntosTruco();
@@ -422,7 +420,7 @@ public class ManoService {
                 
                 break;
             case NO_QUIERO: 
-                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco, secuenciaCantos, queTrucoEs);
+                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco);
                 manoActual.copiaParcialTruco(mano);
                 manoActual.setTerminada(true);
                 
@@ -430,7 +428,7 @@ public class ManoService {
 
             case SUBIR:
 
-                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco, secuenciaCantos, queTrucoEs);
+                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco);
                 manoActual.copiaParcialTruco(mano);
                 
                 break;
