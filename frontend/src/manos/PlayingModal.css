@@ -1,11 +1,20 @@
 /* PlayingModal.css */
 /* Ensure the html and body take up the full viewport height */
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Prevents overflow on the root elements */
+.playing-modal-container {
+  position: fixed; /* Ensures the modal overlays the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevents overflow within the modal */
+  background-color: rgba(0, 0, 0, 0); /* Semi-transparent background */
+  z-index: 1000; /* Ensures the modal is above other content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
+
 
 
 /* Keyframe Animations */
