@@ -63,7 +63,7 @@ function AppNavbar() {
 
 
     return (
-        <div expand="md" dark style={{ float: 'left' }}>
+        <div expand="md" dark style={{ float: 'left', zIndex:21 }}>
             <img alt="logo" src={logoChico} onClick={() => handleClick()} style={{ height: 90, width: 90, borderRadius: 500, margin: 10, cursor: 'pointer' }} />
             <LeavingGameModal
             modalIsOpen={leavingModal}

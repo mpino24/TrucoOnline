@@ -95,7 +95,8 @@ export default function Home() {
 
 
     return (
-        <>
+        <div >
+            <div style={{zIndex:21}}>
         {!friendsView && 
             <Nav className="ms-auto mb-2 mb-lg-0" navbar style={{ float: 'right', marginTop: 15, marginRight: 15 }}>
                 <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={toggleAccountMenu}>
@@ -116,8 +117,8 @@ export default function Home() {
                 }
             </Nav>
         }
-
-            <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%' }}>
+        </div>
+            <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%', zIndex:20}}>
                 <div style={{ width: '36%' }}>
                     <div style={{ cursor: 'pointer' }}>
                         <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
@@ -130,6 +131,7 @@ export default function Home() {
                         setModalVisible={setJoinModalView}
                         modalVisible={joinModalView} />      
                 }
+                
                 {creationModalView &&
                     <CreationModal  setCreationModalView={setCreationModalView} creationModalView={creationModalView}/>
                  }
@@ -140,6 +142,7 @@ export default function Home() {
                         <button className="home-button" onClick={toggleJoinModal}>Unirte</button>
                     </div>
                 }
+                
                 {!friendsView && 
                 <div style={{ width: '36%' }}>
                     <div style={{ cursor: 'pointer' }} onClick={toggleFriendsModal} >
@@ -159,7 +162,7 @@ export default function Home() {
                 </div>
 
             </div>
-        </>
+        </div>
     );
 
 }
