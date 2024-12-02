@@ -7,6 +7,7 @@ import org.jpatterns.gof.StatePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
 
@@ -37,8 +38,8 @@ public class RespuestaSubirTruco extends RespuestaTruco{
     }
 
     @Override
-    public RespuestasTruco getTipoRespuestaTruco() {
-        return RespuestasTruco.SUBIR;
+    public Cantos getTipoRespuestaTruco() {
+        return Cantos.SUBIR;
     }
 
     @Override
@@ -46,10 +47,10 @@ public class RespuestaSubirTruco extends RespuestaTruco{
         String codigo = manoActual.getPartida().getCodigo();
         if(puntosTruco == 1){
                 manoActual.setPuntosTruco(puntosTruco+1); //Declaramos como un "quiero" el truco
-                manoActual =manoService.cantosTruco(codigo,CantosTruco.RETRUCO);
+                manoActual =manoService.cantosTruco(codigo,Cantos.RETRUCO);
         }else if(puntosTruco==2){
                 manoActual.setPuntosTruco(puntosTruco +1);
-                manoActual= manoService.cantosTruco(codigo,CantosTruco.VALECUATRO);
+                manoActual= manoService.cantosTruco(codigo,Cantos.VALECUATRO);
         } else {
                 throw new TrucoException( "No se puede subir más, capo"); 
         }

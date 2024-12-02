@@ -1,10 +1,11 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
-import java.util.List;
+
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 
@@ -26,8 +27,8 @@ public class TipoTruco extends Truco{
     }
     
     @Override
-    public CantosTruco getTipoTruco(){
-        return CantosTruco.TRUCO;
+    public Cantos getTipoTruco(){
+        return Cantos.TRUCO;
     }
 
     @Override

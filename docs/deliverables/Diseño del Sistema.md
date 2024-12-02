@@ -1315,3 +1315,35 @@ A consecuencia del cambio anterior, el atributo secuenciaCantosLista de la mano 
 Como ya dijimos anteriormente, la necesidad de secuenciaCantos en la función de quien responde implicaba que solo contemplara los casos del truco. Además, el recargo de todas las posibilidades a través de ese setup tan enorme en el test era un claro code smell de que no era el camino más apropiado. 
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 No solo quienResponde está generalizado sino que también tenemos menos atributos en mano, funciones más compactas y hasta tests mucho más cortos. 
+
+### Refactorización 12: Enum Cantos
+Por el ansia de modularizar y separa las cosas creamos dos enums, uno para el truco y otro para sus respuestas. El problema es que llegados al envido surgia la necesidad de crear otros dos enums más. Esto claramente no tenía sentido ya que se utilizan practicamente los mismos cantos (además que en el truco también existe la posibilidad de decir "Envido" según el caso) así que fueron borrados y unidos en un solo enum.
+#### Estado inicial del código
+```Java 
+    public enum CantosTruco {
+        TRUCO, RETRUCO, VALECUATRO
+    }
+    public enum CantosEnvido {
+        ENVIDO, REAL_ENVIDO, FALTA_ENVIDO, QUIERO, NO_QUIERO
+    }
+
+    public enum RespuestasTruco {
+        QUIERO, NO_QUIERO, SUBIR, ENVIDO, REAL_ENVIDO,FALTA_ENVIDO
+    }
+
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    public enum Cantos {
+        TRUCO, RETRUCO, VALECUATRO, ENVIDO, REAL_ENVIDO, FALTA_ENVIDO, FLOR, CONTRAFLOR, CONTRAFLOR_AL_RESTO, QUIERO, NO_QUIERO, SUBIR
+    } 
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Tener enums para diferenciarlos era una forma simple de ordenarlos, pero en la práctica solo generaba que haya que volver a escribir las mismas cosas en varios enums y comprobaciones más complejas para que correspondan los nombres.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Todo está fácil de encontrar en un mismo lugar y además a la hora de hacer el caso de la flor va a ser una implementación más sencilla.
+

@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
+
 
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
@@ -48,7 +47,7 @@ public class ManoController {
 
     @PatchMapping("/cantarTruco/{cantoTruco}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<CantosTruco> patchCantarTruco(@PathVariable String codigo, @PathVariable CantosTruco cantoTruco) throws TrucoException {
+    public ResponseEntity<Cantos> patchCantarTruco(@PathVariable String codigo, @PathVariable Cantos cantoTruco) throws TrucoException {
         
         manoService.cantosTruco(codigo, cantoTruco);
         return new ResponseEntity<>(cantoTruco, HttpStatus.OK);
@@ -56,7 +55,7 @@ public class ManoController {
     
     @PatchMapping("/responderTruco/{respuestasTruco}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Integer> patchResponderTruco(@PathVariable String codigo, @PathVariable RespuestasTruco respuestasTruco) throws TrucoException {
+    public ResponseEntity<Integer> patchResponderTruco(@PathVariable String codigo, @PathVariable Cantos respuestasTruco) throws TrucoException {
         
         manoService.responderTruco(codigo, respuestasTruco);
         Integer puntosActualesTruco = manoService.getMano(codigo).getPuntosTruco();
@@ -65,14 +64,14 @@ public class ManoController {
 
     @PatchMapping("/cantarEnvido/{cantoEnvido}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<CantosEnvido> patchCantarEnvido(@PathVariable String codigo, @PathVariable CantosEnvido cantoEnvido) throws EnvidoException {
+    public ResponseEntity<Cantos> patchCantarEnvido(@PathVariable String codigo, @PathVariable Cantos cantoEnvido) throws EnvidoException {
         manoService.cantosEnvido(codigo, cantoEnvido);
         return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
     }
 
     @PatchMapping("/responderEnvido/{cantoEnvido}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<CantosEnvido> patchResponderEnvido(@PathVariable String codigo, @PathVariable CantosEnvido cantoEnvido) throws EnvidoException {
+    public ResponseEntity<Cantos> patchResponderEnvido(@PathVariable String codigo, @PathVariable Cantos cantoEnvido) throws EnvidoException {
         manoService.responderEnvido(codigo, cantoEnvido);
         return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
     }

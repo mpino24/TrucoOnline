@@ -20,11 +20,9 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
 
 
@@ -168,7 +166,7 @@ public class ManoService {
         
     }
 
-    public Mano cantosEnvido(String codigo, CantosEnvido canto){
+    public Mano cantosEnvido(String codigo, Cantos canto){
         Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         List<Integer> envidosCantados = manoActual.getEnvidosCantados();
@@ -220,7 +218,7 @@ public class ManoService {
         return manoActual;
     }
 
-    public void responderEnvido(String codigo, CantosEnvido respuesta){
+    public void responderEnvido(String codigo, Cantos respuesta){
         Mano manoActual = getMano(codigo);
         Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
         manoActual.setEquipoCantor(null);
@@ -328,7 +326,7 @@ public class ManoService {
 
 
 	//TODO: FALTAN TEST NEGATIVOS
-    public Mano cantosTruco(String codigo, CantosTruco canto){
+    public Mano cantosTruco(String codigo, Cantos canto){
 		Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
@@ -392,7 +390,7 @@ public class ManoService {
         return manoActual;
     }
 
-	public void responderTruco(String codigo, RespuestasTruco respuesta) {
+	public void responderTruco(String codigo, Cantos respuesta) {
 		Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer jugadorAnterior = manoActual.obtenerJugadorAnterior(jugadorTurno);
@@ -434,9 +432,7 @@ public class ManoService {
                 break;
             default:
                 if(puedeEnvido){
-                    CantosEnvido respuestaEnvido = CantosEnvido.valueOf(respuesta.toString());
-                    cantosEnvido(codigo, respuestaEnvido);
-
+                    cantosEnvido(codigo, respuesta);
                 }
                 throw new TrucoException( "Respuesta al truco no valida"); 
         }
