@@ -12,7 +12,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaNoQuieroTru
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaQuieroTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaSubirTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestasTruco;
 
 public class TestConverterRespuestaTruco {
 
@@ -29,40 +28,40 @@ public class TestConverterRespuestaTruco {
     @Test
     public void devuelveTipoRespuestaQuieroTruco(){
         RespuestaTruco respuestaTruco= new RespuestaQuieroTruco();
-        RespuestasTruco resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
-        assertEquals(RespuestasTruco.QUIERO, resultado);
+        Cantos resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
+        assertEquals(Cantos.QUIERO, resultado);
     }
 
     @Test
     public void devuelveTipoRespuestaNoQuieroTruco(){
         RespuestaTruco respuestaTruco= new RespuestaNoQuieroTruco();
-        RespuestasTruco resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
-        assertEquals(RespuestasTruco.NO_QUIERO, resultado);
+        Cantos resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
+        assertEquals(Cantos.NO_QUIERO, resultado);
     }
 
     @Test
     public void devuelveTipoRespuestaSubirTruco(){
         RespuestaTruco respuestaTruco= new RespuestaSubirTruco(manoService);
-        RespuestasTruco resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
-        assertEquals(RespuestasTruco.SUBIR, resultado);
+        Cantos resultado = convertidorRespuestaTruco.convertToDatabaseColumn(respuestaTruco);
+        assertEquals(Cantos.SUBIR, resultado);
     }
 
     
     
     @Test public void devuelveEntidadTipoRespuestaQuieroTruco() { 
-        RespuestasTruco respuesta = RespuestasTruco.QUIERO; 
+        Cantos respuesta = Cantos.QUIERO; 
         RespuestaTruco resultado = convertidorRespuestaTruco.convertToEntityAttribute(respuesta); 
         assertEquals(new RespuestaQuieroTruco(), resultado); 
     } 
     
     @Test public void devuelveEntidadTipoRespuestaNoQuieroTruco() { 
-        RespuestasTruco respuesta = RespuestasTruco.NO_QUIERO; 
+        Cantos respuesta = Cantos.NO_QUIERO; 
         RespuestaTruco resultado = convertidorRespuestaTruco.convertToEntityAttribute(respuesta); 
         assertEquals(new RespuestaNoQuieroTruco(), resultado);  
     } 
     
     @Test public void devuelveEntidadTipoRespuestaSubirTruco() { 
-        RespuestasTruco respuesta = RespuestasTruco.SUBIR; 
+        Cantos respuesta = Cantos.SUBIR; 
         RespuestaTruco resultado = convertidorRespuestaTruco.convertToEntityAttribute(respuesta); 
         assertEquals(new RespuestaSubirTruco(manoService), resultado); 
     } 

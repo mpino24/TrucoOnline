@@ -1185,3 +1185,165 @@ Las funciones anteriores ahora adaptadas en ManoService:
 Las exceptions no funcionaban y además este tipo de funciones es más correcto que se encuentren ahí.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 El código de Mano no hace nada que tenga que ver con una acción del jugador en su turno, lo que permite una mejor separación de las propiedades de cada clase.
+
+### Refactorización 11: Quien responde?
+Cambiamos la función quien responde para poder hacerla más general utilizando la propiedad de la mano jugadorIniciadorCanto y así reutilizarla en otros cantos.
+#### Estado inicial del código
+```Java
+public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
+        Integer res = null;
+        Integer rondaActual = getRondaActual();
+        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
+        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
+        Integer rondaCanto = cantoHecho.get(0);
+        Integer jugadorCanto = getJugadorIniciadorDelCanto(); 
+        if(jugadorCanto==jugadorAnterior && rondaActual==rondaCanto){
+            res = jugadorAnterior;
+        }else{
+            res = jugadorSiguiente;
+        }
+        return res;
+        
+        
+    }
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+public Integer quienResponde(){
+        Integer jugadorQueResponde;
+        Integer jugadorIniciador = getJugadorIniciadorDelCanto();
+        Integer jugadorSiguiente = siguienteJugador(jugadorIniciador);
+        Integer jugadorActual = getJugadorTurno();
+        if(jugadorActual==jugadorIniciador){
+            jugadorQueResponde = jugadorSiguiente;
+        }else{
+            jugadorQueResponde=jugadorIniciador;
+        }
+        return jugadorQueResponde;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+Anteriormente solo contemplaba los casos del truco y dependia de una lista llamada secuenciaCantos que no permitia que fuera reutilizable en el caso del envido y flor.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora podemos usar esa quienResponde tanto para el truco como para el envido, sin necesidad de crear dos funciones que hagan esencialmente lo mismo pero con distintas aproximaciones.
+
+
+### Refactorización 11.5: Secuencia Cantos
+A consecuencia del cambio anterior, el atributo secuenciaCantosLista de la mano se convirtió en "legacy code", siendo obsoleto y borrado en todos los archivos que se utilizaba.
+#### Estado inicial del código
+```Java Ejemplo en tipoTruco y el setUpSecuencia cantos de los tests (hay más casos):
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual) {
+        listaRondaJugador.add(rondaActual);
+        listaRondaJugador.add(jugadorTurno);
+        manoActual.setEquipoCantor(getEquipo(jugadorTurno));
+                                                             
+        manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));
+        secuenciaCantos.add(listaRondaJugador);
+        manoActual.setSecuenciaCantoLista(secuenciaCantos);
+        return manoActual;
+    }
+
+    ....
+
+    public void setupSecuenciaCantos(Integer jugadorCantorTruco, Integer rondaTruco, Integer jugadorCantorRetruco, Integer rondaRetruco, Integer jugadorCantorValecuatro, Integer rondaValecuatro){
+        List<List<Integer>> secuenciaCantos = new ArrayList<>();
+        List<Integer> listaRondaJugadorTruco = new ArrayList<>();
+        listaRondaJugadorTruco.add(rondaTruco);
+        listaRondaJugadorTruco.add(jugadorCantorTruco);
+        secuenciaCantos.add(listaRondaJugadorTruco);
+        if(rondaRetruco!=null && jugadorCantorRetruco!=null){
+            List<Integer> listaRondaJugadorRetruco = new ArrayList<>();
+            listaRondaJugadorRetruco.add(rondaRetruco);
+            listaRondaJugadorRetruco.add(jugadorCantorRetruco);
+            secuenciaCantos.add(listaRondaJugadorRetruco);
+            if(rondaValecuatro!=null && jugadorCantorValecuatro!=null){
+                List<Integer> listaRondaJugadorValecuatro = new ArrayList<>();
+                listaRondaJugadorValecuatro.add(rondaValecuatro);
+                listaRondaJugadorValecuatro.add(jugadorCantorValecuatro);
+                secuenciaCantos.add(listaRondaJugadorValecuatro);
+            }
+        }
+        mano.setSecuenciaCantoLista(secuenciaCantos);
+    }
+
+    // Ejemplo inicio de test
+    public void testsTruco(){
+        setup(0, 4);
+        setupTruco(0, 3); 
+        setupCartasDisponibles(1, 2);
+
+        setupSecuenciaCantos(1, 1, 0, 1, null, null);
+        
+    } 
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, Integer rondaActual) {
+        manoActual.setEquipoCantor(getEquipo(jugadorTurno));                                                     
+        manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));
+        return manoActual;
+    }
+
+    ....
+
+    public void setupTruco(Integer equipoCantor, Integer truco, Integer jugadorIniciadorCanto){ // FUNCION YA EXISTENTE + lo de jugadorIniciadorCanto
+        if(equipoCantor!=null) mano.setEquipoCantor(equipoCantor);
+        if(truco!=null) mano.setPuntosTruco(truco);
+
+        if(jugadorIniciadorCanto !=null){ // De ponerlo en otro valor que no sea null, quiere decir que estamos en un "ida y vuelta" de cantos
+            mano.setJugadorIniciadorDelCanto(jugadorIniciadorCanto); 
+        }
+    }
+
+    // Ejemplo inicio de test nuevo
+    public void testsTruco(){
+        setup(0, 4);
+        setupTruco(0, 3, 0); // <- Atributo nuevo 
+        setupCartasDisponibles(1, 2);
+
+        
+    } 
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Como ya dijimos anteriormente, la necesidad de secuenciaCantos en la función de quien responde implicaba que solo contemplara los casos del truco. Además, el recargo de todas las posibilidades a través de ese setup tan enorme en el test era un claro code smell de que no era el camino más apropiado. 
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+No solo quienResponde está generalizado sino que también tenemos menos atributos en mano, funciones más compactas y hasta tests mucho más cortos. 
+
+### Refactorización 12: Enum Cantos
+Por el ansia de modularizar y separa las cosas creamos dos enums, uno para el truco y otro para sus respuestas. El problema es que llegados al envido surgia la necesidad de crear otros dos enums más. Esto claramente no tenía sentido ya que se utilizan practicamente los mismos cantos (además que en el truco también existe la posibilidad de decir "Envido" según el caso) así que fueron borrados y unidos en un solo enum.
+#### Estado inicial del código
+```Java 
+    public enum CantosTruco {
+        TRUCO, RETRUCO, VALECUATRO
+    }
+    public enum CantosEnvido {
+        ENVIDO, REAL_ENVIDO, FALTA_ENVIDO, QUIERO, NO_QUIERO
+    }
+
+    public enum RespuestasTruco {
+        QUIERO, NO_QUIERO, SUBIR, ENVIDO, REAL_ENVIDO,FALTA_ENVIDO
+    }
+
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    public enum Cantos {
+        TRUCO, RETRUCO, VALECUATRO, ENVIDO, REAL_ENVIDO, FALTA_ENVIDO, FLOR, CONTRAFLOR, CONTRAFLOR_AL_RESTO, QUIERO, NO_QUIERO, SUBIR
+    } 
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Tener enums para diferenciarlos era una forma simple de ordenarlos, pero en la práctica solo generaba que haya que volver a escribir las mismas cosas en varios enums y comprobaciones más complejas para que correspondan los nombres.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Todo está fácil de encontrar en un mismo lugar y además a la hora de hacer el caso de la flor va a ser una implementación más sencilla.
+

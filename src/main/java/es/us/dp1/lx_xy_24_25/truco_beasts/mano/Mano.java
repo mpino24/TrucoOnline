@@ -28,19 +28,24 @@ public class Mano {
     private Integer rondaActual = 1;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
-    private List<List<Integer>> secuenciaCantoLista = new ArrayList<>(); // Tiene como primer atributo la ronda y de segundo el jugador en el que lo canto (siempre la primera es el truco, segunda retruco y tercera valecuatro)
+    
+    private Integer esTrucoEnvidoFlor = 0; // 0 -> Truco, 1 -> envido, 2 -> flor
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
     private Integer jugadorIniciadorDelCanto;
     private Boolean terminada = false;
     private Boolean puedeCantarTruco = true;
-
+    private Boolean puedeCantarEnvido = false;
+    private Integer queEnvidoPuedeCantar = 2; //1 -> solo falta envido, 2 -> falta y real, 3 -> falta, real y envido, otro -> nada
+    private Integer equipoGanadorEnvido;
+    private Boolean seQuizoEnvido = false;
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
     private final Integer rondasMaximasGanables = 2;
     
+    List<Integer> envidosCadaJugador;
 
-    private List<Integer> envidos = new ArrayList<>();
+    private List<Integer> envidosCantados;
     @ManyToOne
     private Partida partida;
 
@@ -48,7 +53,6 @@ public class Mano {
         this.equipoCantor = mano.getEquipoCantor();
         this.esperandoRespuesta = mano.getEsperandoRespuesta();
         this.jugadorTurno = mano.getJugadorTurno();
-        this.secuenciaCantoLista = mano.getSecuenciaCantoLista();
         this.puntosTruco = mano.getPuntosTruco();
     }
 
@@ -60,25 +64,91 @@ public class Mano {
             Integer equipoCantor = getEquipoCantor();
             Integer jugadorTurno = getJugadorTurno();
             res =(equipoCantor == null || jugadorTurno % 2 != equipoCantor);
-            setPuedeCantarTruco(res);
+            
         }
-
+        setPuedeCantarTruco(res);
         
         return res;
     }
+    final Integer maximosEnvido = 2;
+    final Integer maximosRealEnvido =1;
+    final Integer maximosFaltaEnvido = 1; 
 
-    
+    public Boolean comprobarSiPuedeCantarEnvido(Boolean fueraDeCantos) { //O SUS OTRAS POSIBILIDADES
+        Boolean res;
+        if(getRondaActual() != 1 || getPuntosEnvido() !=0 || getPuntosTruco() > 1){
+            res = false;
+        } else{
+            List<Integer> listaEnvidos = getEnvidosCantados();
+            Integer envidos = listaEnvidos.get(0);
+            Integer realEnvido = listaEnvidos.get(1);
+            Integer faltaEnvido = listaEnvidos.get(2);
+            if(faltaEnvido ==maximosFaltaEnvido){
+                res=false;
+                setQueEnvidoPuedeCantar(0);
+            } else if(realEnvido ==maximosRealEnvido){
+                res =true;
+                setQueEnvidoPuedeCantar(1);
+            } else if (envidos == maximosEnvido) {
+                res = true;
+                setQueEnvidoPuedeCantar(2);
+            } else{
+                res =true;
+                setQueEnvidoPuedeCantar(3);
+            }
+            Integer jugador = getJugadorTurno();
+            Integer jugadorPie = obtenerJugadorPie();
+            Boolean esPie = jugador==jugadorPie || siguienteJugador(jugador) == jugadorPie;
+            if(fueraDeCantos){
+                res = res &&  esPie;
+            }
+             
+        }
+        setPuedeCantarEnvido(res);
+        return res;
+    }
 
-     public List<Integer> listaEnvidos(List<List<Carta>> cartasDisp){ 
+
+
+   
+
+     public List<Integer> listaTantosCadaJugador(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
-        for(int i=0; i<cartasDisp.size(); i++){
+        for(int i=0; i<getCartasDisp().size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
             listaEnvidosCadaJugador.add(i, sumaJugador);
         }
+
+        Integer jugadorMano = getJugadorTurno(); //Como esta funcion se llama al principio, será el mano
+        List<Integer> nuevaLista = listaEnvidosCadaJugador;
+    
+        Integer equipoMano = jugadorMano % 2;
+        Integer equipoQueVaGanando = equipoMano;
+        
+        Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
+        for(int i = siguienteJugador(jugadorMano); i<jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
+            Integer puntajeNuevoJugador = listaEnvidosCadaJugador.get(i);
+            if(puntajeNuevoJugador == puntajeGanador){
+                if(equipoQueVaGanando == equipoMano){
+                    nuevaLista.set(i, null);
+                } else {
+                    equipoQueVaGanando = equipoMano;
+                }
+            } else if(puntajeNuevoJugador >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS (CREO QUE NO LO VAMOS A HACER)
+                equipoQueVaGanando = i%2;
+                puntajeGanador = puntajeNuevoJugador;
+            }else{
+                nuevaLista.set(i, null);
+            }
+            
+        }
+        setEquipoGanadorEnvido(equipoQueVaGanando);
+        setEnvidosCadaJugador(listaEnvidosCadaJugador);
         return listaEnvidosCadaJugador;
     }
 
+    
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
         List< Integer> listaSumasPalo= new ArrayList<>();
         for(Map.Entry<Palo, List<Carta>> cartasPaloJugador : diccCartasPaloJugador.entrySet()){
@@ -248,39 +318,22 @@ public class Mano {
 
     
 
-    public Boolean puedeCantarEnvido(){
 
-        Boolean sePuede = false;
-        Boolean esRondaUno = getRondaActual() ==1;
-        Boolean esPie = false;
-        Boolean noHayTruco = getPuntosTruco() <= 1;
-        Boolean noSeCanto = getPuntosEnvido() == 0; //TODO: Evaluar esta funcion ya que para el "primer canto" de envido, real envido o falta envido esta funcion serviria, pero hay que revisar como se hacen los demás
-
-        Integer jugTurno = getJugadorTurno();
-        Integer pie = obtenerJugadorPie();
-        Integer otroPie = obtenerJugadorAnterior(pie);
-
-        if(jugTurno == pie || jugTurno == otroPie) esPie = true;
-
-
-        sePuede = esPie && noHayTruco && esPie && esRondaUno && noSeCanto; //DONE //FALTARIA COMPROBAR SI EL "otroPie" no lo canto, habría que añadir un puntaje de envido en mano y otro de truco
-
-        return sePuede ;  //La idea de esto es que en el turno del jugador le aparezca, tambien es importante que si se canta truco en la primer ronda el siguiente le puede decir envido aunque no sea pie 
-
-    }
                                 
-    public  Integer quienResponde(List<Integer> cantoHecho, Integer jugadorTurno){
-        Integer res = null;
-        Integer rondaActual = getRondaActual();
-        Integer jugadorAnterior = obtenerJugadorAnterior(jugadorTurno);
-        Integer jugadorSiguiente = siguienteJugador(jugadorTurno);
-        Integer rondaCanto = cantoHecho.get(0);
-        Integer jugadorCanto = getJugadorIniciadorDelCanto(); 
-        if(jugadorCanto==jugadorAnterior && rondaActual==rondaCanto){
-            res = jugadorAnterior;
+    
+
+    public Integer quienResponde(){
+        Integer jugadorQueResponde;
+        Integer jugadorIniciador = getJugadorIniciadorDelCanto();
+        Integer jugadorSiguiente = siguienteJugador(jugadorIniciador);
+        Integer jugadorActual = getJugadorTurno();
+        if(jugadorActual==jugadorIniciador){
+            jugadorQueResponde = jugadorSiguiente;
         }else{
-            res = jugadorSiguiente;
+            jugadorQueResponde=jugadorIniciador;
         }
-        return res;
+        return jugadorQueResponde;
     }
 }
+
+

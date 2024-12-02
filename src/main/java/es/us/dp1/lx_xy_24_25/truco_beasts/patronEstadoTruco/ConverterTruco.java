@@ -2,23 +2,24 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
 import org.jpatterns.gof.CompositePattern.Component;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Convert;
 
 @Component
 @Convert
-public class ConverterTruco implements AttributeConverter<Truco, CantosTruco>{
+public class ConverterTruco implements AttributeConverter<Truco, Cantos>{
 
     @Override
-    public CantosTruco convertToDatabaseColumn(Truco attribute) {
+    public Cantos convertToDatabaseColumn(Truco attribute) {
         return attribute.getTipoTruco();
     }
 
     @Override
-    public Truco convertToEntityAttribute(CantosTruco dbData) {
-        if(dbData.equals(CantosTruco.TRUCO)){
+    public Truco convertToEntityAttribute(Cantos dbData) {
+        if(dbData.equals(Cantos.TRUCO)){
             return new TipoTruco();
-        }else if (dbData.equals(CantosTruco.RETRUCO)){
+        }else if (dbData.equals(Cantos.RETRUCO)){
             return new TipoRetruco();
         }else {
             return new TipoValeCuatro();
