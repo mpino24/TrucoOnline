@@ -575,7 +575,7 @@ const PlayingModal = forwardRef((props, ref) => {
                         </button>}
                         
                         {mano.puedeCantarEnvido && (  
-                        <div className='envido-button-container'>
+                        <div className='envido-button-container' style={{top:'-120%', position:'absolute', left:'60%'}}>
                         {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
                             <button onClick={() => responderEnvido('ENVIDO')}>
                                 <span>Envido</span>
