@@ -114,21 +114,20 @@ public class TestMano {
 
     @Test
     public void envidosListaLlena(){
-        
+        setup(0, 4);
         List<List<Carta>> listaCartasDispo = setUpListaCartasDispo(3);
         setUpCartas(listaCartasDispo);
-        List<Integer> listaResultante = List.of(25,3,32,6);
-        List<Integer> listaEnvidosRegistrados = mano.listaEnvidos(mano.getCartasDisp());
-        assertEquals(listaResultante, listaEnvidosRegistrados);
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(25);
+        listaResultante.add(null);
+        listaResultante.add(32);
+        listaResultante.add(null);
+        mano.setJugadorTurno(1);
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.listaTantosCadaJugador();
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
         
     }
 
-    @Test
-    public void envidosListaVacia(){
-        setUpCartas(new ArrayList<>());
-        List<Integer> listaEnvidosRegistrados = mano.listaEnvidos(mano.getCartasDisp());
-        assertEquals(new ArrayList<>(), listaEnvidosRegistrados);
-    }
 
     
 
@@ -167,9 +166,12 @@ public class TestMano {
         partida.setCodigo("TESTS");
         mano.setPartida(partida);
         List<Integer> ganadoresRonda = new ArrayList<>();
+        
         ganadoresRonda.add(0);
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
+        ganadoresRonda.add(0);
+        mano.setEnvidosCantados(ganadoresRonda);
     }
  
     @Test
@@ -285,16 +287,16 @@ public class TestMano {
         setup(0, 1);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
         mano.siguienteTurno();
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoNoEsPie(){
         setup(2, 4);
         mano.setJugadorTurno(3);
         setUpCartas(setUpListaCartasDispo(3));
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
 
     @Test
@@ -302,14 +304,14 @@ public class TestMano {
         setup(2, 4);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(1);
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoSiEsPieOtroEquipo(){
         setup(2, 4);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoHayTruco(){
@@ -317,7 +319,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
         mano.setPuntosTruco(2);
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaDos(){
@@ -325,7 +327,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(2));
         mano.setJugadorTurno(0);
         mano.setRondaActual(2);
-        assertFalse(mano.puedeCantarEnvido()); 
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true)); 
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaTres(){
@@ -333,7 +335,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(1));
         mano.setJugadorTurno(3);
         mano.setRondaActual(2);
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
 
     @Test
@@ -342,7 +344,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(3);
         mano.setPuntosEnvido(2);
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
     
     @Test
