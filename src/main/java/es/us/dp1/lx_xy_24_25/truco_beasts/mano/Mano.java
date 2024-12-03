@@ -127,7 +127,7 @@ public class Mano {
         Integer equipoQueVaGanando = equipoMano;
         
         Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
-        for(int i = siguienteJugador(jugadorMano); i<jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
+        for(int i = siguienteJugador(jugadorMano); i!=jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
             Integer puntajeNuevoJugador = listaEnvidosCadaJugador.get(i);
             if(puntajeNuevoJugador == puntajeGanador){
                 if(equipoQueVaGanando == equipoMano){
