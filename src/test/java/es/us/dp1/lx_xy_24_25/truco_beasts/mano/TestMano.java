@@ -9,7 +9,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static org.mockito.ArgumentMatchers.nullable;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -89,9 +89,9 @@ public class TestMano {
                 jugador4= List.of(carta10, carta11, carta12);
                 break;
         }
-
-        return List.of(jugador1, jugador2, jugador3, jugador4);
-
+        List<List<Carta>> cartas =  List.of(jugador1, jugador2, jugador3, jugador4);
+        mano.setCartasDisp(cartas);
+        return cartas;
     }
 
 
@@ -112,22 +112,144 @@ public class TestMano {
         mano.setCartasDisp(cartasDisponibles);
     }
 
-    @Test
-    public void envidosListaLlena(){
+    public void setUpTantos(Integer jug0, Integer jug1, Integer jug2, Integer jug3) {
+        mano.setCartasDisp(List.of(
+            generaCartasParaTanto(jug0),
+            generaCartasParaTanto(jug1),
+            generaCartasParaTanto(jug2),
+            generaCartasParaTanto(jug3)
+        ));
+    }
+    
+    private List<Carta> generaCartasParaTanto(Integer tanto) {
+    
+    
+        if (tanto >= 20) {
+            Integer valor = tanto - 20;
+            Integer valor1 = valor / 2;
+            Integer valor2 = valor - valor1;
+            return List.of(
+                setUpCarta(Palo.ESPADAS, valor1 ==0?11:valor1),
+                setUpCarta(Palo.ESPADAS, valor2==0?10:valor2),
+                setUpCarta(Palo.BASTOS, 1) 
+            );
+        }
+        if(tanto< 20 && tanto > 7){
+            return List.of(setUpCarta(Palo.NADA
+                , tanto));
+        }
+    
+    
+       
         
-        List<List<Carta>> listaCartasDispo = setUpListaCartasDispo(3);
-        setUpCartas(listaCartasDispo);
-        List<Integer> listaResultante = List.of(25,3,32,6);
-        List<Integer> listaEnvidosRegistrados = mano.listaEnvidos(mano.getCartasDisp());
-        assertEquals(listaResultante, listaEnvidosRegistrados);
+        return List.of(
+            setUpCarta(Palo.OROS, tanto),
+            setUpCarta(Palo.COPAS, 1),
+            setUpCarta(Palo.BASTOS, 1) 
+        );
+    }
+    
+    
+   
+    
+
+    @Test
+    public void envidosGanaEquipo2(){
+        setup(0, 4);
+        setUpTantos(7, 21,4, 6);
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(7);
+        listaResultante.add(21);
+        listaResultante.add(null);
+        listaResultante.add(null);
+        
+        
+        mano.setJugadorTurno(0);
+        mano.listaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(1, mano.getEquipoGanadorEnvido());
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
         
     }
 
     @Test
-    public void envidosListaVacia(){
-        setUpCartas(new ArrayList<>());
-        List<Integer> listaEnvidosRegistrados = mano.listaEnvidos(mano.getCartasDisp());
-        assertEquals(new ArrayList<>(), listaEnvidosRegistrados);
+    public void envidosElManoTieneLaMasAlta(){
+        setup(0, 4);
+        setUpTantos(33, 2, 2, 21);
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(33);
+        listaResultante.add(null);
+        listaResultante.add(null);
+        listaResultante.add(null);
+        
+        
+        mano.setJugadorTurno(0);
+        mano.listaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(0, mano.getEquipoGanadorEnvido());
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+        
+    }
+
+    @Test
+    public void envidosEmpateGanaElEquipoMano(){
+        setup(1, 4);
+        setUpTantos(7, 24, 24, 6);
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(null);
+        listaResultante.add(24);
+        listaResultante.add(null);
+        listaResultante.add(null);
+        
+        
+        mano.setJugadorTurno(1);
+        mano.listaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(1, mano.getEquipoGanadorEnvido());
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+        
+    }
+
+    @Test
+    public void envidosGanaElEquipoNoMano(){
+        setup(3, 4);
+        setUpTantos(7, 25, 24, 6);
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(7);
+        listaResultante.add(25);
+        listaResultante.add(null);
+        listaResultante.add(6);
+        
+        
+        mano.setJugadorTurno(3);
+        mano.listaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(1, mano.getEquipoGanadorEnvido());
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+        
+    }
+
+    @Test
+    public void envidosTodosDicenSuTanto(){
+        setup(0, 4);
+        setUpTantos(7, 20, 24, 33);
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(7);
+        listaResultante.add(20);
+        listaResultante.add(24);
+        listaResultante.add(33);
+        
+        
+        mano.setJugadorTurno(0);
+        mano.listaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(1, mano.getEquipoGanadorEnvido());
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+        
     }
 
     
@@ -167,9 +289,12 @@ public class TestMano {
         partida.setCodigo("TESTS");
         mano.setPartida(partida);
         List<Integer> ganadoresRonda = new ArrayList<>();
+        
         ganadoresRonda.add(0);
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
+        ganadoresRonda.add(0);
+        mano.setEnvidosCantados(ganadoresRonda);
     }
  
     @Test
@@ -285,16 +410,16 @@ public class TestMano {
         setup(0, 1);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
         mano.siguienteTurno();
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoNoEsPie(){
         setup(2, 4);
         mano.setJugadorTurno(3);
         setUpCartas(setUpListaCartasDispo(3));
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
 
     @Test
@@ -302,14 +427,14 @@ public class TestMano {
         setup(2, 4);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(1);
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoSiEsPieOtroEquipo(){
         setup(2, 4);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
-        assertTrue(mano.puedeCantarEnvido());
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoHayTruco(){
@@ -317,7 +442,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
         mano.setPuntosTruco(2);
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaDos(){
@@ -325,7 +450,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(2));
         mano.setJugadorTurno(0);
         mano.setRondaActual(2);
-        assertFalse(mano.puedeCantarEnvido()); 
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true)); 
     }
     @Test
     public void sePuedeCantarEnvidoYaEsRondaTres(){
@@ -333,7 +458,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(1));
         mano.setJugadorTurno(3);
         mano.setRondaActual(2);
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
 
     @Test
@@ -342,7 +467,7 @@ public class TestMano {
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(3);
         mano.setPuntosEnvido(2);
-        assertFalse(mano.puedeCantarEnvido());
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
     
     @Test
