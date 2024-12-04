@@ -18,10 +18,13 @@ const PlayingModal = forwardRef((props, ref) => {
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
 
+    //MENSAJES Y CUADRO DEL ENVIDO
+    const [ultimoMensaje, setUltimoMensaje] = useState(null)
     const[resolucionEnvido, setResolucionEnvido] = useState(false)
-      // TODO: CAMBIAR PORQUE ES TOTALMENTE PAUPERRIMO ESTO, PERO NO SE ME OCURRE OTRA OPCION XD
-    const [envidosJugadores, setEnvidosJugadores] = useState([]);
+    const [cantoDicho, setCantoDicho] = useState(false)
 
+    const [envidosJugadores, setEnvidosJugadores] = useState([]);
+    
 
 
     const puntosSinTruco = 1;
@@ -65,16 +68,19 @@ const PlayingModal = forwardRef((props, ref) => {
                 
             }
             
-            if (mano && mano.envidosCadaJugador) {
-                setEnvidosJugadores(mano.envidosCadaJugador.map((envido) => envido === null ? 'Son buenas' : envido));
-            }
-            if(mano && mano.puntosEnvido !== 0 && mano.seQuizoEnvido){
-                setResolucionEnvido(true)
-                
-            } else{
-                setResolucionEnvido(false)
+            if (data.envidosCadaJugador) {
+                setEnvidosJugadores(data.envidosCadaJugador.map((envido) => envido === null ? 'Son buenas' : envido));
             }
 
+            //NECESARIO PARA FORZAR QUE SE ACTUALICE, SINO SOLO LE APARECE AL DEL QUIERO
+            setUltimoMensaje((prevUltimoMensaje) => {
+                if (data.ultimoMensaje !== prevUltimoMensaje) {
+                    return data.ultimoMensaje;
+                }
+                return prevUltimoMensaje;
+            })
+            
+            
         })
         .catch((error) => {
             console.error("Error fetching mano:", error);
@@ -83,15 +89,37 @@ const PlayingModal = forwardRef((props, ref) => {
         });
     }
 
+    function mostrarMensaje() {
+        if(ultimoMensaje=== "LISTA_ENVIDOS"){
+            setResolucionEnvido(true)
+            const timeoutId = setTimeout(() => setResolucionEnvido(false), 4000);
+
+            return () => clearTimeout(timeoutId);
+        } else if(ultimoMensaje!==null){
+            setCantoDicho(true)
+            const timeoutId = setTimeout(() => setCantoDicho(false), 2000);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }
+
+    useEffect(() => {
+        mostrarMensaje()
+    }, [ultimoMensaje])
+
     useEffect(() => {
         let intervalId;
+        
+        mostrarMensaje();
         fetchMano();
         intervalId = setInterval(fetchMano, 1000);
+        
         return () => clearInterval(intervalId);
     }, [game.codigo, posicion]);
 
     useEffect(() => {
         fetchMano();
+        
     }, [tirarTrigger, trucoTrigger, envidoTrigger]);
 
     useEffect(() => {
@@ -106,6 +134,8 @@ const PlayingModal = forwardRef((props, ref) => {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
+
+  
 
     const handlePlayMusic = () => {
         if (audioRef.current) {
@@ -339,9 +369,6 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
     function responderEnvido(respuesta) {
-        if(respuesta === 'QUIERO'){
-            setResolucionEnvido(true)
-        }
         fetch(`/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
             method: "PATCH",
             headers: {
@@ -362,6 +389,7 @@ const PlayingModal = forwardRef((props, ref) => {
     return (
         <div className="playing-modal-container">
             {console.log(mano)}
+            {console.log(ultimoMensaje)}
             {/* Background */}
             <div
                 style={{ 
@@ -488,9 +516,9 @@ const PlayingModal = forwardRef((props, ref) => {
                                 }}
                             >
                                 <h3 style={{ color: "black" }}>Resolución de Envido</h3>
-                                <h5>{mano.equipoGanadorEnvido %2 === posicion%2 ? "Ganaste" : "Perdiste" }</h5>
+                                <h5>{mano.equipoGanadorEnvido  === posicion%2 ? "Ganaste" : "Perdiste" }</h5>
                                 {envidosJugadores.map((envido, index) => (
-                                    <p key={index}>Jugador {index}: {envido}</p>
+                                    <p key={index}>Jugador {index }: {envido}</p>
                                 ))}
                                 
                                 <button
@@ -509,7 +537,29 @@ const PlayingModal = forwardRef((props, ref) => {
                                 </button>
                             </div>
                         )}
-                        </div>
+            </div>
+            {/*Cuadro cantos */}
+            <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
+            {mano && cantoDicho && (
+                            <div 
+                                className="confirmation-dialog"
+                                style={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+                                    maxWidth: "800px",
+                                    margin: "0 auto",
+                                    textAlign: "center",
+                                    
+                                }}
+                            >
+                                {<h3 style={{ color: "black" }}>{ultimoMensaje}</h3>}
+                                
+                            </div>
+                        )}
+            </div>
+
             {/* Truco Buttons */}
             <div style={{display:'flex', flexDirection: 'row'}}>
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales && (

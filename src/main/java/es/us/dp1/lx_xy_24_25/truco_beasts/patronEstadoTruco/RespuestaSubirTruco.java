@@ -47,9 +47,11 @@ public class RespuestaSubirTruco extends RespuestaTruco{
         if(puntosTruco == 1){
                 manoActual.setPuntosTruco(puntosTruco+1); //Declaramos como un "quiero" el truco
                 manoActual =manoService.cantosTruco(codigo,Cantos.RETRUCO);
+                manoActual.setUltimoMensaje(Cantos.RETRUCO);
         }else if(puntosTruco==2){
                 manoActual.setPuntosTruco(puntosTruco +1);
                 manoActual= manoService.cantosTruco(codigo,Cantos.VALECUATRO);
+                manoActual.setUltimoMensaje(Cantos.VALECUATRO);
         } else {
                 throw new TrucoException( "No se puede subir más, capo"); 
         }

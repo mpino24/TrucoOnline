@@ -211,6 +211,7 @@ public class ManoService {
             manoActual.setEsperandoRespuesta(false);
             throw e;
         }
+        manoActual.setUltimoMensaje(canto);
         manoActual.setPuedeCantarTruco(false);
         manoActual.comprobarSiPuedeCantarEnvido(false);
         actualizarMano(manoActual, codigo);
@@ -229,7 +230,7 @@ public class ManoService {
                 
                 gestionarPuntosEnvido(false, codigo);
                 manoActual = getMano(codigo);
-                manoActual.setSeQuizoEnvido(true);
+                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
@@ -241,6 +242,7 @@ public class ManoService {
                 gestionarPuntosEnvido(true, codigo);
                 
                 manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.NO_QUIERO);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
@@ -360,7 +362,7 @@ public class ManoService {
         }
         manoActual.comprobarSiPuedeCantarTruco();
         manoActual.comprobarSiPuedeCantarEnvido(false);
-
+        manoActual.setUltimoMensaje(canto);
 		actualizarMano(manoActual, codigo);
         return manoActual;
     }
