@@ -115,16 +115,38 @@ public class ManoService {
 		ganadoresRonda.add(ganadasIniciales);
 		nuevaMano.setGanadoresRondas(ganadoresRonda);
 
+        
+        Integer numJugadores = partida.getNumJugadores();
         List<Carta> listaCartasLanzadas = new ArrayList<>();
-        for (int i = 0; i <partida.getNumJugadores(); i++){
+        for (int i = 0; i <numJugadores; i++){
             listaCartasLanzadas.add(null);
+            
         }
+        nuevaMano.setCartasLanzadasTotales(inicializarCartasLanzadasTotales(numJugadores));
         nuevaMano.setCartasLanzadasRonda(listaCartasLanzadas);
         nuevaMano.comprobarSiPuedeCantarEnvido(true);
         actualizarMano(nuevaMano, partida.getCodigo());
 		return nuevaMano;
 	}
 	
+
+    /*
+     * Fundamental que sea así ya que si creas una lista vacia y la añadis varias veces para cada uno de los casos poniendo los fors separados
+     * considera que es la misma y si haces cambios en una se hacen en la otra, cosa que no queremos.
+     */
+    public List<List<Carta>> inicializarCartasLanzadasTotales(Integer numJugadores){
+    List<List<Carta>> res = new ArrayList<>();
+    Integer rondas = 3;    
+    for (int j = 0; j < numJugadores; j++) {
+        List<Carta> listaVacia = new ArrayList<>();
+        for (int i = 0; i < rondas; i++) {
+            listaVacia.add(null);
+        }
+        res.add(listaVacia);  
+    }
+    return res;
+}
+
 	public Carta tirarCarta(String codigo, Integer cartaId){
 		Mano manoActual = getMano(codigo);
         if(!manoActual.getEsperandoRespuesta()){
@@ -145,7 +167,9 @@ public class ManoService {
                 throw new CartaTiradaException();
             }
             Carta cartaALanzar = cartasDisponibles.get(indice);
-
+            
+            manoActual.getCartasLanzadasTotales().get(jugadorActual).set(manoActual.getRondaActual()-1, cartaALanzar);
+            
             manoActual.getCartasDisp().get(jugadorActual).set(indice,null);
             manoActual.getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
 
