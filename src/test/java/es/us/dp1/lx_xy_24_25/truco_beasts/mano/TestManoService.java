@@ -60,7 +60,14 @@ public class TestManoService {
             envidos.add(envidosIniciales);
         }
         mano.setEnvidosCantados(envidos);
+        List<List<Carta>> cartasLanzadasTotales = new ArrayList<>();
+        List<Carta> listaParaCartasVacia = new ArrayList<>();
         
+        for (int i = 0; i <numJugadores; i++){
+            
+            cartasLanzadasTotales.add(listaParaCartasVacia);
+        }
+        mano.setCartasLanzadasTotales(cartasLanzadasTotales);
 
         manoService = new ManoService(cartaRepository, partidaService);
         codigo = partida.getCodigo();

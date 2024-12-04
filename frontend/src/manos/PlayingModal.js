@@ -221,34 +221,49 @@ const PlayingModal = forwardRef((props, ref) => {
     };
 
     const renderCartasMesa = () => {
-        if (mano && mano.cartasLanzadasRonda) {
-            const cartasLanzadas = mano.cartasLanzadasRonda;
-
-            if (!cartasLanzadas || cartasLanzadas.length === 0) {
+        if (mano && mano.cartasLanzadasTotales) {
+            const cartasLanzadasTotales = mano.cartasLanzadasTotales;
+    
+            if (!cartasLanzadasTotales || cartasLanzadasTotales.length === 0) {
                 return <div>No hay cartas para mostrar.</div>;
             }
-
+    
             return (
                 <div className="cartas-mesa-container">
-                    {cartasLanzadas.map((carta, index) => (
-                        carta && (
-                            <div key={index} className="card-container mesa">
-                                <img
-                                    src={carta.foto}
-                                    alt={`Carta ${index + 1}`}
-                                    className="card-image"
-                                    onError={(e) => (e.target.style.display = 'none')}
-                                />
-                                <div className="sunset-overlay"></div>
-                            </div>
-                        )
+                    {cartasLanzadasTotales.map((cartasJugador, jugadorIndex) => (
+                        <div key={jugadorIndex} className="jugador-cartas">
+                            {cartasJugador.map((carta, rondaIndex) => (
+                                carta && (
+                                    <div
+                                        key={rondaIndex}
+                                        className="card-container mesa"
+                                        style={{
+                                            transform: `translateY(-${rondaIndex * -15}px)`, // Mueve cada carta más arriba según la ronda
+                                            position: 'relative',
+                                            zIndex: 10 + rondaIndex,
+                                            
+                                        }}
+                                    >
+                                        <img
+                                            src={carta.foto}
+                                            alt={`Carta Ronda ${rondaIndex + 1}`}
+                                            className="card-image"
+                                            onError={(e) => (e.target.style.display = 'none')}
+                                        />
+                                        <div className="sunset-overlay"></div>
+                                    </div>
+                                )
+                            ))}
+                        </div>
                     ))}
                 </div>
             );
         }
-        
+    
         return <div>Cargando cartas lanzadas...</div>;
     };
+    
+    
 
 
     const dragStart = (evento, carta) => {
@@ -389,7 +404,6 @@ const PlayingModal = forwardRef((props, ref) => {
     return (
         <div className="playing-modal-container">
             {console.log(mano)}
-            {console.log(ultimoMensaje)}
             {/* Background */}
             <div
                 style={{ 

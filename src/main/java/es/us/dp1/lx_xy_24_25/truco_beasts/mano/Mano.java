@@ -28,7 +28,7 @@ public class Mano {
     private Integer rondaActual = 1;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
-    
+    private List<List<Carta>> cartasLanzadasTotales; //Esta lista contiene las cartas que lanzo cada jugador siendo el indice de la lista grande, el jugador, y el de la sublista, la ronda en la que la lanzo
     private Integer esTrucoEnvidoFlor = 0; // 0 -> Truco, 1 -> envido, 2 -> flor
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
