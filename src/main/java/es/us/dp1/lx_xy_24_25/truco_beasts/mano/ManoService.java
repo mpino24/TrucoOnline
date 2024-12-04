@@ -211,6 +211,9 @@ public class ManoService {
             manoActual.setEsperandoRespuesta(false);
             throw e;
         }
+        if(canto == Cantos.ENVIDO && envidosCantados.get(0) > 1){
+            canto = Cantos.ENVIDO2;
+        }
         manoActual.setUltimoMensaje(canto);
         manoActual.setPuedeCantarTruco(false);
         manoActual.comprobarSiPuedeCantarEnvido(false);

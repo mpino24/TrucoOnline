@@ -36,6 +36,7 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
 
         manoActual.setPuntosTruco(puntosTruco);
         manoActual.setTerminada(true);
+        manoActual.setUltimoMensaje(getTipoRespuestaTruco());
         return manoActual;
     }
     
