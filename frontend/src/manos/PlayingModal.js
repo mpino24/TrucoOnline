@@ -554,7 +554,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                     
                                 }}
                             >
-                                {<h3 style={{ color: "black" }}>{ultimoMensaje}</h3>}
+                                {<h3 style={{ color: "black" }}>{ultimoMensaje.replace("_", " ").replace("2","")}</h3>}
                                 
                             </div>
                         )}
