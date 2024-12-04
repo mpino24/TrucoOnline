@@ -44,7 +44,7 @@ public class RespuestaQuieroTruco extends RespuestaTruco{
         manoActual.setEsperandoRespuesta(false);
         manoActual.setJugadorTurno(manoActual.getJugadorIniciadorDelCanto());
         
-        
+        manoActual.setUltimoMensaje(getTipoRespuestaTruco());
         manoActual.comprobarSiPuedeCantarEnvido(false);
         return manoActual;
     } 

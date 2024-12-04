@@ -38,7 +38,10 @@ public class Mano {
     private Boolean puedeCantarEnvido = false;
     private Integer queEnvidoPuedeCantar = 2; //1 -> solo falta envido, 2 -> falta y real, 3 -> falta, real y envido, otro -> nada
     private Integer equipoGanadorEnvido;
-    private Boolean seQuizoEnvido = false;
+
+    private Cantos ultimoMensaje;
+
+
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
     private final Integer rondasMaximasGanables = 2;
@@ -57,6 +60,7 @@ public class Mano {
         this.queEnvidoPuedeCantar = mano.getQueEnvidoPuedeCantar();
         this.puedeCantarEnvido = mano.getPuedeCantarEnvido();
         this.terminada = mano.getTerminada();
+        this.ultimoMensaje = mano.getUltimoMensaje();
     }
 
     public  Boolean comprobarSiPuedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
