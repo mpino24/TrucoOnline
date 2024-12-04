@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
+
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
@@ -13,13 +14,14 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
 
 
 @StatePattern.ConcreteState
-public class RespuestaSubirTruco extends RespuestaTruco{
+public class RespuestaEnvidos extends RespuestaTruco{
 
     private final ManoService manoService; 
-    
+    private final Cantos tipoEnvido;
     @Autowired
-    public RespuestaSubirTruco(ManoService manoService){
+    public RespuestaEnvidos(ManoService manoService, Cantos tipoEnvido){
         this.manoService = manoService;
+        this.tipoEnvido = tipoEnvido;
 
     }
 
@@ -27,7 +29,7 @@ public class RespuestaSubirTruco extends RespuestaTruco{
     public boolean equals(Object o) { 
         if (this == o) return true; 
         if (o == null || getClass() != o.getClass()) return false; 
-        RespuestaSubirTruco respuestaSubirTruco = (RespuestaSubirTruco) o; 
+        RespuestaSubirTruco respuestaRetruco = (RespuestaSubirTruco) o; 
         return true; 
     }
             
@@ -38,21 +40,22 @@ public class RespuestaSubirTruco extends RespuestaTruco{
 
     @Override
     public Cantos getTipoRespuestaTruco() {
-        return Cantos.SUBIR;
+        return Cantos.ENVIDO;
     }
 
     @Override
     public Mano accionRespuestaTruco(Mano manoActual, Integer puntosTruco)  {
+        Boolean puedeEnvido = manoActual.getPuedeCantarEnvido(); 
+        
         String codigo = manoActual.getPartida().getCodigo();
-        if(puntosTruco == 1){
-                manoActual.setPuntosTruco(puntosTruco+1); //Declaramos como un "quiero" el truco
-                manoActual =manoService.cantosTruco(codigo,Cantos.RETRUCO);
-        }else if(puntosTruco==2){
-                manoActual.setPuntosTruco(puntosTruco +1);
-                manoActual= manoService.cantosTruco(codigo,Cantos.VALECUATRO);
-        } else {
-                throw new TrucoException( "No se puede subir más, capo"); 
+        
+        if(puedeEnvido){
+            manoActual =manoService.cantosEnvido(codigo, tipoEnvido);
+        }else{
+            throw new TrucoException( "Respuesta al truco no valida"); 
         }
+        
+        
         return manoActual;
     }
     

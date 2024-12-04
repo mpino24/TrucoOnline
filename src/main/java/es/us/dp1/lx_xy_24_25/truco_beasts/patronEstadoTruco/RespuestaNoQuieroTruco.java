@@ -30,11 +30,12 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
     public Cantos getTipoRespuestaTruco() {
         return Cantos.NO_QUIERO;
     }
+    
+    @Override  
+    public Mano accionRespuestaTruco(Mano manoActual, Integer puntosTruco) {
 
-    @Override
-    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer puntosTruco) {
-        
         manoActual.setPuntosTruco(puntosTruco);
+        manoActual.setTerminada(true);
         return manoActual;
     }
     
