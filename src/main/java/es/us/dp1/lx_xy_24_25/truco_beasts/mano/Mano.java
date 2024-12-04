@@ -54,6 +54,9 @@ public class Mano {
         this.esperandoRespuesta = mano.getEsperandoRespuesta();
         this.jugadorTurno = mano.getJugadorTurno();
         this.puntosTruco = mano.getPuntosTruco();
+        this.queEnvidoPuedeCantar = mano.getQueEnvidoPuedeCantar();
+        this.puedeCantarEnvido = mano.getPuedeCantarEnvido();
+        this.terminada = mano.getTerminada();
     }
 
     public  Boolean comprobarSiPuedeCantarTruco() { //O SUS OTRAS POSIBILIDADES

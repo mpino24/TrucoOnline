@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
@@ -33,7 +34,10 @@ public class TipoTruco extends Truco{
 
     @Override
     public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor) {
-        
+        Integer puntosNoHayTruco = 1;
+        if(manoActual.getPuntosTruco() > puntosNoHayTruco){
+            throw new TrucoException("Ya se canto el truco");
+        }
         manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
                                                               
         manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));

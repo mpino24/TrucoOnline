@@ -72,59 +72,115 @@ Indicar las clases o paquetes creados como resultado de la aplicación del patr�
 
 Describir porqué era interesante aplicar el patrón.
 
+### Patrón: Single Page Application (SPA)
+*Tipo*: Arquitectónico | de Diseño
+
+*Contexto de Aplicación*
+
+Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+
+*Clases o paquetes creados*
+
+Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
+
+*Ventajas alcanzadas al aplicar el patrón*
+
+Describir porqué era interesante aplicar el patrón.
+
+### Patrón: Model View Controller (MVC)
+*Tipo*: Arquitectónico | de Diseño
+
+*Contexto de Aplicación*
+
+Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+
+*Clases o paquetes creados*
+
+Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
+
+*Ventajas alcanzadas al aplicar el patrón*
+
+Describir porqué era interesante aplicar el patrón.
+
+### Patrón: Domain Model
+*Tipo*: Arquitectónico | de Diseño
+
+*Contexto de Aplicación*
+
+Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+
+*Clases o paquetes creados*
+
+Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
+
+*Ventajas alcanzadas al aplicar el patrón*
+
+Describir porqué era interesante aplicar el patrón.
+
+### Patrón: Service layer
+*Tipo*: Arquitectónico | de Diseño
+
+*Contexto de Aplicación*
+
+Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+
+*Clases o paquetes creados*
+
+Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
+
+*Ventajas alcanzadas al aplicar el patrón*
+
+Describir porqué era interesante aplicar el patrón.
+
+### Patrón: (Meta) Data Mapper 
+*Tipo*: Arquitectónico | de Diseño
+
+*Contexto de Aplicación*: el (Meta) Data Mapper es aplicado en la capa de persistencia de la aplicacion, la encargada de trasladar los datos entre los objetos del dominio y la base de datos. Este patron nos permite mantener el modelo de dominio independiente del modelo de datos, facilitando la separacion de responsabilidades.
+
+Este patron lo aplica Spring utilizando JPA en todas nuestras clases del dominio, como:
+- Carta
+- Jugador
+- Partida
+- PartidaJugador
+- User
+
+Las ventajas más claras son la independencia del modelo de dominio y la persistencia de los datos, simplificando su lógica.
+
+La aplicación del patrón (Meta) Data Mapper fue esencial para lograr una arquitectura limpia y desacoplada, donde la lógica de negocio y la lógica de persistencia están claramente separadas
+
+### Patrón: Identity Field
+*Tipo*: Arquitectónico | de Diseño
+
+Aplicamos el patrón Identity Field para garantizar que cada instancia de un objeto de dominio pueda ser identificada de manera única y persistida en la base de datos. Lo utilizamos en todas las entidades de la aplicacion que extiendan de BaseEntity, que se encuentra en el paquete: es.us.dp1.lx_xy_24_25.truco_beasts.model
+Además siempre que se cree una nueva entidad se genera automaticamente una ID para esta.
+
+Este patrón nos aporta diversos beneficios como:
+- Identificar facilmente y de manera única las instancias de objetos con un solo registro en base de datos.
+- Facilita la gestion de las relaciones entre entidades (se usa la id como Primary key o Foreign key).
+- Se optimizan las consultas a la base de datos ya que se usan como indice.
+
+La implementación de Identity Field asegura la unicidad de las entidades del dominio, facilita las operaciones CRUD y mantiene la integridad entre los objetos en memoria y sus representaciones en la base de datos.
+
+### Patrón: Repository
+*Tipo*: Arquitectónico | de Diseño
+
+El patrón Repository se ha utilizado para gestionar el acceso a los datos y poder así encapsular las operaciones de persistencia, consulta y manipulación de las entidades del modelo de dominio.
+
+Lo hemos aplicado para las entidades:
+- Carta
+- Jugador
+- Partida
+- PartidaJugador
+- User
+En sus respectivos paquetes: es.us.dp1.lx_xy_24_25.truco_beasts.{nombre de la entidad}Repository
+
+Entre sus ventajas destaca la separacion de responsabilidades facilitando el mantenimiento y claridad del código y su integracion directa con el framework que estamos utilizando, pudiendo hacer de una manera simple consultas avanzadas.
+
+En resumen, el patrón Repository es clave para estructurar la capa de acceso a datos de forma modular y desacoplada. 
+
+
 ## Decisiones de diseño
 _En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
-
-### Decisión X
-#### Descripción del problema:*
-
-Describir el problema de diseño que se detectó, o el porqué era necesario plantearse las posibilidades de diseño disponibles para implementar la funcionalidad asociada a esta decisión de diseño.
-
-#### Alternativas de solución evaluadas:
-Especificar las distintas alternativas que se evaluaron antes de seleccionar el diseño concreto implementado finalmente en el sistema. Si se considera oportuno se pude incluir las ventajas e inconvenientes de cada alternativa
-
-#### Justificación de la solución adoptada
-
-Describir porqué se escogió la solución adoptada. Si se considera oportuno puede hacerse en función de qué  ventajas/inconvenientes de cada una de las soluciones consideramos más importantes.
-Os recordamos que la decisión sobre cómo implementar las distintas reglas de negocio, cómo informar de los errores en el frontend, y qué datos devolver u obtener a través de las APIs y cómo personalizar su representación en caso de que sea necesario son decisiones de diseño relevantes.
-
-_Ejemplos de uso de la plantilla con otras decisiones de diseño:_
-
-### Decisión ejemplo: Importación de datos reales para demostración
-#### Descripción del problema:
-
-Como grupo nos gustaría poder hacer pruebas con un conjunto de datos reales suficientes, porque resulta más motivador. El problema es al incluir todos esos datos como parte del script de inicialización de la base de datos, el arranque del sistema para desarrollo y pruebas resulta muy tedioso.
-
-#### Alternativas de solución evaluadas:
-
-*Alternativa 1.a*: Incluir los datos en el propio script de inicialización de la BD (data.sql).
-
-*Ventajas:*
-•	Simple, no requiere nada más que escribir el SQL que genere los datos.
-*Inconvenientes:*
-•	Ralentiza todo el trabajo con el sistema para el desarrollo. 
-•	Tenemos que buscar nosotros los datos reales
-
-*Alternativa 1.b*: Crear un script con los datos adicionales a incluir (extra-data.sql) y un controlador que se encargue de leerlo y lanzar las consultas a petición cuando queramos tener más datos para mostrar.
-*Ventajas:*
-•	Podemos reutilizar parte de los datos que ya tenemos especificados en (data.sql).
-•	No afecta al trabajo diario de desarrollo y pruebas de la aplicación
-*Inconvenientes:*
-•	Puede suponer saltarnos hasta cierto punto la división en capas si no creamos un servicio de carga de datos. 
-•	Tenemos que buscar nosotros los datos reales adicionales
-
-*Alternativa 1.c*: Crear un controlador que llame a un servicio de importación de datos, que a su vez invoca a un cliente REST de la API de datos oficiales de XXXX para traerse los datos, procesarlos y poder grabarlos desde el servicio de importación.
-
-*Ventajas:*
-•	No necesitamos inventarnos ni buscar nosotros lo datos.
-•	Cumple 100% con la división en capas de la aplicación.
-•	No afecta al trabajo diario de desarrollo y pruebas de la aplicación
-*Inconvenientes:*
-•	Supone mucho más trabajo. 
-•	Añade cierta complejidad al proyecto
-
-*Justificación de la solución adoptada*
-Como consideramos que la división en capas es fundamental y no queremos renunciar a un trabajo ágil durante el desarrollo de la aplicación, seleccionamos la alternativa de diseño 1.c.
 
 ### Decisión 1: Creacion de la clase PartidaJugador
 #### Descripción del problema:
@@ -192,6 +248,7 @@ Como grupo no teniamos claro como abordar los apartados de creación y unión de
 • Aumento de carga en memoria y de tiempo de espera .
 
 *Alternativa 2*: Crear dos funciones separadas, una encargada de la gestión del cante y otra de la respuesta.
+
 *Ventajas:*
 • Interfaz mas limpia y dinámica.
 • Omisión de recargas.
@@ -218,6 +275,7 @@ A la hora de gestionar las manos de una partida, teniamos que tener en cuenta qu
 
 
 *Alternativa 2*: Crear un Map<String, Mano> manosPorPartida que tenga de clave el codigo de la partida y de valor su Mano asociada.
+
 *Ventajas:*
 • Cada partida va a poder tener su Mano actual en el ManoService.
 • Es más fácil encontrar desde el ManoService cual es la Mano de esa partida.
@@ -225,6 +283,7 @@ A la hora de gestionar las manos de una partida, teniamos que tener en cuenta qu
 • Tenemos que agregar una función llamada getMano(String codigo) en el ManoService y debe ser llamada en todos los metodos del mismo para poder actuar sobre esa partida.
 
 *Alternativa 3*: Poner Mano en la base de datos y buscarla a partir de su partida asociada.
+
 *Ventajas:*
 • Se gestiona el problema de las partidas simultaneas.
 *Inconvenientes:*
@@ -235,29 +294,34 @@ A la hora de gestionar las manos de una partida, teniamos que tener en cuenta qu
 #### Justificación de la solución adoptada
 Cómo se puede leer en la Refactorización 7, optamos por la alternativa 2, ya que a la hora de gestionar varias partidas simultaneas es mucho más útil y segura.
 
+### Decisión 5: Usar un canto "SUBIR"
+#### Descripción del problema:
+Para las respuestas al "TRUCO", se puede decir "RETRUCO" y luego a este "VALE CUATRO", el problema que surgia es que lo único que diferencia estas dos acciones son el los puntos que ya hay en juego en la partida (1 sin truco, 2 con truco, 3 con retruco y 4 con vale cuatro). La duda nació en como implementarlo de la manera más fácil de gestionarlos.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: : Crear un canto llamado "SUBIR" que según el estado de la partida haga la llamada al retruco o valecuatro.
+
+*Ventajas:*
+• Todo simplificado en una sola clase llamada RespuestaSubirTruco.
+• A la hora de hacer las llamadas en frontend es mucho más simple ya que no hay que crear dos respuestas distintas.
+• En frontend siempre se llama a la respuesta subir, lo unico que cambiamos es el texto para que diga "RETRUCO" o "VALE CUATRO" correspondientemente 
+*Inconvenientes:*
+• Si se quisieran agregar más cantos en un futuro sería mejor que esten separadas para que no haya muchos condicionales en esta clase (considerando que cambiamos las reglas del juego).
+
+
+*Alternativa 2*: Crear dos clases, una dedicada a la respuesta "RETRUCO" y otra al "VALE CUATRO" sin crear un canto "de mentira".
+
+*Ventajas:*
+• Las respuestas están completamente separadas.
+• No hay necesidad de incluir condicionales en las clases.
+*Inconvenientes:*
+• Dado que solamente existen esas dos posibilidades, que esencialmente realizan lo mismo, separarla en dos clases resulta menos intuitivo.
+• Necesitariamos crear dos botones diferentes que se activen o desactiven en base a los puntos de la mano, lo cual generaria código innecesario.
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 1 ya que nos pareció lo más óptimo porque no se puede cantar "RETRUCO" o "VALECUATRO" simultaneamente. Además, dado que ambas tienen que llamar a cantosTruco, solo que según los puntos de la mano se hace con un Canto u otro, crear el canto "imaginario" nos es más útil, simplificando también la cantidad de botones que necesitabamos en frontend.
+
+
 ## Refactorizaciones aplicadas
-
-Si ha hecho refactorizaciones en su código, puede documentarlas usando el siguiente formato:
-
-### Refactorización X: 
-En esta refactorización añadimos un mapa de parámtros a la partida para ayudar a personalizar la información precalculada de la que partimos en cada fase del juego.
-#### Estado inicial del código
-```Java 
-class Animal
-{
-}
-``` 
-_Puedes añadir información sobre el lenguaje concreto en el que está escrito el código para habilitar el coloreado de sintaxis tal y como se especifica en [este tutorial](https://docs.github.com/es/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks)_
-
-#### Estado del código refactorizado
-
-```
-código fuente en java, jsx o javascript
-```
-#### Problema que nos hizo realizar la refactorización
-_Ej: Era difícil añadir información para implementar la lógica de negocio en cada una de las fases del juego (en nuestro caso varía bastante)_
-#### Ventajas que presenta la nueva versión del código respecto de la versión original
-_Ej: Ahora podemos añadir arbitrariamente los datos que nos hagan falta al contexto de la partida para que sea más sencillo llevar a cabo los turnos y jugadas_
 
 ### Refactorización 1: Botón Ver 
 En esta refactorización cambiamos nuestro código para que quedase mas legible, en lugar de tener dos veces la misma declaración del boton Ver (para poder ver partidas), ya solo aparece una vez.
@@ -1346,4 +1410,146 @@ Por el ansia de modularizar y separa las cosas creamos dos enums, uno para el tr
 Tener enums para diferenciarlos era una forma simple de ordenarlos, pero en la práctica solo generaba que haya que volver a escribir las mismas cosas en varios enums y comprobaciones más complejas para que correspondan los nombres.
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Todo está fácil de encontrar en un mismo lugar y además a la hora de hacer el caso de la flor va a ser una implementación más sencilla.
+
+### Refactorización 13: Patron truco
+Habiamos aplicado el patron de estrategia en los cantos del truco, pero para poder gestionar las exceptions todavia haciamos uso de un switch, cosa que hacía que no podamos aprovechar todos los beneficios del patron. Ahora cada excepción se maneja en su respectiva clase. 
+#### Estado inicial del código
+```Java Ejemplos
+    public Mano cantosTruco(String codigo, Cantos canto){
+		Mano manoActual = getMano(codigo);
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer equipoCantor = manoActual.getEquipoCantor();
+
+        Integer rondaActual = manoActual.getRondaActual();
+        
+        if(manoActual.getEsperandoRespuesta()==false){
+            manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
+        }
+        manoActual.setEsperandoRespuesta(true); 
+        
+        
+        manoActual.setEsTrucoEnvidoFlor(0);
+        Mano mano = new Mano();
+        try {
+            if (!manoActual.comprobarSiPuedeCantarTruco()) {
+                throw new TrucoException(); 
+            }
+            Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
+
+            Integer puntosTruco = manoActual.getPuntosTruco();
+            Integer puntosNoHayTruco = 1; Integer puntosHayTruco = 2; Integer puntosHayRetruco = 3;
+            switch (canto) {
+                case TRUCO: 
+                    if(puntosTruco > puntosNoHayTruco){
+                        throw new TrucoException("Ya se canto el truco");
+                    }
+                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
+                    manoActual.copiaParcialTruco(mano);
+                    break;
+                case RETRUCO:
+                    if (puntosTruco < puntosHayTruco) {
+                        throw new TrucoException( "No se cantó el truco");
+                    } else if(puntosTruco>puntosHayTruco){
+                        throw new TrucoException("Ya se canto el retruco");
+                    }
+                    mano = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor);
+                    manoActual.copiaParcialTruco(mano);
+                    break;
+                case VALECUATRO:
+                    if (puntosTruco < puntosHayRetruco) {
+                        throw new TrucoException( "No se cantó el retruco"); 
+                    }else if(puntosTruco > puntosHayRetruco){
+                        throw new TrucoException("Ya se canto el valecuatro");
+                    }
+                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
+                    manoActual.copiaParcialTruco(mano);
+                
+                    break;
+                default:
+                    throw new TrucoException( "Canto no valido"); 
+            }
+        } catch (Exception e) {
+            manoActual.setEsperandoRespuesta(false);
+            throw e;
+        }
+        manoActual.comprobarSiPuedeCantarTruco();
+        manoActual.comprobarSiPuedeCantarEnvido(false);
+
+		actualizarMano(manoActual, codigo);
+        return manoActual;
+    }
+
+    ....
+    // En retruco
+    public Mano accionAlTipoTruco(Mano manoActual, Integer jugadorTurno, Integer equipoCantor) {
+        Integer elQueRespondeAlRetruco = manoActual.quienResponde();
+        manoActual.setJugadorTurno(elQueRespondeAlRetruco);
+        manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+        
+        
+        return manoActual;
+    }
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java Ejemplos
+    public Mano cantosTruco(String codigo, Cantos canto){
+		Mano manoActual = getMano(codigo);
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer equipoCantor = manoActual.getEquipoCantor();
+        
+        if(manoActual.getEsperandoRespuesta()==false){
+            manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
+        }
+        manoActual.setEsperandoRespuesta(true);
+        
+        
+        manoActual.setEsTrucoEnvidoFlor(0);
+        Mano mano = new Mano();
+        try {
+            if (!manoActual.comprobarSiPuedeCantarTruco()) {
+                throw new TrucoException(); 
+            }
+            Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
+
+           
+            mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
+            manoActual.copiaParcialTruco(mano);
+        } catch (Exception e) {
+            manoActual.setEsperandoRespuesta(false);
+            throw e;
+        }
+        manoActual.comprobarSiPuedeCantarTruco();
+        manoActual.comprobarSiPuedeCantarEnvido(false);
+
+		actualizarMano(manoActual, codigo);
+        return manoActual;
+    }
+    
+    ....
+    //En retruco
+    public Mano accionAlTipoTruco(Mano manoActual, Integer jugadorTurno, Integer equipoCantor) {
+        Integer puntosTruco = manoActual.getPuntosTruco();
+        Integer puntosHayTruco = 2;
+        if (puntosTruco < puntosHayTruco) {
+                throw new TrucoException( "No se cantó el truco");
+            } else if(puntosTruco>puntosHayTruco){
+                throw new TrucoException("Ya se canto el retruco");
+            }
+        Integer elQueRespondeAlRetruco = manoActual.quienResponde();
+        manoActual.setJugadorTurno(elQueRespondeAlRetruco);
+        manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
+        
+        
+        return manoActual;
+    }
+```
+#### Problema que nos hizo realizar la refactorización
+No estabamos aplicando completamente el patrón y por lo tanto no aprovechabamos los beneficios que este podía brindarnos.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Ahora tanto cantosTruco como respuestasTruco quedó mucho más limpio y fácil de comprender.
+
+ 
 
