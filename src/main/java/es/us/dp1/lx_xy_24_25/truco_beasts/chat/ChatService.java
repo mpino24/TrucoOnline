@@ -43,6 +43,11 @@ public class ChatService {
         return mensajeRepository.findMessagesFrom(chatId);
     }
 
+    public Mensaje getLastMessage(Integer chatId)throws NotYourChatException{
+        perteneceAChat(chatId);
+        return mensajeRepository.findLastMessage(chatId).orElse(null);
+    }
+
 
     public void perteneceAChat(Integer chatId) throws NotYourChatException{
         User usuarioActual=userService.findCurrentUser();
