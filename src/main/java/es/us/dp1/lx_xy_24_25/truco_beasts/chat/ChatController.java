@@ -8,11 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
 
 @Controller
-@RequestMapping("/chat")
+@RequestMapping("/api/v1/chat")
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
@@ -48,6 +49,12 @@ public class ChatController {
     @GetMapping("/lastMessage/{chatId}")
     public Mensaje getLastMessageFrom(@PathVariable Integer chatId) throws NotYourChatException{
         return chatService.getLastMessage(chatId);
+    }
+
+    @GetMapping()
+    public Chat getChatOf(@RequestParam Integer userId){
+        return chatService.findChatWith(userId);
+
     }
 
 }  

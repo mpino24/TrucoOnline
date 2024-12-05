@@ -144,7 +144,6 @@ public class JugadorService {
                     List<User> usuarios= new ArrayList<>();
                     usuarios.add(userService.findCurrentUser());
                     usuarios.add(userService.findUser(amigo.getId()));
-			        chat.setPartida(null);
                     chat.setUsuarios(usuarios);
 			        chatService.createChat(chat);
                 } else {

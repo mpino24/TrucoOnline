@@ -95,10 +95,10 @@ public class PartidaService {
 
 	
 	@Transactional(readOnly = true)
-    public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
+	public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
 		Optional<Partida> p = partidaRepository.findPartidaByCodigo(codigo);
-        return p.isEmpty()?null: p.get();
-    }
+		return p.isEmpty()?null: p.get();
+	}
 
 	@Transactional
 	public void startGame(String codigo){

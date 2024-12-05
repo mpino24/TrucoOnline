@@ -13,11 +13,13 @@ const JugadorList = forwardRef((props, ref)  => {
 
     const jugadoresList = props.jugadores.map((player) => {
         return (
+            <div onClick={()=> props.mostrarChat(player)}>
             <JugadorView
             jugador={player}
             isFriend={true}
             isSolicitud={true}
             />
+            </div>
         )
     });
     return (
