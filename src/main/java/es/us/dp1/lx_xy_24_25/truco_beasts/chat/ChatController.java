@@ -3,8 +3,13 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
 
 @Controller
+@RequestMapping("/chat")
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
@@ -15,10 +20,13 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @MessageMapping("/mensaje") // Escucha mensajes enviados a "/app/mensaje"
-    public void enviarMensaje(Mensaje mensaje) {
+    @MessageMapping("/mensaje") // Escucha mensajes enviados a "/app/mensaje" Canal
+    public void enviarMensaje(Mensaje mensaje) throws NotYourChatException {
         // Guardar el mensaje en la base de datos
         chatService.guardarMensaje(mensaje);
+
+        String destino= "/topic/chat/"+mensaje.getChat().getId();
+        messagingTemplate.convertAndSend(destino,mensaje); //Aquí se envía el mensaje a todos los clientes suscritos al destino
 
         // Enviar el mensaje al destinatario
         /*messagingTemplate.convertAndSendToUser(
@@ -27,4 +35,5 @@ public class ChatController {
             mensaje                    // Mensaje enviado
         );*/
     }
-}
+
+}  
