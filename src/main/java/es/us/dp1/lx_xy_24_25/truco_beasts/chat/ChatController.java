@@ -45,4 +45,9 @@ public class ChatController {
         return chatService.getMensajesDe(chatId);
     }
 
+    @GetMapping("/lastMessage/{chatId}")
+    public Mensaje getLastMessageFrom(@PathVariable Integer chatId) throws NotYourChatException{
+        return chatService.getLastMessage(chatId);
+    }
+
 }  
