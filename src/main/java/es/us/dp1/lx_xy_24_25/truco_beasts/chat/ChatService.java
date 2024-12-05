@@ -34,8 +34,9 @@ public class ChatService {
         return mensajeRepository.save(mensaje);
     }
 
-    public void createChat(Chat chat) {
-       // return chatRepository.save(chat);
+    public void createChat(Chat chat) throws NotYourChatException{
+        perteneceAChat(chat.getId());
+        chatRepository.save(chat);
     }
 
     public List<Mensaje> getMensajesDe(Integer chatId) throws NotYourChatException{
@@ -43,7 +44,7 @@ public class ChatService {
         return mensajeRepository.findMessagesFrom(chatId);
     }
 
-    public Mensaje getLastMessage(Integer chatId)throws NotYourChatException{
+    public Mensaje getLastMessage(Integer chatId) throws NotYourChatException{
         perteneceAChat(chatId);
         return mensajeRepository.findLastMessage(chatId).orElse(null);
     }
