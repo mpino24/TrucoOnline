@@ -10,6 +10,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
@@ -24,13 +26,15 @@ public class PartidaService {
 
 	UserService userService;
 	PartidaJugadorService partidaJugadorService;
+	ChatService chatService;
 
 
 	@Autowired
-	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService) {
+	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService,ChatService chatService) {
 		this.partidaRepository = partidaRepository;
 		this.userService = userService;
 		this.partidaJugadorService = partidaJugadorService;
+		this.chatService= chatService;
 
   }
 
@@ -109,7 +113,9 @@ public class PartidaService {
 		User creadorPartida = partidaJugadorService.getGameCreator(partida);
 		if(currentUser.getId().equals(creadorPartida.getId())){
 			partida.setInstanteInicio(LocalDateTime.now());
-			//Crear un chat vinculado a la partida creada
+			Chat chat= new Chat();
+			chat.setPartida(partida);
+			chatService.createChat(chat);
 		}else{
 			throw new AccessDeniedException();
 		}
