@@ -11,7 +11,7 @@ import { FaRegEnvelope } from "react-icons/fa6";
 import SolicitudList from './SolicitudList';
 import { FaRegEnvelopeOpen } from "react-icons/fa6";
 import { BsEnvelopePaper } from "react-icons/bs";
-
+import Chat from "frontend/src/components/chat.js";
 
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player, setPlayer] = useState(null);
@@ -134,6 +134,10 @@ const GetFriendsModal = forwardRef((props, ref) => {
             <h1 style={{ fontSize: 30, textAlign: 'center' }}>
                 Chats
             </h1>
+            <div style={{ marginTop: "20px" }}>
+            <h2>Chat en Tiempo Real</h2>
+            <Chat />
+            </div>
             <hr></hr>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
@@ -167,6 +171,10 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     </button>
 
                 }
+                <div style={{ marginTop: "20px" }}>
+            <h2>Chat en Tiempo Real</h2>
+            <Chat />
+            </div>
 
             </div>
             {player &&
@@ -183,6 +191,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 </div>
             }
         </div>
+        
 
 
 

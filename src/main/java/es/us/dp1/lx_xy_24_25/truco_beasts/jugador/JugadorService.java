@@ -131,6 +131,7 @@ public class JugadorService {
                     jugador.getSolicitudes().remove(amigo);
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
+                    //Crear entidad de chat entre amigos
                 } else {
                     throw new IllegalStateException("No te puedes agregar a ti mismo");
                 }

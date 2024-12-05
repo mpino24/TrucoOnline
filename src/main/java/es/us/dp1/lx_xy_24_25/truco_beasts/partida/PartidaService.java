@@ -1,9 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-
-
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -113,6 +109,7 @@ public class PartidaService {
 		User creadorPartida = partidaJugadorService.getGameCreator(partida);
 		if(currentUser.getId().equals(creadorPartida.getId())){
 			partida.setInstanteInicio(LocalDateTime.now());
+			//Crear un chat vinculado a la partida creada
 		}else{
 			throw new AccessDeniedException();
 		}
