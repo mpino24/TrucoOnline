@@ -1,9 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 
+import java.util.List;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
@@ -33,7 +36,13 @@ public class ChatController {
             mensaje.getDestinatario(), // Usuario destinatario
             "/queue/mensajes",         // Cola privada del destinatario
             mensaje                    // Mensaje enviado
-        );*/
+        
+            );*/
+    }
+
+    @GetMapping("/{chatId}")
+    public List<Mensaje> getMensajesDe(@PathVariable Integer chatId){
+        return chatService.getMensajesDe(chatId);
     }
 
 }  
