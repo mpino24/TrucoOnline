@@ -41,7 +41,7 @@ public class ChatController {
     }
 
     @GetMapping("/{chatId}")
-    public List<Mensaje> getMensajesDe(@PathVariable Integer chatId){
+    public List<Mensaje> getMensajesDe(@PathVariable Integer chatId) throws NotYourChatException{
         return chatService.getMensajesDe(chatId);
     }
 
