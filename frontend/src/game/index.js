@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import tokenService from "frontend/src/services/token.service.js";
 import WaitingModal from "frontend/src/game/WaitingModal.js"
 import PlayingModal from "frontend/src/manos/PlayingModal.js"
-
+import { Link } from "react-router-dom";
+import {Button} from "reactstrap";
+import FinishedModal from "./FinishedModal";
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Game(){
@@ -49,12 +51,17 @@ export default function Game(){
         <div>
             {game && game.estado==='WAITING' && 
             
-            <WaitingModal
-            game={game}/>}
+            <WaitingModal game={game}/>}
 
             {game && game.estado === 'ACTIVE' &&
             <PlayingModal game={game} />
             }
+
+            
+            {game && game.estado === 'FINISHED' &&
+                <FinishedModal game={game}/>
+            }
+            
 
 
         </div>

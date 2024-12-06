@@ -75,7 +75,6 @@ public class PartidaService {
 	@Transactional
 	public Partida updatePartida(@Valid Partida partida, Integer idToUpdate) {
 		Partida toUpdate = findPartidaById(idToUpdate);
-	
 		BeanUtils.copyProperties(partida, toUpdate, "id");
 		partidaRepository.save(toUpdate);
 		return toUpdate;

@@ -27,6 +27,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 
 @SpringBootTest(classes = TrucoBeastsApplication.class)
@@ -212,6 +213,17 @@ public class PartidaJugadorServiceTest {
     public void getGameCreator() {
         User res = pjService.getGameCreator(partida);
         assertTrue(res.getId().equals(9));
+    }
+
+    @Test
+    public void getAllJugadoresPartida(){
+        List<PartidaJugadorView> res= pjService.getAllJugadoresPartida("ABCDE");
+        assertEquals(2, res.size());
+    }
+
+    @Test
+    public void getAllJugadoresPartidaBadCodigo(){
+        assertThrows(ResourceNotFoundException.class , () -> pjService.getAllJugadoresPartida("GCHDT"));
     }
 
 }

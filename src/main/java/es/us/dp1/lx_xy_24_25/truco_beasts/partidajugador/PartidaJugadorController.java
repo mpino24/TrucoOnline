@@ -31,10 +31,10 @@ public class PartidaJugadorController {
     private final PartidaJugadorService pjService;
     private final PartidaService partidaService;
     private final UserService userService;
+    
     @Autowired
-
-    public PartidaJugadorController(PartidaJugadorService partJugService,PartidaService partidaService,UserService userService)   {
-        this.pjService=partJugService;
+    public PartidaJugadorController(PartidaJugadorService pjService,PartidaService partidaService,UserService userService)   {
+        this.pjService=pjService;
         this.partidaService=partidaService;
         this.userService=userService;
     }
@@ -79,6 +79,12 @@ public class PartidaJugadorController {
     public ResponseEntity<String> changeTeamOfUser(@RequestParam(required=true) Integer userId) throws TeamIsFullException{
         pjService.changeTeamOfUser(userId);
         return new ResponseEntity<>("Usuario cambiado de equipo",HttpStatus.OK);
+    }
+
+    @GetMapping("/jugadores/codigoPartida/{codigo}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PartidaJugadorView> getAllJugadoresPartida(@PathVariable("codigo") String codigo){
+        return pjService.getAllJugadoresPartida(codigo);
     }
     
 }
