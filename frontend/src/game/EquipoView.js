@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
-import JugadorView from "frontend/src/components/JugadorView.js";
+import JugadorView from "../components/JugadorView.js";
 import { CiCirclePlus } from "react-icons/ci";
-import tokenService from "frontend/src/services/token.service.js";
+import tokenService from "../services/token.service.js";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { FaRegHandPointRight } from "react-icons/fa6";
 import { FaCrown } from "react-icons/fa";

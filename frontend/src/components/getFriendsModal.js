@@ -1,12 +1,11 @@
 import { forwardRef, useEffect, useState } from 'react';
-import { Button, Label, Form, Input } from "reactstrap";
+import { Form } from "reactstrap";
 import { IoIosSearch } from "react-icons/io";
 import JugadorView from './JugadorView';
 import JugadorList from "./JugadorList";
 import { VscChromeClose } from "react-icons/vsc";
 import { IoCloseCircle } from "react-icons/io5";
-import tokenService from 'frontend/src/services/token.service.js';
-import useFetchState from "frontend/src/util/useFetchState.js";
+import tokenService from '../services/token.service.js';
 import { FaRegEnvelope } from "react-icons/fa6";
 import SolicitudList from './SolicitudList';
 import { FaRegEnvelopeOpen } from "react-icons/fa6";

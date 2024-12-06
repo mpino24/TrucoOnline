@@ -1,6 +1,6 @@
 import { Form } from "reactstrap";
 import React, { useState, forwardRef } from 'react';
-import 'frontend/src/components/css/joinModal.css';
+import '../components/css/joinModal.css';
 import { IoCloseCircle } from "react-icons/io5";
 import GameList from "./GameList";
 import { IoIosSearch } from "react-icons/io";
@@ -75,11 +75,6 @@ const GetJoinModal = forwardRef((props, ref) => {
                                 <VscChromeClose onClick={handleReset} style={{width: 30,height: 30,cursor: "pointer",marginLeft: 8}}/>
                             }
                         </div>
-
-
-
-
-
 
                     </div>
                 </Form>
