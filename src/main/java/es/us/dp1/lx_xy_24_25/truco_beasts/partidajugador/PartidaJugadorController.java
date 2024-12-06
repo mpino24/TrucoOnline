@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
@@ -40,7 +41,7 @@ public class PartidaJugadorController {
     }
 
     @GetMapping("/miposicion/{partidaId}")
-    public Integer getMiPosicion(@PathVariable("partidaId") Integer partidaId){
+    public Integer getMiPosicion(@PathVariable("partidaId") Integer partidaId) throws ResourceNotFoundException{
         Integer userId = userService.findCurrentUser().getId();
         return pjService.getMiPosicion(userId, partidaId);
     }
@@ -83,7 +84,7 @@ public class PartidaJugadorController {
 
     @GetMapping("/jugadores/codigoPartida/{codigo}")
     @ResponseStatus(HttpStatus.OK)
-    public List<PartidaJugadorView> getAllJugadoresPartida(@PathVariable("codigo") String codigo){
+    public List<PartidaJugadorView> getAllJugadoresPartida(@PathVariable("codigo") String codigo) throws ResourceNotFoundException{
         return pjService.getAllJugadoresPartida(codigo);
     }
     
