@@ -10,6 +10,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 @StatePattern.Context
 public abstract class RespuestaTruco {
     public abstract Cantos getTipoRespuestaTruco();
-    public abstract Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno,Integer jugadorAnterior, Integer puntosTruco) ;
+    public abstract Mano accionRespuestaTruco(Mano manoActual,Integer puntosTruco) ;
     
 }

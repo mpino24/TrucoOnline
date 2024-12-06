@@ -28,7 +28,7 @@ public class Mano {
     private Integer rondaActual = 1;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
-    
+    private List<List<Carta>> cartasLanzadasTotales; //Esta lista contiene las cartas que lanzo cada jugador siendo el indice de la lista grande, el jugador, y el de la sublista, la ronda en la que la lanzo
     private Integer esTrucoEnvidoFlor = 0; // 0 -> Truco, 1 -> envido, 2 -> flor
     private Integer equipoCantor = null;
     private Boolean esperandoRespuesta = false;
@@ -38,7 +38,10 @@ public class Mano {
     private Boolean puedeCantarEnvido = false;
     private Integer queEnvidoPuedeCantar = 2; //1 -> solo falta envido, 2 -> falta y real, 3 -> falta, real y envido, otro -> nada
     private Integer equipoGanadorEnvido;
-    private Boolean seQuizoEnvido = false;
+
+    private Cantos ultimoMensaje;
+
+
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
     private final Integer rondasMaximasGanables = 2;
@@ -54,6 +57,10 @@ public class Mano {
         this.esperandoRespuesta = mano.getEsperandoRespuesta();
         this.jugadorTurno = mano.getJugadorTurno();
         this.puntosTruco = mano.getPuntosTruco();
+        this.queEnvidoPuedeCantar = mano.getQueEnvidoPuedeCantar();
+        this.puedeCantarEnvido = mano.getPuedeCantarEnvido();
+        this.terminada = mano.getTerminada();
+        this.ultimoMensaje = mano.getUltimoMensaje();
     }
 
     public  Boolean comprobarSiPuedeCantarTruco() { //O SUS OTRAS POSIBILIDADES
@@ -121,13 +128,13 @@ public class Mano {
         }
 
         Integer jugadorMano = getJugadorTurno(); //Como esta funcion se llama al principio, será el mano
-        List<Integer> nuevaLista = listaEnvidosCadaJugador;
+        List<Integer> nuevaLista = new ArrayList<>(listaEnvidosCadaJugador);
     
         Integer equipoMano = jugadorMano % 2;
         Integer equipoQueVaGanando = equipoMano;
         
         Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
-        for(int i = siguienteJugador(jugadorMano); i<jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
+        for(int i = siguienteJugador(jugadorMano); i!=jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
             Integer puntajeNuevoJugador = listaEnvidosCadaJugador.get(i);
             if(puntajeNuevoJugador == puntajeGanador){
                 if(equipoQueVaGanando == equipoMano){
@@ -135,7 +142,7 @@ public class Mano {
                 } else {
                     equipoQueVaGanando = equipoMano;
                 }
-            } else if(puntajeNuevoJugador >= puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS (CREO QUE NO LO VAMOS A HACER)
+            } else if(puntajeNuevoJugador > puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS (CREO QUE NO LO VAMOS A HACER)
                 equipoQueVaGanando = i%2;
                 puntajeGanador = puntajeNuevoJugador;
             }else{
@@ -144,8 +151,8 @@ public class Mano {
             
         }
         setEquipoGanadorEnvido(equipoQueVaGanando);
-        setEnvidosCadaJugador(listaEnvidosCadaJugador);
-        return listaEnvidosCadaJugador;
+        setEnvidosCadaJugador(nuevaLista);
+        return nuevaLista;
     }
 
     
