@@ -144,16 +144,9 @@ public class PartidaJugadorControllerTest {
     verify(pjService).getPlayersConnectedTo("ABCDE");
     
   }
-
-
-
-
-
-
-
     List<PartidaJugadorView> setUp(){
-        PartidaJugadorView jugador1 = new PartidaJugadorView("", "");
-        PartidaJugadorView jugador2 = new PartidaJugadorView("", "");
+        PartidaJugadorView jugador1 = new PartidaJugadorView("", "",1);
+        PartidaJugadorView jugador2 = new PartidaJugadorView("", "",2);
         return List.of(jugador1, jugador2);
     }
 

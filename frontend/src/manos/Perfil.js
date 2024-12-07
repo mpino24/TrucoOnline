@@ -34,18 +34,19 @@ const Perfil = forwardRef((props, ref) => {
     return ( 
         <> 
             {perfil.map((persona, index) => { 
+                
                 if (index !== posicionJugador) { 
                     if (index % 2 === posicionJugador % 2) { 
-                            return ( <div key={index} style={{ marginTop:'-25%', marginLeft:'65%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> ); 
+                            return ( <div key={index} style={{ marginTop:'-25%', marginLeft:'65%', zIndex:1000 }}> {renderJugador(persona, index)} </div> ); 
                         
                         
                     } 
                     else if (!posicionUsada) { 
                         posicionUsada= true; 
                         if(game.numJugadores===2 && posicionJugador===0){
-                            return ( <div key={index} style={{ marginTop: '20%', marginLeft:'85%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> );
+                            return ( <div key={index} style={{ marginTop: '20%', marginLeft:'85%', zIndex:1000}}> {renderJugador(persona, index)} </div> );
                         }else{
-                            return ( <div key={index} style={{ marginTop: '20%', marginLeft:'-80%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> );
+                            return ( <div key={index} style={{ marginTop: '20%', marginLeft:'-80%', zIndex:1000 }}> {renderJugador(persona, index)} </div> );
                         }  
                         } 
                     else { 
