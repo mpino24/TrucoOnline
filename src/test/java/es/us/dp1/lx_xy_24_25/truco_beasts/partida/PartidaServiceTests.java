@@ -5,10 +5,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.orm.ObjectRetrievalFailureException;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.EntityUtils;
@@ -21,10 +27,10 @@ public class PartidaServiceTests {
     
     @Autowired
     private PartidaService partidaService;
-
-
-
-
+    private final Pageable pageable= PageRequest.of(0,5,Sort.by(
+        Order.asc("instanteInicio"),
+        Order.desc("id")
+        ));
 
 
 
@@ -34,14 +40,14 @@ public class PartidaServiceTests {
         partida.setInstanteFin(null);
         partida.setInstanteInicio(null);
         partidaService.savePartida(partida);
-        List<Partida> partidas = (List<Partida>) this.partidaService.findAllPartidasActivas();
+        List<Partida> partidas =this.partidaService.findAllPartidasActivas(pageable).getContent();
         Partida p1 = EntityUtils.getById(partidas, Partida.class, 0);
         assertEquals("WWWWW", p1.getCodigo());
     }
 
     @Test
     public void noDevuelvePartidasNoActivas() {
-        List<Partida> partidas = (List<Partida>) this.partidaService.findAllPartidasActivas();
+        List<Partida> partidas = this.partidaService.findAllPartidasActivas(pageable).getContent();
         assertThrows(ObjectRetrievalFailureException.class, () -> EntityUtils.getById(partidas, Partida.class, 2));
     }
 
@@ -60,7 +66,7 @@ public class PartidaServiceTests {
     @Test
 	@Transactional
 	public void guardaPartidaConIdNuevo() {
-		int initialCount = partidaService.findAllPartidasActivas().size();
+		int initialCount = partidaService.findAllPartidasActivas(pageable).getContent().size();
 
 		Partida partida = new Partida();
 		partida.setCodigo("TESTS");
@@ -72,7 +78,7 @@ public class PartidaServiceTests {
         partida.setPuntosMaximos(15);
 		this.partidaService.savePartida(partida);
 
-		int finalCount = partidaService.findAllPartidasActivas().size();
+		int finalCount = partidaService.findAllPartidasActivas(pageable).getContent().size();
 
 		assertEquals(initialCount + 1, finalCount);
 		assertNotNull(partida.getId());

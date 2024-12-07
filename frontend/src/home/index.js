@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Link, Router } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../App.css';
 import '../static/css/home/home.css';
 import '../static/css/home/homeButton.css';
@@ -7,12 +7,11 @@ import { FaUserFriends } from "react-icons/fa";
 import { RiArrowRightDoubleLine } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { IoTrophy } from "react-icons/io5";
-import tokenService from "frontend/src/services/token.service.js";
-import jwt_decode from "jwt-decode";
-import CreationModal from "frontend/src/components/getCreationModal.js"
-import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
-import GetJoinModal from 'frontend/src/components/getJoinModal.js';
-import useFetchState from "frontend/src/util/useFetchState.js";
+import tokenService from "../services/token.service.js";
+import CreationModal from "../components/getCreationModal.js"
+import { NavLink, NavItem, Nav } from 'reactstrap';
+import GetJoinModal from '../components/getJoinModal.js';
+import useFetchState from "../util/useFetchState.js";
 import GetFriendsModal from '../components/getFriendsModal';
 
 

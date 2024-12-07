@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
@@ -43,14 +42,16 @@ public class RespuestaSubirTruco extends RespuestaTruco{
     }
 
     @Override
-    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer puntosTruco)  {
+    public Mano accionRespuestaTruco(Mano manoActual, Integer puntosTruco)  {
         String codigo = manoActual.getPartida().getCodigo();
         if(puntosTruco == 1){
                 manoActual.setPuntosTruco(puntosTruco+1); //Declaramos como un "quiero" el truco
                 manoActual =manoService.cantosTruco(codigo,Cantos.RETRUCO);
+                manoActual.setUltimoMensaje(Cantos.RETRUCO);
         }else if(puntosTruco==2){
                 manoActual.setPuntosTruco(puntosTruco +1);
                 manoActual= manoService.cantosTruco(codigo,Cantos.VALECUATRO);
+                manoActual.setUltimoMensaje(Cantos.VALECUATRO);
         } else {
                 throw new TrucoException( "No se puede subir más, capo"); 
         }

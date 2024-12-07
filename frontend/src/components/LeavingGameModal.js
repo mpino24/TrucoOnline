@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import Modal from 'react-modal';
-import tokenService from 'frontend/src/services/token.service.js';
+import tokenService from '../services/token.service.js';
 import { useNavigate } from 'react-router-dom'
 
 

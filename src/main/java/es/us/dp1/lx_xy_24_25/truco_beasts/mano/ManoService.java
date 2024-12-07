@@ -36,7 +36,7 @@ public class ManoService {
 	private final ConverterTruco converterTruco = new ConverterTruco();
     private final ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco(this);
 
-	private final Integer maximoPuntajeTruco=4;
+	
     
 
     @Autowired
@@ -114,16 +114,38 @@ public class ManoService {
 		ganadoresRonda.add(ganadasIniciales);
 		nuevaMano.setGanadoresRondas(ganadoresRonda);
 
+        
+        Integer numJugadores = partida.getNumJugadores();
         List<Carta> listaCartasLanzadas = new ArrayList<>();
-        for (int i = 0; i <partida.getNumJugadores(); i++){
+        for (int i = 0; i <numJugadores; i++){
             listaCartasLanzadas.add(null);
+            
         }
+        nuevaMano.setCartasLanzadasTotales(inicializarCartasLanzadasTotales(numJugadores));
         nuevaMano.setCartasLanzadasRonda(listaCartasLanzadas);
         nuevaMano.comprobarSiPuedeCantarEnvido(true);
         actualizarMano(nuevaMano, partida.getCodigo());
 		return nuevaMano;
 	}
 	
+
+    /*
+     * Fundamental que sea así ya que si creas una lista vacia y la añadis varias veces para cada uno de los casos poniendo los fors separados
+     * considera que es la misma y si haces cambios en una se hacen en la otra, cosa que no queremos.
+     */
+    public List<List<Carta>> inicializarCartasLanzadasTotales(Integer numJugadores){
+    List<List<Carta>> res = new ArrayList<>();
+    Integer rondas = 3;    
+    for (int j = 0; j < numJugadores; j++) {
+        List<Carta> listaVacia = new ArrayList<>();
+        for (int i = 0; i < rondas; i++) {
+            listaVacia.add(null);
+        }
+        res.add(listaVacia);  
+    }
+    return res;
+}
+
 	public Carta tirarCarta(String codigo, Integer cartaId){
 		Mano manoActual = getMano(codigo);
         if(!manoActual.getEsperandoRespuesta()){
@@ -144,7 +166,9 @@ public class ManoService {
                 throw new CartaTiradaException();
             }
             Carta cartaALanzar = cartasDisponibles.get(indice);
-
+            
+            manoActual.getCartasLanzadasTotales().get(jugadorActual).set(manoActual.getRondaActual()-1, cartaALanzar);
+            
             manoActual.getCartasDisp().get(jugadorActual).set(indice,null);
             manoActual.getCartasLanzadasRonda().set(jugadorActual, cartaALanzar);
 
@@ -210,6 +234,10 @@ public class ManoService {
             manoActual.setEsperandoRespuesta(false);
             throw e;
         }
+        if(canto == Cantos.ENVIDO && envidosCantados.get(0) > 1){
+            canto = Cantos.ENVIDO2;
+        }
+        manoActual.setUltimoMensaje(canto);
         manoActual.setPuedeCantarTruco(false);
         manoActual.comprobarSiPuedeCantarEnvido(false);
         actualizarMano(manoActual, codigo);
@@ -224,23 +252,27 @@ public class ManoService {
         switch (respuesta) {
             case QUIERO:
                 
-                manoActual.setPuedeCantarEnvido(false);
-                manoActual.setQueEnvidoPuedeCantar(0);
-                manoActual.setEsperandoRespuesta(false);
+                
+                
                 gestionarPuntosEnvido(false, codigo);
-                manoActual.setSeQuizoEnvido(true);
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
+                
                 break;
             case NO_QUIERO:
-                manoActual.setPuedeCantarEnvido(false);
-                manoActual.setQueEnvidoPuedeCantar(0);
+                
+                
                 gestionarPuntosEnvido(true, codigo);
-                manoActual.setEsperandoRespuesta(false);
+                
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.NO_QUIERO);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
+                
                 break;
 
             default:
@@ -290,6 +322,9 @@ public class ManoService {
             } else{
                 res = 1;
             }
+            if(res ==0){
+                res = 1;
+            }
 
             if(equipoRespondedor==0){
                 partida.setPuntosEquipo2(puntosEquipo2 + res);
@@ -313,10 +348,11 @@ public class ManoService {
             
         }
         manoActual.setPuntosEnvido(res);
-        
-        
-        
+        manoActual.setPuedeCantarEnvido(false);
+        manoActual.setQueEnvidoPuedeCantar(-1);
+        manoActual.setEsperandoRespuesta(false);
         partidaService.updatePartida(partida, partida.getId());
+        actualizarMano(manoActual, codigo);
         return res;
         
     }
@@ -328,8 +364,6 @@ public class ManoService {
 		Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         Integer equipoCantor = manoActual.getEquipoCantor();
-
-        Integer rondaActual = manoActual.getRondaActual();
         
         if(manoActual.getEsperandoRespuesta()==false){
             manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
@@ -345,53 +379,23 @@ public class ManoService {
             }
             Truco estadoTruco =  converterTruco.convertToEntityAttribute(canto);
 
-            Integer puntosTruco = manoActual.getPuntosTruco();
-            Integer puntosNoHayTruco = 1; Integer puntosHayTruco = 2; Integer puntosHayRetruco = 3;
-            switch (canto) {
-                case TRUCO: 
-                    if(puntosTruco > puntosNoHayTruco){
-                        throw new TrucoException("Ya se canto el truco");
-                    }
-                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
-                    manoActual.copiaParcialTruco(mano);
-                    break;
-                case RETRUCO:
-                    if (puntosTruco < puntosHayTruco) {
-                        throw new TrucoException( "No se cantó el truco");
-                    } else if(puntosTruco>puntosHayTruco){
-                        throw new TrucoException("Ya se canto el retruco");
-                    }
-                    mano = estadoTruco.accionAlTipoTruco(manoActual,jugadorTurno, equipoCantor);
-                    manoActual.copiaParcialTruco(mano);
-                    break;
-                case VALECUATRO:
-                    if (puntosTruco < puntosHayRetruco) {
-                        throw new TrucoException( "No se cantó el retruco"); 
-                    }else if(puntosTruco > puntosHayRetruco){
-                        throw new TrucoException("Ya se canto el valecuatro");
-                    }
-                    mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
-                    manoActual.copiaParcialTruco(mano);
-                
-                    break;
-                default:
-                    throw new TrucoException( "Canto no valido"); 
-            }
+           
+            mano = estadoTruco.accionAlTipoTruco(manoActual, jugadorTurno, equipoCantor);
+            manoActual.copiaParcialTruco(mano);
         } catch (Exception e) {
             manoActual.setEsperandoRespuesta(false);
             throw e;
         }
         manoActual.comprobarSiPuedeCantarTruco();
         manoActual.comprobarSiPuedeCantarEnvido(false);
-
+        manoActual.setUltimoMensaje(canto);
 		actualizarMano(manoActual, codigo);
         return manoActual;
     }
 
 	public void responderTruco(String codigo, Cantos respuesta) {
 		Mano manoActual = getMano(codigo);
-        Integer jugadorTurno = manoActual.getJugadorTurno();
-        Integer jugadorAnterior = manoActual.obtenerJugadorAnterior(jugadorTurno);
+ 
         Integer puntosTruco = manoActual.getPuntosTruco();
         
         
@@ -400,40 +404,10 @@ public class ManoService {
         
 
         RespuestaTruco respuestaTruco =   converterRespuestaTruco.convertToEntityAttribute(respuesta);
-        Boolean puedeEnvido = mano.getPuedeCantarEnvido(); 
-        switch (respuesta) {
-            case QUIERO:
-                
-                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco);
-                manoActual.copiaParcialTruco(mano);
-                
-                puntosTruco= manoActual.getPuntosTruco();
-                if(puntosTruco > maximoPuntajeTruco){
-                    manoActual.setPuntosTruco(maximoPuntajeTruco);
-                    throw new TrucoException("El máximo puntaje obtenible en el truco son " + maximoPuntajeTruco +" puntos");
-                }
-                manoActual.comprobarSiPuedeCantarEnvido(false);
-                
-                break;
-            case NO_QUIERO: 
-                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco);
-                manoActual.copiaParcialTruco(mano);
-                manoActual.setTerminada(true);
-                
-                break;
-
-            case SUBIR:
-
-                mano = respuestaTruco.accionRespuestaTruco(manoActual,jugadorTurno, jugadorAnterior, puntosTruco);
-                manoActual.copiaParcialTruco(mano);
-                
-                break;
-            default:
-                if(puedeEnvido){
-                    cantosEnvido(codigo, respuesta);
-                }
-                throw new TrucoException( "Respuesta al truco no valida"); 
-        }
+        
+        mano = respuestaTruco.accionRespuestaTruco(manoActual,puntosTruco);
+        manoActual.copiaParcialTruco(mano);
+        
         manoActual.comprobarSiPuedeCantarTruco();
 		actualizarMano(manoActual, codigo);
     }
