@@ -2,8 +2,8 @@ import React, { useState, forwardRef, useEffect, useRef } from 'react';
 import tokenService from "frontend/src/services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
+import Perfil from './Perfil';
 import './PlayingModal.css';
-
 
 import backgroundMusic from 'frontend/src/static/audios/musicaPartida2.mp3';
 import PuntosComponente from './PuntosComponente';
@@ -693,6 +693,10 @@ const PlayingModal = forwardRef((props, ref) => {
                     jugadorMano={game.jugadorMano}
                 />
             )}
+            {mano && (
+                <Perfil game={game} posicion={posicion}/>
+            )}
+            
         
                 
         </div>
