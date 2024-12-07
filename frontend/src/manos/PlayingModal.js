@@ -2,10 +2,10 @@ import React, { useState, forwardRef, useEffect, useRef } from 'react';
 import tokenService from "../services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
+import Perfil from './Perfil';
 import './PlayingModal.css';
 
-
-import backgroundMusic from '../static/audios/musicaPartida2.mp3';
+import backgroundMusic from 'frontend/src/static/audios/musicaPartida2.mp3';
 import PuntosComponente from './PuntosComponente';
 
 const jwt = tokenService.getLocalAccessToken();
@@ -402,6 +402,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (
+        <>
         <div className="playing-modal-container">
             {console.log(mano)}
             {/* Background */}
@@ -693,9 +694,13 @@ const PlayingModal = forwardRef((props, ref) => {
                     jugadorMano={game.jugadorMano}
                 />
             )}
-        
-                
+            
+                           
         </div>
+        <div style={{zIndex:100000000000000}}>
+        <Perfil game={game} posicion={posicion}/>
+        </div>
+        </>
     );
 });
 
