@@ -107,5 +107,4 @@ public class PartidaController {
 		partidaService.startGame(codigo);
 		return new ResponseEntity<>("Partida comenzada con éxito", HttpStatus.OK);
 	}
-	
 }

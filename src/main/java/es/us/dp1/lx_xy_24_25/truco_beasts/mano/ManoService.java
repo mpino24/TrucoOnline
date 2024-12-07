@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -434,8 +435,11 @@ public class ManoService {
 		} else {
 			partida.setPuntosEquipo2(puntosEquipo2+manoActual.getPuntosTruco());
 		}
+        boolean terminada= partida.haTerminadoLaPartida();
+        if(terminada) partida.setInstanteFin(LocalDateTime.now());
 
 		if (partida.getEstado() == Estado.FINISHED) {
+            partidaService.updatePartida(partida, partida.getId());
 			return manoActual; // TODO CAMBIAR!!!!!!
 		} else {
             manosPorPartida.remove(partida.getCodigo());

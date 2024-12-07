@@ -36,6 +36,7 @@ public class PartidaJugadorService {
         this.partidaRepository = partidaRepository;
     }
 
+
     @Transactional(readOnly = true)
     public Integer getNumJugadoresInPartida(Integer partidaId) {
         return pjRepository.findNumJugadoresPartida(partidaId);
@@ -147,5 +148,14 @@ public class PartidaJugadorService {
         return userService.findUser(pj.get().getPlayer().getId());
 
     }
+
+    public List<PartidaJugadorView> getAllJugadoresPartida(String codigo){
+        Optional<Partida> partida= pjRepository.findPartidaByCodigoPartida(codigo);
+        if(partida.isEmpty()){
+            throw new ResourceNotFoundException("No se ha encontrado Partida con codigo '"+ codigo + "'");
+        }
+        return pjRepository.findAllJugadoresPartida(codigo);
+    }
+
 
 }
