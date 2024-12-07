@@ -1,9 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-
-
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -75,6 +71,8 @@ public class PartidaService {
 	@Transactional
 	public Partida updatePartida(@Valid Partida partida, Integer idToUpdate) {
 		Partida toUpdate = findPartidaById(idToUpdate);
+		boolean terminada= partida.haTerminadoLaPartida();
+        if(terminada) partida.setInstanteFin(LocalDateTime.now());
 		BeanUtils.copyProperties(partida, toUpdate, "id");
 		partidaRepository.save(toUpdate);
 		return toUpdate;

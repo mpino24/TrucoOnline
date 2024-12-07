@@ -15,7 +15,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
-
+    
     const [resolucionEnvido, setResolucionEnvido] = useState(false); // Controls dialog visibility
     // Removed envidoResolved state
     // TODO: CAMBIAR PORQUE ES TOTALMENTE PAUPERRIMO ESTO, PERO NO SE ME OCURRE OTRA OPCION XD
@@ -52,7 +52,10 @@ const PlayingModal = forwardRef((props, ref) => {
         .then((data) => {
             setMano(data);
             let cartasActuales = data.cartasDisp[posicion];
-        
+            console.log("-----------------------------------")
+            console.log("EL FIN SE ACERCA:"+game.instanteFin)
+            console.log("-----------------------------------")
+
             if (JSON.stringify(cartasJugador) !== JSON.stringify(cartasActuales)) {
                 setCartasJugador(cartasActuales);
                 setPuntosTrucoActuales(data.puntosTruco);
