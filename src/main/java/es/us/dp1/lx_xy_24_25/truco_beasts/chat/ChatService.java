@@ -25,11 +25,12 @@ public class ChatService {
         this.chatRepository =chatRepository;
     }
     public Mensaje guardarMensaje(Mensaje mensaje) throws NotYourChatException {
-        User usuarioActual=userService.findCurrentUser();
+        //User usuarioActual=userService.findCurrentUser();
+        User prueba =userService.findUser(4);
         mensaje.setFechaEnvio(LocalDateTime.now());
-        mensaje.setRemitente(usuarioActual);
+        mensaje.setRemitente(prueba);
 
-        perteneceAChat(mensaje.getChat().getId());
+        //perteneceAChat(mensaje.getChat().getId());
 
         return mensajeRepository.save(mensaje);
     }
@@ -50,6 +51,7 @@ public class ChatService {
 
     public Chat findChatWith(Integer amigoId){
         return chatRepository.findChatBetween(amigoId,userService.findCurrentUser().getId());
+
     }
 
 

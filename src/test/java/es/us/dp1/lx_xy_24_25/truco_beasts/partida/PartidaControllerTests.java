@@ -1,45 +1,38 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 
-import org.springframework.http.MediaType;
-
-import org.springframework.context.annotation.FilterType;
-
 @WebMvcTest(value = PartidaController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
 public class PartidaControllerTests {
-    
+
     private static final String BASE_URL = "/api/v1/partida";
-    
+
     @MockBean
     private PartidaService partidaService;
 
@@ -57,6 +50,11 @@ public class PartidaControllerTests {
     private Partida partidaA2;
     private Partida partidaPrivada;
     private Partida partidaTerminada;
+
+    private final Pageable pageable = PageRequest.of(0, 5, Sort.by(
+            Order.asc("instanteInicio"),
+            Order.desc("id")
+    ));
 
     @BeforeEach
     public void setup() {
@@ -122,7 +120,7 @@ public class PartidaControllerTests {
 
         when(partidaService.findAllPartidas()).thenReturn(Arrays.asList(partidaA2, partidaPrivada, partidaTerminada));
 
-        mockMvc.perform(get(BASE_URL+"/partidas")
+        mockMvc.perform(get(BASE_URL + "/partidas")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -136,7 +134,7 @@ public class PartidaControllerTests {
 
         when(partidaService.findAllPartidas()).thenReturn(Arrays.asList(partidaA2));
 
-        mockMvc.perform(get(BASE_URL+"/partidas")
+        mockMvc.perform(get(BASE_URL + "/partidas")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -147,9 +145,9 @@ public class PartidaControllerTests {
     @WithMockUser(username = "player", roles = {"PLAYER"})
     void deberiaDevolverTodasLasPartidasPublicasJugador() throws Exception {
 
-        when(partidaService.findAllPartidasActivas()).thenReturn(Arrays.asList(partidaA2));
+        when(partidaService.findAllPartidasActivas(pageable).getContent()).thenReturn(Arrays.asList(partidaA2));
 
-        mockMvc.perform(get(BASE_URL+"/partidas/accesibles")
+        mockMvc.perform(get(BASE_URL + "/partidas/accesibles")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1));
@@ -161,7 +159,7 @@ public class PartidaControllerTests {
 
         when(partidaService.findPartidaById(1)).thenReturn(partidaA2);
 
-        mockMvc.perform(get(BASE_URL+"/1")
+        mockMvc.perform(get(BASE_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));

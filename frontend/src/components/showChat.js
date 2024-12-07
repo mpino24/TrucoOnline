@@ -1,81 +1,93 @@
-import React, { forwardRef,useState, useEffect } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import tokenService from "../services/token.service";
-import { Client } from '@stomp/stompjs';
+import useFetchState from "../util/useFetchState";
+import { Client } from "@stomp/stompjs";
 
-const Chat= forwardRef((props, ref) => {
+const Chat = forwardRef((props, ref) => {
+  const jwt = tokenService.getLocalAccessToken();
+  
+  const [stompClient, setStompClient] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [mensajes, setMensajes] = useFetchState(
+    [],
+    `/api/v1/chat/${props.idChat}`,
+    jwt,
+    setMessage,
+    setVisible
+  );
 
-  const [stompClient,setStompClient] = useState(null);
-  const [mensajes,setMensajes]= useState([]);
-  const [mensaje,setMensaje]= useState('');
+
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
-    setMensaje('');
     const cliente = new Client({
-      brokerURL :'ws://localhost:8080'
-    })
+      brokerURL: "ws://localhost:8080/ws",
+      connectHeaders: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
 
-    cliente.onConnect = () =>{
-      cliente.subscribe(`/topic/chat/${props.idChat}`,(mensaje) =>{ //¿?
-        const nuevoMensaje = JSON.parse(mensaje.body)
-        setMensajes((p) => [...p,nuevoMensaje])
-      }) 
-    }
+    cliente.onConnect = () => {
+      console.log("Conectado exitosamente");
+      cliente.subscribe(`/topic/chat/${props.idChat}`, (mensaje) => {
+        const nuevoMensaje = JSON.parse(mensaje.body);
+        setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
+      });
+    };
 
-    cliente.activate()
+    cliente.onDisconnect = () => {
+      console.log("Desconectado del servidor STOMP");
+    };
+
+    cliente.onStompError = (frame) => {
+      console.error('Error de STOMP: ', frame.headers['message']);
+      console.error('Detalles: ', frame.body);
+    };
+
+    cliente.activate();
     setStompClient(cliente);
 
-    return () =>{
-      if(cliente){
+    return () => {
+      if (cliente) {
         cliente.deactivate();
       }
-    }
+    };
+  }, [jwt, props.idChat]);
 
-
-
-  }, []);
-
-
-  const evtEnviarMensaje = () =>{
-    if(stompClient!==null && mensaje !==''){
+  const evtEnviarMensaje = () => {
+    if (stompClient && stompClient.connected && mensaje.trim() !== "") {
       stompClient.publish({
-        destination:'/app/mensaje', //¿?¿?¿?
+        destination: "/app/mensaje",
         body: JSON.stringify({
-          contenido:mensaje,
-          chat: { id: props.idChat }
-        })
-
-      })
-      setMensaje('')
+          contenido: mensaje,
+          chat: { id: props.idChat },
+        }),
+      });
+      console.log("Mensaje enviado");
+      setMensaje("");
+    } else {
+      console.error("STOMP aún no está listo o no está conectado");
     }
-
-  }
+  };
 
   const handleEnviar = () => {
-    if (mensaje.trim() !== "") {
-      evtEnviarMensaje(mensaje); // Llama a la función pasada como prop
-      setMensajes((prev) => [...prev, { contenido: mensaje }]); // Añade el mensaje localmente
-      setMensaje(""); // Limpia el input
-    }
+    evtEnviarMensaje();
   };
 
   return (
     <>
-    {mensajes.map((msg,i) => (
-      <p key={i}>
-        {msg.contenido}
-      </p>
+      {mensajes.map((msg, i) => (
+        <p key={i}>{msg.contenido}</p>
+      ))}
 
-
-    ))}
-
-          <input
+      <input
         type="text"
         value={mensaje}
-        onChange={(e) => setMensaje(e.target.value)} // Actualiza el estado del mensaje
+        onChange={(e) => setMensaje(e.target.value)} 
         placeholder="Escribe un mensaje..."
       />
 
-      {/* Botón para enviar el mensaje */}
       <button onClick={handleEnviar}>Enviar</button>
     </>
   );

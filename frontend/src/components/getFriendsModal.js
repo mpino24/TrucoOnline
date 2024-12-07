@@ -23,16 +23,16 @@ const GetFriendsModal = forwardRef((props, ref) => {
     const [amigos, setAmigos] = useState([]);
     const [request, setRequest] = useState([]);
     const [requestView, setRequestView] = useState(false);
-    const [chatVisible,setChatVisible] = useState(false);
-    const [chatId,setChatId]=useState(null);
+    const [chatVisible, setChatVisible] = useState(false);
+    const [chatId, setChatId] = useState(null);
 
     useEffect(() => {
         if (!userName) {
             fetchFriends();
             fetchFriendsRequest();
-            const intervalId = setInterval(fetchFriends, 5000);
+            const intervalId = setInterval(fetchFriends, 50000000);
 
-            const intervalId2 = setInterval(fetchFriendsRequest, 1000);
+            const intervalId2 = setInterval(fetchFriendsRequest, 1000000);
 
             return () => {
                 clearInterval(intervalId)
@@ -128,9 +128,9 @@ const GetFriendsModal = forwardRef((props, ref) => {
             .catch((message) => alert(message));
     }
 
-    function mostrarChat(player){
+    function mostrarChat(player) {
         fetch(
-            `/api/v1/chat?userId=` + player.id,
+            `/api/v1/chat/with/` + player.id,
             {
                 method: "GET",
                 headers: {
@@ -138,30 +138,26 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 }
             }
         )
-            .then((response) => response.text())
+            .then((response) => response.json())
             .then((data) => {
-                alert(data)
                 if (data.length === 0) {
                     setChatId(null);
                 } else {
-                    setChatId(data)
-                    
+                    setChatId(data.id)
+
                 }
             })
             .catch((message) => alert(message));
-
-
-
         setChatVisible(true);
     }
 
-    function closeModal(){
-        if(chatVisible){
+    function closeModal() {
+        if (chatVisible) {
             setChatVisible(false);
-        }else{
+        } else {
             handleModalVisible(props.setModalVisible, props.modalVisible)
         }
-    
+
     }
 
 
@@ -207,15 +203,13 @@ const GetFriendsModal = forwardRef((props, ref) => {
                                 </button>
 
                             }
-
-
                         </div>
                         {player &&
                             <JugadorView jugador={player} />}
                         {!player && !requestView &&
                             <div>
                                 <JugadorList jugadores={amigos}
-                                mostrarChat={mostrarChat} />
+                                    mostrarChat={mostrarChat} />
                             </div>
                         }
                         {requestView &&
@@ -229,32 +223,16 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 {chatVisible &&
                     <>
                         <h1 style={{ fontSize: 30, textAlign: 'center' }}>
-                            Chat{chatId}
+                            Chat
                         </h1>
                         <hr></hr>
                         <Chat
-                        idChat={chatId}/>
-
+                            idChat={chatId} />
                     </>
-
                 }
             </div>
         </>
-
-
-
-
-
-
-
     )
-
-
-
-
-
-
-
 }
 )
 export default GetFriendsModal;
