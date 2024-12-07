@@ -1,9 +1,9 @@
 import { forwardRef, useState } from 'react';
 import { Form, Label} from "reactstrap";
-import useFetchState from "frontend/src/util/useFetchState.js";
+import useFetchState from "../util/useFetchState.js";
 import { IoCloseCircle } from "react-icons/io5";
-import tokenService from "frontend/src/services/token.service.js";
-import getErrorModal from "frontend/src/util/getErrorModal";
+import tokenService from "../services/token.service.js";
+import getErrorModal from "../util/getErrorModal";
 import parseSubmit from './getCreationUtils/parseSubmit';
 
 

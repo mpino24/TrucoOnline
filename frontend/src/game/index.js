@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import tokenService from "frontend/src/services/token.service.js";
-import WaitingModal from "frontend/src/game/WaitingModal.js"
-import PlayingModal from "frontend/src/manos/PlayingModal.js"
+import tokenService from "../services/token.service.js";
+import WaitingModal from "../game/WaitingModal.js"
+import PlayingModal from "../manos/PlayingModal.js"
 import { Link } from "react-router-dom";
 import {Button} from "reactstrap";
 import FinishedModal from "./FinishedModal";
+
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Game(){

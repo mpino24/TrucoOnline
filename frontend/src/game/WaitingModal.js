@@ -3,9 +3,9 @@ import { IoCloseCircle } from "react-icons/io5";
 
 import { TbFlower } from "react-icons/tb";
 import { TbFlowerOff } from "react-icons/tb";
-import EquipoView from 'frontend/src/game/EquipoView.js'
+import EquipoView from '../game/EquipoView.js'
 import LeavingGameModal from '../components/LeavingGameModal';
-import tokenService from "frontend/src/services/token.service.js";
+import tokenService from "../services/token.service.js";
 import { useNavigate } from 'react-router-dom'
 import ExpeledModal from './ExpeledModal';
 
