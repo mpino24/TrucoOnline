@@ -15,6 +15,7 @@ public class PartidaJugadorView {
     public PartidaJugadorView(String userName, String foto, Integer posicion) {
         this.userName = userName;
         this.foto = foto;
+        this.posicion=posicion;
     }
     
     
