@@ -6,12 +6,17 @@ import GameList from "./GameList";
 import { IoIosSearch } from "react-icons/io";
 import PartidaView from "./PartidaView";
 import { VscChromeClose } from "react-icons/vsc";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 const GetJoinModal = forwardRef((props, ref) => {
 
     const [message, setMessage] = useState(null);
     const [codigo, setCodigo] = useState("");
     const [partida, setPartida] = useState(null);
+
+    const [pagina, setPagina] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(1);
 
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
@@ -53,10 +58,14 @@ const GetJoinModal = forwardRef((props, ref) => {
         document.getElementById('inputId').value = null;
     }
 
+    function handleOtherPage(number) {
+        setPagina(pagina + number);
+    }
+
 
     return (
         <>
-            <div className='cuadro-union'>
+            <div className='cuadro-union' style={{ display: 'flex', flexDirection: 'column' }}>
                 <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
 
                 <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
@@ -71,8 +80,8 @@ const GetJoinModal = forwardRef((props, ref) => {
                             <button type="submit" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
                                 <IoIosSearch style={{ width: 30, height: 30 }} />
                             </button>
-                            {partida && 
-                                <VscChromeClose onClick={handleReset} style={{width: 30,height: 30,cursor: "pointer",marginLeft: 8}}/>
+                            {partida &&
+                                <VscChromeClose onClick={handleReset} style={{ width: 30, height: 30, cursor: "pointer", marginLeft: 8 }} />
                             }
                         </div>
 
@@ -87,7 +96,33 @@ const GetJoinModal = forwardRef((props, ref) => {
                     Partidas públicas:
                 </h1>
                 <div style={{ overflowY: 'auto' }}>
-                    <GameList />
+                    <GameList
+                        key={pagina}
+                        pagina={pagina}
+                        setTotalPaginas={setTotalPaginas}
+                    />
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: 'auto', paddingTop: '10px' }}>
+
+                    <IoIosArrowBack
+                        style={{
+                            fontSize: '24px',
+                            cursor: pagina > 0 - 1 ? 'pointer' : 'default',
+                            visibility: pagina > 0 ? 'visible' : 'hidden'
+                        }}
+                        onClick={() => pagina > 0 ? handleOtherPage(-1) : null} />
+
+                    <p style={{ margin: 0, fontSize: '16px' }}>{pagina + 1}</p>
+                    
+                    <IoIosArrowForward
+                        style={{
+                            fontSize: '24px',
+                            cursor: pagina < totalPaginas - 1 ? 'pointer' : 'default',
+                            visibility: pagina < totalPaginas - 1 ? 'visible' : 'hidden'
+                        }}
+                        onClick={() => pagina < totalPaginas - 1 ? handleOtherPage(1) : null} />
+
                 </div>
             </div>
 

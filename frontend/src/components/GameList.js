@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect,forwardRef } from 'react';
 import tokenService from '../services/token.service.js';
 import useFetchState from "../util/useFetchState.js";
 import PartidaView from './PartidaView';
 
 const jwt = tokenService.getLocalAccessToken();
-export default function GameList() {
-    const [pagina, setPagina] = useState(0);
-    const [tamaño, setTamaño] = useState(4);
+const GameList= forwardRef((props, ref) => {
+
     const [games, setGames] = useFetchState([]);
+
 
     useEffect(() => {
         fetch(
-            `/api/v1/partida/partidas/accesibles?page=${pagina}&size=${tamaño}`,
+            `/api/v1/partida/partidas/accesibles?page=${props.pagina}&size=4`,
             {
                 method: "GET",
                 headers: {
@@ -19,10 +19,11 @@ export default function GameList() {
                 }
             }
         )
-            .then((response) => response.text())
+            .then((response) => response.json())
             .then((data) => {
                 if (data.content) {
                     setGames(data.content)
+                    props.setTotalPaginas(data.totalPages)
                 }
                 else {
                     setGames([])
@@ -30,12 +31,10 @@ export default function GameList() {
                 }
             })
             .catch((message) => alert("Error: " + message));
-    }, [pagina, setGames, tamaño]);
+    }, [props, setGames]);
 
 
-    function handleNextPage() {
-        setPagina(pagina + 1);
-    }
+
 
     const gamesList = games.map((partida) => {
         return (
@@ -46,9 +45,9 @@ export default function GameList() {
     });
     return (
         <div>
-            <p style={{ overflowY: true }}>{gamesList}</p>
-            <button onClick={() => handleNextPage()}><p>Next Page</p></button>
+            <p style={{ overflowY: 'auto' }}>{gamesList}</p>
         </div>
 
     )
-}
+});
+export default GameList;
