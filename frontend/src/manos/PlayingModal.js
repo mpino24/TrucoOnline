@@ -1,11 +1,11 @@
 import React, { useState, forwardRef, useEffect, useRef } from 'react';
-import tokenService from "frontend/src/services/token.service.js";
+import tokenService from "../services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
 import './PlayingModal.css';
 
 
-import backgroundMusic from 'frontend/src/static/audios/musicaPartida2.mp3';
+import backgroundMusic from '../static/audios/musicaPartida2.mp3';
 import PuntosComponente from './PuntosComponente';
 
 const jwt = tokenService.getLocalAccessToken();
@@ -18,6 +18,13 @@ const PlayingModal = forwardRef((props, ref) => {
     const [cartasJugador, setCartasJugador] = useState([]);
     const [mano, setMano] = useState(null);
 
+    //MENSAJES Y CUADRO DEL ENVIDO
+    const [ultimoMensaje, setUltimoMensaje] = useState(null)
+    const[resolucionEnvido, setResolucionEnvido] = useState(false)
+    const [cantoDicho, setCantoDicho] = useState(false)
+
+    const [envidosJugadores, setEnvidosJugadores] = useState([]);
+    
 
 
     const puntosSinTruco = 1;
@@ -26,7 +33,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [puntosTrucoActuales, setPuntosTrucoActuales] = useState(puntosSinTruco);
     const [tirarTrigger, setTirarTrigger] = useState(0);
     const [trucoTrigger, setTrucoTrigger] = useState(0);
-
+    const [envidoTrigger, setEnvidoTrigger] = useState(0);
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
     );
@@ -59,8 +66,21 @@ const PlayingModal = forwardRef((props, ref) => {
                 setPuntosTrucoActuales(data.puntosTruco);
  
                 
-            }          
+            }
+            
+            if (data.envidosCadaJugador) {
+                setEnvidosJugadores(data.envidosCadaJugador.map((envido) => envido === null ? 'Son buenas' : envido));
+            }
 
+            //NECESARIO PARA FORZAR QUE SE ACTUALICE, SINO SOLO LE APARECE AL DEL QUIERO
+            setUltimoMensaje((prevUltimoMensaje) => {
+                if (data.ultimoMensaje !== prevUltimoMensaje) {
+                    return data.ultimoMensaje;
+                }
+                return prevUltimoMensaje;
+            })
+            
+            
         })
         .catch((error) => {
             console.error("Error fetching mano:", error);
@@ -69,16 +89,38 @@ const PlayingModal = forwardRef((props, ref) => {
         });
     }
 
+    function mostrarMensaje() {
+        if(ultimoMensaje=== "LISTA_ENVIDOS"){
+            setResolucionEnvido(true)
+            const timeoutId = setTimeout(() => setResolucionEnvido(false), 4000);
+
+            return () => clearTimeout(timeoutId);
+        } else if(ultimoMensaje!==null){
+            setCantoDicho(true)
+            const timeoutId = setTimeout(() => setCantoDicho(false), 2000);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }
+
+    useEffect(() => {
+        mostrarMensaje()
+    }, [ultimoMensaje])
+
     useEffect(() => {
         let intervalId;
+        
+        mostrarMensaje();
         fetchMano();
         intervalId = setInterval(fetchMano, 1000);
+        
         return () => clearInterval(intervalId);
     }, [game.codigo, posicion]);
 
     useEffect(() => {
         fetchMano();
-    }, [tirarTrigger, trucoTrigger]);
+        
+    }, [tirarTrigger, trucoTrigger, envidoTrigger]);
 
     useEffect(() => {
         if (mano && puntosTrucoActuales) {
@@ -92,6 +134,8 @@ const PlayingModal = forwardRef((props, ref) => {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
+
+  
 
     const handlePlayMusic = () => {
         if (audioRef.current) {
@@ -177,34 +221,50 @@ const PlayingModal = forwardRef((props, ref) => {
     };
 
     const renderCartasMesa = () => {
-        if (mano && mano.cartasLanzadasRonda) {
-            const cartasLanzadas = mano.cartasLanzadasRonda;
-
-            if (!cartasLanzadas || cartasLanzadas.length === 0) {
+        if (mano && mano.cartasLanzadasTotales) {
+            const cartasLanzadasTotales = mano.cartasLanzadasTotales;
+    
+            if (!cartasLanzadasTotales || cartasLanzadasTotales.length === 0) {
                 return <div>No hay cartas para mostrar.</div>;
             }
-
+    
             return (
                 <div className="cartas-mesa-container">
-                    {cartasLanzadas.map((carta, index) => (
-                        carta && (
-                            <div key={index} className="card-container mesa">
-                                <img
-                                    src={carta.foto}
-                                    alt={`Carta ${index + 1}`}
-                                    className="card-image"
-                                    onError={(e) => (e.target.style.display = 'none')}
-                                />
-                                <div className="sunset-overlay"></div>
-                            </div>
-                        )
+                    {cartasLanzadasTotales.map((cartasJugador, jugadorIndex) => (
+                        <div key={jugadorIndex} className="jugador-cartas">
+                            {cartasJugador.map((carta, rondaIndex) => (
+                                carta && (
+                                    <div
+                                        key={rondaIndex}
+                                        className="card-container mesa"
+                                        style={{
+                                            transform: `translateY(-${rondaIndex * -15}px)`, // Mueve cada carta más arriba según la ronda
+                                            position: 'relative',
+                                            zIndex: 10 + rondaIndex,
+                                            
+                                        }}
+                                    >
+                                        <img
+                                            src={carta.foto}
+                                            alt={`Carta Ronda ${rondaIndex + 1}`}
+                                            className="card-image"
+                                            onError={(e) => (e.target.style.display = 'none')}
+                                        />
+                                        <div className="sunset-overlay"></div>
+                                    </div>
+                                )
+                            ))}
+                        </div>
                     ))}
                 </div>
             );
         }
-        
+    
         return <div>Cargando cartas lanzadas...</div>;
     };
+    
+    
+
 
     const dragStart = (evento, carta) => {
         if (mano && cartasJugador && Number(posicion) === mano.jugadorTurno) {
@@ -306,8 +366,44 @@ const PlayingModal = forwardRef((props, ref) => {
         .catch((error) => alert(error.message));
     }
 
+    function cantarEnvido(respuesta) {
+        fetch(`/api/v1/manos/${game.codigo}/cantarEnvido/${respuesta}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if (data) {
+                setEnvidoTrigger((prev) => prev + 1);
+            }
+        })
+        .catch((error) => alert(error.message));
+    }
+    function responderEnvido(respuesta) {
+        fetch(`/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if (data) {
+                setEnvidoTrigger((prev) => prev + 1);
+            }
+        })
+        .catch((error) => alert(error.message));
+    }
+
     return (
-        <>
+        <div className="playing-modal-container">
+            {console.log(mano)}
             {/* Background */}
             <div
                 style={{ 
@@ -315,7 +411,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     backgroundSize: 'cover', 
                     backgroundRepeat: 'no-repeat', 
                     backgroundPosition: 'center', 
-                    height: '100vh', 
+                    height: '99910vh', 
                     width: '100vw',
                     position: 'relative', // To position the dragged card relative to this container
                     zIndex: -1
@@ -330,7 +426,7 @@ const PlayingModal = forwardRef((props, ref) => {
             <h4 className={"puntos-ellos"}>Ellos:</h4>
             {mano &&  puntosTrucoActuales &&
             (
-                <> 
+                <div style={{overflow:'hidden'}}> 
                 <PuntosComponente  estiloFotoPunto={"puntaje-EquipoNuestro"} 
                                     posicion={posicion} puntosEquipo1={game.puntosEquipo1} puntosEquipo2={game.puntosEquipo2}
                                     />
@@ -338,9 +434,11 @@ const PlayingModal = forwardRef((props, ref) => {
                 <PuntosComponente estiloFotoPunto={"puntaje-EquipoEllos"} 
                                     posicion={posicion} puntosEquipo1={game.puntosEquipo2} puntosEquipo2={game.puntosEquipo1}
                                 />
-                </>
+                </div>
             )}
                 
+                
+
             {/* Drop Area */}
             <div
                 ref={dropAreaRef}
@@ -412,9 +510,72 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Table Cards */}
             <div className="cartas-mesa-position">
                 {renderCartasMesa()}
+                
+            </div>
+
+            {/* Cuadto del envido*/}
+            <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
+            {mano && resolucionEnvido && (
+                            <div 
+                                className="confirmation-dialog"
+                                style={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+                                    maxWidth: "800px",
+                                    margin: "0 auto",
+                                    textAlign: "center",
+                                    
+                                }}
+                            >
+                                <h3 style={{ color: "black" }}>Resolución de Envido</h3>
+                                <h5>{mano.equipoGanadorEnvido  === posicion%2 ? "Ganaste" : "Perdiste" }</h5>
+                                {envidosJugadores.map((envido, index) => (
+                                    <p key={index}>Jugador {index }: {envido}</p>
+                                ))}
+                                
+                                <button
+                                    onClick={() => setResolucionEnvido(false)}
+                                    style={{
+                                        backgroundColor: "red",
+                                        color: "white",
+                                        padding: "10px",
+                                        marginTop: "10px",
+                                        border: "none",
+                                        borderRadius: "10px",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        )}
+            </div>
+            {/*Cuadro cantos */}
+            <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
+            {mano && cantoDicho && (
+                            <div 
+                                className="confirmation-dialog"
+                                style={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+                                    maxWidth: "800px",
+                                    margin: "0 auto",
+                                    textAlign: "center",
+                                    
+                                }}
+                            >
+                                {ultimoMensaje && <h3 style={{ color: "black" }}>{ultimoMensaje.replace("_", " ").replace("2","")}</h3>}
+                                
+                            </div>
+                        )}
             </div>
 
             {/* Truco Buttons */}
+            <div style={{display:'flex', flexDirection: 'row'}}>
             {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales && (
                 <div className="truco-button-container"> 
                     {puntosTrucoActuales === puntosSinTruco && (
@@ -434,9 +595,29 @@ const PlayingModal = forwardRef((props, ref) => {
                     )}
                 </div>
             )}
-
+            {/* Cantar envido */}
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido &&   (
+                <div className="envido-button-container"> 
+                    {mano.queEnvidoPuedeCantar >=3  && (
+                        <button onClick={() => cantarEnvido('ENVIDO')}>
+                            <span>Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >=2 && (
+                        <button onClick={() => cantarEnvido('REAL_ENVIDO')}>
+                            <span >Real Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >= 1 && (
+                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' }} onClick={() => cantarEnvido('FALTA_ENVIDO')}>
+                            <span className="swirl-glow-text">Falta Envido</span>
+                        </button>
+                    )}
+                </div>
+            )}
+            </div>
             {/* Responder Truco Buttons */}
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && (
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && mano.esTrucoEnvidoFlor ===0 && (
                 <div className="truco-button-container responder-truco-buttons"> 
                     {puntosTrucoActuales !== puntosConRetruco && 
                         <button onClick={() => responderTruco("QUIERO")}>Quiero</button>}
@@ -447,7 +628,7 @@ const PlayingModal = forwardRef((props, ref) => {
                             <span className="swirl-glow-text"> ¡Quiero!</span>
                         </button>}
     
-                    {puntosTrucoActuales !== puntosConRetruco && 
+                    {puntosTrucoActuales !== puntosConRetruco && mano.puedeCantarTruco && 
                         <button
                             style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
                             onClick={() => responderTruco('SUBIR')}
@@ -456,9 +637,54 @@ const PlayingModal = forwardRef((props, ref) => {
                                 {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
                             </span>
                         </button>}
+                        
+                        {mano.puedeCantarEnvido && (  
+                        <div className='envido-button-container' style={{top:'-120%', position:'absolute', left:'60%'}}>
+                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
+                            <button onClick={() => responderEnvido('ENVIDO')}>
+                                <span>Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
+                            <button onClick={() => responderEnvido('REAL_ENVIDO')}>
+                                <span>Real Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
+                            <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                                <span className="swirl-glow-text">Falta Envido</span>
+                            </button>
+                        )}
+                        </div>
+                    )}
                 </div>
             )}
-
+            
+        {/*Responder envido */}
+        {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&mano.esTrucoEnvidoFlor ===1 &&  (
+                <div className="envido-button-container" style={{left:'70%', position:'fixed'}}> 
+                    
+                        <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
+                        <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
+                    
+                    
+                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
+                        <button onClick={() => responderEnvido('ENVIDO')}>
+                            <span>Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
+                        <button onClick={() => responderEnvido('REAL_ENVIDO')}>
+                            <span>Real Envido</span>
+                        </button>
+                    )}
+                    {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
+                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                            <span className="swirl-glow-text">Falta Envido</span>
+                        </button>
+                    )}
+                </div>
+            )}
             {/* Cartas Volteadas */}
             {mano && (
                 <CartasVolteadas
@@ -469,7 +695,7 @@ const PlayingModal = forwardRef((props, ref) => {
             )}
         
                 
-        </>
+        </div>
     );
 });
 

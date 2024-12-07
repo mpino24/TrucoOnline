@@ -36,6 +36,7 @@ public class PartidaJugadorService {
         this.partidaRepository = partidaRepository;
     }
 
+
     @Transactional(readOnly = true)
     public Integer getNumJugadoresInPartida(Integer partidaId) {
         return pjRepository.findNumJugadoresPartida(partidaId);
@@ -49,7 +50,7 @@ public class PartidaJugadorService {
     @Transactional(readOnly = true)
     public Integer getMiPosicion(Integer userId, Integer partidaId) throws ResourceNotFoundException {
         Partida partida = partidaRepository.findById(partidaId).get();
-        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj -> pj.getPlayer().getId().equals(userId)).findFirst().orElse(null);
+        PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj -> pj.getPlayer().getUser().getId().equals(userId)).findFirst().orElse(null);
         if (partjugador == null) {
             throw new ResourceNotFoundException("No se encontro la partidaJugador pedida");
         }
@@ -147,5 +148,14 @@ public class PartidaJugadorService {
         return userService.findUser(pj.get().getPlayer().getId());
 
     }
+
+    public List<PartidaJugadorView> getAllJugadoresPartida(String codigo){
+        Optional<Partida> partida= pjRepository.findPartidaByCodigoPartida(codigo);
+        if(partida.isEmpty()){
+            throw new ResourceNotFoundException("No se ha encontrado Partida con codigo '"+ codigo + "'");
+        }
+        return pjRepository.findAllJugadoresPartida(codigo);
+    }
+
 
 }

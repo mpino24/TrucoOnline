@@ -93,4 +93,12 @@ public class ExceptionHandlerController {
 
 		return new ResponseEntity<>(message, HttpStatus.CONFLICT);
 	}
+	@ExceptionHandler(value = EnvidoException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<ErrorMessage> handleEnvidoException(EnvidoException ex, WebRequest request) {
+		ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), new Date(), ex.getMessage(),
+				request.getDescription(false));
+
+		return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+	}
 }

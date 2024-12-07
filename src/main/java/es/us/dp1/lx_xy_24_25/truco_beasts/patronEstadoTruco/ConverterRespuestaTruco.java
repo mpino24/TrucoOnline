@@ -2,13 +2,15 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 import org.jpatterns.gof.CompositePattern.Component;
 import org.springframework.context.annotation.Lazy;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.ManoService;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Convert;
 
 @Component
 @Convert
-public class ConverterRespuestaTruco implements AttributeConverter<RespuestaTruco, RespuestasTruco> {
+public class ConverterRespuestaTruco implements AttributeConverter<RespuestaTruco, Cantos> {
 
     public final ManoService manoService;
 
@@ -18,18 +20,22 @@ public class ConverterRespuestaTruco implements AttributeConverter<RespuestaTruc
 
 
     @Override
-    public RespuestasTruco convertToDatabaseColumn(RespuestaTruco attribute) {
+    public Cantos convertToDatabaseColumn(RespuestaTruco attribute) {
         return attribute.getTipoRespuestaTruco();
     }
 
     @Override
-    public RespuestaTruco convertToEntityAttribute(RespuestasTruco dbData) {
-        if(dbData.equals(RespuestasTruco.QUIERO)){
+    public RespuestaTruco convertToEntityAttribute(Cantos dbData) {
+        if(dbData.equals(Cantos.QUIERO)){
             return new RespuestaQuieroTruco();
-        }else if (dbData.equals(RespuestasTruco.NO_QUIERO)){
+        }else if (dbData.equals(Cantos.NO_QUIERO)){
             return new RespuestaNoQuieroTruco();
-        }else{
+        }else if (dbData.equals(Cantos.SUBIR)){
             return new RespuestaSubirTruco(manoService);
+        } else if (dbData.equals(Cantos.ENVIDO) || dbData.equals(Cantos.REAL_ENVIDO) || dbData.equals(Cantos.FALTA_ENVIDO)) {
+            return new RespuestaEnvidos(manoService, dbData);
+        }{
+            throw new TrucoException( "Respuesta al truco no valida"); 
         }
     }
     

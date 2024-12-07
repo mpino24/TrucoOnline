@@ -1,10 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
-import java.util.List;
+
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 
@@ -26,25 +28,27 @@ public class TipoTruco extends Truco{
     }
     
     @Override
-    public CantosTruco getTipoTruco(){
-        return CantosTruco.TRUCO;
+    public Cantos getTipoTruco(){
+        return Cantos.TRUCO;
     }
 
     @Override
-    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos, List<Integer> listaRondaJugador, Integer rondaActual) {
-        listaRondaJugador.add(rondaActual);
-        listaRondaJugador.add(jugadorTurno);
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor) {
+        Integer puntosNoHayTruco = 1;
+        if(manoActual.getPuntosTruco() > puntosNoHayTruco){
+            throw new TrucoException("Ya se canto el truco");
+        }
         manoActual.setEquipoCantor(getEquipo(jugadorTurno));//el 0 es el equipo 1 (los pares) y el 1 es el equipo 2 (impares) 
-                                                             //se le podría sumar 1 al resultado del modulo y quedan con el mismo numero (yo creo que lo complica más) 
+                                                              
         manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorTurno));
-        secuenciaCantos.add(listaRondaJugador);
-        manoActual.setSecuenciaCantoLista(secuenciaCantos);
+        
+        
         return manoActual;
     }
 
-    //TODO: FALTA TEST (NO SE NI SI ES NECESARIA ESTA FUNCIÓN)
+    //TODO: FALTA TEST
 
-    public Integer getEquipo(Integer jugador){ // Podria devolver un integer sino
+    public Integer getEquipo(Integer jugador){ 
         Integer equipo = null;
         if (jugador%2==0) equipo=0; //equipo 1
         else if(jugador%2==1) equipo =1; //equipo 2

@@ -95,8 +95,20 @@ export default function Register() {
             paddingBottom: '30px' 
           }}
         >
-          <h1>Registrarse</h1>
-          <div className="auth-form-container" style={{ width: '100%', maxWidth: '400px' }}>  
+          <h1 style={{
+                top: '7%',
+                position: 'absolute',
+                color: 'darkgreen',
+                textShadow: `
+                  -2px -2px 0 white,
+                  2px -2px 0 white,
+                  -2px  2px 0 white,
+                  2px  2px 0 white
+                `
+              }}
+            >Registrarse</h1>
+
+          <div className="auth-form-container" style={{ width: '100%', maxWidth: '400px', top:'1%', position:'fixed'}}>  
             <FormGenerator
               ref={registerFormRef}
               inputs={registerFormInputs}
@@ -104,7 +116,7 @@ export default function Register() {
               numberOfColumns={1}
               listenEnterKey
               buttonText="Save"
-              buttonClassName="auth-button"
+              buttonClassName="saveRegister-button"
             />
           </div>
         </div>
@@ -133,8 +145,20 @@ export default function Register() {
             paddingBottom: '30px'  // Espaciado inferior para el layout general
           }}
         >
-          <h1>Registrarse</h1>
-          <h2 className="text-center text-md">
+          <h1 style={{color: 'darkgreen',
+                textShadow: `
+                  -2px -2px 0 white,
+                  2px -2px 0 white,
+                  -2px  2px 0 white,
+                  2px  2px 0 white
+                `}}>Registrarse</h1>
+          <h2 className="text-center text-md" style={{color: 'darkgreen',
+                textShadow: `
+                  -2px -2px 0 white,
+                  2px -2px 0 white,
+                  -2px  2px 0 white,
+                  2px  2px 0 white
+                `}}>
             ¿Cuál será la autoridad de tu usuario?
           </h2>
           <div className="options-row">

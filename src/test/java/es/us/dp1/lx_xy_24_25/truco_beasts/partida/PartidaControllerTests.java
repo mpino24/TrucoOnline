@@ -1,30 +1,53 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+
+import org.springframework.http.MediaType;
 
 import org.springframework.context.annotation.FilterType;
 
 @WebMvcTest(value = PartidaController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
 public class PartidaControllerTests {
     
-    private static final String BASE_URL = "api/v1/partida";
-
-    @Autowired
-    private PartidaController partidaController;
+    private static final String BASE_URL = "/api/v1/partida";
     
-    @Autowired
+    @MockBean
     private PartidaService partidaService;
+
+    @MockBean
+    private PartidaJugadorService partidaJugadorService;
+
+    @MockBean
+    private UserService userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,6 +60,9 @@ public class PartidaControllerTests {
 
     @BeforeEach
     public void setup() {
+
+        usuarioAdmin = new User();
+        usuarioJugador = new User();
 
         Authorities autoridadAdmin = new Authorities();
         autoridadAdmin.setId(1);
@@ -54,6 +80,7 @@ public class PartidaControllerTests {
         usuarioJugador.setUsername("player");
         usuarioJugador.setAuthority(autoridadJugador);
 
+        partidaA2 = new Partida();
         partidaA2.setId(1);
         partidaA2.setCodigo("TESTS");
         partidaA2.setConFlor(true);
@@ -63,6 +90,7 @@ public class PartidaControllerTests {
         partidaA2.setPuntosMaximos(15);
         partidaA2.setVisibilidad(Visibilidad.PUBLICA);
 
+        partidaPrivada = new Partida();
         partidaPrivada.setId(2);
         partidaPrivada.setCodigo("TESTS");
         partidaPrivada.setConFlor(true);
@@ -72,6 +100,7 @@ public class PartidaControllerTests {
         partidaPrivada.setPuntosMaximos(30);
         partidaPrivada.setVisibilidad(Visibilidad.PRIVADA);
 
+        partidaTerminada = new Partida();
         partidaTerminada.setId(3);
         partidaTerminada.setCodigo("TESTS");
         partidaTerminada.setConFlor(true);
@@ -82,5 +111,59 @@ public class PartidaControllerTests {
         partidaTerminada.setInstanteInicio(LocalDateTime.of(2024, 11, 9, 11, 30, 45));
         partidaTerminada.setInstanteFin(LocalDateTime.of(2024, 11, 9, 12, 0, 0));
         partidaTerminada.setVisibilidad(Visibilidad.PUBLICA);
+
+        when(userService.findCurrentUser()).thenReturn(usuarioJugador);
+        when(userService.findCurrentUser()).thenReturn(usuarioAdmin);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void deberiaDevolverTodasLasPartidasAdmin() throws Exception {
+
+        when(partidaService.findAllPartidas()).thenReturn(Arrays.asList(partidaA2, partidaPrivada, partidaTerminada));
+
+        mockMvc.perform(get(BASE_URL+"/partidas")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[2].id").value(3));
+    }
+
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void noDeberiaDevolverPartidasPrivadasJugador() throws Exception {
+
+        when(partidaService.findAllPartidas()).thenReturn(Arrays.asList(partidaA2));
+
+        mockMvc.perform(get(BASE_URL+"/partidas")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void deberiaDevolverTodasLasPartidasPublicasJugador() throws Exception {
+
+        when(partidaService.findAllPartidasActivas()).thenReturn(Arrays.asList(partidaA2));
+
+        mockMvc.perform(get(BASE_URL+"/partidas/accesibles")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1));
+    }
+
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void deberiaDevolverPartida() throws Exception {
+
+        when(partidaService.findPartidaById(1)).thenReturn(partidaA2);
+
+        mockMvc.perform(get(BASE_URL+"/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 }

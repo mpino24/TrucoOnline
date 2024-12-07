@@ -1,10 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
-import java.util.List;
+
 import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 @StatePattern.ConcreteState
@@ -24,19 +26,24 @@ public class TipoValeCuatro extends Truco{
     }
 
     @Override
-    public CantosTruco getTipoTruco(){
-        return CantosTruco.VALECUATRO;
+    public Cantos getTipoTruco(){
+        return Cantos.VALECUATRO;
     }
 
     @Override
-    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor, List<List<Integer>> secuenciaCantos,
-            List<Integer> listaRondaJugador, Integer rondaActual) {
-        List<Integer> cantoEnRetruco = secuenciaCantos.get(1);
-        Integer elQueResponde = manoActual.quienResponde(cantoEnRetruco, jugadorTurno);
+    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor) {
+        Integer puntosTruco = manoActual.getPuntosTruco();
+        Integer puntosHayRetruco = 3;
+        if (puntosTruco < puntosHayRetruco) {
+            throw new TrucoException( "No se cantó el retruco"); 
+        }else if(puntosTruco > puntosHayRetruco){
+            throw new TrucoException("Ya se canto el valecuatro");
+        }
+        Integer elQueResponde = manoActual.quienResponde();
         manoActual.setJugadorTurno(elQueResponde);
         manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
-        secuenciaCantos.add(listaRondaJugador);
-        manoActual.setSecuenciaCantoLista(secuenciaCantos);
+        
+        
         return manoActual;
     }
     

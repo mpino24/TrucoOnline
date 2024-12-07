@@ -1,8 +1,5 @@
 import { useState, forwardRef, useEffect } from 'react';
-import { TbFlower } from "react-icons/tb";
-import { TbFlowerOff } from "react-icons/tb";
-import { Link } from 'react-router-dom';
-import tokenService from 'frontend/src/services/token.service.js';
+import tokenService from '../services/token.service.js';
 
 const user = tokenService.getUser();
 const jwt = tokenService.getLocalAccessToken();

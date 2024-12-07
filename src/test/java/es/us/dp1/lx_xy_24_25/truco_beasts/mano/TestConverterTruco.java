@@ -1,12 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 import org.junit.Before;
 import org.junit.Test;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.CantosTruco;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoRetruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoTruco;
@@ -26,40 +26,40 @@ public class TestConverterTruco {
     @Test
     public void devuelveTipoTruco(){
         Truco tipoTruco= new TipoTruco();
-        CantosTruco resultado = convertidorTruco.convertToDatabaseColumn(tipoTruco);
-        assertEquals(CantosTruco.TRUCO, resultado);
+        Cantos resultado = convertidorTruco.convertToDatabaseColumn(tipoTruco);
+        assertEquals(Cantos.TRUCO, resultado);
     }
 
     @Test
     public void devuelveTipoRetruco(){
         Truco tipoTruco= new TipoRetruco();
-        CantosTruco resultado = convertidorTruco.convertToDatabaseColumn(tipoTruco);
-        assertEquals(CantosTruco.RETRUCO, resultado);
+        Cantos resultado = convertidorTruco.convertToDatabaseColumn(tipoTruco);
+        assertEquals(Cantos.RETRUCO, resultado);
     }
 
     @Test
     public void devuelveTipoValeCuatro(){
         Truco tipoTruco= new TipoValeCuatro();
-        CantosTruco resultado = convertidorTruco.convertToDatabaseColumn(tipoTruco);
-        assertEquals(CantosTruco.VALECUATRO, resultado);
+        Cantos resultado = convertidorTruco.convertToDatabaseColumn(tipoTruco);
+        assertEquals(Cantos.VALECUATRO, resultado);
     }
 
     
     
     @Test public void devuelveEntidadTipoTruco() { 
-        CantosTruco canto = CantosTruco.TRUCO; 
+        Cantos canto = Cantos.TRUCO; 
         Truco resultado = convertidorTruco.convertToEntityAttribute(canto); 
         assertEquals(new TipoTruco(), resultado); 
     } 
     
     @Test public void devuelveEntidadTipoRetruco() { 
-        CantosTruco canto = CantosTruco.RETRUCO; 
+        Cantos canto = Cantos.RETRUCO; 
         Truco resultado = convertidorTruco.convertToEntityAttribute(canto); 
         assertEquals(new TipoRetruco(), resultado); 
     } 
     
     @Test public void devuelveEntidadTipoValeCuatro() { 
-        CantosTruco canto = CantosTruco.VALECUATRO; 
+        Cantos canto = Cantos.VALECUATRO; 
         Truco resultado = convertidorTruco.convertToEntityAttribute(canto); 
         assertEquals(new TipoValeCuatro(), resultado); 
     } 

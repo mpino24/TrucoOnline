@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.jpatterns.gof.StatePattern;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 
@@ -26,15 +27,16 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
     }
 
     @Override
-    public RespuestasTruco getTipoRespuestaTruco() {
-        return RespuestasTruco.NO_QUIERO;
+    public Cantos getTipoRespuestaTruco() {
+        return Cantos.NO_QUIERO;
     }
+    
+    @Override  
+    public Mano accionRespuestaTruco(Mano manoActual, Integer puntosTruco) {
 
-    @Override
-    public Mano accionRespuestaTruco(Mano manoActual, Integer jugadorTurno, Integer jugadorAnterior, Integer truco,
-            List<List<Integer>> secuenciaCantos, Integer queTrucoEs) {
-        
-        manoActual.setPuntosTruco(truco);
+        manoActual.setPuntosTruco(puntosTruco);
+        manoActual.setTerminada(true);
+        manoActual.setUltimoMensaje(getTipoRespuestaTruco());
         return manoActual;
     }
     

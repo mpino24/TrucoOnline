@@ -4,7 +4,7 @@ import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import "../../static/css/auth/authButton.css";
 import { loginFormInputs } from "./form/loginFormInputs";
-import logo from 'frontend/src/static/images/Logo_juego.png'
+import logo from '../../static/images/Logo_juego.png'
 import { Link } from 'react-router-dom';
 
 export default function Login() {

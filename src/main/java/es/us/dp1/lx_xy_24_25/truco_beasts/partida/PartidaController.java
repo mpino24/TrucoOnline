@@ -6,6 +6,8 @@ import java.util.Random;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,8 +62,8 @@ public class PartidaController {
 
    
 	@GetMapping("/partidas/accesibles")
-	public ResponseEntity<List<Partida>> findPartidasActivasPublicas() {
-		return new ResponseEntity<>(partidaService.findAllPartidasActivas(), HttpStatus.OK);
+	public ResponseEntity<Page<Partida>> findPartidasActivasPublicas(Pageable pageable) {
+		return new ResponseEntity<>(partidaService.findAllPartidasActivas(pageable), HttpStatus.OK);
 	}
 
 	
@@ -105,5 +107,4 @@ public class PartidaController {
 		partidaService.startGame(codigo);
 		return new ResponseEntity<>("Partida comenzada con éxito", HttpStatus.OK);
 	}
-	
 }
