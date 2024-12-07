@@ -402,6 +402,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (
+        <>
         <div className="playing-modal-container">
             {console.log(mano)}
             {/* Background */}
@@ -693,13 +694,13 @@ const PlayingModal = forwardRef((props, ref) => {
                     jugadorMano={game.jugadorMano}
                 />
             )}
-            {mano && (
-                <Perfil game={game} posicion={posicion}/>
-            )}
             
-        
-                
+                           
         </div>
+        <div style={{zIndex:100000000000000}}>
+        <Perfil game={game} posicion={posicion}/>
+        </div>
+        </>
     );
 });
 

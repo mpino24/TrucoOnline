@@ -17,13 +17,12 @@ const Perfil = forwardRef((props, ref) => {
         jwt, 
         setMessage, 
         setVisible, ); 
-        console.log(perfil);
-
+    console.log(perfil);
 
     const renderJugador = (persona, index) => { 
         return ( 
-            <div key={index}> 
-                <p>{persona.userName}</p> 
+            <div key={index} > 
+                <p style={{color:'red'}}>{persona.userName}</p> 
                 <img style={{ height: 60, width: 60, borderRadius: 500 }} 
                         src={persona.foto} 
                         alt={`Foto perfil jugador ${index}`} 
@@ -37,11 +36,22 @@ const Perfil = forwardRef((props, ref) => {
             {perfil.map((persona, index) => { 
                 if (index !== posicionJugador) { 
                     if (index % 2 === posicionJugador % 2) { 
-                        return ( <div key={index} style={{ textAlign: 'center' }}> {renderJugador(persona, index)} </div> ); } 
-                        else if (!posicionUsada) { 
-                            posicionUsada= true; 
-                            return ( <div key={index} style={{ float: 'left' }}> {renderJugador(persona, index)} </div> ); } 
-                        else { return ( <div key={index} style={{ float: 'right' }}> {renderJugador(persona, index)} </div> ); } 
+                            return ( <div key={index} style={{ marginTop:'-25%', marginLeft:'65%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> ); 
+                        
+                        
+                    } 
+                    else if (!posicionUsada) { 
+                        posicionUsada= true; 
+                        if(game.numJugadores===2 && posicionJugador===0){
+                            return ( <div key={index} style={{ marginTop: '20%', marginLeft:'85%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> );
+                        }else{
+                            return ( <div key={index} style={{ marginTop: '20%', marginLeft:'-80%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> );
+                        }  
+                        } 
+                    else { 
+                        
+                        return ( <div key={index} style={{  marginTop: '10%', marginLeft:'85%', zIndex:1000000000000 }}> {renderJugador(persona, index)} </div> );
+                        }
                 } 
                 return null; 
             })} 
