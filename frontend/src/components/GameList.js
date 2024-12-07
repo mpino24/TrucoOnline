@@ -1,35 +1,53 @@
-import { useState } from 'react';
-import tokenService from 'frontend/src/services/token.service.js';
-import useFetchState from "frontend/src/util/useFetchState.js";
-import { TbFlower } from "react-icons/tb";
-import { TbFlowerOff } from "react-icons/tb";
-import { Link } from 'react-router-dom';
-import { ScrollView } from 'react-native-web';
+import { useEffect,forwardRef } from 'react';
+import tokenService from '../services/token.service.js';
+import useFetchState from "../util/useFetchState.js";
 import PartidaView from './PartidaView';
 
 const jwt = tokenService.getLocalAccessToken();
-export default function GameList() {
-    const [message, setMessage] = useState(null);
-    const [visible, setVisible] = useState(false);
-    const [games, setGames] = useFetchState(
-        [],
-        `/api/v1/partida/partidas/accesibles`,
-        jwt,
-        setMessage,
-        setVisible
-    );
+const GameList= forwardRef((props, ref) => {
+
+    const [games, setGames] = useFetchState([]);
+
+
+    useEffect(() => {
+        fetch(
+            `/api/v1/partida/partidas/accesibles?page=${props.pagina}&size=4`,
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.content) {
+                    setGames(data.content)
+                    props.setTotalPaginas(data.totalPages)
+                }
+                else {
+                    setGames([])
+
+                }
+            })
+            .catch((message) => alert("Error: " + message));
+    }, [props, setGames]);
+
+
+
 
     const gamesList = games.map((partida) => {
         return (
             <PartidaView
-            game={partida}
+                game={partida}
             />
         )
     });
     return (
         <div>
-            <p style={{overflowY:true}}>{gamesList}</p>
+            <p style={{ overflowY: 'auto' }}>{gamesList}</p>
         </div>
-        
+
     )
-}
+});
+export default GameList;

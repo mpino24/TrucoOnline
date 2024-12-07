@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useEffect, useRef } from 'react';
-import tokenService from "frontend/src/services/token.service.js";
+import tokenService from "../services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
 import Perfil from './Perfil';

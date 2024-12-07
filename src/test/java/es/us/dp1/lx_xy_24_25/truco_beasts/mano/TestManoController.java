@@ -1,11 +1,30 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Visibilidad;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 
 
 
@@ -20,5 +39,98 @@ public class TestManoController {
     @Autowired
     private ManoController manoController;
 
-    
+    @Autowired
+    private PartidaService partidaService;
+
+    @Autowired
+    private ManoService manoService;
+
+    private User usuario0;
+    private User usuario1;
+    private Jugador jugador0;
+    private Jugador jugador1;
+    private Partida partida;
+    private PartidaJugador jug0partida;
+    private PartidaJugador jug1partida;
+
+    @BeforeEach
+    public void setup() {
+
+        usuario0 = new User();
+        usuario1 = new User();
+        jugador0 = new Jugador();
+        jugador1 = new Jugador();
+        partida = new Partida();
+        jug0partida = new PartidaJugador();
+        jug1partida = new PartidaJugador();
+
+        Authorities autoridadAdmin = new Authorities();
+        autoridadAdmin.setId(1);
+        autoridadAdmin.setAuthority("ADMIN");
+        Authorities autoridadJugador = new Authorities();
+        autoridadJugador.setId(2);
+        autoridadJugador.setAuthority("PLAYER");
+
+        usuario0.setId(1);
+        usuario0.setUsername("jugador0");
+        usuario0.setPassword("jugador0");
+        usuario0.setAuthority(autoridadJugador);
+        jugador0.setId(1);
+        jugador0.setUser(usuario0);
+
+        usuario1.setId(2);
+        usuario1.setUsername("jugador1");
+        usuario1.setPassword("jugador1");
+        usuario1.setAuthority(autoridadJugador);
+        jugador1.setId(2);
+        jugador1.setUser(usuario1);
+
+        partida.setId(1);
+        partida.setCodigo("TESTS");
+        partida.setConFlor(true);
+        partida.setNumJugadores(2);
+        partida.setPuntosEquipo1(0);
+        partida.setPuntosEquipo2(0);
+        partida.setPuntosMaximos(15);
+        partida.setVisibilidad(Visibilidad.PUBLICA);
+        
+        jug0partida.setId(1);
+        jug0partida.setGame(partida);
+        jug0partida.setPlayer(jugador0);
+        jug0partida.setIsCreator(true);
+        
+        jug1partida.setId(2);
+        jug1partida.setGame(partida);
+        jug1partida.setPlayer(jugador1);
+        jug1partida.setIsCreator(false);
+    }
+
+    public List<List<Carta>> cartas() {
+        Carta c0 = new Carta();
+        Carta c1 = new Carta();
+        Carta c2 = new Carta();
+        c0.setId(0);
+        c1.setId(1);
+        c2.setId(2);
+        c0.setPoder(14);
+        c1.setPoder(13);
+        c2.setPoder(6);
+        List<Carta> listaBase = new ArrayList<>();
+        
+        List<List<Carta>> cartasDisponibles = new ArrayList<>();
+        listaBase.add(c0); listaBase.add(c1); listaBase.add(c2);
+        cartasDisponibles.add(listaBase); cartasDisponibles.add(listaBase);
+        return cartasDisponibles;
+    }
+
+    @WithMockUser(username = "jugador1", password = "jugador1", authorities = {"PLAYER"})
+	@Test
+    void jugadorConTurnoDeberiaTirarCarta() throws Exception {
+        Mano mano = manoService.getMano("TESTS");
+        mano.setCartasDisp(cartas());
+        Integer idCartaALanzar = mano.getCartasDisp().get(1).get(0).getId();
+
+        mockMvc.perform(patch(BASE_URL+"/tirarCarta/"+idCartaALanzar).with(csrf())).andExpect(status().isCreated());
+    }
+
 }
