@@ -175,7 +175,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 !mano.esperandoRespuesta;
 
             if (!cartasJugador) {
-                return <div>No hay cartas para mostrar.</div>;
+                return <div></div>;
             }
 
             return (
