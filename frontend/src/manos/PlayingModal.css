@@ -22,6 +22,33 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
 }
+/* Enhanced Drop Shadow Glow Animation */
+@keyframes dropShadowGlowCuadro { 
+  0%, 100% {
+      text-shadow: 
+        /* Edge Shadows */
+        -0.5px -0.5px 0 rgb(143, 43, 0), 
+        0.5px -0.5px 0 rgb(143, 43, 0), 
+        -0.5px 0.5px 0 rgb(143, 43, 0), 
+        0.5px 0.5px 0 rgb(143, 43, 0), 
+        /* Enhanced Glow Layers */
+        0 0 20px rgb(255, 115, 0),
+        0 0 30px rgb(255, 115, 0),
+        0 0 40px rgb(255, 115, 0);
+  }
+  50% {
+      text-shadow: 
+        /* Edge Shadows */
+        -0.5px -0.5px 0 rgb(143, 43, 0), 
+        0.5px -0.5px 0 rgb(143, 43, 0), 
+        -0.5px 0.5px 0 rgb(143, 43, 0), 
+        0.5px 0.5px 0 rgb(143, 43, 0), 
+        /* Enhanced Glow Layers */
+        0 0 40px rgb(255, 115, 0),
+        0 0 60px rgb(255, 115, 0),
+        0 0 80px rgb(255, 115, 0);
+  }
+}
 
 @keyframes slightSwirl {
   0% { transform: rotate(0deg); }
@@ -54,6 +81,53 @@
   }
   50% {
     filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
+  }
+}
+
+/* Fade in and out animation */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes particleAnim {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(-75%, -75%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-75%, -75%) scale(0.5);
+    opacity: 0;
+  }
+}
+/* Original glow animation */
+@keyframes dropShadowGlowContainer {
+  0%, 100% {
+    box-shadow: 0px 4px 10px rgba(255, 166, 0, 0.382);
+  }
+  50% {
+    box-shadow: 0px 4px 20px rgba(255, 166, 0, 0.7);
   }
 }
 
@@ -258,6 +332,94 @@
 .envido-button-container button:hover {
   background-color: darkorange;
 }
+.cuadros-canto {
+  position: relative; /* Needed for stacking context and centering */
+  border-radius: 10px;
+  max-width: 400px;
+  width: 80%;
+  height: 120%;
+  color: rgb(255, 187, 0);
+  text-align: center;
+  animation: dropShadowGlowCuadro 3s ease-in-out infinite, slightSwirl 2.5s ease-in-out infinite, fadeInOut 5s ease-in-out infinite;
+  z-index: 0; /* Base level */
+}
+
+.cuadros-canto h3 {
+  position: relative;
+  z-index: 2; /* Ensure text is above particles */
+}
+
+
+
+/* Base for both pseudo-elements: a single small circle at the center */
+.cuadros-canto::before,
+.cuadros-canto::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: orange;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: particleAnim 3s infinite ease-in-out;
+  z-index: 1; /* Behind the text (z=2), but above background (z=0) */
+}
+
+/* First cluster of confetti around center */
+.cuadros-canto::before {
+  box-shadow:
+    -10px -10px orange,
+    15px -20px orange,
+    -20px 15px orange,
+    25px 10px orange,
+    -30px 5px orange,
+    30px -15px orange,
+    -5px 30px orange,
+    10px 25px orange,
+    -25px -25px orange,
+    20px -5px orange,
+    -40px 20px orange,
+    40px -10px orange,
+    -15px 40px orange,
+    15px 35px orange,
+    -35px -15px orange,
+    35px 5px orange,
+    -10px 50px orange,
+    10px -35px orange,
+    -45px 0px orange,
+    45px 25px orange;
+  animation-delay: 0.5s;
+}
+
+/* Second cluster of confetti around center */
+.cuadros-canto::after {
+  box-shadow:
+    -5px -30px orange,
+    5px -40px orange,
+    -25px -20px orange,
+    25px -25px orange,
+    -35px 30px orange,
+    35px 20px orange,
+    -20px 40px orange,
+    20px 50px orange,
+    -50px 10px orange,
+    50px -5px orange,
+    -15px -45px orange,
+    15px -10px orange,
+    -45px 35px orange,
+    45px 40px orange,
+    -30px 50px orange,
+    30px -30px orange,
+    -10px -50px orange,
+    5px 35px orange,
+    -25px -5px orange,
+    25px -15px orange;
+  animation-delay: 1s;
+}
+
 
 .res-envido-container {
   background-color: darkorange;

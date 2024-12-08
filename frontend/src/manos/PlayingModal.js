@@ -95,7 +95,7 @@ const PlayingModal = forwardRef((props, ref) => {
             return () => clearTimeout(timeoutId);
         } else if(ultimoMensaje!==null){
             setCantoDicho(true)
-            const timeoutId = setTimeout(() => setCantoDicho(false), 2000);
+            const timeoutId = setTimeout(() => setCantoDicho(false), 5000);
 
             return () => clearTimeout(timeoutId);
         }
@@ -531,19 +531,9 @@ const PlayingModal = forwardRef((props, ref) => {
             <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
             {mano && cantoDicho && (
                             <div 
-                                className="confirmation-dialog"
-                                style={{
-                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                                    padding: "20px",
-                                    borderRadius: "10px",
-                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
-                                    maxWidth: "800px",
-                                    margin: "0 auto",
-                                    textAlign: "center",
-                                    
-                                }}
+                                className="cuadros-canto"
                             >
-                                {ultimoMensaje && <h3 style={{ color: "black" }}>{ultimoMensaje.replace("_", " ").replace("2","")}</h3>}
+                                {ultimoMensaje && <h3 style={{ color: "darkorange" }}>{ultimoMensaje.replace("_", " ").replace("2","")}</h3>}
                                 
                             </div>
                         )}
