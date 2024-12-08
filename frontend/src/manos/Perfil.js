@@ -1,7 +1,7 @@
 import useFetchState from "../util/useFetchState";
 import React, { useState, forwardRef } from 'react';
 import tokenService from "../services/token.service";
-
+import  "frontend/src/static/css/mano/perfil.css"
 const jwt = tokenService.getLocalAccessToken();
 
 const Perfil = forwardRef((props, ref) => { 
@@ -21,15 +21,39 @@ const Perfil = forwardRef((props, ref) => {
 
     const renderJugador = (persona, index) => { 
         return ( 
-            <div key={index}> 
-                <p style={{color:'red'}}>{persona.userName}</p> 
-                <img 
-                    style={{ height: 60, width: 60, borderRadius: 500 }} 
-                    src={persona.foto} 
-                    alt={`Foto perfil jugador ${index}`} 
-                    onError={(e) => (e.target.style.display = 'none')} 
-                /> 
-            </div> 
+            <div 
+            style={{
+                position: 'relative', 
+                width: 80, 
+                height: 80, 
+                display: 'inline-block', 
+                textAlign: 'center'
+            }} 
+            key={index}
+        >
+            <p 
+                className="swirl-glow-textFoto" 
+
+            >
+                {persona.userName}
+            </p>
+            <img 
+                style={{
+                    height: 80, 
+                    width: 80, 
+                    borderRadius: 500, 
+                    objectFit: 'cover',
+                    margin: 40,
+                    left: '0%',
+                    position: 'absolute', 
+
+                }} 
+                src={persona.foto} 
+                alt={`Foto perfil jugador ${index}`} 
+                onError={(e) => (e.target.style.display = 'none')} 
+            />
+        </div>
+        
         ); 
     };
 
@@ -75,7 +99,7 @@ const Perfil = forwardRef((props, ref) => {
                             playerStyle = { 
                                 position: 'absolute', 
                                 top: '7%', // Jugador de tu equipo, arriba
-                                left: '65%', // Centrado horizontalmente
+                                left: '60%', // Centrado horizontalmente
                                 transform: 'translateX(-50%)', // Asegurarse de que esté centrado
                                 zIndex: 1000 
                             };
@@ -84,7 +108,7 @@ const Perfil = forwardRef((props, ref) => {
                             posicionUsada = true;
                             playerStyle = { 
                                 position: 'absolute',
-                                top: '50%',
+                                top: '45%',
                                 left: '10%',  // A la izquierda
                                 transform: 'translateY(-50%)',
                                 zIndex: 1000 
@@ -93,8 +117,8 @@ const Perfil = forwardRef((props, ref) => {
                             // El segundo jugador contrario va a la derecha
                             playerStyle = { 
                                 position: 'absolute', 
-                                top: '50%', 
-                                right: '10%',  // A la derecha
+                                top: '42%', 
+                                right: '15%',  // A la derecha
                                 transform: 'translateY(-50%)',
                                 zIndex: 1000 
                             };

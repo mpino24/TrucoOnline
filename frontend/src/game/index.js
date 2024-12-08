@@ -16,7 +16,7 @@ export default function Game(){
     const [game,setGame]= useState(null);
     
 
-    useEffect(() => { //¿Hace falta que sea así?
+    useEffect(() => { 
         let intervalId;
 
         function fetchGame() {
