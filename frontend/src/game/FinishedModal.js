@@ -1,7 +1,7 @@
 import React, { forwardRef} from 'react';
 import { Link } from "react-router-dom";
-import {Button} from "reactstrap";
 import "frontend/src/static/css/mano/finishModal.css"
+
 
 const FinishedModal = forwardRef((props, ref) => {
 
