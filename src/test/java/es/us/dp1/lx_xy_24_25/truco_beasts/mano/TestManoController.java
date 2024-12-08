@@ -2,9 +2,10 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -36,13 +37,12 @@ public class TestManoController {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ManoController manoController;
+ 
 
-    @Autowired
+    @MockBean
     private PartidaService partidaService;
 
-    @Autowired
+    @MockBean
     private ManoService manoService;
 
     private User usuario0;
@@ -123,14 +123,15 @@ public class TestManoController {
         return cartasDisponibles;
     }
 
-    @WithMockUser(username = "jugador1", password = "jugador1", authorities = {"PLAYER"})
+    
 	@Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
     void jugadorConTurnoDeberiaTirarCarta() throws Exception {
-        Mano mano = manoService.getMano("TESTS");
-        mano.setCartasDisp(cartas());
-        Integer idCartaALanzar = mano.getCartasDisp().get(1).get(0).getId();
-
-        mockMvc.perform(patch(BASE_URL+"/tirarCarta/"+idCartaALanzar).with(csrf())).andExpect(status().isCreated());
+        List<List<Carta>> cartasDisponibles= cartas();
+        Carta carta= cartasDisponibles.get(0).get(0);
+        when(manoService.tirarCarta(partida.getCodigo(), carta.getId())).thenReturn(carta);
+        mockMvc.perform(patch(BASE_URL+"/tirarCarta/{cartaId}", partida.getCodigo(), carta.getId()).with(csrf()))
+                    .andExpect(status().isOk());
     }
 
 }
