@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
@@ -63,10 +66,16 @@ public class PartidaJugadorController {
             return pjService.getNumberOfGamesConnected(jugadorId);
     }
 
+
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void eliminateJugadorPartida(@RequestParam(required=false) Integer expulsadoId){
-        pjService.eliminateJugadorPartida(expulsadoId);
+    public ResponseEntity<String> eliminateJugadorPartida(@RequestParam(required=false) Integer expulsadoId){
+        try{
+            pjService.eliminateJugadorPartida(expulsadoId);
+            return ResponseEntity.status(HttpStatus.OK).body("Se elimino correctamente");
+        }catch (NotAuthorizedException exception){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+        }
+        
     }
 
     @GetMapping("/players")
@@ -74,12 +83,18 @@ public class PartidaJugadorController {
     public List<PartidaJugadorDTO> getPlayersConnectedTo(@RequestParam(required=true) String partidaCode){
         return pjService.getPlayersConnectedTo(partidaCode);
     }
+    
 
     @PatchMapping("/changeteam")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> changeTeamOfUser(@RequestParam(required=true) Integer userId) throws TeamIsFullException{
-        pjService.changeTeamOfUser(userId);
-        return new ResponseEntity<>("Usuario cambiado de equipo",HttpStatus.OK);
+        try{
+            pjService.changeTeamOfUser(userId);
+            return new ResponseEntity<>("Usuario cambiado de equipo",HttpStatus.OK);
+        }catch(TeamIsFullException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+        
     }
 
     @GetMapping("/jugadores/codigoPartida/{codigo}")
@@ -87,5 +102,12 @@ public class PartidaJugadorController {
     public List<PartidaJugadorView> getAllJugadoresPartida(@PathVariable("codigo") String codigo) throws ResourceNotFoundException{
         return pjService.getAllJugadoresPartida(codigo);
     }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class) 
+    public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) { 
+        String name = ex.getParameterName(); 
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(name + " parameter is missing"); 
+    }
+    
     
 }
