@@ -68,16 +68,27 @@
 
 @keyframes dropShadowGlow {
   0%, 100% {
-    text-shadow: 0 0 10px rgba(255, 140, 0, 1);
+    text-shadow:
+    -0.5px -0.5px 0 rgb(143, 43, 0), 
+        0.5px -0.5px 0 rgb(143, 43, 0), 
+        -0.5px 0.5px 0 rgb(143, 43, 0), 
+        0.5px 0.5px 0 rgb(143, 43, 0), 
+    0 0 10px rgba(255, 140, 0, 1);
   }
   50% {
-    text-shadow: 0 0 20px rgba(255, 183, 76, 1);
+    text-shadow:
+    -0.5px -0.5px 0 rgb(143, 43, 0), 
+        0.5px -0.5px 0 rgb(143, 43, 0), 
+        -0.5px 0.5px 0 rgb(143, 43, 0), 
+        0.5px 0.5px 0 rgb(143, 43, 0), 
+    
+    0 0 20px rgba(255, 183, 76, 1);
   }
 }
 
 @keyframes dropShadowGlowContainer {
   0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
+    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.382));
   }
   50% {
     filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
@@ -124,7 +135,7 @@
 /* Original glow animation */
 @keyframes dropShadowGlowContainer {
   0%, 100% {
-    box-shadow: 0px 4px 10px rgba(255, 166, 0, 0.382);
+    box-shadow: 0px 4px 10px rgba(255, 166, 0,  0.382);
   }
   50% {
     box-shadow: 0px 4px 20px rgba(255, 166, 0, 0.7);
@@ -142,7 +153,7 @@
     circle at 50% 50%, 
     rgba(255, 223, 186, 0.5) 0%, 
     rgba(255, 183, 76, 0.5) 40%, 
-    rgba(255, 140, 0, 0.6) 70%
+    rgba(255, 140, 0, 0.382) 70%
   );
   background-size: 400% 400%;
   animation: holoGlow 3s ease-in-out infinite;
@@ -161,8 +172,14 @@
   display: inline-block;
   animation: slightSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
   color: aliceblue;
+  font-size: larger;
 }
 
+.swirl-glow-text2 {
+  display: inline-block;
+  animation: slightSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+  color: aliceblue;
+}
 /* Base Card Styles */
 .base-card {
   width: 100px;
@@ -291,7 +308,13 @@
   width: 150px;
   height: 75px;
   margin: 5px;
+  font-size: large;
   left: 82%;
+  text-shadow:
+    -0.5px -0.5px 0 rgb(143, 43, 0), 
+        0.5px -0.5px 0 rgb(143, 43, 0), 
+        -0.5px 0.5px 0 rgb(143, 43, 0), 
+        0.5px 0.5px 0 rgb(143, 43, 0);
   position: fixed;
   transform: translateX(-50%);
   top: 85%;
@@ -305,7 +328,13 @@
   padding: 10px;
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
-  background-color: rgba(255, 166, 0, 0.382);
+  font-size: large;
+  text-shadow:
+  -0.5px -0.5px 0 rgb(143, 43, 0), 
+      0.5px -0.5px 0 rgb(143, 43, 0), 
+      -0.5px 0.5px 0 rgb(143, 43, 0), 
+      0.5px 0.5px 0 rgb(143, 43, 0);
+  background-color: rgba(255, 166, 0,  0.382);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -318,7 +347,7 @@
   padding: 10px;
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
-  background-color: rgba(255, 166, 0, 0.382);
+  background-color: rgba(255, 166, 0,  0.382);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -346,6 +375,7 @@
 
 .cuadros-canto h3 {
   position: relative;
+  font-size: xx-large;
   z-index: 2; /* Ensure text is above particles */
 }
 
@@ -425,12 +455,12 @@
   background-color: darkorange;
   border-radius: 10px;
   border: 3px solid rgb(212, 113, 0);
-  box-shadow: 0px 4px 10px rgba(255, 166, 0, 0.382);
+  box-shadow: 0px 4px 10px rgba(255, 166, 0,  0.382);
   max-width: 400px;
   width: 80%;
   height: 120%;
   text-align: center;
-  animation: dropShadowGlowContainer 3s ease-in-out infinite;
+  animation: dropShadowGlowContainer 3s ease-in-out infinite, fadeInOut 7s ease-in-out infinite;;
 
 }
 
@@ -581,7 +611,7 @@
   padding: 10px;
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
-  background-color: rgba(255, 166, 0, 0.382);
+  background-color: rgba(255, 166, 0,  0.382);
   color: rgb(0, 0, 0);
   font-weight: bold;
   cursor: pointer;
@@ -602,7 +632,7 @@
   color: rgb(0, 0, 0);
   gap: 10px;
   z-index: 2000; /* Ensure it's above other elements */
-  background-color: rgba(255, 166, 0, 0.382);
+  background-color: rgba(255, 166, 0,  0.382);
   padding: 5px 10px;
   border: 3px solid rgb(212, 113, 0);
   animation: dropShadowGlowContainer 3s ease-in-out infinite;

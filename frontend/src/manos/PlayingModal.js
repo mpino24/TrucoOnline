@@ -90,10 +90,10 @@ const PlayingModal = forwardRef((props, ref) => {
     function mostrarMensaje() {
         if(ultimoMensaje=== "LISTA_ENVIDOS"){
             setResolucionEnvido(true)
-            const timeoutId = setTimeout(() => setResolucionEnvido(false), 4000);
+            const timeoutId = setTimeout(() => setResolucionEnvido(false), 7000);
 
             return () => clearTimeout(timeoutId);
-        } else if(ultimoMensaje!==null){
+        } else if(ultimoMensaje!==null ){
             setCantoDicho(true)
             const timeoutId = setTimeout(() => setCantoDicho(false), 5000);
 
@@ -511,7 +511,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                 className="res-envido-container"
                                
                             >
-                                <h3 className='swirl-glow-text' style={{marginTop:12}}>Resolución de Envido</h3>
+                                <h3 className='swirl-glow-text2' style={{marginTop:12}}>Resolución de Envido</h3>
                                 <h5
                                 style={{
                                     color: mano.equipoGanadorEnvido === posicion % 2 ? 'white' : 'black',
