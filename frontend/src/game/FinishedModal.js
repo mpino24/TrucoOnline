@@ -21,12 +21,12 @@ const FinishedModal = forwardRef((props, ref) => {
         }}
     >
             <h2 className="player-heading" style={{left:'40%'}}> Ganador: Equipo {ganador}</h2>
-            <div className="botones">
-            <Button className='recuadro'style={{zIndex: 1000000000}} >
+            <div className="finish-button-container">
+            <button style={{zIndex: 1000000000}} >
                 <Link
                 to={`/home`}
-                style={{ textDecoration: "none" }}>Volver</Link>
-                </Button>
+                style={{ textDecoration: "none", color: 'white'}}>Volver</Link>
+                </button>
             </div>
         </div>
         </div>
