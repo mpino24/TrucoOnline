@@ -445,7 +445,7 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Play Music Button */}
             {!isPlaying && (
                 <button onClick={handlePlayMusic} className="play-music-button">
-                    <span className="swirl-glow-text"> 🎵 </span>                 
+                    <span className="swirl-glow-textMusica" > 🎵 </span>                 
                 </button>
             )}
 

@@ -69,26 +69,26 @@
 @keyframes dropShadowGlow {
   0%, 100% {
     text-shadow:
-    -0.5px -0.5px 0 rgb(143, 43, 0), 
-        0.5px -0.5px 0 rgb(143, 43, 0), 
-        -0.5px 0.5px 0 rgb(143, 43, 0), 
-        0.5px 0.5px 0 rgb(143, 43, 0), 
+    0 0 10px rgba(255, 140, 0, 1);
+  }
+  50% {
+    text-shadow:    
+    0 0 20px rgba(255, 183, 76, 1);
+  }
+}
+@keyframes dropShadowGlowMusica {
+  0%, 100% {
+    text-shadow: 
     0 0 10px rgba(255, 140, 0, 1);
   }
   50% {
     text-shadow:
-    -0.5px -0.5px 0 rgb(143, 43, 0), 
-        0.5px -0.5px 0 rgb(143, 43, 0), 
-        -0.5px 0.5px 0 rgb(143, 43, 0), 
-        0.5px 0.5px 0 rgb(143, 43, 0), 
-    
     0 0 20px rgba(255, 183, 76, 1);
   }
 }
-
 @keyframes dropShadowGlowContainer {
   0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.382));
+    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.5));
   }
   50% {
     filter: drop-shadow(0 0 20px rgba(255, 183, 76, 0.8));
@@ -135,7 +135,7 @@
 /* Original glow animation */
 @keyframes dropShadowGlowContainer {
   0%, 100% {
-    box-shadow: 0px 4px 10px rgba(255, 166, 0,  0.382);
+    box-shadow: 0px 4px 10px rgba(255, 166, 0,  0.5);
   }
   50% {
     box-shadow: 0px 4px 20px rgba(255, 166, 0, 0.7);
@@ -153,7 +153,7 @@
     circle at 50% 50%, 
     rgba(255, 223, 186, 0.5) 0%, 
     rgba(255, 183, 76, 0.5) 40%, 
-    rgba(255, 140, 0, 0.382) 70%
+    rgba(255, 140, 0, 0.5) 70%
   );
   background-size: 400% 400%;
   animation: holoGlow 3s ease-in-out infinite;
@@ -171,6 +171,13 @@
 .swirl-glow-text {
   display: inline-block;
   animation: slightSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+  color: aliceblue;
+  font-size: large;
+}
+
+.swirl-glow-textMusica {
+  display: inline-block;
+  animation: slightSwirl 5s ease-in-out infinite, dropShadowGlowMusica 3s ease-in-out infinite;
   color: aliceblue;
   font-size: larger;
 }
@@ -310,11 +317,6 @@
   margin: 5px;
   font-size: large;
   left: 82%;
-  text-shadow:
-    -0.5px -0.5px 0 rgb(143, 43, 0), 
-        0.5px -0.5px 0 rgb(143, 43, 0), 
-        -0.5px 0.5px 0 rgb(143, 43, 0), 
-        0.5px 0.5px 0 rgb(143, 43, 0);
   position: fixed;
   transform: translateX(-50%);
   top: 85%;
@@ -329,12 +331,7 @@
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
   font-size: large;
-  text-shadow:
-  -0.5px -0.5px 0 rgb(143, 43, 0), 
-      0.5px -0.5px 0 rgb(143, 43, 0), 
-      -0.5px 0.5px 0 rgb(143, 43, 0), 
-      0.5px 0.5px 0 rgb(143, 43, 0);
-  background-color: rgba(255, 166, 0,  0.382);
+  background-color: rgba(255, 166, 0,  0.5);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -347,7 +344,7 @@
   padding: 10px;
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
-  background-color: rgba(255, 166, 0,  0.382);
+  background-color: rgba(255, 166, 0,  0.5);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -375,13 +372,39 @@
 
 .cuadros-canto h3 {
   position: relative;
-  font-size: xx-large;
+  font-size: 40px;
   z-index: 2; /* Ensure text is above particles */
 }
 
 
 
 /* Base for both pseudo-elements: a single small circle at the center */
+
+/* Base for both pseudo-elements: a single small orange circle at the center */
+@keyframes particleAnim {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Base for both pseudo-elements: a single small orange circle at the center */
 .cuadros-canto::before,
 .cuadros-canto::after {
   content: "";
@@ -391,14 +414,14 @@
   width: 5px;
   height: 5px;
   background: orange;
-  border-radius: 50%;
+  border-radius: 50%; /* Remove or adjust for square particles */
   transform: translate(-50%, -50%);
   pointer-events: none;
   animation: particleAnim 3s infinite ease-in-out;
-  z-index: 1; /* Behind the text (z=2), but above background (z=0) */
+  z-index: 1; /* Behind text (z=2) but above background (z=0) */
 }
 
-/* First cluster of confetti around center */
+/* First cluster of confetti: reduced spread */
 .cuadros-canto::before {
   box-shadow:
     -10px -10px orange,
@@ -420,11 +443,24 @@
     -10px 50px orange,
     10px -35px orange,
     -45px 0px orange,
-    45px 25px orange;
+    45px 25px orange,
+    /* Reduced spread: limiting to ±60px */
+    -60px -40px orange,
+    60px -20px orange,
+    -50px 60px orange,
+    50px 50px orange,
+    -55px 30px orange, /* You can reduce or remove these for tighter spread */
+    55px -10px orange,
+    -20px 55px orange,
+    20px -60px orange,
+    -60px -25px orange, /* Consider reducing to -60px */
+    80px 15px orange,
+    -60px 40px orange, /* Reduced spread: change to -60px 40px */
+    60px -50px orange; /* Change to 60px -50px */
   animation-delay: 0.5s;
 }
 
-/* Second cluster of confetti around center */
+/* Second cluster: reduced spread */
 .cuadros-canto::after {
   box-shadow:
     -5px -30px orange,
@@ -446,16 +482,28 @@
     -10px -50px orange,
     5px 35px orange,
     -25px -5px orange,
-    25px -15px orange;
+    25px -15px orange,
+    /* Reduced spread: limiting to ±60px */
+    -60px -60px orange,
+    60px -45px orange,
+    -55px 65px orange, /* Change to -55px 45px */
+    55px 70px orange,  /* Change to 55px 40px */
+    -75px -15px orange, /* Change to -60px -15px */
+    75px -40px orange,  /* Change to 60px -40px */
+    -90px 20px orange,  /* Change to -60px 20px */
+    90px 60px orange,   /* Change to 60px 60px */
+    -35px -80px orange, /* Change to -35px -60px */
+    35px -90px orange,  /* Change to 35px -60px */
+    -100px -20px orange, /* Change to -60px -20px */
+    100px 35px orange;  /* Change to 60px 35px */
   animation-delay: 1s;
 }
-
 
 .res-envido-container {
   background-color: darkorange;
   border-radius: 10px;
   border: 3px solid rgb(212, 113, 0);
-  box-shadow: 0px 4px 10px rgba(255, 166, 0,  0.382);
+  box-shadow: 0px 4px 10px rgba(255, 166, 0,  0.5);
   max-width: 400px;
   width: 80%;
   height: 120%;
@@ -475,7 +523,7 @@
   padding: 10px;
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
-  background-color: rgba(255, 166, 0, 0.382);
+  background-color: rgba(255, 166, 0, 0.5);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -611,7 +659,7 @@
   padding: 10px;
   border: 3px solid rgb(212, 113, 0);
   border-radius: 5px;
-  background-color: rgba(255, 166, 0,  0.382);
+  background-color: rgba(255, 166, 0,  0.5);
   color: rgb(0, 0, 0);
   font-weight: bold;
   cursor: pointer;
@@ -632,7 +680,7 @@
   color: rgb(0, 0, 0);
   gap: 10px;
   z-index: 2000; /* Ensure it's above other elements */
-  background-color: rgba(255, 166, 0,  0.382);
+  background-color: rgba(255, 166, 0,  0.5);
   padding: 5px 10px;
   border: 3px solid rgb(212, 113, 0);
   animation: dropShadowGlowContainer 3s ease-in-out infinite;
