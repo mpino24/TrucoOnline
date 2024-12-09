@@ -40,7 +40,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
             }
 
         }
-    })
+    },[jwt, userName,amigos])
 
     function fetchFriends() {
         fetch(
