@@ -62,7 +62,11 @@ const Chat = forwardRef((props, ref) => {
         body: JSON.stringify({
           contenido: mensaje,
           chat: { id: props.idChat },
+          remitente: {id: tokenService.getUser().id},
         }),
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       });
       console.log("Mensaje enviado");
       setMensaje("");
