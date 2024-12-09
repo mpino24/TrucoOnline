@@ -332,6 +332,31 @@ Para las respuestas al "TRUCO", se puede decir "RETRUCO" y luego a este "VALE CU
 #### Justificación de la solución adoptada
 Nos decantamos por la alternativa 1 ya que nos pareció lo más óptimo porque no se puede cantar "RETRUCO" o "VALECUATRO" simultaneamente. Además, dado que ambas tienen que llamar a cantosTruco, solo que según los puntos de la mano se hace con un Canto u otro, crear el canto "imaginario" nos es más útil, simplificando también la cantidad de botones que necesitabamos en frontend.
 
+### Decisión 6: Añadir un atributo creador en PartidaJugador
+#### Descripción del problema:
+Para almacenar quien es el jugador que ha creado la partida y otorgarle así el derecho a expulsar gente o comenzarla cuando crea oportuno, necesitamos guardar para cada partida un atributo creador que haga referencia al jugador que creó la partida.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: : Añadir un atributo creador a la clase Partida.
+
+*Ventajas:*
+• Te permite obtener el creador de la partida directamente con una llamada a la base de datos que obtenga los datos de la partida.
+• Evitamos redundancias en la base de datos respecto a la otra alternativa, ya que solamente tendremos ese dato almacenado una vez en la db por cada partida.
+
+*Inconvenientes:*
+• La relación de la partida con cada jugador queda esparcida en distintas clases, con lo que el código es menos intuitivo.
+
+*Alternativa 2*: Crear dos clases, una dedicada a la respuesta "RETRUCO" y otra al "VALE CUATRO" sin crear un canto "de mentira".
+
+*Ventajas:*
+• Unificas toda la información del jugador respecto a una partida en una misma clase.
+• Dada la arquitectura del proyecto al momento de tomar la decisión y el código ya desarrollado, es la opción más optima de implementar.
+
+*Inconvenientes:*
+• En la base de datos, se guardan valores False para todos los jugadores conectados a una partida menos para uno, lo que resulta en información redundante y menos eficiente.
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 2 ya que hemos primado la unificación de toda la información del jugador respecto a una partida en una misma entidad PartidaJugador sobre separar esa información en distintas clases. Además, dado el código ya implementado era la solución que generaba menos retrabajo.
+
 
 ## Refactorizaciones aplicadas
 
