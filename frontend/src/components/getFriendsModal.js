@@ -162,8 +162,16 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
 
     return (
-        <>
-            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal3.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'stretch',
+                height: '95vh',
+            }}
+        >
+            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
                 <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => closeModal()} />
                 {!chatVisible &&
                     <>
@@ -231,7 +239,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     </>
                 }
             </div>
-        </>
+        </div>
     )
 }
 )

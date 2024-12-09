@@ -18,7 +18,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px; /* Espaciado entre mensajes */
-  max-height: 400px; /* Altura máxima */
   overflow-y: auto; /* Scroll vertical si excede el espacio */
   padding: 10px;
 
@@ -55,8 +54,9 @@
   border: 1px solid #faf456; 
   border-radius: 5px; 
 }
-.input-container { display: flex; 
-  
+.input-container { 
+  margin-bottom: 5px;
+  display: flex; 
   padding: 10px; 
 }
 .btn-send { 

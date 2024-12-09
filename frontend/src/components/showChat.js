@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef, useState, useEffect, useRef } from "react";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
@@ -18,8 +18,15 @@ const Chat = forwardRef((props, ref) => {
     setVisible
   );
 
+  const [mensaje, setMensaje] = useState("");
 
-  const [mensaje, setMensaje] = useState('');
+  // Ref para el contenedor de mensajes
+  const messagesEndRef = useRef(null);
+
+  // Efecto para desplazar automáticamente al final cuando los mensajes cambien
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [mensajes]);
 
   useEffect(() => {
     const cliente = new Client({
@@ -42,8 +49,8 @@ const Chat = forwardRef((props, ref) => {
     };
 
     cliente.onStompError = (frame) => {
-      console.error('Error de STOMP: ', frame.headers['message']);
-      console.error('Detalles: ', frame.body);
+      console.error("Error de STOMP: ", frame.headers["message"]);
+      console.error("Detalles: ", frame.body);
     };
 
     cliente.activate();
@@ -63,11 +70,12 @@ const Chat = forwardRef((props, ref) => {
         body: JSON.stringify({
           contenido: mensaje,
           chat: { id: props.idChat },
-          remitente: {id: tokenService.getUser().id},
+          remitente: { id: tokenService.getUser().id },
+          username: { username: tokenService.getUser().username },
         }),
         headers: {
-          Authorization: `Bearer ${jwt}`
-        }
+          Authorization: `Bearer ${jwt}`,
+        },
       });
       console.log("Mensaje enviado");
       setMensaje("");
@@ -81,37 +89,55 @@ const Chat = forwardRef((props, ref) => {
   };
 
   return (
-    <>
-    <div className="messages-container">
-    {mensajes.map((msg, i) =>
-    msg.remitente.id === user.id ? (
-      <div key={i} className="own-message">
-        {msg.contenido}
-      </div>
-    ) : (
-      <>
-      <div key={i} >{msg.remitente.username}</div>
-      <div key={i} className="other-message">
-        {msg.contenido}
-      </div>
-      </>
-    )
-    )}
-  </div>
-    <div className="input-container">
-      <input
-        type="text"
-        value={mensaje}
-        onChange={(e) => setMensaje(e.target.value)} 
-        placeholder="Escribe un mensaje..."
-        className="input-text"
-      />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "stretch",
+        height: "85vh",
+      }}
+    >
+      <div
+        className="messages-container"
+        style={{
+          flexGrow: 1,
+          overflowY: "auto",
+          padding: "10px",
+        }}
+      >
+        {mensajes.map((msg, i) =>
+          msg.remitente.id === user.id ? (
+            <div key={i} className="own-message">
+              {msg.contenido}
+            </div>
+          ) : (
+            <>
+              <div key={i}>{msg.remitente.username}</div>
+              <div key={i} className="other-message">
+                {msg.contenido}
+              </div>
+            </>
+          )
+        )}
 
-      <button onClick={handleEnviar} className="btn-send" >Enviar</button>
+        {/* Ref hacia el final del contenedor de mensajes */}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className="input-container">
+        <input
+          type="text"
+          value={mensaje}
+          onChange={(e) => setMensaje(e.target.value)}
+          placeholder="Escribe un mensaje..."
+          className="input-text"
+        />
+        <button onClick={handleEnviar} className="btn-send">
+          Enviar
+        </button>
+      </div>
     </div>
-    </>
-
-    
   );
 });
 
