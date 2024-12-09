@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import org.springframework.http.MediaType;
 
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 @WebMvcTest(value = PartidaController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
 public class PartidaControllerTests {
@@ -147,12 +151,16 @@ public class PartidaControllerTests {
     @WithMockUser(username = "player", roles = {"PLAYER"})
     void deberiaDevolverTodasLasPartidasPublicasJugador() throws Exception {
 
-        when(partidaService.findAllPartidasActivas()).thenReturn(Arrays.asList(partidaA2));
+        Page<Partida> partidasPage = new PageImpl<>(List.of(partidaA2));
+
+        when(partidaService.findAllPartidasActivas(any(Pageable.class))).thenReturn(partidasPage);
 
         mockMvc.perform(get(BASE_URL+"/partidas/accesibles")
+                .param("page", "0")
+                .param("size", "5")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1));
+                .andExpect(jsonPath("$.content[0].id").value(1));
     }
 
     @Test
