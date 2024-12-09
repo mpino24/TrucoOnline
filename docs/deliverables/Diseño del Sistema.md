@@ -75,32 +75,42 @@ Describir porqué era interesante aplicar el patrón.
 ### Patrón: Single Page Application (SPA)
 *Tipo*: Arquitectónico | de Diseño
 
-*Contexto de Aplicación*
+Se ha utilizado el patrón SPA en múltiples puntos de la aplicación como lo son la partida en sí, la creación de una partida, la sección social, la creación de un perfil, el iniciado de sesión y la edición de perfil.
 
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+Este patrón es utilizado, concretamente, por la inmensa mayoría de las carpetas del frontend de la aplicación como lo son:
+- auth
+- components
+- game
+- home
+- manos
+- profile
+- util
 
-*Clases o paquetes creados*
-
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
-*Ventajas alcanzadas al aplicar el patrón*
-
-Describir porqué era interesante aplicar el patrón.
+La aplicación de este patrón ha sido crucial para evitar una experiencia de usuario paupérrima. Sin el patrón SPA no se podría, dentro de una partida, tirar una carta y que la carta tirada se vea en la mesa sin la necesidad de tener que recargar la página. Tampoco sería posible iniciar sesión o editar datos de un perfil viendo en el formulario los cambios que se realizan en los campos.
+Este patrón es uno de los más importantes.
 
 ### Patrón: Model View Controller (MVC)
 *Tipo*: Arquitectónico | de Diseño
 
-*Contexto de Aplicación*
+Este patrón es otro de los pilares de esta aplicación, pues define los aspectos generales de la arquitectura de esta. El Modelo está integrado por los servicios, los repositorios y las clases de dominio, la Vista está compuesta por la totalidad del frontend y el Controlador está representado por los controladores en el backend de la aplicación.
 
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+Ejemplos de clases clasificadas según su pertenencia al Modelo, la Vista o el Controlador:
 
-*Clases o paquetes creados*
+#### Modelo
+- User
+- Mano
+- PartidaRepository
+- CartaRepository
+#### Vista
+- manos/PlayingModal.js
+- home/index.js
+- game/EquipoView.js
+#### Controlador
+- ManoController
+- PartidaController
+- CartaController
 
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
-*Ventajas alcanzadas al aplicar el patrón*
-
-Describir porqué era interesante aplicar el patrón.
+El patrón MVC nos ha proporcionado una separación clara de responsabilidades en la aplicación, facilitando mucho llevar a cabo refactorizaciones, añadir nuevas funcionalidades, hacer pruebas y corregir errores. La forma en la que este patrón separa la lógica de negocio, la gestión de interacciones y la interfaz de usuario nos ha facilitado mucho la labor de desarrollo, definiendo una estructura bien organizada.
 
 ### Patrón: Domain Model
 *Tipo*: Arquitectónico
