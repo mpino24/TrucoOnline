@@ -2,10 +2,11 @@ import React, { forwardRef, useState, useEffect } from "react";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
+import "./Chat.css";
 
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
-  
+  const user = tokenService.getUser();
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -81,19 +82,36 @@ const Chat = forwardRef((props, ref) => {
 
   return (
     <>
-      {mensajes.map((msg, i) => (
-        <p key={i}>{msg.contenido}</p>
-      ))}
-
+    <div className="messages-container">
+    {mensajes.map((msg, i) =>
+    msg.remitente.id === user.id ? (
+      <div key={i} className="own-message">
+        {msg.contenido}
+      </div>
+    ) : (
+      <>
+      <div key={i} >{msg.remitente.username}</div>
+      <div key={i} className="other-message">
+        {msg.contenido}
+      </div>
+      </>
+    )
+    )}
+  </div>
+    <div className="input-container">
       <input
         type="text"
         value={mensaje}
         onChange={(e) => setMensaje(e.target.value)} 
         placeholder="Escribe un mensaje..."
+        className="input-text"
       />
 
-      <button onClick={handleEnviar}>Enviar</button>
+      <button onClick={handleEnviar} className="btn-send" >Enviar</button>
+    </div>
     </>
+
+    
   );
 });
 

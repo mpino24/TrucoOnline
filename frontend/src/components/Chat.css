@@ -1,0 +1,73 @@
+/* Contenedor principal del chat */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  max-width: 600px; /* Ancho máximo del chat */
+  margin: 0 auto; /* Centra horizontalmente */
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden; /* Impide que los hijos desborden */
+  position: relative;
+}
+
+
+/* Contenedor de mensajes */
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espaciado entre mensajes */
+  max-height: 400px; /* Altura máxima */
+  overflow-y: auto; /* Scroll vertical si excede el espacio */
+  padding: 10px;
+
+}
+
+.own-message {
+  align-self: flex-end; /* Alinea a la derecha */
+  background-color: #d1e7dd; /* Fondo verde claro */
+  color: #0f5132; /* Texto verde oscuro */
+  padding: 10px 15px;
+  border-radius: 10px 10px 0 10px; /* Bordes redondeados */
+  max-width: 70%; /* No ocupa más del 70% del ancho */
+  word-wrap: break-word; /* Permite dividir palabras largas */
+  margin: 5px 0;
+}
+
+/* Mensajes recibidos (alineados a la izquierda) */
+.other-message {
+  align-self: flex-start; /* Mensajes recibidos a la izquierda */
+  background-color: #f8d7da; /* Fondo rojo claro */
+  color: #842029; /* Texto rojo oscuro */
+  padding: 10px 15px;
+  border-radius: 10px 10px 10px 0; /* Bordes redondeados */
+  max-width: 70%; /* No ocupa más del 70% del ancho */
+  word-wrap: break-word;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.input-text { 
+  width: calc(100% - 100px); /* dejar espacio para el botón */ 
+  padding: 10px; 
+  margin-top: 10px;
+  background-color: #b5ad80; 
+  border: 1px solid #faf456; 
+  border-radius: 5px; 
+}
+.input-container { display: flex; 
+  
+  padding: 10px; 
+}
+.btn-send { 
+  width: 90px; /* ancho del botón */ 
+  padding: 10px; margin-top: 10px; 
+  background-color: #918212; /* color del botón */ 
+  color: white; border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+} 
+  
+.btn-send:hover {
+  background-color: #515117; /* color del botón al pasar el mouse */ 
+}
