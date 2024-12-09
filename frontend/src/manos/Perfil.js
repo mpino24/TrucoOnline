@@ -1,7 +1,7 @@
 import useFetchState from "../util/useFetchState";
 import React, { useState, forwardRef } from 'react';
 import tokenService from "../services/token.service";
-import  "frontend/src/static/css/mano/perfil.css"
+import  "../static/css/mano/perfil.css"
 const jwt = tokenService.getLocalAccessToken();
 
 const Perfil = forwardRef((props, ref) => { 

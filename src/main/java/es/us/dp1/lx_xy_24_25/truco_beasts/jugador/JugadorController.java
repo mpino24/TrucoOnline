@@ -35,19 +35,19 @@ public class JugadorController {
 
 
     @GetMapping
-	public ResponseEntity<JugadorDTO> findJugadorByUserId(@RequestParam(required=true) String userId) {
-		return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
-	}
+    public ResponseEntity<JugadorDTO> findJugadorByUserId(@RequestParam(required=true) String userId) {
+        return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+    }
 
     @GetMapping("/amigos")
     public ResponseEntity<List<JugadorDTO>> findAmigosByUserId(@RequestParam(required=true) String userId) {
-		return new ResponseEntity<>(jugadorService.findAmigosByUserId(Integer.valueOf(userId)), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(jugadorService.findAmigosByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+    }
     @GetMapping("/solicitudes")
     public ResponseEntity<List<JugadorDTO>> findSolicitudesByUserId() {
         User currentUser= userService.findCurrentUser();
-		return new ResponseEntity<>(jugadorService.findSolicitudesByUserId(currentUser.getId()), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(jugadorService.findSolicitudesByUserId(currentUser.getId()), HttpStatus.OK);
+    }
 
     @GetMapping("/{userName}")
     public ResponseEntity<JugadorDTO> findJugadorByJugadorName(@PathVariable String userName){

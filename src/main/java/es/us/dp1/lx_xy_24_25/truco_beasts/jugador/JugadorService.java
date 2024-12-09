@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +11,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -20,10 +24,14 @@ import jakarta.validation.Valid;
 public class JugadorService {
 
     JugadorRepository jugadorRepository;
+    ChatService chatService;
+    UserService userService;
 
     @Autowired
-    public JugadorService(JugadorRepository jugadorRepository) {
+    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService,UserService userService ) {
         this.jugadorRepository = jugadorRepository;
+        this.chatService= chatService;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -131,6 +139,13 @@ public class JugadorService {
                     jugador.getSolicitudes().remove(amigo);
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
+                    //Crear entidad de chat entre amigos
+                    Chat chat= new Chat();
+                    List<User> usuarios= new ArrayList<>();
+                    usuarios.add(userService.findCurrentUser());
+                    usuarios.add(userService.findUser(amigo.getId()));
+                    chat.setUsuarios(usuarios);
+			        chatService.createChat(chat);
                 } else {
                     throw new IllegalStateException("No te puedes agregar a ti mismo");
                 }

@@ -70,6 +70,9 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).permitAll() //Cambiar a authenticated ????
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).permitAll() //Cambiar a authenticated ????
 			.requestMatchers("/api/v1/profile/edit").authenticated()
+			.requestMatchers("/ws").permitAll()
+			.requestMatchers("/app/mensaje").permitAll()
+			.requestMatchers("/api/v1/chat/**").permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/profile/borrarMiCuenta")).authenticated()
 			.anyRequest().authenticated())					
 			

@@ -10,7 +10,7 @@ import { FaRegEnvelope } from "react-icons/fa6";
 import SolicitudList from './SolicitudList';
 import { FaRegEnvelopeOpen } from "react-icons/fa6";
 import { BsEnvelopePaper } from "react-icons/bs";
-
+import Chat from "./showChat.js";
 
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player, setPlayer] = useState(null);
@@ -23,21 +23,24 @@ const GetFriendsModal = forwardRef((props, ref) => {
     const [amigos, setAmigos] = useState([]);
     const [request, setRequest] = useState([]);
     const [requestView, setRequestView] = useState(false);
+    const [chatVisible, setChatVisible] = useState(false);
+    const [chatId, setChatId] = useState(null);
 
     useEffect(() => {
         if (!userName) {
             fetchFriends();
             fetchFriendsRequest();
-            const intervalId = setInterval(fetchFriends, 5000);
+            const intervalId = setInterval(fetchFriends, 50000000);
 
-            const intervalId2 = setInterval(fetchFriendsRequest, 1000);
+            const intervalId2 = setInterval(fetchFriendsRequest, 1000000);
 
-            return () => {clearInterval(intervalId)
+            return () => {
+                clearInterval(intervalId)
                 clearInterval(intervalId2)
-             }
+            }
 
         }
-    })
+    },[jwt, userName,amigos])
 
     function fetchFriends() {
         fetch(
@@ -81,7 +84,6 @@ const GetFriendsModal = forwardRef((props, ref) => {
     function handleChange(event) {
         const target = event.target;
         const value = target.value;
-        const name = target.name;
         setUsername(value)
     }
 
@@ -126,76 +128,119 @@ const GetFriendsModal = forwardRef((props, ref) => {
             .catch((message) => alert(message));
     }
 
+    function mostrarChat(player) {
+        fetch(
+            `/api/v1/chat/with/` + player.id,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                }
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.length === 0) {
+                    setChatId(null);
+                } else {
+                    setChatId(data.id)
+
+                }
+            })
+            .catch((message) => alert(message));
+        setChatVisible(true);
+    }
+
+    function closeModal() {
+        if (chatVisible) {
+            setChatVisible(false);
+        } else {
+            handleModalVisible(props.setModalVisible, props.modalVisible)
+        }
+
+    }
+
 
     return (
-        <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal3.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
-            <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
-            <h1 style={{ fontSize: 30, textAlign: 'center' }}>
-                Chats
-            </h1>
-            <hr></hr>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <input onChange={handleChange} style={{ color: "black" }} id='inputId' placeholder="Buscar..." class="input" name="text" type="text" required />
-                        <div>
-                            <button style={{ background: 'transparent', border: 'transparent' }}>
-                                <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'stretch',
+                height: '95vh',
+            }}
+        >
+            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
+                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => closeModal()} />
+                {!chatVisible &&
+                    <>
+                        <h1 style={{ fontSize: 30, textAlign: 'center' }}>
+                            Amigos
+                        </h1>
+                        <hr></hr>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <input onChange={handleChange} style={{ color: "black" }} id='inputId' placeholder="Buscar..." class="input" name="text" type="text" required />
+                                    <div>
+                                        <button style={{ background: 'transparent', border: 'transparent' }}>
+                                            <IoIosSearch style={{ width: 40, height: 40, cursor: 'pointer' }} />
 
-                            </button>
-                            {player &&
-                                <VscChromeClose style={{ width: 40, height: 40, cursor: "pointer", position: 'absolute', marginLeft: 20 }} onClick={() => handleReset()} />
+                                        </button>
+                                        {player &&
+                                            <VscChromeClose style={{ width: 40, height: 40, cursor: "pointer", position: 'absolute', marginLeft: 20 }} onClick={() => handleReset()} />
+                                        }
+
+                                    </div>
+                                </div>
+                            </Form>
+                            {!requestView && request.length === 0 &&
+                                <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
+                                    <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                                </button>
                             }
+                            {!requestView && request.length !== 0 &&
+                                <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
+                                    <BsEnvelopePaper style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                                </button>
+                            }
+                            {requestView &&
+                                <button onClick={() => { setRequestView(false) }} style={{ background: 'transparent', border: 'transparent' }}>
+                                    <FaRegEnvelopeOpen style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
+                                </button>
 
+                            }
                         </div>
-                    </div>
-                </Form>
-                {!requestView && request.length === 0 &&
-                    <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
-                        <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
-                    </button>
+                        {player &&
+                            <JugadorView jugador={player} />}
+                        {!player && !requestView &&
+                            <div>
+                                <JugadorList jugadores={amigos}
+                                    mostrarChat={mostrarChat} />
+                            </div>
+                        }
+                        {requestView &&
+                            <div>
+                                <SolicitudList jugadores={request}
+                                    setJugadores={setRequest} />
+                            </div>
+                        }
+                    </>
                 }
-                {!requestView && request.length !== 0 &&
-                    <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
-                        <BsEnvelopePaper style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
-                    </button>
+                {chatVisible &&
+                    <>
+                        <h1 style={{ fontSize: 30, textAlign: 'center' }}>
+                            Chat
+                        </h1>
+                        <hr></hr>
+                        <Chat
+                            idChat={chatId} />
+                    </>
                 }
-                {requestView &&
-                    <button onClick={() => { setRequestView(false) }} style={{ background: 'transparent', border: 'transparent' }}>
-                        <FaRegEnvelopeOpen style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
-                    </button>
-
-                }
-
             </div>
-            {player &&
-                <JugadorView jugador={player} />}
-            {!player && !requestView &&
-                <div>
-                    <JugadorList jugadores={amigos} />
-                </div>
-            }
-            {requestView &&
-                <div>
-                    <SolicitudList jugadores={request}
-                        setJugadores={setRequest} />
-                </div>
-            }
         </div>
-
-
-
-
-
-
     )
-
-
-
-
-
-
-
 }
 )
 export default GetFriendsModal;
