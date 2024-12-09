@@ -2,14 +2,13 @@ import React, { useState, forwardRef, useEffect, useRef } from 'react';
 import tokenService from "../services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
+import Perfil from './Perfil';
 import './PlayingModal.css';
 
-
-import backgroundMusic from '../static/audios/musicaPartida2.mp3';
+import backgroundMusic from 'frontend/src/static/audios/musicaPartida2.mp3';
 import PuntosComponente from './PuntosComponente';
 
 const jwt = tokenService.getLocalAccessToken();
-
 
 const PlayingModal = forwardRef((props, ref) => {
     const game = props.game;
@@ -47,8 +46,6 @@ const PlayingModal = forwardRef((props, ref) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(50); // Default volume at 50%
 
-
-
     function fetchMano() {
         fetch('/api/v1/manos/' + game.codigo, {
             method: "GET",
@@ -60,12 +57,13 @@ const PlayingModal = forwardRef((props, ref) => {
         .then((data) => {
             setMano(data);
             let cartasActuales = data.cartasDisp[posicion];
-        
-            if (cartasJugador !== cartasActuales) {
+            console.log("-----------------------------------")
+            console.log("EL FIN SE ACERCA:"+game.instanteFin)
+            console.log("-----------------------------------")
+
+            if (JSON.stringify(cartasJugador) !== JSON.stringify(cartasActuales)) {
                 setCartasJugador(cartasActuales);
                 setPuntosTrucoActuales(data.puntosTruco);
- 
-                
             }
             
             if (data.envidosCadaJugador) {
@@ -92,12 +90,12 @@ const PlayingModal = forwardRef((props, ref) => {
     function mostrarMensaje() {
         if(ultimoMensaje=== "LISTA_ENVIDOS"){
             setResolucionEnvido(true)
-            const timeoutId = setTimeout(() => setResolucionEnvido(false), 4000);
+            const timeoutId = setTimeout(() => setResolucionEnvido(false), 7000);
 
             return () => clearTimeout(timeoutId);
-        } else if(ultimoMensaje!==null){
+        } else if(ultimoMensaje!==null ){
             setCantoDicho(true)
-            const timeoutId = setTimeout(() => setCantoDicho(false), 2000);
+            const timeoutId = setTimeout(() => setCantoDicho(false), 5000);
 
             return () => clearTimeout(timeoutId);
         }
@@ -156,17 +154,11 @@ const PlayingModal = forwardRef((props, ref) => {
         }
     };
 
-
     const handleVolumeChange = (event) => {
         const sliderValue = event.target.value;
-    
-        
         const minLog = 0.01; // Volumen más bajo (casi mudo)
         const maxLog = 1;    // Volumen más alto (máximo)
-        
-        
         const logVolume = Math.pow(10, (sliderValue / 100) * (Math.log10(maxLog) - Math.log10(minLog)) + Math.log10(minLog));
-    
         setVolume(sliderValue); 
         if (audioRef.current) {
             audioRef.current.volume = logVolume; 
@@ -183,7 +175,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 !mano.esperandoRespuesta;
 
             if (!cartasJugador) {
-                return <div>No hay cartas para mostrar.</div>;
+                return <div></div>;
             }
 
             return (
@@ -383,6 +375,7 @@ const PlayingModal = forwardRef((props, ref) => {
         })
         .catch((error) => alert(error.message));
     }
+
     function responderEnvido(respuesta) {
         fetch(`/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
             method: "PATCH",
@@ -402,6 +395,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     return (
+        <>
         <div className="playing-modal-container">
             {console.log(mano)}
             {/* Background */}
@@ -411,7 +405,7 @@ const PlayingModal = forwardRef((props, ref) => {
                     backgroundSize: 'cover', 
                     backgroundRepeat: 'no-repeat', 
                     backgroundPosition: 'center', 
-                    height: '99910vh', 
+                    height: '19000vh', // Adjusted to cover the viewport
                     width: '100vw',
                     position: 'relative', // To position the dragged card relative to this container
                     zIndex: -1
@@ -420,24 +414,25 @@ const PlayingModal = forwardRef((props, ref) => {
                 <h3 className="player-heading">
                     Jugador: {Number(posicion)}
                 </h3>
-                
             </div>
             <h4 className={"puntos-nuestros"}>Nos:</h4>
             <h4 className={"puntos-ellos"}>Ellos:</h4>
-            {mano &&  puntosTrucoActuales &&
-            (
+            {mano && puntosTrucoActuales && (
                 <div style={{overflow:'hidden'}}> 
-                <PuntosComponente  estiloFotoPunto={"puntaje-EquipoNuestro"} 
-                                    posicion={posicion} puntosEquipo1={game.puntosEquipo1} puntosEquipo2={game.puntosEquipo2}
-                                    />
-               
-                <PuntosComponente estiloFotoPunto={"puntaje-EquipoEllos"} 
-                                    posicion={posicion} puntosEquipo1={game.puntosEquipo2} puntosEquipo2={game.puntosEquipo1}
-                                />
+                    <PuntosComponente  
+                        estiloFotoPunto={"puntaje-EquipoNuestro"} 
+                        posicion={posicion} 
+                        puntosEquipo1={game.puntosEquipo1} 
+                        puntosEquipo2={game.puntosEquipo2}
+                    />
+                    <PuntosComponente 
+                        estiloFotoPunto={"puntaje-EquipoEllos"} 
+                        posicion={posicion} 
+                        puntosEquipo1={game.puntosEquipo2} 
+                        puntosEquipo2={game.puntosEquipo1}
+                    />
                 </div>
             )}
-                
-                
 
             {/* Drop Area */}
             <div
@@ -450,34 +445,31 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Play Music Button */}
             {!isPlaying && (
                 <button onClick={handlePlayMusic} className="play-music-button">
-                     <span className="swirl-glow-text"> 🎵
-                     </span>                 
+                    <span className="swirl-glow-textMusica" > 🎵 </span>                 
                 </button>
             )}
 
             {/* Volume Slider */}
             {isPlaying && (
-                    <>
-                        <button onClick={handlePauseMusic} className="play-music-button">
+                <>
+                    <button onClick={handlePauseMusic} className="play-music-button">
                         ⏸
-                        </button>
-                        <div className="volume-slider-container">
-                            <label htmlFor="volume-slider">Volume:</label>
-                            <input
-                                type="range"
-                                id="volume-slider"
-                                min="0"
-                                max="100"
-                                value={volume}
-                                onChange={handleVolumeChange}
-                            />
-                            <span>{volume}%</span>
-                        </div>
-                    </>
-                )}
-            
+                    </button>
+                    <div className="volume-slider-container">
+                        <label htmlFor="volume-slider">Volume:</label>
+                        <input
+                            type="range"
+                            id="volume-slider"
+                            min="0"
+                            max="100"
+                            value={volume}
+                            onChange={handleVolumeChange}
+                        />
+                        <span>{volume}%</span>
+                    </div>
+                </>
+            )}
 
-          
             <audio ref={audioRef} src={backgroundMusic} loop /> 
 
             {/* Player's Cards */}
@@ -510,45 +502,28 @@ const PlayingModal = forwardRef((props, ref) => {
             {/* Table Cards */}
             <div className="cartas-mesa-position">
                 {renderCartasMesa()}
-                
             </div>
 
             {/* Cuadto del envido*/}
-            <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
+            <div  style={{position: 'absolute', left: '52%', top: '30%', transform: 'translateX(-50%)', zIndex: '1000'}}>
             {mano && resolucionEnvido && (
                             <div 
-                                className="confirmation-dialog"
-                                style={{
-                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                                    padding: "20px",
-                                    borderRadius: "10px",
-                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
-                                    maxWidth: "800px",
-                                    margin: "0 auto",
-                                    textAlign: "center",
-                                    
-                                }}
+                                className="res-envido-container"
+                               
                             >
-                                <h3 style={{ color: "black" }}>Resolución de Envido</h3>
-                                <h5>{mano.equipoGanadorEnvido  === posicion%2 ? "Ganaste" : "Perdiste" }</h5>
-                                {envidosJugadores.map((envido, index) => (
-                                    <p key={index}>Jugador {index }: {envido}</p>
-                                ))}
-                                
-                                <button
-                                    onClick={() => setResolucionEnvido(false)}
-                                    style={{
-                                        backgroundColor: "red",
-                                        color: "white",
-                                        padding: "10px",
-                                        marginTop: "10px",
-                                        border: "none",
-                                        borderRadius: "10px",
-                                        cursor: "pointer",
-                                    }}
+                                <h3 className='swirl-glow-text2' style={{marginTop:12}}>Resolución de Envido</h3>
+                                <h5
+                                style={{
+                                    color: mano.equipoGanadorEnvido === posicion % 2 ? 'white' : 'black',
+                                     margin: '3px 0',
+                                     fontStyle: 'italic'
+                                }}
                                 >
-                                    Cerrar
-                                </button>
+                                {mano.equipoGanadorEnvido === posicion % 2 ? '¡Ganaste!' : 'Perdiste...'}
+                                </h5>                               
+                                 {envidosJugadores.map((envido, index) => (
+                                    <p style={{ margin: '9px 0' }} key={index}>Jugador {index }: {envido}</p>
+                                ))}
                             </div>
                         )}
             </div>
@@ -556,19 +531,9 @@ const PlayingModal = forwardRef((props, ref) => {
             <div  style={{position: 'absolute', left: '50%', top: '39%', transform: 'translateX(-50%)', zIndex: '1000'}}>
             {mano && cantoDicho && (
                             <div 
-                                className="confirmation-dialog"
-                                style={{
-                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                                    padding: "20px",
-                                    borderRadius: "10px",
-                                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
-                                    maxWidth: "800px",
-                                    margin: "0 auto",
-                                    textAlign: "center",
-                                    
-                                }}
+                                className="cuadros-canto"
                             >
-                                {ultimoMensaje && <h3 style={{ color: "black" }}>{ultimoMensaje.replace("_", " ").replace("2","")}</h3>}
+                                {ultimoMensaje && <h3 style={{ color: "darkorange" }}>{ultimoMensaje.replace("_", " ").replace("2","")}</h3>}
                                 
                             </div>
                         )}
@@ -576,48 +541,49 @@ const PlayingModal = forwardRef((props, ref) => {
 
             {/* Truco Buttons */}
             <div style={{display:'flex', flexDirection: 'row'}}>
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales && (
-                <div className="truco-button-container"> 
-                    {puntosTrucoActuales === puntosSinTruco && (
-                        <button onClick={() => cantarTruco('TRUCO')}>
-                            <span className="swirl-glow-text">¡Truco!</span>
-                        </button>
-                    )}
-                    {puntosTrucoActuales === puntosConTruco && (
-                        <button onClick={() => cantarTruco('RETRUCO')}>
-                            <span className="swirl-glow-text">¡Retruco!</span>
-                        </button>
-                    )}
-                    {puntosTrucoActuales === puntosConRetruco && (
-                        <button onClick={() => cantarTruco('VALECUATRO')}>
-                            <span className="swirl-glow-text">¡Vale cuatro!</span>
-                        </button>
-                    )}
-                </div>
-            )}
-            {/* Cantar envido */}
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido &&   (
-                <div className="envido-button-container"> 
-                    {mano.queEnvidoPuedeCantar >=3  && (
-                        <button onClick={() => cantarEnvido('ENVIDO')}>
-                            <span>Envido</span>
-                        </button>
-                    )}
-                    {mano.queEnvidoPuedeCantar >=2 && (
-                        <button onClick={() => cantarEnvido('REAL_ENVIDO')}>
-                            <span >Real Envido</span>
-                        </button>
-                    )}
-                    {mano.queEnvidoPuedeCantar >= 1 && (
-                        <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' }} onClick={() => cantarEnvido('FALTA_ENVIDO')}>
-                            <span className="swirl-glow-text">Falta Envido</span>
-                        </button>
-                    )}
-                </div>
-            )}
+                {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarTruco && puntosTrucoActuales && (
+                    <div className="truco-button-container"> 
+                        {puntosTrucoActuales === puntosSinTruco && (
+                            <button onClick={() => cantarTruco('TRUCO')}>
+                                <span className="swirl-glow-text">¡Truco!</span>
+                            </button>
+                        )}
+                        {puntosTrucoActuales === puntosConTruco && (
+                            <button onClick={() => cantarTruco('RETRUCO')}>
+                                <span className="swirl-glow-text">¡Retruco!</span>
+                            </button>
+                        )}
+                        {puntosTrucoActuales === puntosConRetruco && (
+                            <button onClick={() => cantarTruco('VALECUATRO')}>
+                                <span className="swirl-glow-text">¡Vale cuatro!</span>
+                            </button>
+                        )}
+                    </div>
+                )}
+                {/* Cantar envido */}
+                {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && !mano.esperandoRespuesta && mano.puedeCantarEnvido && (
+                    <div className="envido-button-container"> 
+                        {mano.queEnvidoPuedeCantar >= 3 && (
+                            <button onClick={() => cantarEnvido('ENVIDO')}>
+                                <span>Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >= 2 && (
+                            <button onClick={() => cantarEnvido('REAL_ENVIDO')}>
+                                <span>Real Envido</span>
+                            </button>
+                        )}
+                        {mano.queEnvidoPuedeCantar >= 1 && (
+                            <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' }} onClick={() => cantarEnvido('FALTA_ENVIDO')}>
+                                <span className="swirl-glow-text">Falta Envido</span>
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
+
             {/* Responder Truco Buttons */}
-            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && mano.esTrucoEnvidoFlor ===0 && (
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && puntosTrucoActuales && mano.esTrucoEnvidoFlor === 0 && (
                 <div className="truco-button-container responder-truco-buttons"> 
                     {puntosTrucoActuales !== puntosConRetruco && 
                         <button onClick={() => responderTruco("QUIERO")}>Quiero</button>}
@@ -627,7 +593,6 @@ const PlayingModal = forwardRef((props, ref) => {
                             onClick={() => responderTruco("QUIERO")}>
                             <span className="swirl-glow-text"> ¡Quiero!</span>
                         </button>}
-    
                     {puntosTrucoActuales !== puntosConRetruco && mano.puedeCantarTruco && 
                         <button
                             style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }}
@@ -637,54 +602,51 @@ const PlayingModal = forwardRef((props, ref) => {
                                 {puntosTrucoActuales === puntosSinTruco ? '¡Retruco!' : '¡Vale Cuatro!'}
                             </span>
                         </button>}
-                        
-                        {mano.puedeCantarEnvido && (  
+                    {mano.puedeCantarEnvido && (  
                         <div className='envido-button-container' style={{top:'-120%', position:'absolute', left:'60%'}}>
-                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
-                            <button onClick={() => responderEnvido('ENVIDO')}>
-                                <span>Envido</span>
-                            </button>
-                        )}
-                        {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
-                            <button onClick={() => responderEnvido('REAL_ENVIDO')}>
-                                <span>Real Envido</span>
-                            </button>
-                        )}
-                        {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
-                            <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
-                                <span className="swirl-glow-text">Falta Envido</span>
-                            </button>
-                        )}
+                            {mano.queEnvidoPuedeCantar >= 3 && mano.puedeCantarEnvido && (
+                                <button onClick={() => responderEnvido('ENVIDO')}>
+                                    <span>Envido</span>
+                                </button>
+                            )}
+                            {mano.queEnvidoPuedeCantar >= 2 && mano.puedeCantarEnvido && (
+                                <button onClick={() => responderEnvido('REAL_ENVIDO')}>
+                                    <span>Real Envido</span>
+                                </button>
+                            )}
+                            {mano.queEnvidoPuedeCantar >= 1 && mano.puedeCantarEnvido && (
+                                <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
+                                    <span className="swirl-glow-text">Falta Envido</span>
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
             )}
             
-        {/*Responder envido */}
-        {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta &&mano.esTrucoEnvidoFlor ===1 &&  (
+            {/* Responder Envido */}
+            {mano && cartasJugador && Number(posicion) === mano.jugadorTurno && mano.esperandoRespuesta && mano.esTrucoEnvidoFlor === 1 && (
                 <div className="envido-button-container" style={{left:'70%', position:'fixed'}}> 
-                    
-                        <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
-                        <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
-                    
-                    
-                        {mano.queEnvidoPuedeCantar >= 3 &&mano.puedeCantarEnvido && (
+                    <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
+                    <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
+                    {mano.queEnvidoPuedeCantar >= 3 && mano.puedeCantarEnvido && (
                         <button onClick={() => responderEnvido('ENVIDO')}>
                             <span>Envido</span>
                         </button>
                     )}
-                    {mano.queEnvidoPuedeCantar >=2  && mano.puedeCantarEnvido &&(
+                    {mano.queEnvidoPuedeCantar >= 2 && mano.puedeCantarEnvido && (
                         <button onClick={() => responderEnvido('REAL_ENVIDO')}>
                             <span>Real Envido</span>
                         </button>
                     )}
-                    {mano.queEnvidoPuedeCantar >=1  &&mano.puedeCantarEnvido && (
+                    {mano.queEnvidoPuedeCantar >= 1 && mano.puedeCantarEnvido && (
                         <button style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite'}} onClick={() => responderEnvido('FALTA_ENVIDO')}>
                             <span className="swirl-glow-text">Falta Envido</span>
                         </button>
                     )}
                 </div>
             )}
+
             {/* Cartas Volteadas */}
             {mano && (
                 <CartasVolteadas
@@ -693,10 +655,15 @@ const PlayingModal = forwardRef((props, ref) => {
                     jugadorMano={game.jugadorMano}
                 />
             )}
-        
-                
+            
+                           
         </div>
+        <div style={{zIndex:100000000000000}}>
+        <Perfil game={game} posicion={posicion}/>
+        </div>
+        </>
     );
+
 });
 
-    export default PlayingModal;
+export default PlayingModal;

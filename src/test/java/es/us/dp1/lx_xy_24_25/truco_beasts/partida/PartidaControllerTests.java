@@ -147,10 +147,10 @@ public class PartidaControllerTests {
 
         when(partidaService.findAllPartidasActivas(pageable).getContent()).thenReturn(Arrays.asList(partidaA2));
 
-        mockMvc.perform(get(BASE_URL + "/partidas/accesibles")
+        mockMvc.perform(get(BASE_URL+"/partidas/accesibles")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1));
+                .andExpect(jsonPath("$.content[0].id").value(1));
     }
 
     @Test
@@ -164,4 +164,6 @@ public class PartidaControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }
+
+    
 }

@@ -77,6 +77,8 @@ public class PartidaService {
 	@Transactional
 	public Partida updatePartida(@Valid Partida partida, Integer idToUpdate) {
 		Partida toUpdate = findPartidaById(idToUpdate);
+		boolean terminada= partida.haTerminadoLaPartida();
+        if(terminada) partida.setInstanteFin(LocalDateTime.now());
 		BeanUtils.copyProperties(partida, toUpdate, "id");
 		partidaRepository.save(toUpdate);
 		return toUpdate;

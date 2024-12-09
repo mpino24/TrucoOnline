@@ -10,10 +10,12 @@ public class PartidaJugadorView {
 
     String userName;
     String foto;
+    Integer posicion;
 
-    public PartidaJugadorView(String userName, String foto) {
+    public PartidaJugadorView(String userName, String foto, Integer posicion) {
         this.userName = userName;
         this.foto = foto;
+        this.posicion=posicion;
     }
     
     

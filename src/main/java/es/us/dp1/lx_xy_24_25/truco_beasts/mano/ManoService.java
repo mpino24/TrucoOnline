@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
@@ -435,12 +433,13 @@ public class ManoService {
 		} else {
 			partida.setPuntosEquipo2(puntosEquipo2+manoActual.getPuntosTruco());
 		}
-        boolean terminada= partida.haTerminadoLaPartida();
-        if(terminada) partida.setInstanteFin(LocalDateTime.now());
+       
 
-		if (partida.getEstado() == Estado.FINISHED) {
+		if (partida.haTerminadoLaPartida()) {
+            manosPorPartida.remove(partida.getCodigo());
             partidaService.updatePartida(partida, partida.getId());
-			return manoActual; // TODO CAMBIAR!!!!!!
+            return null;
+			
 		} else {
             manosPorPartida.remove(partida.getCodigo());
 			partida.setJugadorMano((partida.getJugadorMano() + 1) % partida.getNumJugadores());
