@@ -103,20 +103,22 @@ Indicar las clases o paquetes creados como resultado de la aplicación del patr�
 Describir porqué era interesante aplicar el patrón.
 
 ### Patrón: Domain Model
-*Tipo*: Arquitectónico | de Diseño
+*Tipo*: Arquitectónico
 
 *Contexto de Aplicación*
-
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
-
+Se aplica en multiples entidades de la aplicación y sirve como separador de funcionalidades en las clases, para que todo lo relacionado a la lógica de negeocio quede asociado a esta capa de servicio. El patron nos permite tener una alta cohesion con un bajo acoplamiento
 *Clases o paquetes creados*
-
+- Carta
+- Jugador
+- Partida
+- PartidaJugador
+- User
 Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
+Todos los services
 *Ventajas alcanzadas al aplicar el patrón*
-
+Hay varias ventajas, pero las mas prominentes son la claridad al saber que tipo de lógica se encuentra en las capas de servicio asi como que, por ejemplo nos permite cambiar componentes sin miedo a afectar a otros que dependan de él
 Describir porqué era interesante aplicar el patrón.
-
+Tenemos muchas entidades, con logicas distintas pero categorizables, por ello hemos decidido agrupar todas las de la logica de negocio en esta capa 
 ### Patrón: Service layer
 *Tipo*: Arquitectónico | de Diseño
 
