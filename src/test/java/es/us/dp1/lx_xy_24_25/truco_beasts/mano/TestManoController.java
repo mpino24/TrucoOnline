@@ -2,6 +2,9 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,7 +15,11 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -36,8 +43,6 @@ public class TestManoController {
 
     @Autowired
     private MockMvc mockMvc;
-
- 
 
     @MockBean
     private PartidaService partidaService;
@@ -130,8 +135,79 @@ public class TestManoController {
         List<List<Carta>> cartasDisponibles= cartas();
         Carta carta= cartasDisponibles.get(0).get(0);
         when(manoService.tirarCarta(partida.getCodigo(), carta.getId())).thenReturn(carta);
-        mockMvc.perform(patch(BASE_URL+"/tirarCarta/{cartaId}", partida.getCodigo(), carta.getId()).with(csrf()))
+
+        mockMvc.perform(patch(BASE_URL+"/tirarCarta/{cartaId}", partida.getCodigo(), carta.getId())
+                    .with(csrf()))
                     .andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void deberiaActualizarManoYDevolverMano() throws Exception {
+        Mano mano = new Mano();
+        mano.setPartida(partida);
+        when(manoService.getMano(partida.getCodigo())).thenReturn(mano);
+
+        mockMvc.perform(get(BASE_URL, partida.getCodigo())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void jugadorDeberiaPoderCantarTruco() throws Exception {
+        Cantos cantoTruco = Cantos.TRUCO;
+        String codigoPartida = partida.getCodigo();
+        Mano mano = new Mano();
+        when(manoService.cantosTruco(codigoPartida, cantoTruco)).thenReturn(mano);
+
+        mockMvc.perform(patch(BASE_URL + "/cantarTruco/{cantoTruco}", codigoPartida, cantoTruco)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void jugadorDeberiaPoderResponderTruco() throws Exception {
+        Cantos respuestasTruco = Cantos.QUIERO;
+        String codigoPartida = partida.getCodigo();
+        doNothing().when(manoService).responderTruco(codigoPartida, respuestasTruco);
+        Mano mano = new Mano();
+        when(manoService.getMano(codigoPartida)).thenReturn(mano);
+
+        mockMvc.perform(patch(BASE_URL + "/responderTruco/{respuestasTruco}", codigoPartida, respuestasTruco)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void jugadorDeberiaPoderCantarEnvido() throws Exception {
+        Cantos cantoEnvido = Cantos.ENVIDO;
+        String codigoPartida = partida.getCodigo();
+        Mano mano = new Mano();
+        when(manoService.cantosTruco(codigoPartida, cantoEnvido)).thenReturn(mano);
+        
+        mockMvc.perform(patch(BASE_URL + "/cantarEnvido/{cantoEnvido}", codigoPartida, cantoEnvido)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void jugadorDeberiaPoderResponderEnvido() throws Exception {
+        Cantos cantoEnvido = Cantos.QUIERO;
+        String codigoPartida = partida.getCodigo();
+        doNothing().when(manoService).responderTruco(codigoPartida, cantoEnvido);
+        Mano mano = new Mano();
+        when(manoService.getMano(codigoPartida)).thenReturn(mano);
+
+        mockMvc.perform(patch(BASE_URL + "/responderEnvido/{cantoEnvido}", codigoPartida, cantoEnvido)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
