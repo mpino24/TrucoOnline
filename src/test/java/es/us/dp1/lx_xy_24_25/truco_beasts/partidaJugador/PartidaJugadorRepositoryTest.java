@@ -41,7 +41,7 @@ public class PartidaJugadorRepositoryTest {
 
     @Test
     public void findPartidaByUserIdBadUserId(){
-        Optional<Partida> res = pjRepo.findPartidaByUserId(1);
+        Optional<Partida> res = pjRepo.findPartidaByUserId(209);
         assertTrue(res.isEmpty());
     }
 

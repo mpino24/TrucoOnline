@@ -134,17 +134,17 @@ public class ManoService {
      * considera que es la misma y si haces cambios en una se hacen en la otra, cosa que no queremos.
      */
     public List<List<Carta>> inicializarCartasLanzadasTotales(Integer numJugadores){
-    List<List<Carta>> res = new ArrayList<>();
-    Integer rondas = 3;    
-    for (int j = 0; j < numJugadores; j++) {
-        List<Carta> listaVacia = new ArrayList<>();
-        for (int i = 0; i < rondas; i++) {
-            listaVacia.add(null);
+        List<List<Carta>> res = new ArrayList<>();
+        Integer rondas = 3;    
+        for (int j = 0; j < numJugadores; j++) {
+            List<Carta> listaVacia = new ArrayList<>();
+            for (int i = 0; i < rondas; i++) {
+                listaVacia.add(null);
+            }
+            res.add(listaVacia);  
         }
-        res.add(listaVacia);  
+        return res;
     }
-    return res;
-}
 
 	public Carta tirarCarta(String codigo, Integer cartaId){
 		Mano manoActual = getMano(codigo);

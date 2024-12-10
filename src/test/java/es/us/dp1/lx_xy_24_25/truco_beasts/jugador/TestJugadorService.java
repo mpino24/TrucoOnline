@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -31,6 +32,7 @@ public class TestJugadorService {
     }
 
     @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testFindAmigosByUserId() {
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
@@ -47,6 +49,7 @@ public class TestJugadorService {
 
     
     @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testCheckIfAreFriends(){   
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
         assertTrue(jugadorService.checkIfAreFriends(jugador.getUser().getUsername(), jugador2.getUser().getId()));
@@ -60,6 +63,7 @@ public class TestJugadorService {
 
 
     @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testAddFriendAgainFallo(){
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
@@ -89,6 +93,7 @@ public class TestJugadorService {
     }
 
     @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testDeleteFriend() {
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
 

@@ -60,14 +60,10 @@ public class TestManoService {
             envidos.add(envidosIniciales);
         }
         mano.setEnvidosCantados(envidos);
-        List<List<Carta>> cartasLanzadasTotales = new ArrayList<>();
-        List<Carta> listaParaCartasVacia = new ArrayList<>();
         
-        for (int i = 0; i <numJugadores; i++){
-            
-            cartasLanzadasTotales.add(listaParaCartasVacia);
-        }
-        mano.setCartasLanzadasTotales(cartasLanzadasTotales);
+        mano.setCartasLanzadasTotales(inicializarCartasLanzadasTotales(numJugadores));
+        
+
 
         manoService = new ManoService(cartaRepository, partidaService);
         codigo = partida.getCodigo();
@@ -75,7 +71,18 @@ public class TestManoService {
         
     }
     
-
+    public List<List<Carta>> inicializarCartasLanzadasTotales(Integer numJugadores){
+        List<List<Carta>> res = new ArrayList<>();
+        Integer rondas = 3;    
+        for (int j = 0; j < numJugadores; j++) {
+            List<Carta> listaVacia = new ArrayList<>();
+            for (int i = 0; i < rondas; i++) {
+                listaVacia.add(null);
+            }
+            res.add(listaVacia);  
+        }
+        return res;
+    }
     @Test
     public void testRepartirCartas() {
        setup(0,4);
