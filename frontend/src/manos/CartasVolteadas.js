@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import './CartasVolteadas.css';
+import  "../static/css/mano/CartasVolteadas.css"
 
 const listaUrlCartasVacias = [
   "http://localhost:8080/resources/images/cartas/1carta.jpg",

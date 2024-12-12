@@ -3,7 +3,7 @@ import tokenService from "../services/token.service.js";
 import useFetchState from "../util/useFetchState";
 import CartasVolteadas from './CartasVolteadas';
 import Perfil from './Perfil';
-import './PlayingModal.css';
+import  "../static/css/mano/PlayingModal.css"
 
 import backgroundMusic from '../static/audios/musicaPartida2.mp3';
 import PuntosComponente from './PuntosComponente';
