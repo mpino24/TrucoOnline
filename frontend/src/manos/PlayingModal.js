@@ -193,12 +193,21 @@ const PlayingModal = forwardRef((props, ref) => {
                                     onDrag={(evento) => onDrag(evento)}
                                     onDragEnd={(evento) => onDragEnd(evento, carta)}
                                 >
+                                    <button onDoubleClick={()=> tirarCarta(carta.id)}
+                                        style={{
+                                            border: 'none',
+                                            outline: 'none',
+                                            background: 'none',
+                                            padding: 0,
+                                            margin: 0,
+                                            cursor: 'pointer'
+                                        }}>
                                     <img
                                         src={carta.foto}
                                         alt={`Carta ${index + 1}`}
                                         className="card-image"
                                         onError={(e) => (e.target.style.display = 'none')}
-                                    />
+                                    /></button>
                                     {/* Overlay de resplandor holográfico */}
                                     <div className="sunset-overlay"></div>
                                 </div>
