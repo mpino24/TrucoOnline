@@ -40,9 +40,9 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
         List<Integer> listaE1= List.of(0, 3);
         List<Integer> listaE2= List.of(3, 0);
         if(jugadorActual%2==0){
-            manoActual.setGanadoresRondas(listaE2);
-        }else{
             manoActual.setGanadoresRondas(listaE1);
+        }else{
+            manoActual.setGanadoresRondas(listaE2);
         }
         
         manoActual.setUltimoMensaje(getTipoRespuestaTruco());
