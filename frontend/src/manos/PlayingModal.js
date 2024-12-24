@@ -193,7 +193,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                     onDrag={(evento) => onDrag(evento)}
                                     onDragEnd={(evento) => onDragEnd(evento, carta)}
                                 >
-                                    <button onDoubleClick={()=> tirarCarta(carta.id)}
+                                    <button onClick={()=> tirarCarta(carta.id)}
                                         style={{
                                             border: 'none',
                                             outline: 'none',
