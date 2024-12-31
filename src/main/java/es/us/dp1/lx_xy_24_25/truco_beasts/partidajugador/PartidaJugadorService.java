@@ -89,8 +89,8 @@ public class PartidaJugadorService {
 
     }
 
-    @Transactional
-    public void eliminateJugadorPartida(Integer partidaJugadorId) {
+    @Transactional(rollbackFor = { NotAuthorizedException.class, ResourceNotFoundException.class })
+    public void eliminateJugadorPartida(Integer partidaJugadorId) throws ResourceNotFoundException, NotAuthorizedException {
         User currentUser = userService.findCurrentUser();
         PartidaJugador parJug = pjRepository.findById(partidaJugadorId).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el jugador con id " + partidaJugadorId));
         Integer jugadorExpulsadoId = parJug.getPlayer().getId();
