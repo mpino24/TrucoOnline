@@ -41,8 +41,7 @@ public class PartidaJugadorServiceTest {
     @Autowired
     private PartidaService partidaService;
 
-    public PartidaJugadorServiceTest() {
-    }
+    
     public Partida partida;
 
     @BeforeEach

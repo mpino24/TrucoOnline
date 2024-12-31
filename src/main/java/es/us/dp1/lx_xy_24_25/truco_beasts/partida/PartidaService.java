@@ -89,7 +89,7 @@ public class PartidaService {
 		return partidaRepository.findById(id).get();
 	}
 
-	@Transactional()
+	@Transactional
 	public void deletePartida(String codigo) {
 		Partida p= findPartidaByCodigo(codigo);
 		partidaRepository.delete(p);

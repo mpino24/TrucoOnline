@@ -88,24 +88,44 @@ public class PartidaJugadorService {
         User currentUser = userService.findCurrentUser();
         Partida partida = getPartidaOfUserId(currentUser.getId());
         List<PartidaJugador> jugadores = pjRepository.findPlayersConnectedTo(partida.getCodigo());
-        Integer creadorId = jugadores.stream().filter(pj -> pj.getIsCreator()).map(pj -> pj.getPlayer().getId()).findFirst().orElse(null);
+        Integer creadorId = jugadores.stream()
+                .filter(pj -> pj.getIsCreator())
+                .map(pj -> pj.getPlayer().getId())
+                .findFirst()
+                .orElse(null);
+
+        
         if (expulsadoId != null && !expulsadoId.equals(currentUser.getId())) {
             if (currentUser.getId().equals(creadorId)) {
                 pjRepository.deleteByPlayerId(expulsadoId);
             } else {
                 throw new NotAuthorizedException("No tienes permiso para eliminar a jugadores de la partida");
             }
-        } else {
+        } else { 
+            
             pjRepository.deleteByPlayerId(currentUser.getId());
-            PartidaJugador nuevoCreador = jugadores.stream().filter(pj -> !pj.getPlayer().getId().equals(currentUser.getId())).findFirst().orElse(null);
+
+            
+            PartidaJugador nuevoCreador = jugadores.stream()
+                    .filter(pj -> !pj.getPlayer().getId().equals(currentUser.getId()))
+                    .findFirst()
+                    .orElse(null);
+
             if (creadorId != null && creadorId.equals(currentUser.getId()) && nuevoCreador != null) {
                 nuevoCreador.setIsCreator(true);
                 pjRepository.save(nuevoCreador);
             } else if (nuevoCreador == null) {
-                partidaRepository.delete(partida);
+                partidaRepository.delete(partida); 
             }
         }
+
+        
+        Integer jugadoresRestantes = getNumJugadoresInPartida(partida.getId());
+        if (jugadoresRestantes == 0) {
+            partidaRepository.delete(partida); 
+        }
     }
+
 
     @Transactional(readOnly = true)
     public List<PartidaJugadorDTO> getPlayersConnectedTo(String partidaCode) {
