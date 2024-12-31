@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.parser.Part;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
@@ -24,19 +28,22 @@ import jakarta.validation.Valid;
 @Service
 public class PartidaService {
 
-  PartidaRepository partidaRepository;
+	private final PartidaRepository partidaRepository;
 
-	UserService userService;
-	PartidaJugadorService partidaJugadorService;
-	ChatService chatService;
+  	private final UserService userService;
 
+	
+	private final PartidaJugadorRepository pjRepository;
+
+	private final ChatRepository chatRepository;
 
 	@Autowired
-	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorService partidaJugadorService,ChatService chatService) {
+	public PartidaService(PartidaRepository partidaRepository, UserService userService, PartidaJugadorRepository pjRepository,ChatRepository chatRepository) {
 		this.partidaRepository = partidaRepository;
 		this.userService = userService;
-		this.partidaJugadorService = partidaJugadorService;
-		this.chatService= chatService;
+		this.pjRepository = pjRepository;
+		this.chatRepository = chatRepository;
+		
 
   }
 
@@ -113,16 +120,27 @@ public class PartidaService {
 		Integer jugadorMano =  (int) (Math.random() * partida.getNumJugadores());
 		partida.setJugadorMano(jugadorMano);
 		User currentUser= userService.findCurrentUser();
-		User creadorPartida = partidaJugadorService.getGameCreator(partida);
+		User creadorPartida = getGameCreator(partida);
 		if(currentUser.getId().equals(creadorPartida.getId())){
 			partida.setInstanteInicio(LocalDateTime.now());
 			Chat chat= new Chat();
 			chat.setPartida(partida);
-			chatService.createChat(chat);
+			//Cambiado al ChatRepository porque se necesita PartidaService en el PartidaJugadorService y sino generaba dependencia circular
+			chatRepository.save(chat);
 		}else{
 			throw new AccessDeniedException();
 		}
 		
 	}
+
+	@Transactional(readOnly = true)
+    public User getGameCreator(Partida p) {
+        Optional<PartidaJugador> pj = pjRepository.findCreator(p.getId());
+        if (pj.isEmpty()) {
+            throw new ResourceNotFoundException("Creador de la partida no encontrado");
+        }
+        return userService.findUser(pj.get().getPlayer().getId());
+
+    }
 
 }
