@@ -87,6 +87,17 @@ public class PartidaJugadorController {
         
     }
 
+    @DeleteMapping("/eliminarJugador/{jugadorId}")
+    public ResponseEntity<String> eliminateJugadorPartidaByJugadorId(@PathVariable("jugadorId") Integer jugadorId){
+        try{
+            pjService.eliminateJugadorPartidaByJugadorId(jugadorId);
+            return ResponseEntity.status(HttpStatus.OK).body("Se elimino correctamente");
+        }catch (NotAuthorizedException exception){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+        }
+        
+    }
+
     @GetMapping("/players")
     @ResponseStatus(HttpStatus.OK)
     public List<PartidaJugadorDTO> getPlayersConnectedTo(@RequestParam(required=true) String partidaCode){

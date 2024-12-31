@@ -227,4 +227,13 @@ public class PartidaJugadorService {
     }
 
 
+    public void eliminateJugadorPartidaByJugadorId(Integer jugadorId) {
+        PartidaJugador pj = pjRepository.findByPlayerIdAndGameNotFinish(jugadorId);
+        if(pj==null){
+            throw new ResourceNotFoundException("No se ha encontrado el jugador con id "+ jugadorId);
+        }
+        eliminateJugadorPartida(pj.getId());
+    }
+
+
 }

@@ -27,7 +27,7 @@ const EquipoView = forwardRef((props, ref) => {
 
     function handleExpelPlayer(playerId){
         fetch(
-            "/api/v1/partidajugador?expulsadoId="+playerId,
+            "/api/v1/partidajugador/eliminarJugador/"+playerId,
             {
                 method: "DELETE",
                 headers: {
