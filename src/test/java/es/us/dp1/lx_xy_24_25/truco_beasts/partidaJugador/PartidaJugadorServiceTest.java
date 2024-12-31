@@ -115,7 +115,7 @@ public class PartidaJugadorServiceTest {
             Integer res = pjService.getNumJugadoresInPartida(0);
             assertTrue(res.equals(2));
 
-            pjService.eliminateJugadorPartida(10);
+            pjService.eliminateJugadorPartidaByJugadorId(10);
             res = pjService.getNumberOfGamesConnected(10);
             assertTrue(res.equals(0));
 
@@ -136,8 +136,14 @@ public class PartidaJugadorServiceTest {
         partida.setInstanteFin(null);
         partida.setInstanteInicio(null);
         partidaService.savePartida(partida);
+        try {
+            pjService.addJugadorPartida(partida, 10, false);
+        } catch (AlreadyInGameException e) {     
+            fail("La excepción AlreadyInGameException no debería haberse lanzado.");;
+        }
+        
 
-        pjService.eliminateJugadorPartida(null);
+        pjService.eliminateJugadorPartidaByJugadorId(9);
         Integer res = pjService.getNumberOfGamesConnected(9);
         assertTrue(res.equals(0));
 
