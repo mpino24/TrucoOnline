@@ -38,5 +38,11 @@ public class PartidaJugador extends BaseEntity{
         }
     }
 
+    public Integer floresCantadas = 0;
+    public Integer quierosCantados = 0;
+    public Integer noQuierosCantados = 0;
+
+
+
 }
 

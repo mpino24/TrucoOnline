@@ -29,7 +29,7 @@ const FinishedModal = forwardRef((props, ref) => {
     >
         
         <div style={{display:'flex', flexDirection:'vertical'}}>
-            <h2 className="player-heading" style={{left:'40%'}}> Ganador: Equipo {ganador}</h2>
+            <h2 className="player-heading" style={{left:'40%'}}> Ganador: Equipo {ganador +1}</h2>
             <h3 className="player-heading" style={{marginTop:'80px', marginLeft:'450px'}}>{posicion%2===ganador ? "Ganaste": "Perdiste"}</h3>
             </div>
             <div className="finish-button-container">

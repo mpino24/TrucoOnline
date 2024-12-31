@@ -244,30 +244,33 @@ public class PartidaJugadorControllerTest {
     @Test
     @WithMockUser(username = "player", roles = {"PLAYER"})
     void eliminarJugadorPartidaSinPasarJugador() throws Exception{
-        doNothing().when(partidaJugadorService).eliminateJugadorPartida(jugador1.getId());
-        mockMvc.perform(delete(BASE_URL)
+        doNothing().when(partidaJugadorService).eliminateJugadorPartidaByJugadorId(jugador1.getId());;
+        mockMvc.perform(delete(BASE_URL + "/eliminarJugador")
                             .with(csrf()))
-                        .andExpect(status().isOk());
+                        .andExpect(status().isInternalServerError());
     }
 
     @Test
     @WithMockUser(username = "player", roles = {"PLAYER"})
-    void eliminarJugadorPartidaPasandoJugador() throws Exception{
-        doNothing().when(partidaJugadorService).eliminateJugadorPartida(jugador1.getId());
-        mockMvc.perform(delete(BASE_URL+"?expulsadoId=", jugador1.getId())
-                            .with(csrf()))
-                        .andExpect(status().isOk())
-                        .andExpect(content().string("Se elimino correctamente"));
+    void eliminarJugadorPartidaPasandoJugador() throws Exception {
+      doNothing().when(partidaJugadorService).eliminateJugadorPartidaByJugadorId(jugador2.getId());
+      mockMvc.perform(delete(BASE_URL + "/eliminarJugador/{jugadorId}", jugador2.getId())
+          .with(csrf()))
+          .andExpect(status().isOk())
+          .andExpect(content().string("Se elimino correctamente"));
+      verify(partidaJugadorService).eliminateJugadorPartidaByJugadorId(jugador2.getId());
     }
 
     @Test
     @WithMockUser(username = "player", roles = {"PLAYER"})
-    void eliminarJugadorPartidaExcepcionUser() throws Exception{
-        doThrow(new NotAuthorizedException("No tienes permiso para eliminar a jugadores de la partida")).when(partidaJugadorService).eliminateJugadorPartida(jugador1.getId());
-        mockMvc.perform(delete(BASE_URL + "?expulsadoId="+ jugador1.getId())
-                            .with(csrf()))
-                        .andExpect(status().isForbidden())
-                        .andExpect(content().string("No tienes permiso para eliminar a jugadores de la partida"));
+    void eliminarJugadorPartidaExcepcionUser() throws Exception {
+    doThrow(new NotAuthorizedException("No tienes permiso para eliminar a jugadores de la partida"))
+        .when(partidaJugadorService).eliminateJugadorPartidaByJugadorId(jugador1.getId());
+    mockMvc.perform(delete(BASE_URL + "/eliminarJugador/{jugadorId}", jugador1.getId())
+        .with(csrf()))
+        .andExpect(status().isForbidden())
+        .andExpect(content().string("No tienes permiso para eliminar a jugadores de la partida"));
+    verify(partidaJugadorService).eliminateJugadorPartidaByJugadorId(jugador1.getId());
     }
 
 

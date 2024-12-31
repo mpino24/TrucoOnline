@@ -5,36 +5,43 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 
 @Service
 public class PartidaJugadorService {
 
-    PartidaJugadorRepository pjRepository;
-    JugadorRepository jugRepository;
-    UserService userService;
-    PartidaRepository partidaRepository;
+    private final PartidaJugadorRepository pjRepository;
+    private final JugadorRepository jugRepository;
+    private final UserService userService;
 
-    @Autowired
-    public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo, UserService userService, PartidaRepository partidaRepository) {
+    private final PartidaService partidaService;
+  
+
+   
+    public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo, UserService userService, PartidaService partidaService) {
         this.pjRepository = partJugRepository;
         this.jugRepository = jugadorRepo;
         this.userService = userService;
-        this.partidaRepository = partidaRepository;
+        
+        this.partidaService = partidaService;
     }
 
 
@@ -50,7 +57,7 @@ public class PartidaJugadorService {
 
     @Transactional(readOnly = true)
     public Integer getMiPosicion(Integer userId, Integer partidaId) throws ResourceNotFoundException {
-        Partida partida = partidaRepository.findById(partidaId).get();
+        Partida partida = partidaService.findPartidaById(partidaId);
         PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj -> pj.getPlayer().getUser().getId().equals(userId)).findFirst().orElse(null);
         if (partjugador == null) {
             throw new ResourceNotFoundException("No se encontro la partidaJugador pedida");
@@ -89,8 +96,8 @@ public class PartidaJugadorService {
 
     }
 
-    @Transactional
-    public void eliminateJugadorPartida(Integer partidaJugadorId) {
+    @Transactional(rollbackFor = { NotAuthorizedException.class, ResourceNotFoundException.class })
+    public void eliminateJugadorPartida(Integer partidaJugadorId) throws ResourceNotFoundException, NotAuthorizedException {
         User currentUser = userService.findCurrentUser();
         PartidaJugador parJug = pjRepository.findById(partidaJugadorId).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el jugador con id " + partidaJugadorId));
         Integer jugadorExpulsadoId = parJug.getPlayer().getId();
@@ -133,26 +140,33 @@ public class PartidaJugadorService {
                 nuevoCreador.setIsCreator(true);
                 pjRepository.save(nuevoCreador);
             } else if (nuevoCreador == null) {
-                partidaRepository.delete(partidaActual); 
+                partidaService.deletePartida(partidaActual.getCodigo()); 
                 
             }
             
         }
 
-        
-        List<Integer> jugadoresRestantes = getJugadoresInPartida(partidaActual.getCodigo());
-        Integer puntos = partidaActual.getPuntosMaximos();
-        Integer jugadoresEquipo1 = (int) jugadoresRestantes.stream().filter(j -> j % 2 == 0).count();
-        Integer jugadoresEquipo2 = jugadoresRestantes.size() - jugadoresEquipo1;
-        if(jugadoresEquipo1 > jugadoresEquipo2){
-           partidaActual.setPuntosEquipo1(puntos);
-          
-        }else if(jugadoresEquipo1 < jugadoresEquipo2){
-            partidaActual.setPuntosEquipo2(puntos);
+        if (partidaActual.getEstado().equals(Estado.ACTIVE)) {
+            checkEndGame(parJug);
+            
         }
-        partidaRepository.save(partidaActual);
+        
             
         
+    }
+
+    public void checkEndGame(PartidaJugador partidaJugador) {
+        Partida partida = partidaJugador.getGame();
+        Equipo equipoDelQueHuyo = partidaJugador.getEquipo();
+        Integer puntos = partida.getPuntosMaximos();
+        
+        if(equipoDelQueHuyo.equals(Equipo.EQUIPO1)){
+            partida.setPuntosEquipo2(puntos);
+          
+        }else{
+            partida.setPuntosEquipo1(puntos);
+        }
+        partidaService.updatePartida(partida, partida.getId());
     }
 
 
@@ -180,7 +194,7 @@ public class PartidaJugadorService {
         Integer userId = user.getId();
         
         Integer jugadorId = jugRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el jugador actual")).getId();
-        res = pjRepository.findPartidaJugadorbyId(jugadorId);
+        res = pjRepository.findByPlayerIdAndGameNotFinish(jugadorId);
         }
         if(res == null || res.getGame().getEstado() == Estado.FINISHED){
             res=null;
