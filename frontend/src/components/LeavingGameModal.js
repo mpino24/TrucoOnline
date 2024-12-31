@@ -14,7 +14,7 @@ const LeavingGameModal = forwardRef((props, ref) => {
 
     function leaveGame() {
         fetch(
-            "/api/v1/partidajugador",
+            "/api/v1/partidajugador/salir/"+ props.partidaJugadorId,
             {
                 method: "DELETE",
                 headers: {

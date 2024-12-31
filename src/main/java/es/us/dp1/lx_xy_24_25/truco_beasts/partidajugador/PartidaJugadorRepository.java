@@ -33,7 +33,7 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     @Query("SELECT pj FROM PartidaJugador pj WHERE pj.game.codigo= :partidaCode")
     List<PartidaJugador> findPlayersConnectedTo(String partidaCode);
 
-    @Query("SELECT pj.game FROM PartidaJugador pj WHERE pj.player.id = :userId")
+    @Query("SELECT pj.game FROM PartidaJugador pj WHERE pj.player.id = :userId AND pj.game.instanteFin IS NULL")
     Optional<Partida> findPartidaByUserId(Integer userId);
 
     @Query("SELECT pj FROM PartidaJugador pj WHERE pj.game.id=:partidaId AND pj.isCreator = true")

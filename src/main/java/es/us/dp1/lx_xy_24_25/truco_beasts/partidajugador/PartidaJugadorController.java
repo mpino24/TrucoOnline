@@ -66,11 +66,20 @@ public class PartidaJugadorController {
             return pjService.getNumberOfGamesConnected(jugadorId);
     }
 
+    @GetMapping("/partidaJugadorActual")
+    public ResponseEntity<PartidaJugador> getPartidaJugadorActual(){
+        PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
+        if(pj==null){
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+        }
+        return ResponseEntity.ok(pjService.getPartidaJugadorUsuarioActual());
+    }
 
-    @DeleteMapping
-    public ResponseEntity<String> eliminateJugadorPartida(@RequestParam(required=false) Integer expulsadoId){
+
+    @DeleteMapping("/salir/{partidaJugadorId}")
+    public ResponseEntity<String> eliminateJugadorPartida(@PathVariable("partidaJugadorId") Integer partidaJugadorId){
         try{
-            pjService.eliminateJugadorPartida(expulsadoId);
+            pjService.eliminateJugadorPartida(partidaJugadorId);
             return ResponseEntity.status(HttpStatus.OK).body("Se elimino correctamente");
         }catch (NotAuthorizedException exception){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
