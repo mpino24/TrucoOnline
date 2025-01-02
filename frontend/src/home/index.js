@@ -12,7 +12,9 @@ import CreationModal from "../components/getCreationModal.js"
 import { NavLink, NavItem, Nav } from 'reactstrap';
 import GetJoinModal from '../components/getJoinModal.js';
 import useFetchState from "../util/useFetchState.js";
+import jwt_decode from "jwt-decode";
 import GetFriendsModal from '../components/getFriendsModal';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Home() {
@@ -23,12 +25,18 @@ export default function Home() {
     const [backgroundUrl, setBackgroundUrl] = useState();
     const [username, setUsername] = useState("");
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
-
-
-
+    const [roles, setRoles] = useState([]);
 
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
+
+    useEffect(() => {
+        if (jwt) {
+            setRoles(jwt_decode(jwt).authorities);
+        }
+    }, [jwt])
+
+
 
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -90,8 +98,11 @@ export default function Home() {
         }
     }, [usuario, player])
 
+    const navigate = useNavigate();
 
-
+    const handleRedirect = (path) => {
+        navigate(path);
+    };
 
     return (
         <>
@@ -114,8 +125,24 @@ export default function Home() {
                     </div>
                 }
             </Nav>
-        }
-
+        }   
+            
+        
+            {roles.includes('ADMIN') && (
+            <div expand='md' style={{float: 'left'}}>
+                <button className="button-admin" onClick={() => {navigate("/users")}}>
+                USUARIOS
+                </button>
+                <button className="button-admin" onClick={() => {navigate("/admin/partidas")}}>
+                PARTIDAS EN CURSO
+                </button>
+                <button className="button-admin" onClick={() => {navigate("/admin/partidas/terminadas")}}>
+                PARTIDAS JUGADAS
+                </button>
+            </div>
+            )}
+            
+            
             <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%' }}>
                 <div style={{ width: '36%' }}>
                     <div style={{ cursor: 'pointer' }}>

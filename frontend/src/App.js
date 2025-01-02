@@ -13,6 +13,8 @@ import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
+import PartidasAdmin from "./admin/partidas/PartidasAdmin";
+import PartidasTerminadasAdmin from "./admin/partidas/PartidasTerminadasAdmin";
 import Game from "./game"
 import SwaggerDocs from "./public/swagger";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -50,6 +52,8 @@ function App() {
         <>
           <Route path="/users" element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
+          <Route path="/admin/partidas" element={<PrivateRoute><PartidasAdmin /></PrivateRoute>} />
+          <Route path="/admin/partidas/terminadas" element={<PrivateRoute><PartidasTerminadasAdmin /></PrivateRoute>} />
         </>
       );
     }
