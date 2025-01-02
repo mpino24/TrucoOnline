@@ -70,7 +70,7 @@ const Chat = forwardRef((props, ref) => {
         body: JSON.stringify({
           contenido: mensaje,
           chat: { id: props.idChat },
-          remitente: { id: tokenService.getUser().id },
+          remitente: { id: tokenService.getUser().id, username: tokenService.getUser().username },
           username: { username: tokenService.getUser().username },
         }),
         headers: {
