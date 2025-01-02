@@ -13,12 +13,14 @@ import { NavLink, NavItem, Nav } from 'reactstrap';
 import GetJoinModal from '../components/getJoinModal.js';
 import useFetchState from "../util/useFetchState.js";
 import GetFriendsModal from '../components/getFriendsModal';
+import EstadisticasModal from '../estadisticas/EstadisticasModal.js';
 
 
 export default function Home() {
     const [joinModalView, setJoinModalView] = useState(false);
     const [creationModalView, setCreationModalView] = useState(false);
     const [friendsView,setFriendsView] = useState(false);
+    const [estadisticasView, setEstadisticasView] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
     const [backgroundUrl, setBackgroundUrl] = useState();
     const [username, setUsername] = useState("");
@@ -83,6 +85,10 @@ export default function Home() {
         setFriendsView((current) => !current);
     },[])
 
+    const toggleEstadisticasModal = useCallback(() => {
+        setEstadisticasView((current) => !current);
+    },[])
+
     useEffect(() => {
         if (usuario) {
             setUsername(usuario.username);
@@ -95,7 +101,7 @@ export default function Home() {
 
     return (
         <>
-        {!friendsView && 
+        {!friendsView && !estadisticasView && 
             <Nav className="ms-auto mb-2 mb-lg-0" navbar style={{ float: 'right', marginTop: 15, marginRight: 15 }}>
                 <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={toggleAccountMenu}>
                     <p style={{ color: "white", marginRight: 20, fontSize: 20 }} >{username}</p>
@@ -150,9 +156,15 @@ export default function Home() {
                 {friendsView && 
                 <div style={{ width: '36%', height:'100%', marginRight:-12}}>
                     <GetFriendsModal setModalVisible={setFriendsView} modalVisible={friendsView}/>
-                </div>  
-                
+                </div>    
                 }
+                {estadisticasView && 
+                <div style={{ width: '36%', height:'100%', marginLeft:-12}}>
+                    <EstadisticasModal setModalVisible={setEstadisticasView} modalVisible={estadisticasView}/>
+                </div>    
+                }
+
+
                 <div style={{ backgroundColor: 'black', position: 'fixed', bottom: 0, width: '100%', height: 41 }}>
                     <center style={{ color: 'white', marginTop: 5 }}>© MIDPIE</center>
                 </div>

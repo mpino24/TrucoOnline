@@ -66,9 +66,10 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/plan")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/**")).hasAuthority(ADMIN)
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partida/**")).permitAll()
-			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).permitAll() //Cambiar a authenticated ????
-			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).permitAll() //Cambiar a authenticated ????
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partida/**")).authenticated()
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).authenticated() 
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).authenticated() 
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/estadisticas/misEstadisticas")).authenticated()
 			.requestMatchers("/api/v1/profile/edit").authenticated()
 			.requestMatchers("/ws").permitAll()
 			.requestMatchers("/app/mensaje").permitAll()

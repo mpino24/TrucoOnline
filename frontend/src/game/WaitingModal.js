@@ -27,7 +27,12 @@ const WaitingModal = forwardRef((props, ref) => {
             fetch(
                 `/api/v1/partidajugador/players?partidaCode=` + game.codigo,
                 {
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      }
                 }
             )
                 .then((response) => response.json())
