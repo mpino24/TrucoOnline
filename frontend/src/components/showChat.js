@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect, useRef } from "react";
+import React, { forwardRef, useState, useEffect, useRef, useLayoutEffect } from "react";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
@@ -25,9 +25,9 @@ const Chat = forwardRef((props, ref) => {
   const messagesEndRef = useRef(null);
 
   // Efecto para desplazar automáticamente al final cuando los mensajes cambien
-  useEffect(() => {
+  function moveScroll() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [mensajes]);
+  }
 
   useEffect(() => {
     const cliente = new Client({
@@ -107,7 +107,11 @@ const Chat = forwardRef((props, ref) => {
           padding: "10px",
         }}
       >
-        {mensajes.map((msg, i) =>
+        {mensajes.map((msg, i) => {
+          if(mensajes.length-1 === i){
+            moveScroll();
+          }
+          return(
           msg.remitente.id === user.id ? (
             <div key={i} className="own-message">
               <RenderContent contenido={msg.contenido} />
@@ -120,9 +124,12 @@ const Chat = forwardRef((props, ref) => {
               </div>
             </>
           )
+        );
+        }
         )}
-
         <div ref={messagesEndRef} />
+
+        
       </div>
 
       <div className="input-container">
