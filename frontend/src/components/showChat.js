@@ -3,6 +3,7 @@ import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
 import "./Chat.css";
+import RenderContent from "./RenderContent";
 
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
@@ -109,19 +110,18 @@ const Chat = forwardRef((props, ref) => {
         {mensajes.map((msg, i) =>
           msg.remitente.id === user.id ? (
             <div key={i} className="own-message">
-              {msg.contenido}
+              <RenderContent contenido={msg.contenido} />
             </div>
           ) : (
             <>
               <div key={i}>{msg.remitente.username}</div>
               <div key={i} className="other-message">
-                {msg.contenido}
+                <RenderContent contenido={msg.contenido} />
               </div>
             </>
           )
         )}
 
-        {/* Ref hacia el final del contenedor de mensajes */}
         <div ref={messagesEndRef} />
       </div>
 
