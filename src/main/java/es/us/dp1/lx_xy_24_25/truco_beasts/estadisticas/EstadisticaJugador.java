@@ -1,14 +1,21 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
+import java.time.Duration;
+
 import org.jpatterns.gof.CompositePattern.Component;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Component
+@Getter
+@Setter
 public class EstadisticaJugador {
     
 
     
     public Integer partidasJugadas = 0;
-    public Integer tiempoJugado = 0;
+    public Duration tiempoJugado = Duration.ofSeconds(0); // En segundos
     public Integer victorias = 0;
     public Integer derrotas = 0;
     public Integer partidasA2 = 0;
