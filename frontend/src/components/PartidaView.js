@@ -55,19 +55,24 @@ const PartidaView = forwardRef((props, ref) => {
                     {game.conFlor && <TbFlower style={{ verticalAlign: 'middle' }} />}
                     {!game.conFlor && <TbFlowerOff />}
                 </p>
-                <p>{connectedUsers}/{game.numJugadores} jugadores</p>
+                {game.estado !=='FINISHED' && 
+                 <p>{connectedUsers}/{game.numJugadores} jugadores</p>
+                }
+               
             </div>
             <div style={{ display: 'flex', flexDirection: props.interfaz === 'chat' ? 'column' : 'row', alignItems: 'center', gap: '10px', marginTop: props.interfaz === 'chat' ? '10px' : '0' }}>
-                {game && connectedUsers < game.numJugadores &&
+                {game && connectedUsers < game.numJugadores && game.estado === 'WAITING' &&
                     <button className="button" style={{ color: 'brown' }} onClick={() => handleSubmit()}>
                         Unirse
                     </button>
                 }
-                {game &&
+                {game && game.estado !== 'FINISHED' &&
                     <button className="button" style={{ color: 'darkgreen' }} onClick={() => navigate(`/partidas?partidaCode=${game.codigo}`)}>
                         Ver
                     </button>
                 }
+                {game && game.estado === 'FINISHED' &&
+                <p>Partida finalizada</p>}
             </div>
         </div>
     );

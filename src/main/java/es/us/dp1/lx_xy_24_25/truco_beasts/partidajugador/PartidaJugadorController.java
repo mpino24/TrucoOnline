@@ -72,6 +72,8 @@ public class PartidaJugadorController {
         if(pj==null){
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
+        pj.getPlayer().setAmigos(null);
+        pj.getPlayer().setSolicitudes(null);
         return ResponseEntity.ok(pjService.getPartidaJugadorUsuarioActual());
     }
 

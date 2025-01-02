@@ -113,7 +113,11 @@ const WaitingModal = forwardRef((props, ref) => {
         )
             .then((response) => response.text())
             .then((data) => {
-                setFriends(JSON.parse(data))
+                //Los amigos que ya están en la partida no deben aparecer en la lista de amigos a invitar
+                const amigos = JSON.parse(data);
+                const jugadoresEnPartida = jugadores.map(j => j.player.id);
+                const amigosFiltrados = amigos.filter(amigo => !jugadoresEnPartida.includes(amigo.id));
+                setFriends(amigosFiltrados)
 
             })
             .catch((message) => alert(message));
@@ -124,15 +128,28 @@ const WaitingModal = forwardRef((props, ref) => {
 
     function sendInvitation(friendId) {
         fetch(
-            `/api/v1/chat/with/` + friendId,
+            `/api/v1/chat/sendto/` + friendId,
             {
                 method: "POST",
                 headers: {
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${jwt}`,
                 },
-                body: JSON.stringify({ contenido: "Te invito a la partida {"+game.codigo+"}" }),
+                body: JSON.stringify({ 
+                    remitente: {id: usuario.id},
+                    fechaEnvio: new Date().toISOString(),
+                    chat: { id: 0 },
+                    contenido: "Te invito a la partida {"+game.codigo+"}" }),
             }
-        )
+        ).then((response) => {
+            if (!response.ok) {
+                return response.text().then((errorMessage) => {
+                    throw new Error("Error al enviar la invitación: " + errorMessage);
+                });
+            }else{
+                alert("Invitación enviada a "+friends.find(friend => friend.id === friendId).userName);
+            }
+        }).catch((message) => alert("Error al enviar la invitación: "+message));
     }
 
     return (
@@ -142,10 +159,11 @@ const WaitingModal = forwardRef((props, ref) => {
                     style={{ position: 'absolute', right: '10px', width: '30px', height: '30px', cursor: 'pointer' }} onClick={() => { getFriends() }} />
                 {friendList && (
                     <div
-                        style={{backgroundColor: 'gray',position: 'absolute',right: '10px',top: '165px',display: 'flex',flexDirection: 'column',justifyContent: 'center',alignItems: 'center',borderRadius: '10px',padding: '10px'}}  >
+                        style={{backgroundColor: 'gray',position: 'absolute',right: '10px',top: '165px',display: 'flex',flexDirection: 'column',justifyContent: 'center',alignItems: 'center',borderRadius: '10px',padding: '10px',zIndex:1000}}  >
                         <div
                             style={{overflowY: 'auto',height: '200px',width: '200px'}}
                         >
+                            <p style={{display:'flex',justifyContent:'center',alignItems: 'center'}}>Invitar amigos</p>
                             {friends.map((friend) => (
                                 <div
                                     key={friend.id}

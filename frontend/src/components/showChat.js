@@ -132,6 +132,11 @@ const Chat = forwardRef((props, ref) => {
           onChange={(e) => setMensaje(e.target.value)}
           placeholder="Escribe un mensaje..."
           className="input-text"
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleEnviar();
+            }
+          }}
         />
         <button onClick={handleEnviar} className="btn-send">
           Enviar

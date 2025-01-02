@@ -41,7 +41,7 @@ public class ChatRestController {
         return chatService.findChatWith(userId);
     }
 
-    @PostMapping("/with/{userId}")
+    @PostMapping("/sendto/{userId}")
     public Mensaje sendNewMessage(@PathVariable Integer userId, @RequestBody Mensaje mensaje) throws NotYourChatException {
         mensaje.setChat(chatService.findChatWith(userId));
         mensaje.setRemitente(userService.findCurrentUser());
