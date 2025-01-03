@@ -1,24 +1,25 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class estadisticasServiceTest {
+@SpringBootTest
+public class EstadisticasServiceTest {
     @Autowired
     private EstadisticasService estadisticasService;
 
-    @Autowired
+    @Mock
     private EstadisticasRepository estadisticasRepository;
 
 
     @Test
     void testGetEstadisticasJugador() {
 
-    Integer jugadorId = 1; // Usa el ID del jugador que generaste.
+        Integer jugadorId = 1; // Usa el ID del jugador que generaste.
 
         // Act: Llama al método que deseas probar.
         EstadisticaJugador result = estadisticasService.getEstadisticasJugador(jugadorId);
