@@ -137,29 +137,30 @@ export default function Home() {
                     }
                 </Nav>
             }
-            {roles.includes('ADMIN') && !estadisticasView && !friendsView&& (
-            <div expand='md' style={{float: 'left'}}>
-                <button className="button-admin" onClick={() => {navigate("/users")}}>
-                USUARIOS
-                </button>
-                <button className="button-admin" onClick={() => {navigate("/admin/partidas")}}>
-                PARTIDAS EN CURSO
-                </button>
-                <button className="button-admin" onClick={() => {navigate("/admin/partidas/terminadas")}}>
-                PARTIDAS JUGADAS
-                </button>
-            </div>
+            {roles.includes('ADMIN') && !estadisticasView && !friendsView && (
+                <div expand='md' style={{ float: 'left' }}>
+                    <button className="button-admin" onClick={() => { navigate("/users") }}>
+                        USUARIOS
+                    </button>
+                    <button className="button-admin" onClick={() => { navigate("/admin/partidas") }}>
+                        PARTIDAS EN CURSO
+                    </button>
+                    <button className="button-admin" onClick={() => { navigate("/admin/partidas/terminadas") }}>
+                        PARTIDAS JUGADAS
+                    </button>
+                </div>
             )}
 
             <div className="home-page-container" style={{ backgroundImage: `url(${backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', height: '100vh', width: '100vw' }}>
-               {!estadisticasView &&
-               <div style={{ width: '36%' }}>
-                    <div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}  onClick={toggleEstadisticasModal}>
-                        <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
-                        <RiArrowRightDoubleLine style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
-                        <div />
+                {!estadisticasView &&
+                    <div style={{ width: '36%' }}>
+                        <div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={toggleEstadisticasModal}>
+                            <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
+                            <RiArrowRightDoubleLine style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
+                            <div />
+                        </div>
                     </div>
-                </div>
+                }
                 {joinModalView &&
                     <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000, width: '60%' }}>
                         <GetJoinModal
@@ -192,9 +193,7 @@ export default function Home() {
                         <GetFriendsModal setModalVisible={setFriendsView} modalVisible={friendsView} />
                     </div>
                 }
-                            }
-
-                
+ 
                 {estadisticasView &&
                     <div style={{
                         position: 'fixed',
