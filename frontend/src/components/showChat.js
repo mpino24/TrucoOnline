@@ -1,8 +1,9 @@
-import React, { forwardRef, useState, useEffect, useRef } from "react";
+import React, { forwardRef, useState, useEffect, useRef, useLayoutEffect } from "react";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
 import "./Chat.css";
+import RenderContent from "./RenderContent";
 
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
@@ -24,9 +25,9 @@ const Chat = forwardRef((props, ref) => {
   const messagesEndRef = useRef(null);
 
   // Efecto para desplazar automáticamente al final cuando los mensajes cambien
-  useEffect(() => {
+  function moveScroll() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [mensajes]);
+  }
 
   useEffect(() => {
     const cliente = new Client({
@@ -70,7 +71,7 @@ const Chat = forwardRef((props, ref) => {
         body: JSON.stringify({
           contenido: mensaje,
           chat: { id: props.idChat },
-          remitente: { id: tokenService.getUser().id },
+          remitente: { id: tokenService.getUser().id, username: tokenService.getUser().username },
           username: { username: tokenService.getUser().username },
         }),
         headers: {
@@ -106,23 +107,29 @@ const Chat = forwardRef((props, ref) => {
           padding: "10px",
         }}
       >
-        {mensajes.map((msg, i) =>
+        {mensajes.map((msg, i) => {
+          if(mensajes.length-1 === i){
+            moveScroll();
+          }
+          return(
           msg.remitente.id === user.id ? (
             <div key={i} className="own-message">
-              {msg.contenido}
+              <RenderContent contenido={msg.contenido} />
             </div>
           ) : (
             <>
               <div key={i}>{msg.remitente.username}</div>
               <div key={i} className="other-message">
-                {msg.contenido}
+                <RenderContent contenido={msg.contenido} />
               </div>
             </>
           )
+        );
+        }
         )}
-
-        {/* Ref hacia el final del contenedor de mensajes */}
         <div ref={messagesEndRef} />
+
+        
       </div>
 
       <div className="input-container">
@@ -132,6 +139,11 @@ const Chat = forwardRef((props, ref) => {
           onChange={(e) => setMensaje(e.target.value)}
           placeholder="Escribe un mensaje..."
           className="input-text"
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleEnviar();
+            }
+          }}
         />
         <button onClick={handleEnviar} className="btn-send">
           Enviar
