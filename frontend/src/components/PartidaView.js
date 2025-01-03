@@ -48,33 +48,32 @@ const PartidaView = forwardRef((props, ref) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: props.interfaz === 'chat' ? 'column' : 'row', alignItems: props.interfaz === 'chat' ? 'flex-start' : 'center', gap: '10px',height:'auto',flexGrow:1 }}>
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
-                <p style={{ fontSize: 18, textDecoration: 'underline' }}>Partida {game.codigo}:</p>
-                <p style={{ marginLeft: 10 }}>{game.puntosMaximos} puntos</p>
-                <p>
-                    {game.conFlor && <TbFlower style={{ verticalAlign: 'middle' }} />}
-                    {!game.conFlor && <TbFlowerOff />}
-                </p>
-                {game.estado !=='FINISHED' && 
-                 <p>{connectedUsers}/{game.numJugadores} jugadores</p>
-                }
-               
-            </div>
-            <div style={{ display: 'flex', flexDirection: props.interfaz === 'chat' ? 'column' : 'row', alignItems: 'center', gap: '10px', marginTop: props.interfaz === 'chat' ? '10px' : '0' }}>
-                {game && connectedUsers < game.numJugadores && game.estado === 'WAITING' &&
-                    <button className="button" style={{ color: 'brown' }} onClick={() => handleSubmit()}>
-                        Unirse
-                    </button>
-                }
-                {game && game.estado !== 'FINISHED' &&
-                    <button className="button" style={{ color: 'darkgreen' }} onClick={() => navigate(`/partidas?partidaCode=${game.codigo}`)}>
-                        Ver
-                    </button>
-                }
-                {game && game.estado === 'FINISHED' &&
-                <p>Partida finalizada</p>}
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
+            <p style={{ fontSize: 18, textDecoration: 'underline' }}>Partida {game.codigo}:</p>
+            <p style={{ marginLeft: 10 }}>{game.puntosMaximos} puntos</p>
+            <p>
+                {game.conFlor && <TbFlower style={{ verticalAlign: 'middle' }} />}
+                {!game.conFlor && <TbFlowerOff />}
+            </p>
+            {game.estado !=='FINISHED' && 
+             <p>{connectedUsers}/{game.numJugadores} jugadores</p>
+            }
         </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px', marginTop: props.interfaz === 'chat' ? '10px' : '0' }}>
+            {game && connectedUsers < game.numJugadores && game.estado === 'WAITING' &&
+                <button className="button" style={{ color: 'brown' }} onClick={() => handleSubmit()}>
+                    Unirse
+                </button>
+            }
+            {game && game.estado !== 'FINISHED' &&
+                <button className="button" style={{ color: 'darkgreen' }} onClick={() => navigate(`/partidas?partidaCode=${game.codigo}`)}>
+                    Ver
+                </button>
+            }
+            {game && game.estado === 'FINISHED' &&
+            <p>Partida finalizada</p>}
+        </div>
+    </div>
     );
 });
 

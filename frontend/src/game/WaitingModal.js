@@ -27,8 +27,6 @@ const WaitingModal = forwardRef((props, ref) => {
     const user = tokenService.getUser();
     const navigate = useNavigate();
     const [stompClient, setStompClient] = useState(null);
-    const [mensaje, setMensaje] = useState("");
-    const [chatId, setChatId] = useState(null);
 
 
     useEffect(() => {
@@ -122,7 +120,7 @@ const WaitingModal = forwardRef((props, ref) => {
                     const jugadoresEnPartida = jugadores.map(j => j.player.id);
                     const amigosFiltrados = amigos.filter(amigo => !jugadoresEnPartida.includes(amigo.id));
                     setFriends(amigosFiltrados)
-                }else{
+                } else {
                     setFriends([]);
                 }
 
@@ -133,70 +131,74 @@ const WaitingModal = forwardRef((props, ref) => {
 
     }
 
-    function findChatId(friendId) {
-        fetch(
-            `/api/v1/chat/with/` + friendId,
-            {
+    async function findChatId(friendId) {
+        try {
+            const response = await fetch(`/api/v1/chat/with/` + friendId, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
-            }
-        ).then((response) => {
+            });
+
             if (!response.ok) {
-                return response.text().then((errorMessage) => {
-                    throw new Error("Error al buscar el chat: " + errorMessage);
-                });
-            } else {
-                return response.json();
+                const errorMessage = await response.text();
+                throw new Error("Error al buscar el chat: " + errorMessage);
             }
-        }).then((data) => {
-            setChatId(data.id);
-        }).catch((message) => alert("Error al buscar el chat: " + message));
+
+            const data = await response.json();
+            return data.id; // Devuelve el ID del chat
+        } catch (error) {
+            alert("Error al buscar el chat: " + error.message);
+            throw error; // Lanza el error para que la función llamante pueda manejarlo
+        }
     }
 
-
-    function sendInvitation(friendId) {
-        findChatId(friendId);
-
-        const cliente = new Client({
-            brokerURL: "ws://localhost:8080/ws",
-            connectHeaders: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
-
-        cliente.onConnect = () => {
-            console.log("Conectado exitosamente");
-            cliente.subscribe(`/topic/chat/${chatId}`);
-            setStompClient(cliente);
-
-            evtEnviarMensaje();
-        };
-
-        cliente.onDisconnect = () => {
-            console.log("Desconectado del servidor STOMP");
-        };
-
-        cliente.onStompError = (frame) => {
-            console.error("Error de STOMP: ", frame.headers["message"]);
-            console.error("Detalles: ", frame.body);
-        };
-
-        cliente.activate();
-        
-
-        
-
+    async function sendInvitation(friendId) {
+        try {
+            const chatId = await findChatId(friendId);
+            const cliente = new Client({
+                brokerURL: "ws://localhost:8080/ws",
+                connectHeaders: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+    
+            // Crea una promesa para esperar la conexión STOMP
+            const connectPromise = new Promise((resolve, reject) => {
+                cliente.onConnect = () => {
+                    console.log("Conectado exitosamente");
+                    cliente.subscribe(`/topic/chat/${chatId}`);
+                    setStompClient(cliente); // Asigna el cliente STOMP una vez conectado
+                    resolve(cliente); // Resuelve la promesa con el cliente STOMP
+                };
+    
+                cliente.onDisconnect = () => {
+                    console.log("Desconectado del servidor STOMP");
+                };
+    
+                cliente.onStompError = (frame) => {
+                    console.error("Error de STOMP: ", frame.headers["message"]);
+                    console.error("Detalles: ", frame.body);
+                    reject(new Error("Error de STOMP: " + frame.headers["message"]));
+                };
+            });
+    
+            cliente.activate(); // Activa el cliente STOMP
+    
+            const connectedClient = await connectPromise; // Espera a que el cliente esté completamente conectado
+    
+            evtEnviarMensaje(chatId, connectedClient); // Pasa el cliente conectado a evtEnviarMensaje
+        } catch (error) {
+            console.error("Error en sendInvitation: ", error.message);
+        }
     }
-
-    const evtEnviarMensaje = () => {
-        setMensaje("Te invito a la partida {" + game.codigo + "}");
-        if (stompClient && stompClient.connected) {
-            stompClient.publish({
+    
+    const evtEnviarMensaje = (chatId, connectedClient) => {
+        if (connectedClient && connectedClient.connected) {
+            connectedClient.publish({
                 destination: "/app/mensaje",
                 body: JSON.stringify({
-                    contenido: mensaje,
+                    contenido: `Te invito a la partida {${game.codigo}}`,
                     chat: { id: chatId },
                     remitente: { id: tokenService.getUser().id, username: tokenService.getUser().username },
                     username: { username: tokenService.getUser().username },
@@ -206,17 +208,14 @@ const WaitingModal = forwardRef((props, ref) => {
                 },
             });
             console.log("Mensaje enviado");
-
-            stompClient.deactivate();
-
+    
+            connectedClient.deactivate(); // Desactiva el cliente después de enviar el mensaje
         } else {
             console.error("STOMP aún no está listo o no está conectado");
         }
     };
-
-
-
-
+    
+    
 
     return (
         <>
@@ -326,7 +325,7 @@ const WaitingModal = forwardRef((props, ref) => {
             <LeavingGameModal
                 modalIsOpen={leavingModal}
                 setIsOpen={setLeavingModal}
-                />
+            />
             <ExpeledModal
                 modalIsOpen={expeledView} />
         </>

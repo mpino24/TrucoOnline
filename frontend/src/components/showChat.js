@@ -137,7 +137,7 @@ const Chat = forwardRef((props, ref) => {
         {mensajes.map((msg, i) => {
           return (
             msg.remitente.id === user.id ? (
-              <div key={i} className="own-message" style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+              <div key={i} className="own-message" style={{ display: 'flex', flexDirection: 'column' }}>
                 <RenderContent contenido={msg.contenido} />
                 <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
               </div>
@@ -145,7 +145,7 @@ const Chat = forwardRef((props, ref) => {
               <>
                 <div key={i}>{msg.remitente.username}</div>
                 <div key={i} className="other-message">
-                  <RenderContent contenido={msg.contenido} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} />
+                  <RenderContent contenido={msg.contenido} style={{ display: 'flex', flexDirection: 'column' }} />
                   <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
                 </div>
               </>
