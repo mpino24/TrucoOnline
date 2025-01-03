@@ -136,11 +136,6 @@ export default function Home() {
                     }
                 </Nav>
             }
-
-
-                }
-            </Nav>
-        }   
             
         
             {roles.includes('ADMIN') && (
