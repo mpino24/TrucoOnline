@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import ExpeledModal from './ExpeledModal';
 import { FaUserFriends } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
+import { Client } from "@stomp/stompjs";
 
 const WaitingModal = forwardRef((props, ref) => {
     const game = props.game;
@@ -25,6 +26,9 @@ const WaitingModal = forwardRef((props, ref) => {
     const [friends, setFriends] = useState([]);
     const user = tokenService.getUser();
     const navigate = useNavigate();
+    const [stompClient, setStompClient] = useState(null);
+    const [mensaje, setMensaje] = useState("");
+    const [chatId, setChatId] = useState(null);
 
 
     useEffect(() => {
@@ -118,11 +122,14 @@ const WaitingModal = forwardRef((props, ref) => {
         )
             .then((response) => response.text())
             .then((data) => {
-                //Los amigos que ya están en la partida no deben aparecer en la lista de amigos a invitar
                 const amigos = JSON.parse(data);
-                const jugadoresEnPartida = jugadores.map(j => j.player.id);
-                const amigosFiltrados = amigos.filter(amigo => !jugadoresEnPartida.includes(amigo.id));
-                setFriends(amigosFiltrados)
+                if (amigos.length !== 0) {
+                    const jugadoresEnPartida = jugadores.map(j => j.player.id);
+                    const amigosFiltrados = amigos.filter(amigo => !jugadoresEnPartida.includes(amigo.id));
+                    setFriends(amigosFiltrados)
+                }else{
+                    setFriends([]);
+                }
 
             })
             .catch((message) => alert(message));
@@ -131,31 +138,90 @@ const WaitingModal = forwardRef((props, ref) => {
 
     }
 
-    function sendInvitation(friendId) {
+    function findChatId(friendId) {
         fetch(
-            `/api/v1/chat/sendto/` + friendId,
+            `/api/v1/chat/with/` + friendId,
             {
-                method: "POST",
+                method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${jwt}`,
                 },
-                body: JSON.stringify({ 
-                    remitente: {id: usuario.id},
-                    fechaEnvio: new Date().toISOString(),
-                    chat: { id: 0 },
-                    contenido: "Te invito a la partida {"+game.codigo+"}" }),
             }
         ).then((response) => {
             if (!response.ok) {
                 return response.text().then((errorMessage) => {
-                    throw new Error("Error al enviar la invitación: " + errorMessage);
+                    throw new Error("Error al buscar el chat: " + errorMessage);
                 });
-            }else{
-                alert("Invitación enviada a "+friends.find(friend => friend.id === friendId).userName);
+            } else {
+                return response.json();
             }
-        }).catch((message) => alert("Error al enviar la invitación: "+message));
+        }).then((data) => {
+            setChatId(data.id);
+        }).catch((message) => alert("Error al buscar el chat: " + message));
     }
+
+
+    function sendInvitation(friendId) {
+        findChatId(friendId);
+
+        const cliente = new Client({
+            brokerURL: "ws://localhost:8080/ws",
+            connectHeaders: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+
+        cliente.onConnect = () => {
+            console.log("Conectado exitosamente");
+            cliente.subscribe(`/topic/chat/${chatId}`);
+            setStompClient(cliente);
+
+            evtEnviarMensaje();
+        };
+
+        cliente.onDisconnect = () => {
+            console.log("Desconectado del servidor STOMP");
+        };
+
+        cliente.onStompError = (frame) => {
+            console.error("Error de STOMP: ", frame.headers["message"]);
+            console.error("Detalles: ", frame.body);
+        };
+
+        cliente.activate();
+        
+
+        
+
+    }
+
+    const evtEnviarMensaje = () => {
+        setMensaje("Te invito a la partida {" + game.codigo + "}");
+        if (stompClient && stompClient.connected) {
+            stompClient.publish({
+                destination: "/app/mensaje",
+                body: JSON.stringify({
+                    contenido: mensaje,
+                    chat: { id: chatId },
+                    remitente: { id: tokenService.getUser().id, username: tokenService.getUser().username },
+                    username: { username: tokenService.getUser().username },
+                }),
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+            console.log("Mensaje enviado");
+
+            stompClient.deactivate();
+
+        } else {
+            console.error("STOMP aún no está listo o no está conectado");
+        }
+    };
+
+
+
+
 
     return (
         <>
@@ -164,15 +230,15 @@ const WaitingModal = forwardRef((props, ref) => {
                     style={{ position: 'absolute', right: '10px', width: '30px', height: '30px', cursor: 'pointer' }} onClick={() => { getFriends() }} />
                 {friendList && (
                     <div
-                        style={{backgroundColor: 'gray',position: 'absolute',right: '10px',top: '165px',display: 'flex',flexDirection: 'column',justifyContent: 'center',alignItems: 'center',borderRadius: '10px',padding: '10px',zIndex:1000}}  >
+                        style={{ backgroundColor: 'gray', position: 'absolute', right: '10px', top: '165px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}  >
                         <div
-                            style={{overflowY: 'auto',height: '200px',width: '200px'}}
+                            style={{ overflowY: 'auto', height: '200px', width: '200px' }}
                         >
-                            <p style={{display:'flex',justifyContent:'center',alignItems: 'center'}}>Invitar amigos</p>
+                            <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Invitar amigos</p>
                             {friends.map((friend) => (
                                 <div
                                     key={friend.id}
-                                    style={{display: 'flex',alignItems: 'center',justifyContent: 'space-between',marginBottom: '10px'}}
+                                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}
                                 >
                                     <img
                                         style={{
@@ -184,7 +250,7 @@ const WaitingModal = forwardRef((props, ref) => {
                                         src={friend.photo}
                                         alt="Foto de perfil del usuario"
                                     />
-                                    <p style={{margin: 0,flex: 1,textAlign: 'left' }}>
+                                    <p style={{ margin: 0, flex: 1, textAlign: 'left' }}>
                                         {friend.userName}
                                     </p>
 
@@ -264,7 +330,8 @@ const WaitingModal = forwardRef((props, ref) => {
             </div>
             <LeavingGameModal
                 modalIsOpen={leavingModal}
-                setIsOpen={setLeavingModal} />
+                setIsOpen={setLeavingModal}
+                />
             <ExpeledModal
                 modalIsOpen={expeledView} />
         </>

@@ -34,7 +34,7 @@ const JugadorView = forwardRef((props, ref) => {
             .catch((message) => alert(message));
     }
 
-
+/*
     useEffect(() => {
         if (friendBool !== true && solicitudBool) {
             fetch(
@@ -55,7 +55,7 @@ const JugadorView = forwardRef((props, ref) => {
                 })
                 .catch((message) => alert(message));
         }
-    }, [friendBool, jugador.userName, props.isFriend,solicitudBool, props.isSolicitud]);
+    }, [friendBool, jugador.userName, props.isFriend,solicitudBool, props.isSolicitud]);*/
 
     return (
         <div style={{ cursor: 'pointer' }}>

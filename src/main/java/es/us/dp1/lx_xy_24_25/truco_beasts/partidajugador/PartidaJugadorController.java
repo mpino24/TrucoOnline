@@ -78,10 +78,11 @@ public class PartidaJugadorController {
     }
 
 
-    @DeleteMapping("/salir/{partidaJugadorId}")
-    public ResponseEntity<String> eliminateJugadorPartida(@PathVariable("partidaJugadorId") Integer partidaJugadorId){
+    @DeleteMapping("/salir")
+    public ResponseEntity<String> eliminateJugadorPartida(){
         try{
-            pjService.eliminateJugadorPartida(partidaJugadorId);
+            PartidaJugador partidaJugador = pjService.getPartidaJugadorUsuarioActual();
+            pjService.eliminateJugadorPartida(partidaJugador.getId());
             return ResponseEntity.status(HttpStatus.OK).body("Se elimino correctamente");
         }catch (NotAuthorizedException exception){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
