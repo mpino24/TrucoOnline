@@ -77,7 +77,7 @@ public class JugadorController {
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
    
-    @DeleteMapping("isFriend/{amigoId}")
+    @DeleteMapping("/isFriend/{amigoId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity deleteFriend(@PathVariable int amigoId){
         User currentUser= userService.findCurrentUser();
