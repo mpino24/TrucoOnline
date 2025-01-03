@@ -4,20 +4,18 @@ INSERT INTO appusers(id,username,password,authority) VALUES (1,'admin1','$2a$10$
 
 -- Ten player users, named player1 with passwor 0wn3r
 INSERT INTO authorities(id,authority) VALUES (2,'PLAYER');
-INSERT INTO appusers(id,username,password,authority) VALUES (3,'MNB3620','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (4,'player1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (5,'player2','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (6,'player3','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (7,'player4','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (8,'player5','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (9,'player6','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (10,'player7','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (11,'player8','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (12,'player9','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (13,'player10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (14,'hmf2475','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (15,'mvs9857','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
-INSERT INTO appusers(id,username,password,authority) VALUES (16,'phb1628','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (2,'player0','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (3,'player1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (4,'player2','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (5,'player3','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (6,'player4','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (7,'player5','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (8,'player6','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (9,'player7','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (10,'player8','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (11,'player9','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+INSERT INTO appusers(id,username,password,authority) VALUES (12,'player10','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',2);
+
 
 -- Insertar partidas
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (0,2,'WWWWW',FALSE,15,0,0,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
@@ -30,16 +28,16 @@ INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,P
 --INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (7,2,'PWERT',FALSE,15,1,2,'PUBLICA',null,null);
 
 -- Inserts de players
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1,'Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/jaguar.jpg',13);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (2,'Paula', 'Rosa', 'paula@alum.us.es','http://localhost:8080/resources/images/paula.jpg',14);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1,'jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/jorge.jpg',1);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (2,'Paula', 'Rosa', 'paula@alum.us.es','http://localhost:8080/resources/images/paula.jpg',2);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (3,'Maria', 'del', 'pino@alum.us.es','http://localhost:8080/resources/images/canguro.jpg',3);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (4,'Eloy', 'Eloy', 'eloy@alum.us.es','http://localhost:8080/resources/images/quebuenascartas.jpg',4);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (5,'Ivan', 'FerLinandez', 'ivan@alum.us.es','http://localhost:8080/resources/images/mosca.jpg',5);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (6,'jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/jorge.jpg',6);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (7,'David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/cervecita.jpg',7);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (8,'Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/gorila.jpg',8);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (9,'otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/ballena.jpg',9);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (10,'lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/lampi.jpg',10);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (6,'David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/cervecita.jpg',6);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (7,'Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/gorila.jpg',7);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (8,'otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/ballena.jpg',8);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (9,'lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/lampi.jpg',9);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (10,'Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/jaguar.jpg',10);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (11,'mono', 'bananas', 'monin@alum.us.es','https://media1.tenor.com/m/xldK7lpjZyMAAAAd/goidrain-monkey.gif',11);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (12,'bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/robot.jpg',12);
 

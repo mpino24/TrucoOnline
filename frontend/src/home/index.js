@@ -138,7 +138,7 @@ export default function Home() {
             }
             
         
-            {roles.includes('ADMIN') && (
+            {roles.includes('ADMIN') && !estadisticasView && !friendsView&& (
             <div expand='md' style={{float: 'left'}}>
                 <button className="button-admin" onClick={() => {navigate("/users")}}>
                 USUARIOS
