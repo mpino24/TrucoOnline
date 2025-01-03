@@ -20,9 +20,7 @@ const SolicitudList = forwardRef((props, ref) => {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -48,9 +46,7 @@ const SolicitudList = forwardRef((props, ref) => {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())

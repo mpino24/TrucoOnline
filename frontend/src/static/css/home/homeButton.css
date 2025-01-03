@@ -40,19 +40,3 @@
     background-color: var(--main-red-color) !important;
     box-shadow: 0px 15px 20px rgba(229, 46, 46, 0.4);
   }
-
-  .button-admin {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    margin: 15px;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 0;
-    -webkit-text-stroke: 1px black;
-  }
-  
-  .button-admin:hover {
-    transform: translateY(3px);
-  }
