@@ -40,7 +40,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
             }
 
         }
-    },[jwt, userName,amigos])
+    }, [jwt, userName, amigos])
 
     function fetchFriends() {
         fetch(
@@ -171,7 +171,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 height: '95vh',
             }}
         >
-            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
+            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%',overflow: 'hidden', paddingBottom: '60px' }}>
                 <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => closeModal()} />
                 {!chatVisible &&
                     <>
@@ -215,13 +215,13 @@ const GetFriendsModal = forwardRef((props, ref) => {
                         {player &&
                             <JugadorView jugador={player} />}
                         {!player && !requestView &&
-                            <div>
+                            <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 170px)' }}>
                                 <JugadorList jugadores={amigos}
                                     mostrarChat={mostrarChat} />
                             </div>
                         }
                         {requestView &&
-                            <div>
+                            <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 160px)' }}>
                                 <SolicitudList jugadores={request}
                                     setJugadores={setRequest} />
                             </div>

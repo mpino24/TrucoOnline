@@ -24,8 +24,9 @@ const JugadorList = forwardRef((props, ref)  => {
     });
     return (
 
-            <div style={{overflowY:'auto',maxHeight: '400px'}}>
+            <div style={{height: '100vh'}}>
                 {jugadoresList}
+                <div style={{height: '6vh'}}></div>
             </div>
 
         
