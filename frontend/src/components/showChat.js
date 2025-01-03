@@ -11,6 +11,8 @@ const Chat = forwardRef((props, ref) => {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+
+
   const [mensajes, setMensajes] = useFetchState(
     [],
     `/api/v1/chat/${props.idChat}`,
@@ -23,11 +25,29 @@ const Chat = forwardRef((props, ref) => {
 
   // Ref para el contenedor de mensajes
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   // Efecto para desplazar automáticamente al final cuando los mensajes cambien
   function moveScroll() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      moveScroll();
+    });
+
+    if (messagesContainerRef.current) {
+      observer.observe(messagesContainerRef.current, { childList: true, subtree: true });
+    }
+
+    return () => {
+      if (messagesContainerRef.current) {
+        observer.disconnect();
+      }
+    };
+  }, [mensajes]);
+
 
   useEffect(() => {
     const cliente = new Client({
@@ -89,6 +109,11 @@ const Chat = forwardRef((props, ref) => {
     evtEnviarMensaje();
   };
 
+  const formatFecha = (fecha) => {
+    const date = new Date(fecha);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  };
+
   return (
     <div
       style={{
@@ -106,30 +131,30 @@ const Chat = forwardRef((props, ref) => {
           overflowY: "auto",
           padding: "10px",
         }}
+        ref={messagesContainerRef}
       >
         {mensajes.map((msg, i) => {
-          if(mensajes.length-1 === i){
-            moveScroll();
-          }
-          return(
-          msg.remitente.id === user.id ? (
-            <div key={i} className="own-message">
-              <RenderContent contenido={msg.contenido} />
-            </div>
-          ) : (
-            <>
-              <div key={i}>{msg.remitente.username}</div>
-              <div key={i} className="other-message">
+          return (
+            msg.remitente.id === user.id ? (
+              <div key={i} className="own-message">
                 <RenderContent contenido={msg.contenido} />
+                <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
               </div>
-            </>
-          )
-        );
+            ) : (
+              <>
+                <div key={i}>{msg.remitente.username}</div>
+                <div key={i} className="other-message">
+                  <RenderContent contenido={msg.contenido} />
+                  <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
+                </div>
+              </>
+            )
+          );
         }
         )}
         <div ref={messagesEndRef} />
 
-        
+
       </div>
 
       <div className="input-container">
