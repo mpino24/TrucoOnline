@@ -168,7 +168,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 alignItems: 'stretch',
-                height: '95vh',
+                height: '100vh',
             }}
         >
             <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%',overflow: 'hidden', paddingBottom: '60px' }}>

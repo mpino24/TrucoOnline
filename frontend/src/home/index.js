@@ -125,15 +125,19 @@ export default function Home() {
                     </div>
                 </div>
                 {joinModalView &&
-                    <GetJoinModal
-                        setModalVisible={setJoinModalView}
-                        modalVisible={joinModalView} />
+                    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000, width: '60%' }}>
+                        <GetJoinModal
+                            setModalVisible={setJoinModalView}
+                            modalVisible={joinModalView} />
+                    </div>
                 }
                 {creationModalView &&
-                    <CreationModal setCreationModalView={setCreationModalView} creationModalView={creationModalView} />
+                    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000 }}>
+                        <CreationModal setCreationModalView={setCreationModalView} creationModalView={creationModalView} />
+                    </div>
                 }
                 {!(joinModalView || creationModalView) &&
-                    <div className="hero-div">
+                    <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
                         <h1>¿Un truco?</h1>
                         <button className="home-button" onClick={toggleCreationModal}>Crear</button>
                         <button className="home-button" onClick={toggleJoinModal}>Unirte</button>
@@ -148,7 +152,7 @@ export default function Home() {
                     </div>
                 }
                 {friendsView &&
-                    <div style={{ width: '36%', height: '100%', marginRight: -12 }}>
+                    <div style={{ position: 'fixed', right: 0, top: 0, height: '100%', width: '36%' }}>
                         <GetFriendsModal setModalVisible={setFriendsView} modalVisible={friendsView} />
                     </div>
 
