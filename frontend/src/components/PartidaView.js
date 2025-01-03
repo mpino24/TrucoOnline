@@ -16,12 +16,7 @@ const PartidaView = forwardRef((props, ref) => {
             fetch(
                 "/api/v1/partidajugador/numjugadores?partidaId=" + game.id,
                 {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                      }
+                    method: "GET"
                 }
             )
                 .then((response) => response.text())
@@ -41,13 +36,8 @@ const PartidaView = forwardRef((props, ref) => {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
                 },
-
-            
+            }
         )
             .then((response) => {
                 response.text();

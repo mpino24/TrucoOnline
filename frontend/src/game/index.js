@@ -29,7 +29,7 @@ export default function Game(){
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${jwt}`,
-                      }
+                      },
                 }
             )
                 .then((response) => response.json())

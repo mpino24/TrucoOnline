@@ -8,9 +8,7 @@ import PartidaView from "./PartidaView";
 import { VscChromeClose } from "react-icons/vsc";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import tokenService from "../services/token.service";
 
-const jwt = tokenService.getLocalAccessToken();
 const GetJoinModal = forwardRef((props, ref) => {
 
     const [message, setMessage] = useState(null);
@@ -31,12 +29,7 @@ const GetJoinModal = forwardRef((props, ref) => {
         fetch(
             "/api/v1/partida/search?codigo=" + codigo,
             {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                method: "GET"
             }
         )
             .then((response) => response.text())

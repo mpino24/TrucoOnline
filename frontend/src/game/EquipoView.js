@@ -13,12 +13,7 @@ const EquipoView = forwardRef((props, ref) => {
         fetch(
             "/api/v1/partidajugador/changeteam?userId=" + usuario.id,
             {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                method: "PATCH"
             }
         )
             .then((response) => {

@@ -19,9 +19,7 @@ const LeavingGameModal = forwardRef((props, ref) => {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                  },
             }
         )
             .then((response) => response.text())
