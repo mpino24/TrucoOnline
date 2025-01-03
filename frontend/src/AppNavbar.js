@@ -14,7 +14,6 @@ function AppNavbar() {
 
 
 
-
     useEffect(() => {
         if (jwt) {
             setRoles(jwt_decode(jwt).authorities);
@@ -39,21 +38,33 @@ function AppNavbar() {
     function handleClick() {
         if (jwt) {
             fetch(
-                "/api/v1/partidajugador/connectedTo/" + tokenService.getUser().id,
+                "/api/v1/partidajugador/partidaJugadorActual",
                 {
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                      },
                 }
             )
-                .then((response) => response.text())
-                .then((data) => {
-                    if (data > 0) {
-                        setLeavingModal(true)
-                    }
-                    else {
+            .then((response) => {
+                if (response.status === 202) { 
+                    return null; 
+                }
+                return response.json(); 
+            })
+            .then((data) => {
+                if (data !== null) {
+                    console.log(data); 
+                    
+                    if (data.game && data.game.estado !== "FINALIZADA") {
+                        setLeavingModal(true);
+                    } else {
                         navigate("/home");
-
                     }
-                })
+                } else {
+                    navigate("/home");
+                }
+            })
                 .catch((message) => alert(message));
         } else {
             navigate("/");
@@ -66,6 +77,7 @@ function AppNavbar() {
         <div expand="md" dark style={{ float: 'left' }}>
             <img alt="logo" src={logoChico} onClick={() => handleClick()} style={{ height: 90, width: 90, borderRadius: 500, margin: 10, cursor: 'pointer' }} />
             <LeavingGameModal
+
             modalIsOpen={leavingModal}
             setIsOpen={setLeavingModal}/>
         </div>

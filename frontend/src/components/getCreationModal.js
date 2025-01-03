@@ -24,7 +24,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
     };
    
   
-    const [numJugadores, setNumJugadores] = useState(null);
+    const [numJugadores, setNumJugadores] = useState(2);
     const [message, setMessage] = useState(null); 
     const [visible, setVisible] = useState(false);
     const [partidaVaciaParse, setPartidaVaciaParse] = useFetchState(

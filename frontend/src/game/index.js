@@ -15,10 +15,12 @@ export default function Game(){
     const codigo = currentUrl.split('partidaCode=')[1].substring(0,5);
     const [game,setGame]= useState(null);
     
+   
+
 
     useEffect(() => { 
         let intervalId;
-
+ 
         function fetchGame() {
             
             fetch(
@@ -38,11 +40,20 @@ export default function Game(){
                     }
                 })
         }
+
+       
+
+      
+        
+    
         fetchGame();
 
         intervalId = setInterval(fetchGame, 1000);
+
         
-        return () => clearInterval(intervalId)
+
+        
+        return () => clearInterval(intervalId) ;
     },[codigo])
 
 

@@ -10,9 +10,17 @@ const listaUrlCartasVacias = [
 ];
 
 const CartasVolteadas = forwardRef((props, ref) => {
-  const { cartasDispo, posicionListaCartas, jugadorMano, numJugadores } = props;
+  let { cartasDispo, posicionListaCartas, jugadorMano, numJugadores } = props;
 
-  // Define card sizes
+  // Define card sizes 
+
+
+  const eresEspectador= typeof posicionListaCartas === 'object'
+  console.log("ESPECTADOOOOOOOOOOOOOOOOOOOR")
+  console.log(eresEspectador)
+  if(eresEspectador){
+    posicionListaCartas=0
+  }
   const cartaDeUna = { width: '50px', height: '75px' };
   const cartaDeDos = { width: '75px', height: '75px' };
   const cartaDeTres = { width: '100px', height: '75px' };
@@ -31,11 +39,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...cartaDeUna,
       top: '40%',
       right: '20%',
-      rotate: '270deg',
+      rotate: '280deg',
     },
     {
       ...cartaDeUna,
-      top: '70px',
+      top: '80px',
       left: '50%',
       rotate: '180deg',
     },
@@ -49,11 +57,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...cartaDeDos,
       top: '40%',
       right: '20%',
-      rotate: '270deg',
+      rotate: '280deg',
     },
     {
       ...cartaDeDos,
-      top: '70px',
+      top: '80px',
       left: '50%',
       rotate: '180deg',
     },
@@ -67,11 +75,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...cartaDeTres,
       top: '40%',
       right: '20%',
-      rotate: '270deg',
+      rotate: '280deg',
     }, //7
     {
       ...cartaDeTres,
-      top: '70px',
+      top: '80px',
       left: '50%',
       rotate: '180deg',
     },
@@ -85,11 +93,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...estiloMazoOtro,
       top: '20%',
       right: '21%',
-      rotate: '270deg',
+      rotate: '280deg',
     }, //10
     {
       ...estiloMazoOtro,
-      top: '70px',
+      top: '80px',
       left: '38%',
       rotate: '180deg',
     },
@@ -98,6 +106,18 @@ const CartasVolteadas = forwardRef((props, ref) => {
       top: '81%',
       left: '30%',
     },
+   { ...cartaDeTres,
+    top: '80%',
+    left: '50%',
+  },
+  { ...cartaDeDos,
+    top: '80%',
+    left: '50%',
+  },
+  { ...cartaDeUna,
+    top: '80%',
+    left: '50%',
+  },
   ];
 
   return (
@@ -121,7 +141,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
         // Determine style based on position and number of cards
         let estiloSegunPosicionYNumCartas;
         if (cartasRestantes === 3) {
-          if ((posicionListaCartas + pos) % 2 === 0)
+          if(eresEspectador && pos===0){
+            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
+            estiloSegunPosicionYNumCartas = listaEstilos[13];
+          }
+          else if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[8];
           else if (
             posicionListaCartas + 1 === pos ||
@@ -130,10 +154,16 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[7];
           else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
             estiloSegunPosicionYNumCartas = listaEstilos[6];
+          else if (posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0)
+            estiloSegunPosicionYNumCartas = listaEstilos[6];
           else
             estiloSegunPosicionYNumCartas = listaEstilos[7];
         } else if (cartasRestantes === 2) {
-          if ((posicionListaCartas + pos) % 2 === 0)
+          if(eresEspectador && pos===0){
+            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
+            estiloSegunPosicionYNumCartas = listaEstilos[14];
+          }
+          else if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[5];
           else if (
             posicionListaCartas + 1 === pos ||
@@ -145,7 +175,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
           else
             estiloSegunPosicionYNumCartas = listaEstilos[4];
         } else {
-          if ((posicionListaCartas + pos) % 2 === 0)
+          if(eresEspectador && pos===0){
+            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
+            estiloSegunPosicionYNumCartas = listaEstilos[15];
+          }
+          else if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[2];
           else if (
             posicionListaCartas + 1 === pos ||
@@ -224,7 +258,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
             </div>
 
             {/* Conditionally render cartasVolteadas */}
-            {pos !== posicionListaCartas && (
+            {(pos !== posicionListaCartas || eresEspectador) &&(
               <div
                 className="cardStyle swirlStyle"
                 style={{

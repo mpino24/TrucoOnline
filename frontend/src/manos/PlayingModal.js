@@ -26,6 +26,7 @@ const PlayingModal = forwardRef((props, ref) => {
     
 
 
+
     const puntosSinTruco = 1;
     const puntosConTruco = 2;
     const puntosConRetruco = 3;
@@ -36,6 +37,8 @@ const PlayingModal = forwardRef((props, ref) => {
     const [posicion, setPosicion] = useFetchState(
         {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
     );
+
+    const [nombresJugadores, setNombresJugadores] = useState([]);
 
     const audioRef = useRef(null);
     const dropAreaRef = useRef(null);
@@ -107,10 +110,32 @@ const PlayingModal = forwardRef((props, ref) => {
 
     useEffect(() => {
         let intervalId;
-        
+        let intervalId2;
         mostrarMensaje();
         fetchMano();
         intervalId = setInterval(fetchMano, 1000);
+
+
+        function fetchPlayerNames() {
+            fetch(
+                '/api/v1/partidajugador/players?partidaCode='+game.codigo,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                      },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    const nombres = data.map(partidaJugador => partidaJugador.player.userName);
+                    setNombresJugadores(nombres);
+            })
+       }
+
+       fetchPlayerNames();
+
+
         
         return () => clearInterval(intervalId);
     }, [game.codigo, posicion]);
@@ -193,12 +218,21 @@ const PlayingModal = forwardRef((props, ref) => {
                                     onDrag={(evento) => onDrag(evento)}
                                     onDragEnd={(evento) => onDragEnd(evento, carta)}
                                 >
+                                    <button onClick={()=> tirarCarta(carta.id)}
+                                        style={{
+                                            border: 'none',
+                                            outline: 'none',
+                                            background: 'none',
+                                            padding: 0,
+                                            margin: 0,
+                                            cursor: 'pointer'
+                                        }}>
                                     <img
                                         src={carta.foto}
                                         alt={`Carta ${index + 1}`}
                                         className="card-image"
                                         onError={(e) => (e.target.style.display = 'none')}
-                                    />
+                                    /></button>
                                     {/* Overlay de resplandor holográfico */}
                                     <div className="sunset-overlay"></div>
                                 </div>
@@ -396,6 +430,7 @@ const PlayingModal = forwardRef((props, ref) => {
 
     return (
         <>
+        {console.log(nombresJugadores)}
         <div className="playing-modal-container">
             {console.log(mano)}
             {/* Background */}
@@ -439,6 +474,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 ref={dropAreaRef}
                 className={`drop-area`}
             >
+                
                 {/* Visual indicator for drop area (optional) */}
             </div>
 
@@ -522,7 +558,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                 {mano.equipoGanadorEnvido === posicion % 2 ? '¡Ganaste!' : 'Perdiste...'}
                                 </h5>                               
                                  {envidosJugadores.map((envido, index) => (
-                                    <p style={{ margin: '9px 0' }} key={index}>Jugador {index }: {envido}</p>
+                                    <p style={{ margin: '9px 0' }} key={index}>{index === posicion ? "Vos" : nombresJugadores[index]}: {envido}</p>
                                 ))}
                             </div>
                         )}

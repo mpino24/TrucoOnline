@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
@@ -41,8 +41,7 @@ public class PartidaControllerTests {
     @MockBean
     private PartidaService partidaService;
 
-    @MockBean
-    private PartidaJugadorService partidaJugadorService;
+    
 
     @MockBean
     private UserService userService;

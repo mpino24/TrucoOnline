@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,25 +14,30 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 
 @Service
 public class PartidaJugadorService {
 
-    PartidaJugadorRepository pjRepository;
-    JugadorRepository jugRepository;
-    UserService userService;
-    PartidaRepository partidaRepository;
+    private final PartidaJugadorRepository pjRepository;
+    private final JugadorRepository jugRepository;
+    private final UserService userService;
 
-    @Autowired
-    public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo, UserService userService, PartidaRepository partidaRepository) {
+    private final PartidaService partidaService;
+  
+
+   
+    public PartidaJugadorService(PartidaJugadorRepository partJugRepository, JugadorRepository jugadorRepo, UserService userService, PartidaService partidaService) {
         this.pjRepository = partJugRepository;
         this.jugRepository = jugadorRepo;
         this.userService = userService;
-        this.partidaRepository = partidaRepository;
+        
+        this.partidaService = partidaService;
     }
 
 
@@ -49,12 +53,17 @@ public class PartidaJugadorService {
 
     @Transactional(readOnly = true)
     public Integer getMiPosicion(Integer userId, Integer partidaId) throws ResourceNotFoundException {
-        Partida partida = partidaRepository.findById(partidaId).get();
+        Partida partida = partidaService.findPartidaById(partidaId);
         PartidaJugador partjugador = pjRepository.findPlayersConnectedTo(partida.getCodigo()).stream().filter(pj -> pj.getPlayer().getUser().getId().equals(userId)).findFirst().orElse(null);
         if (partjugador == null) {
             throw new ResourceNotFoundException("No se encontro la partidaJugador pedida");
         }
         return partjugador.getPosicion();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Integer> getJugadoresInPartida(String codigoPartida) {
+        return pjRepository.findPlayersConnectedTo(codigoPartida).stream().map(pj -> pj.getPlayer().getId()).toList();
     }
 
     @Transactional
@@ -83,29 +92,79 @@ public class PartidaJugadorService {
 
     }
 
-    @Transactional
-    public void eliminateJugadorPartida(Integer expulsadoId) {
+    @Transactional(rollbackFor = { NotAuthorizedException.class, ResourceNotFoundException.class })
+    public void eliminateJugadorPartida(Integer partidaJugadorId) throws ResourceNotFoundException, NotAuthorizedException {
         User currentUser = userService.findCurrentUser();
-        Partida partida = getPartidaOfUserId(currentUser.getId());
-        List<PartidaJugador> jugadores = pjRepository.findPlayersConnectedTo(partida.getCodigo());
-        Integer creadorId = jugadores.stream().filter(pj -> pj.getIsCreator()).map(pj -> pj.getPlayer().getId()).findFirst().orElse(null);
-        if (expulsadoId != null && !expulsadoId.equals(currentUser.getId())) {
-            if (currentUser.getId().equals(creadorId)) {
-                pjRepository.deleteByPlayerId(expulsadoId);
+        PartidaJugador parJug = pjRepository.findById(partidaJugadorId).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el jugador con id " + partidaJugadorId));
+        Integer jugadorExpulsadoId = parJug.getPlayer().getId();
+        Partida partidaActual = parJug.getGame();
+        List<PartidaJugador> listaPartidaJugadores = pjRepository.findPlayersConnectedTo(partidaActual.getCodigo());
+        Integer creadorId = listaPartidaJugadores.stream()
+                .filter(pj -> pj.getIsCreator())
+                .map(pj -> pj.getPlayer().getId())
+                .findFirst()
+                .orElse(null);
+        
+        
+        Integer jugadorActualId = jugRepository.findByUserId(currentUser.getId()).orElseThrow(()->
+            new ResourceNotFoundException("No se ha encontrado el jugador actual")).getId();
+
+        if(jugadorExpulsadoId == null){
+            jugadorExpulsadoId=jugadorActualId;
+        }
+
+
+        if (jugadorExpulsadoId != null && jugadorExpulsadoId !=jugadorActualId) {
+            if (jugadorActualId ==creadorId) {
+                pjRepository.deleteById(partidaJugadorId);
             } else {
                 throw new NotAuthorizedException("No tienes permiso para eliminar a jugadores de la partida");
             }
-        } else {
-            pjRepository.deleteByPlayerId(currentUser.getId());
-            PartidaJugador nuevoCreador = jugadores.stream().filter(pj -> !pj.getPlayer().getId().equals(currentUser.getId())).findFirst().orElse(null);
-            if (creadorId != null && creadorId.equals(currentUser.getId()) && nuevoCreador != null) {
+        } else { 
+            
+            
+            pjRepository.deleteById(partidaJugadorId);
+            
+            //necesario ya que en java las variables de lambda deben ser final o efectivamente final
+            final Integer finalJugadorExpulsadoId = jugadorExpulsadoId;
+            PartidaJugador nuevoCreador = listaPartidaJugadores.stream()
+                    .filter(pj -> pj.getPlayer().getId()  != finalJugadorExpulsadoId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (creadorId != null && creadorId == jugadorActualId && nuevoCreador != null) {
                 nuevoCreador.setIsCreator(true);
                 pjRepository.save(nuevoCreador);
             } else if (nuevoCreador == null) {
-                partidaRepository.delete(partida);
+                partidaService.deletePartida(partidaActual.getCodigo()); 
+                
             }
+            
         }
+
+        if (partidaActual.getEstado().equals(Estado.ACTIVE)) {
+            checkEndGame(parJug);
+            
+        }
+        
+            
+        
     }
+
+    public void checkEndGame(PartidaJugador partidaJugador) {
+        Partida partida = partidaJugador.getGame();
+        Equipo equipoDelQueHuyo = partidaJugador.getEquipo();
+        Integer puntos = partida.getPuntosMaximos();
+        
+        if(equipoDelQueHuyo.equals(Equipo.EQUIPO1)){
+            partida.setPuntosEquipo2(puntos);
+          
+        }else{
+            partida.setPuntosEquipo1(puntos);
+        }
+        partidaService.updatePartida(partida, partida.getId());
+    }
+
 
     @Transactional(readOnly = true)
     public List<PartidaJugadorDTO> getPlayersConnectedTo(String partidaCode) {
@@ -118,8 +177,28 @@ public class PartidaJugadorService {
         if (res.isEmpty()) {
             throw new ResourceNotFoundException("El usuario no está en ninguna partida.");
         } else {
+            
             return res.get();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public PartidaJugador getPartidaJugadorUsuarioActual() {
+        PartidaJugador res = null;
+        User user = userService.findCurrentUser();
+        if(user != null){
+        Integer userId = user.getId();
+        
+        Integer jugadorId = jugRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("No se ha encontrado el jugador actual")).getId();
+        res = pjRepository.findByPlayerIdAndGameNotFinish(jugadorId);
+        }
+        if(res == null || res.getGame().getEstado() == Estado.FINISHED){
+            res=null;
+        }
+        
+            
+        return res;
+        
     }
 
     @Transactional
@@ -155,6 +234,15 @@ public class PartidaJugadorService {
             throw new ResourceNotFoundException("No se ha encontrado Partida con codigo '"+ codigo + "'");
         }
         return pjRepository.findAllJugadoresPartida(codigo);
+    }
+
+
+    public void eliminateJugadorPartidaByJugadorId(Integer jugadorId) {
+        PartidaJugador pj = pjRepository.findByPlayerIdAndGameNotFinish(jugadorId);
+        if(pj==null){
+            throw new ResourceNotFoundException("No se ha encontrado el jugador con id "+ jugadorId);
+        }
+        eliminateJugadorPartida(pj.getId());
     }
 
 

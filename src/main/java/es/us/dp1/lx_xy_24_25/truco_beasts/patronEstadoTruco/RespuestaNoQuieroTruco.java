@@ -47,6 +47,15 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
         }
         manoActual.setGanadoresRondas(parche);
         manoActual.setTerminada(true);
+        Integer jugadorActual = manoActual.getJugadorTurno();
+        List<Integer> listaE1= List.of(0, 3);
+        List<Integer> listaE2= List.of(3, 0);
+        if(jugadorActual%2==0){
+            manoActual.setGanadoresRondas(listaE1);
+        }else{
+            manoActual.setGanadoresRondas(listaE2);
+        }
+        
         manoActual.setUltimoMensaje(getTipoRespuestaTruco());
         return manoActual;
     }

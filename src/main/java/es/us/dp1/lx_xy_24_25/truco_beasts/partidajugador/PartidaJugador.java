@@ -5,6 +5,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,9 +20,11 @@ public class PartidaJugador extends BaseEntity{
     private Integer posicion;
     
     @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
     private Jugador player;
 
     @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
     private Partida game;
 
     @NotNull
@@ -34,6 +37,12 @@ public class PartidaJugador extends BaseEntity{
             return Equipo.EQUIPO2;
         }
     }
+
+    public Integer floresCantadas = 0;
+    public Integer quierosCantados = 0;
+    public Integer noQuierosCantados = 0;
+
+
 
 }
 
