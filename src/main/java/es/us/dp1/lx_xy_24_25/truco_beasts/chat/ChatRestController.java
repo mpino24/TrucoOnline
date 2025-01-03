@@ -39,7 +39,7 @@ public class ChatRestController {
 
     @GetMapping("/users/{chatId}")
     public List<User> getUsersFromChat(@PathVariable Integer chatId) throws NotYourChatException {
-        return null;
+        return chatService.findUsersByChat(chatId);
     }
 
     @GetMapping("/with/{userId}")

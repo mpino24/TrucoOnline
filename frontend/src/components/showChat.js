@@ -11,6 +11,8 @@ const Chat = forwardRef((props, ref) => {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [chatUser, setChatUser] = useState(null);
+
 
 
   const [mensajes, setMensajes] = useFetchState(
@@ -31,6 +33,19 @@ const Chat = forwardRef((props, ref) => {
   function moveScroll() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
+  useEffect(() => {
+    fetch(`/api/v1/chat/users/${props.idChat}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((users) => {
+        const otherUser = users.find((u) => u.id !== user.id);
+        setChatUser(otherUser);
+      })
+      .catch((error) => console.error("Error al obtener los usuarios del chat:", error));
+  }, [props.idChat, jwt, user.id]);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -117,7 +132,7 @@ const Chat = forwardRef((props, ref) => {
   return (
     <>
     <h1 style={{ fontSize: 30, textAlign: 'center' }}>
-                            
+      {chatUser ? `Chat con ${chatUser.username}` : "Cargando..."}
                         </h1>
     <div
       style={{

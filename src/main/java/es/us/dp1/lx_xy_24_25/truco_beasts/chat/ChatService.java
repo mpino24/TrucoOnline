@@ -51,6 +51,10 @@ public class ChatService {
 
     }
 
+    public List<User> findUsersByChat(Integer chatId){
+        return chatRepository.findUsersByChat(chatId);
+    }
+
 
 
 
