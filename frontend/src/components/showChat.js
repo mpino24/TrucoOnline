@@ -135,6 +135,7 @@ const Chat = forwardRef((props, ref) => {
           throw new Error("No se pudo eliminar al amigo.");
         }
         alert("Amigo eliminado exitosamente.");
+
       })
       .catch((error) => {
         console.error(error);
