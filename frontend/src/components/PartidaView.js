@@ -47,7 +47,7 @@ const PartidaView = forwardRef((props, ref) => {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: props.interfaz === 'chat' ? 'column' : 'row', alignItems: props.interfaz === 'chat' ? 'flex-start' : 'center', gap: '10px',height:50 }}>
+        <div style={{ display: 'flex', flexDirection: props.interfaz === 'chat' ? 'column' : 'row', alignItems: props.interfaz === 'chat' ? 'flex-start' : 'center', gap: '10px',height:'auto',flexGrow:1 }}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
                 <p style={{ fontSize: 18, textDecoration: 'underline' }}>Partida {game.codigo}:</p>
                 <p style={{ marginLeft: 10 }}>{game.puntosMaximos} puntos</p>
