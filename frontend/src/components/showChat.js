@@ -89,6 +89,10 @@ const Chat = forwardRef((props, ref) => {
   };
 
   return (
+    <>
+    <h1 style={{ fontSize: 30, textAlign: 'center' }}>
+                            
+                        </h1>
     <div
       style={{
         display: "flex",
@@ -138,6 +142,7 @@ const Chat = forwardRef((props, ref) => {
         </button>
       </div>
     </div>
+    </>
   );
 });
 

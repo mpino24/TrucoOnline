@@ -230,9 +230,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 }
                 {chatVisible &&
                     <>
-                        <h1 style={{ fontSize: 30, textAlign: 'center' }}>
-                            Chat
-                        </h1>
+                        
                         <hr></hr>
                         <Chat
                             idChat={chatId} />

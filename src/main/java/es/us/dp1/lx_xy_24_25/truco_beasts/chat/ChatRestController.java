@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -29,6 +30,11 @@ public class ChatRestController {
     @GetMapping("/lastMessage/{chatId}")
     public Mensaje getLastMessageFrom(@PathVariable Integer chatId) throws NotYourChatException {
         return chatService.getLastMessage(chatId);
+    }
+
+    @GetMapping("/users/{chatId}")
+    public List<User> getUsersFromChat(@PathVariable Integer chatId) throws NotYourChatException {
+        return null;
     }
 
     @GetMapping("/with/{userId}")
