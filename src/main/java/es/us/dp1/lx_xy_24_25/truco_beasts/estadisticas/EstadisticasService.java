@@ -2,23 +2,35 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
 
 @Service
 public class EstadisticasService {
 
     
     private final EstadisticasRepository estadisticasRepository;
-
+    private final JugadorRepository jugadorRepository;
     @Autowired
-    public EstadisticasService(EstadisticasRepository estadisticasRepository) {
+    public EstadisticasService(EstadisticasRepository estadisticasRepository, JugadorRepository jugadorRepository) {
         this.estadisticasRepository = estadisticasRepository;
+        this.jugadorRepository=jugadorRepository;
     }
     @Transactional(readOnly = true)
-    public EstadisticaJugador getEstadisticasJugador(Integer jugadorId){
+    public EstadisticaJugador getEstadisticasJugador(Integer jugadorId) throws ResourceNotFoundException{
+        Optional<Jugador> j = jugadorRepository.findById(jugadorId);
+        if (j.isEmpty()) {
+            throw new ResourceNotFoundException("El jugador de ID " + jugadorId + " no fue encontrado");
+        }
+
         EstadisticaJugador res = new EstadisticaJugador();
         Integer partidasJugadas = estadisticasRepository.findAllPartidasJugadas(jugadorId);
         Integer victorias = estadisticasRepository.findVictorias(jugadorId);
