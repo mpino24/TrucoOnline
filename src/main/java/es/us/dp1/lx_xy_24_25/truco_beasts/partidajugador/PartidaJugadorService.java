@@ -5,12 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -20,7 +17,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;

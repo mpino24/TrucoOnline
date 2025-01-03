@@ -11,7 +11,6 @@ function AppNavbar() {
     const jwt = tokenService.getLocalAccessToken();
     const navigate = useNavigate();
     const [leavingModal,setLeavingModal] = useState(false);
-    const [partidaJugadorActual, setPartidaJugadorActual] = useState({});
 
 
 
@@ -58,7 +57,6 @@ function AppNavbar() {
                     console.log(data); 
                     
                     if (data.game && data.game.estado !== "FINALIZADA") {
-                        setPartidaJugadorActual(data);
                         setLeavingModal(true);
                     } else {
                         navigate("/home");
@@ -78,7 +76,8 @@ function AppNavbar() {
     return (
         <div expand="md" dark style={{ float: 'left' }}>
             <img alt="logo" src={logoChico} onClick={() => handleClick()} style={{ height: 90, width: 90, borderRadius: 500, margin: 10, cursor: 'pointer' }} />
-            <LeavingGameModal partidaJugadorId={partidaJugadorActual.id}
+            <LeavingGameModal
+
             modalIsOpen={leavingModal}
             setIsOpen={setLeavingModal}/>
         </div>

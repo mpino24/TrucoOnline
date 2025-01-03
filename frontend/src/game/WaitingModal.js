@@ -133,33 +133,6 @@ const WaitingModal = forwardRef((props, ref) => {
 
     }
 
-    /*function sendInvitation(friendId) {
-        fetch(
-            `/api/v1/chat/sendto/` + friendId,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${jwt}`,
-                },
-                body: JSON.stringify({ 
-                    remitente: {id: usuario.id},
-                    fechaEnvio: new Date().toISOString(),
-                    chat: { id: 0 },
-                    contenido: "Te invito a la partida {"+game.codigo+"}" }),
-            }
-        ).then((response) => {
-            if (!response.ok) {
-                return response.text().then((errorMessage) => {
-                    throw new Error("Error al enviar la invitación: " + errorMessage);
-                });
-            }else{
-                alert("Invitación enviada a "+friends.find(friend => friend.id === friendId).userName);
-            }
-        }).catch((message) => alert("Error al enviar la invitación: "+message));
-    }*/
-
-
     function findChatId(friendId) {
         fetch(
             `/api/v1/chat/with/` + friendId,
@@ -352,7 +325,8 @@ const WaitingModal = forwardRef((props, ref) => {
             </div>
             <LeavingGameModal
                 modalIsOpen={leavingModal}
-                setIsOpen={setLeavingModal} />
+                setIsOpen={setLeavingModal}
+                />
             <ExpeledModal
                 modalIsOpen={expeledView} />
         </>
