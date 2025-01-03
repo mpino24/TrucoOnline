@@ -221,7 +221,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             alignItems: 'stretch',
             zIndex: 1000,
         }}>
-            {console.log(calcularTiempo(estadisticas.tiempoJugado,estadisticas.partidasJugadas))}
+            {console.log(calcularTiempo(estadisticas.tiempoJugado,0))}
 
             <div style={{
                 position: 'relative',
