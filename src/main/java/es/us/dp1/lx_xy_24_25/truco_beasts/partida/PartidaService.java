@@ -1,8 +1,10 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import jakarta.validation.Valid;
@@ -108,6 +111,34 @@ public class PartidaService {
 	public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
 		Optional<Partida> p = partidaRepository.findPartidaByCodigo(codigo);
 		return p.isEmpty()?null: p.get();
+	}
+
+	@Transactional(readOnly = true)
+	public List<PartidaDTO> getPartidasActivasYParticipantes() {
+		List<Partida> partidas = partidaRepository.findPartidasActivasAdmin();
+        return recogedorDePartidas(partidas);
+    }
+
+	@Transactional(readOnly = true)
+	public List<PartidaDTO> getPartidasTerminadasYParticipantes() {
+		List<Partida> partidas = partidaRepository.findPartidasTerminadasAdmin();
+        return recogedorDePartidas(partidas);
+    }
+
+	public List<PartidaDTO> recogedorDePartidas(List<Partida> partidas) {
+		List<PartidaDTO> res = new ArrayList<>();
+		for(int i=0;i<partidas.size();i++) {
+			Partida partida = partidas.get(i);
+			PartidaJugador pjCreador = pjRepository.findCreator(partida.getId()).orElse(null);
+			String creador = pjCreador.getPlayer().getUser().getUsername();
+			String participantes = pjRepository.findAllJugadoresPartida(partida.getCodigo())
+													.stream()
+													.map(pj -> pj.getUserName())
+													.collect(Collectors.joining(", "));
+			PartidaDTO partidaDTO = new PartidaDTO(partida.getCodigo(), creador, participantes);
+			res.add(partidaDTO);
+		}
+        return res;
 	}
 
 	@Transactional

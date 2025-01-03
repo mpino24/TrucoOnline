@@ -1,8 +1,9 @@
-import React, { forwardRef, useState, useEffect, useRef } from "react";
+import React, { forwardRef, useState, useEffect, useRef, useLayoutEffect } from "react";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
 import "./Chat.css";
+import RenderContent from "./RenderContent";
 
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
@@ -10,6 +11,8 @@ const Chat = forwardRef((props, ref) => {
   const [stompClient, setStompClient] = useState(null);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+
+
   const [mensajes, setMensajes] = useFetchState(
     [],
     `/api/v1/chat/${props.idChat}`,
@@ -22,11 +25,29 @@ const Chat = forwardRef((props, ref) => {
 
   // Ref para el contenedor de mensajes
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   // Efecto para desplazar automáticamente al final cuando los mensajes cambien
-  useEffect(() => {
+  function moveScroll() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      moveScroll();
+    });
+
+    if (messagesContainerRef.current) {
+      observer.observe(messagesContainerRef.current, { childList: true, subtree: true });
+    }
+
+    return () => {
+      if (messagesContainerRef.current) {
+        observer.disconnect();
+      }
+    };
   }, [mensajes]);
+
 
   useEffect(() => {
     const cliente = new Client({
@@ -88,6 +109,11 @@ const Chat = forwardRef((props, ref) => {
     evtEnviarMensaje();
   };
 
+  const formatFecha = (fecha) => {
+    const date = new Date(fecha);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  };
+
   return (
     <>
     <h1 style={{ fontSize: 30, textAlign: 'center' }}>
@@ -109,24 +135,30 @@ const Chat = forwardRef((props, ref) => {
           overflowY: "auto",
           padding: "10px",
         }}
+        ref={messagesContainerRef}
       >
-        {mensajes.map((msg, i) =>
-          msg.remitente.id === user.id ? (
-            <div key={i} className="own-message">
-              {msg.contenido}
-            </div>
-          ) : (
-            <>
-              <div key={i}>{msg.remitente.username}</div>
-              <div key={i} className="other-message">
-                {msg.contenido}
+        {mensajes.map((msg, i) => {
+          return (
+            msg.remitente.id === user.id ? (
+              <div key={i} className="own-message">
+                <RenderContent contenido={msg.contenido} />
+                <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
               </div>
-            </>
-          )
+            ) : (
+              <>
+                <div key={i}>{msg.remitente.username}</div>
+                <div key={i} className="other-message">
+                  <RenderContent contenido={msg.contenido} />
+                  <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
+                </div>
+              </>
+            )
+          );
+        }
         )}
-
-        {/* Ref hacia el final del contenedor de mensajes */}
         <div ref={messagesEndRef} />
+
+
       </div>
 
       <div className="input-container">
@@ -136,6 +168,11 @@ const Chat = forwardRef((props, ref) => {
           onChange={(e) => setMensaje(e.target.value)}
           placeholder="Escribe un mensaje..."
           className="input-text"
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleEnviar();
+            }
+          }}
         />
         <button onClick={handleEnviar} className="btn-send">
           Enviar

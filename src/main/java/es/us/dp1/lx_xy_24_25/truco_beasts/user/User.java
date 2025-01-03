@@ -1,14 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,6 +39,10 @@ public class User extends BaseEntity {
 				cond = true;
 		}
 		return cond;
+	}
+
+	public User(){
+		
 	}
 
 }

@@ -13,7 +13,12 @@ const JugadorView = forwardRef((props, ref) => {
         fetch(
             "/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.id,
             {
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())
@@ -29,13 +34,18 @@ const JugadorView = forwardRef((props, ref) => {
             .catch((message) => alert(message));
     }
 
-
+/*
     useEffect(() => {
         if (friendBool !== true && solicitudBool) {
             fetch(
                 "/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.userName,
                 {
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      }
                 }
             )
                 .then((response) => response.text())
@@ -45,7 +55,7 @@ const JugadorView = forwardRef((props, ref) => {
                 })
                 .catch((message) => alert(message));
         }
-    }, [friendBool, jugador.userName, props.isFriend,solicitudBool, props.isSolicitud]);
+    }, [friendBool, jugador.userName, props.isFriend,solicitudBool, props.isSolicitud]);*/
 
     return (
         <div style={{ cursor: 'pointer' }}>

@@ -29,5 +29,9 @@ public class Mensaje extends BaseEntity{
 
     @ManyToOne
     Chat chat;
+
+    public Mensaje(){
+        
+    }
     
 }

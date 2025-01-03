@@ -30,23 +30,26 @@ const GetFriendsModal = forwardRef((props, ref) => {
         if (!userName) {
             fetchFriends();
             fetchFriendsRequest();
-            const intervalId = setInterval(fetchFriends, 50000000);
 
-            const intervalId2 = setInterval(fetchFriendsRequest, 1000000);
-
-            return () => {
-                clearInterval(intervalId)
-                clearInterval(intervalId2)
-            }
+            const interval = setInterval(() => {
+                fetchFriends();
+                fetchFriendsRequest();
+            }, 5000);
+            return () => clearInterval(interval);
 
         }
-    },[jwt, userName,amigos])
+    }, [jwt, userName])
 
     function fetchFriends() {
         fetch(
             `/api/v1/jugador/amigos?userId=` + user.id,
             {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                }
             }
         )
             .then((response) => response.text())
@@ -66,7 +69,12 @@ const GetFriendsModal = forwardRef((props, ref) => {
         fetch(
             "/api/v1/jugador/" + userName,
             {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                }
             }
         )
             .then((response) => response.text())
@@ -89,20 +97,12 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
     function handleReset() {
         setPlayer(null);
+        setUsername('');
         document.getElementById('inputId').value = '';
-        fetch(
-            `/api/v1/jugador/amigos?userId=` + user.id,
-            {
-                method: "GET"
-            }
-        )
-            .then((response) => response.text())
-            .then((data) => {
-                setAmigos(JSON.parse(data))
-
-            })
-            .catch((message) => alert(message));
+        fetchFriends();
+        fetchFriendsRequest();
     }
+
     function handleModalVisible(setModalVisible, modalVisible) {
         setModalVisible(!modalVisible);
     }
@@ -114,7 +114,9 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                }
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())
@@ -135,7 +137,9 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                }
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.json())
@@ -168,10 +172,10 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 alignItems: 'stretch',
-                height: '95vh',
+                height: '100vh',
             }}
         >
-            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%' }}>
+            <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%', overflow: 'hidden', paddingBottom: '60px' }}>
                 <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => closeModal()} />
                 {!chatVisible &&
                     <>
@@ -215,13 +219,13 @@ const GetFriendsModal = forwardRef((props, ref) => {
                         {player &&
                             <JugadorView jugador={player} />}
                         {!player && !requestView &&
-                            <div>
+                            <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 170px)' }}>
                                 <JugadorList jugadores={amigos}
                                     mostrarChat={mostrarChat} />
                             </div>
                         }
                         {requestView &&
-                            <div>
+                            <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 160px)' }}>
                                 <SolicitudList jugadores={request}
                                     setJugadores={setRequest} />
                             </div>
