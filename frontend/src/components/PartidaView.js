@@ -47,7 +47,7 @@ const PartidaView = forwardRef((props, ref) => {
                   }
                 },
 
-            }
+            
         )
             .then((response) => {
                 response.text();
