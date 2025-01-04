@@ -102,13 +102,15 @@ public class ManoService {
 
         Integer tiposDeEnvido = 3;
         Integer envidosIniciales=0;
+        Integer numCantosFlorIniciales=0;
         List<Integer> envidos = new ArrayList<>();
         for(int i = 0; i<tiposDeEnvido;i++){
             envidos.add(envidosIniciales);
         }
         nuevaMano.setEnvidosCantados(envidos);
         nuevaMano.listaTantosCadaJugador();
-
+        nuevaMano.setFloresCantadas(numCantosFlorIniciales);
+        
 		Integer ganadasIniciales = 0;
 		List<Integer> ganadoresRonda = new ArrayList<>();
 		ganadoresRonda.add(ganadasIniciales);
