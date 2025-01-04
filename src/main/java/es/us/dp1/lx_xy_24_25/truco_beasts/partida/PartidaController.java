@@ -66,7 +66,15 @@ public class PartidaController {
 		return new ResponseEntity<>(partidaService.findAllPartidasActivas(pageable), HttpStatus.OK);
 	}
 
+	@GetMapping("/partidas/participantes/activas")
+	public ResponseEntity<List<PartidaDTO>> findPartidasActivasConParticipantes() {
+        return new ResponseEntity<>(partidaService.findPartidasActivasYParticipantes(), HttpStatus.OK);
+    }
 	
+	@GetMapping("/partidas/participantes/terminadas")
+	public ResponseEntity<List<PartidaDTO>> findPartidasTerminadasConParticipantes() {
+        return new ResponseEntity<>(partidaService.findPartidasTerminadasYParticipantes(), HttpStatus.OK);
+    }
 
 	@PostMapping
 	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida,@RequestParam(required=true) Integer userId) throws AlreadyInGameException {

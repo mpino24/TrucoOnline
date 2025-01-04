@@ -17,6 +17,7 @@ export default function UserEditAdmin() {
     password: "",
     authority: null,
   };
+  const [newPassword, setNewPassword] = useState();
   const id = getIdFromUrl(2);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -69,15 +70,19 @@ export default function UserEditAdmin() {
     </option>
   ));
 
+  function handlePasswordChange(event) {
+    setNewPassword(event.target.value);
+  }
+
   return (
     <div className="auth-page-container">
-      {<h2>{user.id ? "Edit User" : "Add User"}</h2>}
+      {<h2>{user.id ? "Editar usuario" : "Añadir usuario"}</h2>}
       {modal}
       <div className="auth-form-container">
         <Form onSubmit={handleSubmit}>
           <div className="custom-form-input">
             <Label for="username" className="custom-form-input-label">
-              Username
+              Nombre de usuario
             </Label>
             <Input
               type="text"
@@ -90,21 +95,18 @@ export default function UserEditAdmin() {
             />
           </div>
           <div className="custom-form-input">
-            <Label for="lastName" className="custom-form-input-label">
-              Password
-            </Label>
+          <Label for="password" className="custom-form-input-label">Contraseña</Label>
             <Input
               type="password"
-              required
               name="password"
               id="password"
-              value={user.password || ""}
-              onChange={handleChange}
+              value={newPassword}
+              onChange={handlePasswordChange}
               className="custom-input"
             />
           </div>
           <Label for="authority" className="custom-form-input-label">
-            Authority
+            Autoridad
           </Label>
           <div className="custom-form-input">
             {user.id ? (
@@ -136,13 +138,13 @@ export default function UserEditAdmin() {
             )}
           </div>
           <div className="custom-button-row">
-            <button className="auth-button">Save</button>
+            <button className="auth-button">Guardar</button>
             <Link
               to={`/users`}
               className="auth-button"
               style={{ textDecoration: "none" }}
             >
-              Cancel
+              Cancelar
             </Link>
           </div>
         </Form>

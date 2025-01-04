@@ -11,6 +11,8 @@ import Logout from "./auth/logout";
 import Profile from "./profile";
 import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
+import PartidasAdmin from "./admin/partidas/PartidasAdmin";
+import PartidasTerminadasAdmin from "./admin/partidas/PartidasTerminadasAdmin";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import Game from "./game"
@@ -50,6 +52,8 @@ function App() {
         <>
           <Route path="/users" element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
+          <Route path="/admin/partidas" element={<PrivateRoute><PartidasAdmin /></PrivateRoute>} />
+          <Route path="/admin/partidas/terminadas" element={<PrivateRoute><PartidasTerminadasAdmin /></PrivateRoute>} />
         </>
       );
     }

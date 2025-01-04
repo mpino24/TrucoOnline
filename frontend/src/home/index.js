@@ -13,6 +13,8 @@ import { NavLink, NavItem, Nav } from 'reactstrap';
 import GetJoinModal from '../components/getJoinModal.js';
 import useFetchState from "../util/useFetchState.js";
 import GetFriendsModal from '../components/getFriendsModal';
+import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
 
 
 export default function Home() {
@@ -24,11 +26,17 @@ export default function Home() {
     const [username, setUsername] = useState("");
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
 
-
+    const [roles, setRoles] = useState([]);
 
 
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
+
+    useEffect(() => {
+        if (jwt) {
+            setRoles(jwt_decode(jwt).authorities);
+        }
+    }, [jwt])
 
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -64,7 +72,10 @@ export default function Home() {
     }, []);
 
 
-
+    const navigate = useNavigate();
+    const handleRedirect = (path) => {
+        navigate(path);
+    };
 
 
     const toggleJoinModal = useCallback(() => {
@@ -95,6 +106,20 @@ export default function Home() {
 
     return (
         <>
+            {roles.includes('ADMIN') && (
+            <div expand='md' style={{float: 'left'}}>
+                <button className="button-admin" onClick={() => {navigate("/users")}}>
+                USUARIOS
+                </button>
+                <button className="button-admin" onClick={() => {navigate("/admin/partidas")}}>
+                PARTIDAS EN CURSO
+                </button>
+                <button className="button-admin" onClick={() => {navigate("/admin/partidas/terminadas")}}>
+                PARTIDAS JUGADAS
+                </button>
+            </div>
+            )}
+
             {!friendsView &&
                 <Nav className="ms-auto mb-2 mb-lg-0" navbar style={{ float: 'right', marginTop: 15, marginRight: 15 }}>
                     <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={toggleAccountMenu}>
