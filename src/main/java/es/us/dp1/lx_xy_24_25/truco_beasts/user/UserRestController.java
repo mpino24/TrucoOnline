@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,6 +64,11 @@ class UserRestController {
 		} else
 			res = (List<User>) userService.findAll();
 		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+
+	@GetMapping("/paginados")
+	public ResponseEntity<Page<User>> findUsuariosPaginados(Pageable pageable) {
+		return new ResponseEntity<>(userService.findUsuariosPaginacion(pageable), HttpStatus.OK);
 	}
 
 	@GetMapping("authorities")
