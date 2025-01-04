@@ -61,16 +61,16 @@ export default function Home() {
     }, []);
     useEffect(() => {
         const backgrounds = [
-            '/fondos/fondo0.jpg',
-            '/fondos/fondo1.jpg',
-            '/fondos/fondo2.jpg',
-            '/fondos/fondo3.jpg',
-            '/fondos/fondo4.jpg',
-            '/fondos/fondo5.jpg',
-            '/fondos/fondo6.jpg',
-            '/fondos/fondo7.jpg',
-            '/fondos/fondo8.jpg',
-            '/fondos/fondo9.jpg',
+            'url(/fondos/fondo0.jpg)',
+            'url(/fondos/fondo1.jpg)',
+            'url(/fondos/fondo2.jpg)',
+            'url(/fondos/fondo3.jpg)',
+            'url(/fondos/fondo4.jpg)',
+            'url(/fondos/fondo5.jpg)',
+            'url(/fondos/fondo6.jpg)',
+            'url(/fondos/fondo7.jpg)',
+            'url(/fondos/fondo8.jpg)',
+            'url(/fondos/fondo9.jpg)',
         ];
         const randomIndex = Math.floor(Math.random() * backgrounds.length)
         setBackgroundUrl(backgrounds[randomIndex])
