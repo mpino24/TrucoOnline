@@ -42,6 +42,7 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (9
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (10,'lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/lampi.jpg',10);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (11,'mono', 'bananas', 'monin@alum.us.es','https://media1.tenor.com/m/xldK7lpjZyMAAAAd/goidrain-monkey.gif',11);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (12,'bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/robot.jpg',12);
+INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (13,'Admin', 'Uno', 'admin1@alum.us.es','http://localhost:8080/resources/images/robot.jpg',1);
 
 -- faltan algunos que no tienen jugador asociado
 
@@ -50,6 +51,7 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1
 -- INSERT INTO amigo(jugador_id,amigo_id) VALUES (10,8),(8,10);
 -- INSERT INTO solicitud(solicitado_id,solicitante_id) VALUES (4,3);
  INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (0,0,9,0,TRUE);
+ INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (3,0,8,1,FALSE);
  INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (1,1,1,0,TRUE);
  INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE);
 

@@ -18,6 +18,7 @@ export default function PartidasTerminadasAdmin() {
       });
     const modal = getErrorModal(setVisible, visible, message);
     return (
+      <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
         <div className="admin-page-container">
             <h1 className="text-center">Partidas terminadas</h1>
             {alerts.map((a) => a.alert)}
@@ -34,5 +35,6 @@ export default function PartidasTerminadasAdmin() {
                 </Table>
             </div>
         </div>
+      </div>
     );
 }

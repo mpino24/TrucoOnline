@@ -75,6 +75,7 @@ export default function UserEditAdmin() {
   }
 
   return (
+    <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
     <div className="auth-page-container">
       {<h2>{user.id ? "Editar usuario" : "Añadir usuario"}</h2>}
       {modal}
@@ -149,6 +150,7 @@ export default function UserEditAdmin() {
           </div>
         </Form>
       </div>
+    </div>
     </div>
   );
 }
