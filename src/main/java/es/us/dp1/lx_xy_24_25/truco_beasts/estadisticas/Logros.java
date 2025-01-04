@@ -25,6 +25,8 @@ public class Logros extends NamedEntity{
     @NotNull
     Metrica metrica;
 
+
+
     public String getActualDescription(){
         return descripcion.replace("<VALOR>", String.valueOf(valor));
     }
