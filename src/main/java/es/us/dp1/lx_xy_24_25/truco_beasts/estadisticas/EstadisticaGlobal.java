@@ -11,5 +11,7 @@ public class EstadisticaGlobal extends EstadisticaJugador {
 
     public Integer jugadoresTotales=0;
     public Integer partidasConFlor=0;
+
+
     
 }

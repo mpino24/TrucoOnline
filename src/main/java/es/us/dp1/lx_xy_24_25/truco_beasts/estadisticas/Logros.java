@@ -25,8 +25,16 @@ public class Logros extends NamedEntity{
     @NotNull
     Metrica metrica;
 
+    @Min(1)
+    @NotNull
+    private Integer objetivo;
+
     public String getActualDescription(){
         return descripcion.replace("<VALOR>", String.valueOf(valor));
     }
 
+
+    public Boolean logroConseguido(){
+        return this.valor >=this.objetivo;
+    }
 }
