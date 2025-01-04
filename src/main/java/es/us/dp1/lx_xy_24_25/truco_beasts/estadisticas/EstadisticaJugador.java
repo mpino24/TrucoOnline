@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class EstadisticaJugador {
     
-
+    
     
     public Integer partidasJugadas = 0;
     public Integer tiempoJugado = 0; //Segundos 
