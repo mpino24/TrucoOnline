@@ -83,7 +83,7 @@ public class ManoController {
         return new ResponseEntity<>(cantoFlor, HttpStatus.OK);
     }
 
-    @PatchMapping("/cantarFlor/{cantoFlor}")
+    @PatchMapping("/responderFlor/{cantoFlor}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cantos> patchResponderFlor(@PathVariable String codigo, @PathVariable Cantos cantoFlor) throws FlorException {
         manoService.responderFlor(codigo, cantoFlor);

@@ -40,7 +40,7 @@ public class Mano {
     private Integer queFlorPuedeCantar = 0; //2-> Contraflor y con flor me achico, 1->Flor, 0-->Nada
     private Integer equipoGanadorEnvido;
     private Integer equipoGanadorFlor;
-
+    private Boolean tresMismoPalo=false; 
     private Cantos ultimoMensaje;
 
 
@@ -129,13 +129,15 @@ public class Mano {
 
     
         // 1) Verifica las condiciones:
-        //    - puntosTruco >= 1 no se cantó truco  
+        //    - puntosTruco == 1 no se cantó truco  
         //    - puntosEnvido == 0 no se ha ido mas allá del primer envido
 
-        if (getPuntosTruco() >= 1 && getPuntosEnvido() == 0 && getRondaActual()==1) {
+        if (getPuntosTruco() == 1 && getPuntosEnvido() == 0 && getRondaActual()==1) {
             List<Carta> cartasJugadorActual = getCartasDisp().get(getJugadorTurno());
             
             if(tiene3CartasMismoPalo(cartasJugadorActual)){
+                setTresMismoPalo(true);
+
                 // 2) Revisa si el jugador tiene 3 cartas del mismo palo y si no se ha cantado flor antes
                 if (numeroCantosDeFlor==0) {
                     res = true;
@@ -158,7 +160,7 @@ public class Mano {
             }
         }
     
-        // 4) Se registra si, finalmente, este jugador puede (o no) cantar Flor.
+        // 4) Se registra si, finalmente, este jugador puede (o no) cantar algo en relacion a la Flor.
         setPuedeCantarFlor(res);
         return res;
     }
@@ -259,9 +261,6 @@ public class Mano {
     }
     
     private boolean tiene3CartasMismoPalo(List<Carta> cartasJugador) {
-        if (cartasJugador.size() != 3) {
-            return false;
-        }
         Palo paloInicial = cartasJugador.get(0).getPalo();
         return cartasJugador.stream()
                             .allMatch(c -> c.getPalo().equals(paloInicial));

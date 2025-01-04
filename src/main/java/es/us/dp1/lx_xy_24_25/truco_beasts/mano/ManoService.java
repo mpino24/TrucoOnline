@@ -269,6 +269,7 @@ public class ManoService {
                     }
                     
                     numCantosFlores=numCantosFlores+1;
+                    sumar3PuntosSiSoloUnJugadorTieneFlor(manoActual);
                     manoActual.setFloresCantadas(numCantosFlores);
                     manoActual.setJugadorTurno(quienResponde);
                     break;
@@ -587,5 +588,34 @@ public class ManoService {
 		
 		
 	}
+    private void sumar3PuntosSiSoloUnJugadorTieneFlor(Mano manoActual) {
+        // 1) Obtenemos la lista de tantos de Flor de cada jugador
+        List<Integer> tantosFlor = manoActual.listaTantosCadaJugadorFlor();
+        
+        // 2) Contamos cuántos son > 0
+        long jugadoresConFlor = tantosFlor.stream()
+                                          .filter(p -> p != null && p > 0)
+                                          .count();
+        
+        // 3) Si sólo 1 jugador tiene Flor, sumamos 3 puntos a quien la cantó
+        if (jugadoresConFlor == 1) {
+            // El equipo del que cantó la Flor
+            Integer equipoCantorFlor = manoActual.getJugadorIniciadorDelCanto() % 2;
+            
+            Partida partida = manoActual.getPartida();
+            Integer puntosEquipo1 = partida.getPuntosEquipo1();
+            Integer puntosEquipo2 = partida.getPuntosEquipo2();
+    
+            if (equipoCantorFlor == 0) {
+                partida.setPuntosEquipo1(puntosEquipo1 + 3);
+            } else {
+                partida.setPuntosEquipo2(puntosEquipo2 + 3);
+            }
+    
+            // 4) Actualizamos la partida
+            partidaService.updatePartida(partida, partida.getId());
+        }
+    }
+    
 
 }
