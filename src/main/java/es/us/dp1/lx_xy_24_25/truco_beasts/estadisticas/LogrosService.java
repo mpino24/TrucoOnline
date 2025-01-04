@@ -20,12 +20,12 @@ public class LogrosService {
   
     
     private final LogroRepository logroRepository;
-    private final EstadisticasRepository estadisticasRepository;
+    private final EstadisticasService estadisticasService;
 
     @Autowired
-    public LogrosService(LogroRepository logroRepository, EstadisticasRepository estadisticasRepository){
+    public LogrosService(LogroRepository logroRepository, EstadisticasService estadisticasService){
         this.logroRepository= logroRepository;
-        this.estadisticasRepository=estadisticasRepository;
+        this.estadisticasService=estadisticasService;
 
     }
 
@@ -68,12 +68,14 @@ public class LogrosService {
         logroRepository.delete(logro);
     }
 
+    @Transactional
     public List<Logros> logrosConseguidos(Integer jugadorId){
         List<Logros> listaLogros= findAllLogros();
-        List<Logros> misLogros= new ArrayList();
+        List<Logros> misLogros= new ArrayList<>();
+        EstadisticaJugador estadisticaGeneral = estadisticasService.getEstadisticasJugador(jugadorId);
         for(Logros logro:listaLogros){
             Metrica metrica = logro.getMetrica();
-            Integer miEstadistica= obtenerEstadisticaPorMetrica(metrica, jugadorId);
+            Integer miEstadistica= estadisticaGeneral.getEstadisticaPorMetrica(metrica);
             if(miEstadistica>= logro.getValor()){
                 misLogros.add(logro);
             }
@@ -81,46 +83,9 @@ public class LogrosService {
         return misLogros;
     }
 
-    private Integer obtenerEstadisticaPorMetrica(Metrica metrica, Integer jugadorId) {
-        String metodo = obtenerMetodoSegunMetrica(metrica);
+   
 
-        try {
-            Method method = estadisticasRepository.getClass().getMethod(metodo, Integer.class);
-            return (Integer) method.invoke(estadisticasRepository, jugadorId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null; 
-        }
-    }
-
-    private String obtenerMetodoSegunMetrica(Metrica metrica) {
-        switch (metrica) {
-            case PARTIDAS_JUGADAS:
-                return "findAllPartidasJugadas";
-            case TIEMPO_JUGADO:
-                return "findTiempoJugado";
-            case VICTORIAS:
-                return "findVictorias";
-            case PARTIDAS_A_2: 
-                return "findPartidasA2";
-            case PARTIDAS_A_4:
-                return "findPartidasA4";
-            case PARTIDAS_A_6:
-                return "findPartidasA6";
-            case NUMERO_FLORES:
-                return "findNumeroFlores";
-            case NUMERO_ENGANOS:
-                return "findNumeroEnganos";
-            case QUIEROS:
-                return "findQuieros";
-            case NO_QUIEROS:
-                return "findNoQuieros";
-            case PARTIDAS_CON_FLOR:
-                return "findPartidasConFlor";
-            default:
-                return null;
-        }
-    }
+    
     
 }
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -28,18 +29,20 @@ public class LogrosController {
 
     private final LogrosService logrosService;
     private final UserService userService;
-
+    private final JugadorService jugadorService;
 
     @Autowired
-    public LogrosController(LogrosService logrosService, UserService userService){
+    public LogrosController(LogrosService logrosService, UserService userService, JugadorService jugadorService){
         this.logrosService= logrosService;
         this.userService=userService;
+        this.jugadorService=jugadorService;
     }
 
     @GetMapping("/misLogros")
     public ResponseEntity<List<Logros>> getMisLogros(){
         User currentUser= userService.findCurrentUser();
-        return new ResponseEntity<>(logrosService.logrosConseguidos(currentUser.getId()), HttpStatus.OK);
+        Integer jugadorId = jugadorService.findJugadorByUserId(currentUser.getId()).getId();
+        return new ResponseEntity<>(logrosService.logrosConseguidos(jugadorId), HttpStatus.OK);
     }
 
     @PostMapping
