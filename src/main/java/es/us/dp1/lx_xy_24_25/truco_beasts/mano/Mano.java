@@ -125,12 +125,14 @@ public class Mano {
         Boolean res = false;
         Integer numeroCantosDeFlor = getFloresCantadas();
         Integer numFloresParaPoderResponder = 1;
+        Integer numFloresParaNoPoderDecirNada = 2;
+
     
         // 1) Verifica las condiciones:
-        //    - puntosTruco > 1 primera ronda
+        //    - puntosTruco >= 1 no se cantó truco  
         //    - puntosEnvido == 0 no se ha ido mas allá del primer envido
 
-        if (getPuntosTruco() > 1 && getPuntosEnvido() == 0) {
+        if (getPuntosTruco() >= 1 && getPuntosEnvido() == 0 && getRondaActual()==1) {
             List<Carta> cartasJugadorActual = getCartasDisp().get(getJugadorTurno());
             
             if(tiene3CartasMismoPalo(cartasJugadorActual)){
@@ -143,12 +145,12 @@ public class Mano {
                 // 3) Si hubo un solo canto previo de Flor,
                 //    entonces habilitamos "Contraflor" / "Con flor me achico"
                     
-                else if (numeroCantosDeFlor == 1) {
+                else if (numeroCantosDeFlor == numFloresParaPoderResponder) {
                         // Segunda vez que se canta algo de Flor (=> Contraflor).
                         res = true;
                         setQueFlorPuedeCantar(2);
                     }
-                else if (numeroCantosDeFlor >= 2) {
+                else if (numeroCantosDeFlor >= numFloresParaNoPoderDecirNada) {
                     // Tercera vez en adelante => no se puede seguir subiendo
                     setQueFlorPuedeCantar(0);
                     res = false;
