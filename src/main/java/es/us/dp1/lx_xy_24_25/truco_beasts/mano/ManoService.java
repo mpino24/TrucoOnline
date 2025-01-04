@@ -15,6 +15,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.FlorException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
@@ -244,6 +245,53 @@ public class ManoService {
         return manoActual;
     }
 
+    public Mano cantosFlor(String codigo, Cantos canto){
+        Mano manoActual = getMano(codigo);
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer numCantosFlores = manoActual.getFloresCantadas();
+        
+        if(manoActual.getEsperandoRespuesta()==false){
+            manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
+        }
+        manoActual.setEsperandoRespuesta(true);
+        Integer quienResponde = manoActual.quienResponde();
+        try {
+        manoActual.comprobarSiPuedeCantarFlor();
+        Integer queFlorPuedeCantar = manoActual.getQueFlorPuedeCantar();
+        manoActual.setEsTrucoEnvidoFlor(1);
+            switch (canto) {
+                case FLOR:
+                    System.out.println("-------------"+queFlorPuedeCantar+"--------------");
+                    if (queFlorPuedeCantar!=1) {
+                        throw new FlorException("No podés cantar más veces flor/No tenés flor");
+                    }
+                    
+                    numCantosFlores=numCantosFlores+1;
+                    manoActual.setFloresCantadas(numCantosFlores);
+                    manoActual.setJugadorTurno(quienResponde);
+                    break;
+                case CONTRAFLOR:
+                    if(queFlorPuedeCantar!=2){
+                        throw new EnvidoException("No podés cantar contraflor capo");
+                    }
+                    numCantosFlores=numCantosFlores+1;
+                    manoActual.setFloresCantadas(numCantosFlores);
+                    manoActual.setJugadorTurno(quienResponde);
+                    break;
+                default:
+                    throw new EnvidoException("Canto no valido");
+            }
+        } catch (Exception e) {
+            manoActual.setEsperandoRespuesta(false);
+            throw e;
+        }
+        manoActual.setUltimoMensaje(canto);
+        manoActual.setPuedeCantarTruco(false);
+        manoActual.comprobarSiPuedeCantarFlor();
+        actualizarMano(manoActual, codigo);
+        return manoActual;
+    }
+
     public void responderEnvido(String codigo, Cantos respuesta){
         Mano manoActual = getMano(codigo);
         Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
@@ -267,6 +315,53 @@ public class ManoService {
                 
                 gestionarPuntosEnvido(true, codigo);
                 
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.NO_QUIERO);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
+                manoActual.comprobarSiPuedeCantarTruco();
+                
+                break;
+
+            default:
+                cantosEnvido(codigo, respuesta);
+                break;
+        }
+    
+        actualizarMano(manoActual, codigo);
+    }
+
+    public void responderFlor(String codigo, Cantos respuesta){
+        Mano manoActual = getMano(codigo);
+        Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
+        manoActual.setEquipoCantor(null);
+        Integer puntosRechazoNoQuiero= 5;
+        Integer puntosRechazoAchicarse=4;
+        switch (respuesta) {
+            case QUIERO:
+                
+                
+                
+                gestionarPuntosFlor(false, codigo,null);
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
+                manoActual.comprobarSiPuedeCantarTruco();
+                
+                break;
+
+            case CON_FLOR_ME_ACHICO:
+                gestionarPuntosFlor(true, codigo,puntosRechazoAchicarse);
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
+                manoActual.comprobarSiPuedeCantarTruco();
+                break;
+            case NO_QUIERO:
+                
+                gestionarPuntosFlor(true, codigo,puntosRechazoNoQuiero);
                 manoActual = getMano(codigo);
                 manoActual.setUltimoMensaje(Cantos.NO_QUIERO);
                 manoActual.setJugadorTurno(jugadorIniciador);
@@ -356,7 +451,48 @@ public class ManoService {
         return res;
         
     }
+    public Integer gestionarPuntosFlor(Boolean rechazoFlor, String codigo, Integer puntosRechazo){
+        Mano manoActual = getMano(codigo);
 
+        
+        Integer res = manoActual.getPuntosFlor(); //Siempre sera cero en un principio
+        Partida partida = partidaService.findPartidaByCodigo(codigo);
+
+        Integer equipoRespondedor = manoActual.getJugadorTurno() %2;
+
+        Integer puntosEquipo1 = partida.getPuntosEquipo1();
+        Integer puntosEquipo2 = partida.getPuntosEquipo2();
+        Integer equipoGanadorContraflor = manoActual.getEquipoGanadorFlor();
+       
+        Integer puntosContraflorQuiero = 6;
+        
+        if(rechazoFlor){
+            res=puntosRechazo;
+
+            if(equipoRespondedor==0){
+                partida.setPuntosEquipo2(puntosEquipo2 + res);
+            }else{
+                partida.setPuntosEquipo1(puntosEquipo1 + res);
+            }
+            
+        }else{
+            res=puntosContraflorQuiero;
+            if(equipoGanadorContraflor==0){
+                partida.setPuntosEquipo1(puntosEquipo1 + res);
+            }else{
+                partida.setPuntosEquipo2(puntosEquipo2 + res);
+            }
+            
+        }
+        manoActual.setPuntosFlor(res);
+        manoActual.setPuedeCantarFlor(false);
+        manoActual.setQueFlorPuedeCantar(null);
+        manoActual.setEsperandoRespuesta(false);
+        partidaService.updatePartida(partida, partida.getId());
+        actualizarMano(manoActual, codigo);
+        return res;
+        
+    }
 
 
 	//TODO: FALTAN TEST NEGATIVOS
