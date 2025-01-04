@@ -100,7 +100,7 @@ const PlayingModal = forwardRef((props, ref) => {
             const timeoutId = setTimeout(() => setResolucionEnvido(false), 7000);
             return () => clearTimeout(timeoutId);
         } 
-        if (ultimoMensaje === "LISTA_ENVIDOS_FLOR") {
+        else if (ultimoMensaje === "LISTA_ENVIDOS_FLOR") {
             setResolucionEnvidoFlor(true);
             const timeoutId = setTimeout(() => setResolucionEnvidoFlor(false), 7000);
             return () => clearTimeout(timeoutId);
@@ -712,7 +712,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         <div>
                                             <button 
                                                 style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite' }}
-                                                onClick={() => cantarFlor('CONTRAFLOR')}
+                                                onClick={() => responderFlor('CONTRAFLOR')}
                                             >
                                                 <span className="swirl-glow-text">¡Contraflor!</span>
                                             </button>

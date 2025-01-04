@@ -108,7 +108,8 @@ public class ManoService {
             envidos.add(envidosIniciales);
         }
         nuevaMano.setEnvidosCantados(envidos);
-        nuevaMano.listaTantosCadaJugador();
+        nuevaMano.crearListaTantosCadaJugador();
+        nuevaMano.crearListaTantosCadaJugadorFlor();
         nuevaMano.setFloresCantadas(numCantosFlorIniciales);
         
 		Integer ganadasIniciales = 0;
@@ -127,6 +128,8 @@ public class ManoService {
         nuevaMano.setCartasLanzadasTotales(inicializarCartasLanzadasTotales(numJugadores));
         nuevaMano.setCartasLanzadasRonda(listaCartasLanzadas);
         nuevaMano.comprobarSiPuedeCantarEnvido(true);
+        nuevaMano.comprobarSiPuedeCantarFlor();
+
         actualizarMano(nuevaMano, partida.getCodigo());
 		return nuevaMano;
 	}
@@ -183,6 +186,8 @@ public class ManoService {
             }
             manoActual.comprobarSiPuedeCantarTruco();
             manoActual.comprobarSiPuedeCantarEnvido(true);
+            manoActual.comprobarSiPuedeCantarFlor();
+
             actualizarMano(manoActual, codigo);
             return cartaALanzar;
         } else{
@@ -256,34 +261,23 @@ public class ManoService {
             manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
         }
         manoActual.setEsperandoRespuesta(true);
-        Integer quienResponde = manoActual.quienResponde();
         try {
         manoActual.comprobarSiPuedeCantarFlor();
         Integer queFlorPuedeCantar = manoActual.getQueFlorPuedeCantar();
-        manoActual.setEsTrucoEnvidoFlor(1);
-            switch (canto) {
-                case FLOR:
-                    System.out.println("-------------"+queFlorPuedeCantar+"--------------");
+        manoActual.setEsTrucoEnvidoFlor(2);
+
+            if(canto.equals(Cantos.FLOR)){
                     if (queFlorPuedeCantar!=1) {
                         throw new FlorException("No podés cantar más veces flor/No tenés flor");
                     }
                     
                     numCantosFlores=numCantosFlores+1;
                     sumar3PuntosSiSoloUnJugadorTieneFlor(manoActual);
+                    manoActual=getMano(codigo);
                     manoActual.setFloresCantadas(numCantosFlores);
-                    manoActual.setJugadorTurno(quienResponde);
-                    break;
-                case CONTRAFLOR:
-                    if(queFlorPuedeCantar!=2){
-                        throw new EnvidoException("No podés cantar contraflor capo");
-                    }
-                    numCantosFlores=numCantosFlores+1;
-                    manoActual.setFloresCantadas(numCantosFlores);
-                    manoActual.setJugadorTurno(quienResponde);
-                    break;
-                default:
-                    throw new EnvidoException("Canto no valido");
             }
+
+            else throw new FlorException("Canto no valido");
         } catch (Exception e) {
             manoActual.setEsperandoRespuesta(false);
             throw e;
@@ -291,6 +285,7 @@ public class ManoService {
         manoActual.setUltimoMensaje(canto);
         manoActual.setPuedeCantarTruco(false);
         manoActual.comprobarSiPuedeCantarFlor();
+        manoActual.setPuedeCantarEnvido(false);
         actualizarMano(manoActual, codigo);
         return manoActual;
     }
@@ -302,8 +297,6 @@ public class ManoService {
         
         switch (respuesta) {
             case QUIERO:
-                
-                
                 
                 gestionarPuntosEnvido(false, codigo);
                 manoActual = getMano(codigo);
@@ -338,30 +331,32 @@ public class ManoService {
         Mano manoActual = getMano(codigo);
         Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
         manoActual.setEquipoCantor(null);
-        Integer puntosRechazoNoQuiero= 5;
+        Integer puntosRechazoNoQuiero=5;
         Integer puntosRechazoAchicarse=4;
+        Integer numCantosFlores = manoActual.getFloresCantadas();
+        Integer queFlorPuedeCantar = manoActual.getQueFlorPuedeCantar();
+        Integer quienRespondeFlor = manoActual.quienRespondeFlor();
+
         switch (respuesta) {
             case QUIERO:
-                
-                
-                
+
                 gestionarPuntosFlor(false, codigo,null);
-                manoActual = getMano(codigo);
-                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
+                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS_FLOR);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
-                
                 break;
 
             case CON_FLOR_ME_ACHICO:
                 gestionarPuntosFlor(true, codigo,puntosRechazoAchicarse);
                 manoActual = getMano(codigo);
-                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
+                manoActual.setUltimoMensaje(Cantos.CON_FLOR_ME_ACHICO);
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
+
                 break;
+
             case NO_QUIERO:
                 
                 gestionarPuntosFlor(true, codigo,puntosRechazoNoQuiero);
@@ -373,9 +368,17 @@ public class ManoService {
                 
                 break;
 
+             case CONTRAFLOR:
+                    if(queFlorPuedeCantar!=2){
+                        throw new EnvidoException("No podés cantar contraflor capo");
+                    }
+                    numCantosFlores=numCantosFlores+1;
+                    manoActual.setFloresCantadas(numCantosFlores);
+                    manoActual.setJugadorTurno(quienRespondeFlor);
+                    break;
+          
             default:
-                cantosEnvido(codigo, respuesta);
-                break;
+                 throw new FlorException("Canto no valido");
         }
     
         actualizarMano(manoActual, codigo);
@@ -456,13 +459,9 @@ public class ManoService {
     }
     public Integer gestionarPuntosFlor(Boolean rechazoFlor, String codigo, Integer puntosRechazo){
         Mano manoActual = getMano(codigo);
-
-        
         Integer res = manoActual.getPuntosFlor(); //Siempre sera cero en un principio
         Partida partida = partidaService.findPartidaByCodigo(codigo);
-
-        Integer equipoRespondedor = manoActual.getJugadorTurno() %2;
-
+        Integer equipoRespondedor = manoActual.getJugadorTurno()%2;
         Integer puntosEquipo1 = partida.getPuntosEquipo1();
         Integer puntosEquipo2 = partida.getPuntosEquipo2();
         Integer equipoGanadorContraflor = manoActual.getEquipoGanadorFlor();
@@ -489,7 +488,7 @@ public class ManoService {
         }
         manoActual.setPuntosFlor(res);
         manoActual.setPuedeCantarFlor(false);
-        manoActual.setQueFlorPuedeCantar(null);
+        manoActual.setQueFlorPuedeCantar(0);
         manoActual.setEsperandoRespuesta(false);
         partidaService.updatePartida(partida, partida.getId());
         actualizarMano(manoActual, codigo);
@@ -498,7 +497,7 @@ public class ManoService {
     }
 
 
-	//TODO: FALTAN TEST NEGATIVOS
+	
     public Mano cantosTruco(String codigo, Cantos canto){
 		Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
@@ -590,8 +589,9 @@ public class ManoService {
 	}
     private void sumar3PuntosSiSoloUnJugadorTieneFlor(Mano manoActual) {
         // 1) Obtenemos la lista de tantos de Flor de cada jugador
-        List<Integer> tantosFlor = manoActual.listaTantosCadaJugadorFlor();
-        
+        List<Integer> tantosFlor = manoActual.getEnvidosFlorCadaJugador();
+        String codigo= manoActual.getPartida().getCodigo();
+
         // 2) Contamos cuántos son > 0
         long jugadoresConFlor = tantosFlor.stream()
                                           .filter(p -> p != null && p > 0)
@@ -601,7 +601,6 @@ public class ManoService {
         if (jugadoresConFlor == 1) {
             // El equipo del que cantó la Flor
             Integer equipoCantorFlor = manoActual.getJugadorIniciadorDelCanto() % 2;
-            
             Partida partida = manoActual.getPartida();
             Integer puntosEquipo1 = partida.getPuntosEquipo1();
             Integer puntosEquipo2 = partida.getPuntosEquipo2();
@@ -615,6 +614,9 @@ public class ManoService {
             // 4) Actualizamos la partida
             partidaService.updatePartida(partida, partida.getId());
         }
+        else{ manoActual.setJugadorTurno(manoActual.quienRespondeFlor());
+        actualizarMano(manoActual, codigo);}
+
     }
     
 
