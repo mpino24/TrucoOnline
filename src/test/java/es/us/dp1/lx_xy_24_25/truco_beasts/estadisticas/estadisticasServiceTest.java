@@ -8,8 +8,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorRepository;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
