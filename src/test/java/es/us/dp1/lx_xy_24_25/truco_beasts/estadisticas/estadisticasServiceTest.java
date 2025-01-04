@@ -143,3 +143,4 @@ public class EstadisticasServiceTest {
         assertEquals(60, result.getPartidasConFlor());
     }
 }
+
