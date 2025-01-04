@@ -19,6 +19,7 @@ export default function PartidasAdmin() {
       });
     const modal = getErrorModal(setVisible, visible, message);
     return (
+      <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
         <div className="admin-page-container">
             <h1 className="text-center">Partidas en curso</h1>
             {alerts.map((a) => a.alert)}
@@ -36,5 +37,6 @@ export default function PartidasAdmin() {
                 </Table>
             </div>
         </div>
+      </div>
     );
 }

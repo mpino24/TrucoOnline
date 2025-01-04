@@ -46,7 +46,7 @@ export default function Home() {
         [],
         '/api/v1/jugador?userId=' + usuario.id,
         jwt,
-        setMessage,
+        setMessage, 
         setVisible
     );
 
@@ -108,14 +108,8 @@ export default function Home() {
         <>
             {roles.includes('ADMIN') && (
             <div expand='md' style={{float: 'left'}}>
-                <button className="button-admin" onClick={() => {navigate("/users")}}>
-                USUARIOS
-                </button>
-                <button className="button-admin" onClick={() => {navigate("/admin/partidas")}}>
-                PARTIDAS EN CURSO
-                </button>
-                <button className="button-admin" onClick={() => {navigate("/admin/partidas/terminadas")}}>
-                PARTIDAS JUGADAS
+                <button className="button-admin" onClick={() => {navigate("/admin")}}>
+                FUNCIONES DE ADMINISTRADOR
                 </button>
             </div>
             )}
