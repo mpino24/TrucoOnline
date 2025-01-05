@@ -66,8 +66,8 @@ public class LogrosController {
 
     @PostMapping
     public ResponseEntity<Logros> createLogro(@RequestBody @Valid Logros logro){
-        User currenUser = userService.findCurrentUser();
-        if(currenUser.getAuthority().getAuthority().equals("admin")){
+        User currentUser = userService.findCurrentUser();
+        if(currentUser.hasAuthority("ADMIN")){
             Logros newLogro = new Logros();
             BeanUtils.copyProperties(logro, newLogro, "id");
             return new ResponseEntity<>(logrosService.save(newLogro), HttpStatus.CREATED);
@@ -79,8 +79,8 @@ public class LogrosController {
 
     @DeleteMapping("/{logroId}")
     public ResponseEntity<Void> deleteLogro(@PathVariable("logroId") Integer logroId){
-        User currenUser = userService.findCurrentUser();
-        if(currenUser.getAuthority().getAuthority().equals("admin")){
+        User currentUser = userService.findCurrentUser();
+        if(currentUser.hasAuthority("ADMIN")){
             if(logrosService.findLogroById(logroId)==null){
                 throw new ResourceNotFoundException("No se encontro el logro");
             }
@@ -94,8 +94,8 @@ public class LogrosController {
 
     @PutMapping
     public ResponseEntity<Logros> updateLogro(@RequestBody @Valid Logros logro){
-        User currenUser = userService.findCurrentUser();
-        if(currenUser.getAuthority().getAuthority().equals("admin")){
+        User currentUser = userService.findCurrentUser();
+        if(currentUser.hasAuthority("ADMIN")){
             return new ResponseEntity<>(logrosService.updateLogro(logro), HttpStatus.CREATED);
         }else{
             throw new NotAuthorizedException();
