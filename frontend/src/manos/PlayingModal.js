@@ -482,15 +482,8 @@ const PlayingModal = forwardRef((props, ref) => {
                         Cargando mano...  
                     </div>
                 )}
-
-                {console.log("JugTurno?-----------------------------"+mano?.jugadorTurno)}
-                {console.log("------------------------PuntosEnvido?-----------------------------"+mano?.puntosEnvido)}
-                {console.log("------------------------RondaActual?-----------------------------"+mano?.rondaActual)}
                 {console.log("------------------------FloresCantadas?-----------------------------"+mano?.floresCantadas)}
-                {console.log("------------------------PuntosTruco?-----------------------------"+mano?.puntosTruco)}
-                {console.log("------------------------TresMismoTipo?-----------------------------"+mano?.tresMismoPalo)}
-                {console.log("------------------------QueFlorPuedesCantar?------------!!!!!!!!!!-----------------"+mano?.queFlorPuedeCantar)}
-                {console.log("------------------------FLORES LISTA FLOREEES?------------!!!!!!!!!!-----------------"+mano?.listaTienenFlores)}
+
 
 
 
@@ -705,7 +698,7 @@ const PlayingModal = forwardRef((props, ref) => {
                             {/* Cantar Flor */}
                             {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && mano?.puedeCantarFlor && (
                                 <div className="envido-button-container" style={{ top: "30%", position: "absolute" }}>
-                                    {mano?.queFlorPuedeCantar === 1 && (
+                                    {mano?.queFlorPuedeCantar === 1 && mano.floresCantadas==0 && (
                                         <button onClick={() => cantarFlor('FLOR')}>
                                             <span>¡Flor!</span>
                                         </button>
@@ -760,7 +753,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                 )}
 
 
-                                {mano?.puedeCantarFlor && (
+                                {mano?.puedeCantarFlor &&  mano.floresCantadas==0 &&  (
                                         <button style={{zIndex:"100000000",position:"fixed",top:"20%" }} onClick={() => cantarFlor('FLOR')}>
                                             <span>¡Flor!</span>
                                         </button>
@@ -790,7 +783,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         <span className="swirl-glow-text">Falta Envido</span>
                                     </button>
                                 )}
-                                 {mano?.puedeCantarFlor && (
+                                 {mano?.puedeCantarFlor &&  mano.floresCantadas==0 && (
                                         <button style={{zIndex:"100000000",position:"fixed",top:"20%" }} onClick={() => cantarFlor('FLOR')}>
                                             <span>¡Flor!</span>
                                         </button>

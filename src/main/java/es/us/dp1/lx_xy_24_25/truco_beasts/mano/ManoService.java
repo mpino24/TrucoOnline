@@ -303,7 +303,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
 		
 		nuevaMano.setPartida(partida);
 		nuevaMano.setJugadorTurno(partida.getJugadorMano());
-		nuevaMano.setCartasDisp(repartirCartas(partida)); //RECORDAR CAMBIAR ESTO
+		nuevaMano.setCartasDisp(repartirCartasSoloUnaFlor(partida)); //RECORDAR CAMBIAR ESTO
 
         Integer tiposDeEnvido = 3;
         Integer envidosIniciales=0;
@@ -482,6 +482,14 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                     }
                     
                     numCantosFlores=numCantosFlores+1;
+                    manoActual.setEquipoCantor(null);
+                    Integer envidosIniciales=0;
+                    Integer tiposDeEnvido=3;
+                    List<Integer> envidos = new ArrayList<>();
+                    for(int i = 0; i<tiposDeEnvido;i++){
+                        envidos.add(envidosIniciales);
+                    }
+                    manoActual.setEnvidosCantados(envidos);
                     sumar3PuntosSiSoloUnJugadorTieneFlor(manoActual);
                     manoActual=getMano(codigo);
                     manoActual.setFloresCantadas(numCantosFlores);
@@ -493,7 +501,6 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
             throw e;
         }
         manoActual.setUltimoMensaje(canto);
-        manoActual.setPuedeCantarTruco(false);
         manoActual.comprobarSiPuedeCantarFlor();
         manoActual.setPuedeCantarEnvido(false);
         actualizarMano(manoActual, codigo);
@@ -822,6 +829,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
             Integer puntosEquipo2 = partida.getPuntosEquipo2();
             manoActual.setEsperandoRespuesta(false);
             manoActual.setJugadorTurno(jugadorIniciador);
+            manoActual.comprobarSiPuedeCantarTruco();
 
             if (equipoCantorFlor == 0) {
                 partida.setPuntosEquipo1(puntosEquipo1 + 3);
@@ -834,6 +842,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
             
         }
         else{ manoActual.setJugadorTurno(manoActual.quienRespondeFlor());
+            manoActual.setPuedeCantarTruco(false);
             manoActual.comprobarSiPuedeCantarFlor();
 
     }
