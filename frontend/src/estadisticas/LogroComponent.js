@@ -68,6 +68,7 @@ const LogroComponent = ({ logro }) => {
     const nombreStyle = {
         fontSize: '20px',
         fontWeight: 'bold',
+        color: '#FFFFFF',
         margin: '10px 0',
         wordWrap: 'break-word', 
         textAlign: 'center',
