@@ -16,7 +16,8 @@ import lombok.Setter;
 public class Logros extends NamedEntity{
     @NotBlank
     private String descripcion;
-    private String imagencita;
+
+    private String imagencita = "http://localhost:8080/resources/images/trofeos/trofeo1.jpg";
 
     @Min(0)
     private Integer valor;
@@ -26,6 +27,8 @@ public class Logros extends NamedEntity{
     Metrica metrica;
 
 
+    @NotNull
+    Boolean oculto = false;
 
     public String getActualDescription(){
         return descripcion.replace("<VALOR>", String.valueOf(valor));

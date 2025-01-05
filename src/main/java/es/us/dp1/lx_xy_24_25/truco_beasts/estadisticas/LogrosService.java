@@ -46,9 +46,21 @@ public class LogrosService {
     }
 
     @Transactional(readOnly=true)
-    public List<Logros> findAllLogros(){
+    public List<Logros> findAllLogros(Boolean ocultosTambien, Integer jugadorId){
         List<Logros> res= new ArrayList<>();
-        logroRepository.findAll().forEach(x-> res.add(x));
+        if(ocultosTambien || jugadorId==null){
+            logroRepository.findAll().forEach(logro-> res.add(logro));
+        }else{
+            EstadisticaJugador estadisticaJugador = estadisticasService.getEstadisticasJugador(jugadorId);
+            logroRepository.findAll().forEach(logro-> {
+                if(!logro.getOculto() && !tieneLogro(estadisticaJugador.getEstadisticaPorMetrica(logro.getMetrica()), logro)){ //si no está oculto, o tiene el logro, lo muestra
+                    res.add(logro);
+                }
+            });
+        }
+        
+        
+
         return res;
     }
 
@@ -70,19 +82,32 @@ public class LogrosService {
 
     @Transactional
     public List<Logros> logrosConseguidos(Integer jugadorId){
-        List<Logros> listaLogros= findAllLogros();
+        List<Logros> listaLogros= findAllLogros(true, null);
         List<Logros> misLogros= new ArrayList<>();
         EstadisticaJugador estadisticaGeneral = estadisticasService.getEstadisticasJugador(jugadorId);
         for(Logros logro:listaLogros){
             Metrica metrica = logro.getMetrica();
             Integer miEstadistica= estadisticaGeneral.getEstadisticaPorMetrica(metrica);
-            if(miEstadistica>= logro.getValor()){
+            if(tieneLogro(miEstadistica, logro)){
                 misLogros.add(logro);
             }
         }
         return misLogros;
     }
 
+    public Boolean tieneLogro(Integer estadistica,Logros logro){
+        Boolean res = false;
+        if(estadistica >= logro.getValor()){
+            res = true;
+        }
+        return res;
+    }
+
+
+    public Integer findTotalLogros() {
+        Integer res = (int) logroRepository.count();
+        return res;
+    }
    
 
     
