@@ -303,7 +303,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
 		
 		nuevaMano.setPartida(partida);
 		nuevaMano.setJugadorTurno(partida.getJugadorMano());
-		nuevaMano.setCartasDisp(repartirCartasSoloFlor(partida)); //RECORDAR CAMBIAR ESTO
+		nuevaMano.setCartasDisp(repartirCartas(partida)); //RECORDAR CAMBIAR ESTO
 
         Integer tiposDeEnvido = 3;
         Integer envidosIniciales=0;
