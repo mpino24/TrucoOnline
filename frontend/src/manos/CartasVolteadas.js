@@ -16,8 +16,6 @@ const CartasVolteadas = forwardRef((props, ref) => {
 
 
   const eresEspectador= typeof posicionListaCartas === 'object'
-  console.log("ESPECTADOOOOOOOOOOOOOOOOOOOR")
-  console.log(eresEspectador)
   if(eresEspectador){
     posicionListaCartas=0
   }
@@ -39,7 +37,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...cartaDeUna,
       top: '40%',
       right: '20%',
-      rotate: '280deg',
+      rotate: '270deg',
     },
     {
       ...cartaDeUna,
@@ -57,7 +55,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...cartaDeDos,
       top: '40%',
       right: '20%',
-      rotate: '280deg',
+      rotate: '270deg',
     },
     {
       ...cartaDeDos,
@@ -75,7 +73,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...cartaDeTres,
       top: '40%',
       right: '20%',
-      rotate: '280deg',
+      rotate: '270deg',
     }, //7
     {
       ...cartaDeTres,
@@ -93,7 +91,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
       ...estiloMazoOtro,
       top: '20%',
       right: '21%',
-      rotate: '280deg',
+      rotate: '270deg',
     }, //10
     {
       ...estiloMazoOtro,
