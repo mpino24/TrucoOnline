@@ -40,7 +40,7 @@ export default function AdminHome() {
                 <button className="home-button" onClick={() => {navigate("/admin/partidas/terminadas")}}>
                 PARTIDAS JUGADAS
                 </button>
-                <button className="home-button" onClick={() => {}}>
+                <button className="home-button" onClick={() => {navigate("/admin/estadisticas")}}>
                 ESTADÍSTICAS
                 </button>
             </div>
