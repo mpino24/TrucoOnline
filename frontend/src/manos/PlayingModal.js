@@ -504,7 +504,7 @@ const PlayingModal = forwardRef((props, ref) => {
                             }}
                         >
                             <h3 className="player-heading">
-                                Jugador: {Number(posicion)}
+                                {typeof posicion  === 'object' ? "Viendo la partida..." : `Jugador: ${Number(posicion)}` }
                             </h3>
                         </div>
 

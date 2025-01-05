@@ -139,8 +139,11 @@ const CartasVolteadas = forwardRef((props, ref) => {
         // Determine style based on position and number of cards
         let estiloSegunPosicionYNumCartas;
         if (cartasRestantes === 3) {
-          if(eresEspectador && pos===0){
-            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
+          if(eresEspectador && pos==0 && cartasDispo.length==2){
+            estiloSegunPosicionYNumCartas = listaEstilos[6];
+          }
+          else if(eresEspectador && pos===0){
+            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR Y ESTA ES LA LISTAAAAAAAAAAAA     " + cartasDispo.length)
             estiloSegunPosicionYNumCartas = listaEstilos[13];
           }
           else if ((posicionListaCartas + pos) % 2 === 0)
@@ -157,7 +160,10 @@ const CartasVolteadas = forwardRef((props, ref) => {
           else
             estiloSegunPosicionYNumCartas = listaEstilos[7];
         } else if (cartasRestantes === 2) {
-          if(eresEspectador && pos===0){
+          if(eresEspectador && pos==0 && cartasDispo.length==2){
+            estiloSegunPosicionYNumCartas = listaEstilos[3];
+          }
+          else if(eresEspectador && pos===0){
             console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
             estiloSegunPosicionYNumCartas = listaEstilos[14];
           }
@@ -173,6 +179,9 @@ const CartasVolteadas = forwardRef((props, ref) => {
           else
             estiloSegunPosicionYNumCartas = listaEstilos[4];
         } else {
+          if(eresEspectador && pos==0 && cartasDispo.length==2){
+            estiloSegunPosicionYNumCartas = listaEstilos[0];
+          }
           if(eresEspectador && pos===0){
             console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
             estiloSegunPosicionYNumCartas = listaEstilos[15];
@@ -190,25 +199,18 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[1];
         }
 
-        // Logging for debugging
-        console.log("Eres el jugador: " + posicionListaCartas);
-        console.log("Posicion siendo recorrida: " + pos);
-        console.log("");
-        console.log(
-          "Resultado de la condicion: ",
-          posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0
-        );
-        console.log("Deberia entrar al bucle de mano?: ", pos === jugadorMano);
-        console.log("");
+       
 
         // Initialize posicionMazo with default values
         let posicionMazo = { width: '0px' };
 
         if (pos === jugadorMano) {
-          console.log("Efectivamente ha entrado en el bucle de la mano");
-          console.log("");
+          if (posicionListaCartas === jugadorMano && eresEspectador && cartasDispo.length==2){
+                        posicionMazo = listaEstilos[9];
 
-          if (posicionListaCartas === jugadorMano)
+
+          }
+          else if (posicionListaCartas === jugadorMano)
             posicionMazo = listaEstilos[12];
           else if ((posicionListaCartas + pos) % 2 === 0)
             posicionMazo = listaEstilos[11];
