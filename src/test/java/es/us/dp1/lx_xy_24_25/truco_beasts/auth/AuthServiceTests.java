@@ -60,6 +60,7 @@ public class AuthServiceTests {
 			User playerUser = new User();
 			playerUser.setUsername("clinicOwnerTest");
 			playerUser.setPassword("clinicOwnerTest");
+			playerUser.setIsConnected(false);
 			playerUser.setAuthority(authoritiesService.findByAuthority("PLAYER"));
 			userService.saveUser(playerUser);			
 		}

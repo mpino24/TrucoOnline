@@ -93,6 +93,7 @@ public class EstadisticasRepositoryTest {
             user.setAuthority(authoritiesRepository.findByName("PLAYER").get());
             user.setPassword("CONTRASEÑA PRUEBA");
             user.setUsername("USUARIO PRUEBA");
+            user.setIsConnected(true);
             user = userRepository.save(user);  
             
             // jugador

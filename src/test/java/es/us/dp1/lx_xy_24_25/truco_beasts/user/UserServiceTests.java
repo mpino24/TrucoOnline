@@ -116,6 +116,7 @@ class UserServiceTests {
 		User user = new User();
 		user.setUsername("Sam");
 		user.setPassword("password");
+		user.setIsConnected(false);
 		user.setAuthority(authService.findByAuthority("ADMIN"));
 
 		this.userService.saveUser(user);
