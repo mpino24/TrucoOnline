@@ -13,7 +13,12 @@ const JugadorView = forwardRef((props, ref) => {
         fetch(
             "/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.id,
             {
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())

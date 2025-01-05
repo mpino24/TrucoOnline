@@ -31,12 +31,18 @@ const WaitingModal = forwardRef((props, ref) => {
     const [numDesconectados, setNumDesconectados] = useState(0);
 
 
+
     useEffect(() => {
         function fetchPlayers() {
             fetch(
                 `/api/v1/partidajugador/players?partidaCode=` + game.codigo,
                 {
-                    method: "GET"
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      }
                 }
             )
                 .then((response) => response.json())
@@ -119,7 +125,12 @@ const WaitingModal = forwardRef((props, ref) => {
         fetch(
             `/api/v1/jugador/amigos?userId=` + usuario.id,
             {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())
@@ -217,16 +228,13 @@ const WaitingModal = forwardRef((props, ref) => {
                 },
             });
             console.log("Mensaje enviado");
-
             connectedClient.deactivate(); // Desactiva el cliente después de enviar el mensaje
             alert("Invitación enviada");
+
         } else {
             console.error("STOMP aún no está listo o no está conectado");
         }
     };
-
-
-
 
     return (
         <>
