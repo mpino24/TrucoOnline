@@ -92,7 +92,7 @@ class UserControllerTests {
 	}
 
 	@Test
-	@WithMockUser("admin")
+	@WithMockUser(username = "admin1", authorities = "ADMIN")
 	void shouldFindAll() throws Exception {
 		User sara = new User();
 		sara.setId(2);
@@ -166,7 +166,7 @@ class UserControllerTests {
 	}
 
 	@Test
-	@WithMockUser("admin")
+	@WithMockUser(username = "admin1", authorities = "ADMIN")
 	void shouldCreateUser() throws Exception {
 		User aux = new User();
 		aux.setUsername("Prueba");

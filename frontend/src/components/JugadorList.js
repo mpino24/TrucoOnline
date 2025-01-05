@@ -1,23 +1,24 @@
-import { useState, forwardRef } from 'react';
+import { forwardRef } from 'react';
 
-import { TbFlower } from "react-icons/tb";
-import { TbFlowerOff } from "react-icons/tb";
-import { Link } from 'react-router-dom';
-import { ScrollView } from 'react-native-web';
-import PartidaView from './PartidaView';
 import JugadorView from './JugadorView';
 
 
 const JugadorList = forwardRef((props, ref)  => {
-
+    function playerKey(player) {
+        let res=player.id;
+        if(player.isConnected){
+            res+=props.jugadores.length+1;
+        }
+        return res;
+    }
 
     const jugadoresList = props.jugadores.map((player) => {
         return (
-            <div onClick={()=> props.mostrarChat(player)}>
+            <div key={playerKey(player)} onClick={()=> props.mostrarChat(player)}>
             <JugadorView
             jugador={player}
             isFriend={true}
-            isSolicitud={true}
+            isSolicitud={false}
             />
             </div>
         )

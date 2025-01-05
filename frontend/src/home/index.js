@@ -12,36 +12,26 @@ import CreationModal from "../components/getCreationModal.js"
 import { NavLink, NavItem, Nav } from 'reactstrap';
 import GetJoinModal from '../components/getJoinModal.js';
 import useFetchState from "../util/useFetchState.js";
-import jwt_decode from "jwt-decode";
 import GetFriendsModal from '../components/getFriendsModal';
-
-import EstadisticasModal from '../estadisticas/EstadisticasModal.js';
-
+import EstadisticasModal from '../estadisticas/EstadisticasModal';
+import jwt_decode from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
-
-
 
 export default function Home() {
     const [joinModalView, setJoinModalView] = useState(false);
     const [creationModalView, setCreationModalView] = useState(false);
     const [friendsView, setFriendsView] = useState(false);
-    const [estadisticasView, setEstadisticasView] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
     const [backgroundUrl, setBackgroundUrl] = useState();
     const [username, setUsername] = useState("");
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
+    const [estadisticasView, setEstadisticasView] = useState(false);
     const [roles, setRoles] = useState([]);
+
+
 
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
-
-    useEffect(() => {
-        if (jwt) {
-            setRoles(jwt_decode(jwt).authorities);
-        }
-    }, [jwt])
-
-
 
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -55,22 +45,28 @@ export default function Home() {
         setVisible
     );
 
+    useEffect(() => {
+        if (jwt) {
+            setRoles(jwt_decode(jwt).authorities);
+        }
+    }, [jwt])
+
 
     const toggleAccountMenu = useCallback(() => {
         setShowAccountMenu((current) => !current);
     }, []);
     useEffect(() => {
         const backgrounds = [
-            'url(/fondos/fondo0.jpg)',
-            'url(/fondos/fondo1.jpg)',
-            'url(/fondos/fondo2.jpg)',
-            'url(/fondos/fondo3.jpg)',
-            'url(/fondos/fondo4.jpg)',
-            'url(/fondos/fondo5.jpg)',
-            'url(/fondos/fondo6.jpg)',
-            'url(/fondos/fondo7.jpg)',
-            'url(/fondos/fondo8.jpg)',
-            'url(/fondos/fondo9.jpg)',
+            '/fondos/fondo0.jpg',
+            '/fondos/fondo1.jpg',
+            '/fondos/fondo2.jpg',
+            '/fondos/fondo3.jpg',
+            '/fondos/fondo4.jpg',
+            '/fondos/fondo5.jpg',
+            '/fondos/fondo6.jpg',
+            '/fondos/fondo7.jpg',
+            '/fondos/fondo8.jpg',
+            '/fondos/fondo9.jpg',
         ];
         const randomIndex = Math.floor(Math.random() * backgrounds.length)
         setBackgroundUrl(backgrounds[randomIndex])
@@ -96,10 +92,6 @@ export default function Home() {
         setFriendsView((current) => !current);
     }, [])
 
-    const toggleEstadisticasModal = useCallback(() => {
-        setEstadisticasView((current) => !current);
-    }, [])
-
     useEffect(() => {
         if (usuario) {
             setUsername(usuario.username);
@@ -112,10 +104,15 @@ export default function Home() {
         navigate(path);
     };
 
+    const toggleEstadisticasModal = useCallback(() => {
+        setEstadisticasView((current) => !current);
+    }, [])
+
+
+
 
     return (
         <>
-
             {roles.includes('ADMIN') && (
                 <div expand='md' style={{ float: 'left' }}>
                     <button className="button-admin" onClick={() => { navigate("/admin") }}>
@@ -135,6 +132,7 @@ export default function Home() {
                             <NavItem className="d-flex">
                                 <NavLink style={{ color: "white", marginTop: 8, marginLeft: 5 }} id="perfil" tag={Link} to="/profile">Mi Perfil</NavLink>
                             </NavItem>
+
                             <NavItem className="d-flex">
                                 <NavLink style={{ color: "red", marginBottom: 2, marginLeft: 5 }} id="logout" tag={Link} to="/logout">Cerrar Sesión</NavLink>
                             </NavItem>
@@ -143,60 +141,51 @@ export default function Home() {
                 </Nav>
             }
 
-
-
-
-
-            <div className="home-page-container" style={{ background: backgroundUrl, backgroundSize: '100%' }}>
-
+            <div className="home-page-container" style={{ backgroundImage: `url(${backgroundUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', height: '100vh', width: '100vw' }}>
                 {!estadisticasView &&
                     <>
-                        {/* Modulo de estadisticas */}
-                        <div style={{ width: '36%', cursor: 'pointer' }} onClick={toggleEstadisticasModal}>
-                            <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
-                            <RiArrowRightDoubleLine style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
+                        <div style={{ width: '36%' }}>
+                            <div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={toggleEstadisticasModal}>
+                                <IoTrophy style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
+                                <RiArrowRightDoubleLine style={{ width: 80, height: 80, float: 'left', color: 'white' }} />
+                                <div />
+                            </div>
                         </div>
-
-
-                        {/* Jugar */}
                         {joinModalView &&
-                            <GetJoinModal
-                                setModalVisible={setJoinModalView}
-                                modalVisible={joinModalView} />
+                            <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000, width: '60%' }}>
+                                <GetJoinModal
+                                    setModalVisible={setJoinModalView}
+                                    modalVisible={joinModalView} />
+                            </div>
                         }
                         {creationModalView &&
-                            <CreationModal setCreationModalView={setCreationModalView} creationModalView={creationModalView} />
+                            <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000 }}>
+                                <CreationModal setCreationModalView={setCreationModalView} creationModalView={creationModalView} />
+                            </div>
                         }
                         {!(joinModalView || creationModalView) &&
-                            <div className="hero-div" >
+                            <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
                                 <h1>¿Un truco?</h1>
                                 <button className="home-button" onClick={toggleCreationModal}>Crear</button>
                                 <button className="home-button" onClick={toggleJoinModal}>Unirte</button>
                             </div>
                         }
-
-
-                        {/* Modulo social */}
                         {!friendsView &&
                             <div style={{ width: '36%' }}>
-                                <div style={{ cursor: 'pointer' }} onClick={toggleFriendsModal} >
+                                <div style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={toggleFriendsModal} >
                                     <FaUserFriends style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
                                     <RiArrowLeftDoubleLine style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
                                 </div>
                             </div>
                         }
                         {friendsView &&
-                            <div style={{ width: '36%', height: '100%', marginRight: -12 }}>
+                            <div style={{ position: 'fixed', right: 0, top: 0, height: '100%', width: '36%' }}>
                                 <GetFriendsModal setModalVisible={setFriendsView} modalVisible={friendsView} />
                             </div>
+
                         }
-
-
-
                     </>
                 }
-
-
                 {estadisticasView &&
                     <div style={{
                         position: 'fixed',
@@ -214,9 +203,9 @@ export default function Home() {
                 <div style={{ backgroundColor: 'black', position: 'fixed', bottom: 0, width: '100%', height: 41 }}>
                     <center style={{ color: 'white', marginTop: 5 }}>© MIDPIE</center>
                 </div>
+
             </div>
         </>
     );
-
 
 }

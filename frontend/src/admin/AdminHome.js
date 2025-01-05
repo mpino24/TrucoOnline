@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Table } from "reactstrap";
 import "../static/css/admin/adminPage.css";
 import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
 import { useNavigate } from 'react-router-dom';
+import tokenService from "../services/token.service";
 
 export default function AdminHome() {
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [alerts, setAlerts] = useState([]);
-    const [games, setGames] = useFetchState([], "/api/v1/partida/partidas/participantes/activas");
+    const jwt = tokenService.getLocalAccessToken();
+    const [games, setGames] = useFetchState([], "/api/v1/partida/partidas/participantes/activas", jwt, setMessage, setVisible);
     const gameList = games.map((game) => {
         return (
           <tr key={game.id}>
