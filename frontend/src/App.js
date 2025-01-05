@@ -34,25 +34,25 @@ function App() {
   const location = useLocation();
   const jwt = tokenService.getLocalAccessToken();
   let roles = [];
-  
-  function connectUser(){
+
+  function connectUser() {
     fetch(
-        "/api/v1/profile/connect",
-        {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        }
+      "/api/v1/profile/connect",
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
     )
-    .then((response) => {
+      .then((response) => {
         if (!response.ok) {
-            alert("There was an error connecting the user");
+          alert("There was an error connecting the user");
         }
-    })
-    .catch((message) => alert(message));
-}
-  
+      })
+      .catch((message) => alert(message));
+  }
+
   if (jwt) {
     connectUser();
     roles = getRolesFromJWT(jwt);
@@ -102,26 +102,29 @@ function App() {
   }
 
   function disconnectUser() {
-    console.log("Disconnecting user");
-    fetch("/api/v1/profile/disconnect", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    }).then((response) => {
-      if (!response.ok) {
-        alert("There was an error closing the session"); 
+    if (jwt) {
+      console.log("Disconnecting user");
+      fetch("/api/v1/profile/disconnect", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }).then((response) => {
+        if (!response.ok) {
+          alert(response.statusText);
+          alert("There was an error closing the session");
+        }
       }
+      );
     }
-    );
   }
 
   window.addEventListener('beforeunload', function (event) {
-      disconnectUser();
+    disconnectUser();
   });
 
-  
+
   return (
     <div>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
