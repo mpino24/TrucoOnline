@@ -10,6 +10,11 @@ import { Link } from 'react-router-dom';
 export default function Login() {
   const [message, setMessage] = useState(null)
   const loginFormRef = React.createRef();
+  const jwt = tokenService.getLocalAccessToken();
+
+  if(jwt){ //Redirigimos a la página de inicio si ya hay un usuario logueado
+    window.location.href = "/home";
+  }
 
 
   async function handleSubmit({ values }) {

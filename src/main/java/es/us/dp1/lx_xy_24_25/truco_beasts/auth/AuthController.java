@@ -3,17 +3,10 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.auth;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.JwtResponse;
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.jwt.JwtUtils;
-import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.services.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,10 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.request.LoginRequest;
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.request.SignupRequest;
+import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.JwtResponse;
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
+import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.jwt.JwtUtils;
+import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.services.UserDetailsImpl;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.security.authentication.BadCredentialsException;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -63,7 +59,7 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 				.collect(Collectors.toList());
-
+			userService.updateConnection(userDetails.getId(),true); // Para gestionar los usuarios conectados
 			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
 		}catch(BadCredentialsException exception){
 			return ResponseEntity.badRequest().body("Bad Credentials!");
