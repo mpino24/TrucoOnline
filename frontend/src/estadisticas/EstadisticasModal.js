@@ -58,6 +58,11 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 </>
             );
         } else {
+            let logrosRestantes = totalLogros-listaMisLogros.length
+            let textoLogrosRestantes= `Todavia te quedan ${logrosRestantes} logros por conseguir`
+            if(logrosRestantes===1){
+                textoLogrosRestantes = 'Solamente te falta un logro!!!'
+            }
             return (
                 <>
             
@@ -66,7 +71,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     <p style={{ color: 'white' }}>Seguí jugando para desbloquear logros.</p>
                 </div>}
                 {!logrosMios && <div>
-                    <h3 style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Tenes todos los logros!": `Todavia te quedan ${totalLogros-listaMisLogros.length} logros por conseguir`}</h3>
+                    <h3 style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Tenes todos los logros!": textoLogrosRestantes}</h3>
                     <p style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Realmente sos el amo del Truco": `Mucha suerte!`}</p>
                 </div>}
                 </>
