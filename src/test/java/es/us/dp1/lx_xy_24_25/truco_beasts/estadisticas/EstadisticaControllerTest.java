@@ -1,43 +1,28 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
 
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.BeforeParam;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
-
-import org.springframework.http.MediaType;
-
-import org.springframework.context.annotation.FilterType;
 
 @WebMvcTest(controllers = EstadisticasController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
 public class EstadisticaControllerTest {
@@ -51,10 +36,13 @@ public class EstadisticaControllerTest {
     private EstadisticasService estadisticasService;
 
     @MockBean
+    private JugadorService jugadorService;
+
+    @MockBean
     private UserService userService;
 
     private User user1;
-    private Jugador jugador1;
+    private JugadorDTO jugador1;
     private EstadisticaJugador estadisticasJugador1;
     private EstadisticaGlobal estadisticaGlobal1;
 
@@ -68,11 +56,11 @@ public class EstadisticaControllerTest {
 
         user1.setAuthority(autoridadJugador);
         user1.setId(1);
+        user1.setIsConnected(true);
         user1.setUsername("user1");
 
-        jugador1 = new Jugador();
+        jugador1 = new JugadorDTO();
         jugador1.setId(1);
-        jugador1.setUser(user1);
         estadisticasJugador1 = new EstadisticaJugador();
 
         estadisticasJugador1.setDerrotas(2);
@@ -106,6 +94,7 @@ public class EstadisticaControllerTest {
     void obtenerMisEstadisticas() throws Exception{
 
         when(userService.findCurrentUser()).thenReturn(user1);
+        when(jugadorService.findJugadorByUserId(user1.getId())).thenReturn(jugador1);
         when(estadisticasService.getEstadisticasJugador(user1.getId())).thenReturn(estadisticasJugador1);
         mockMvc.perform(get(BASE_URL + "/misEstadisticas"))
                 .andExpect(status().isOk())
