@@ -3,6 +3,7 @@ import useFetchState from '../util/useFetchState.js';
 import Highcharts, { color } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { IoCloseCircle } from "react-icons/io5";
+import jwt_decode from "jwt-decode";
 import tokenService from '../services/token.service.js';
 import HighchartsMore from 'highcharts/highcharts-more';
 import LogroComponent from './LogroComponent.js';
@@ -15,20 +16,40 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [estadisticas, setEstadisticas] = useFetchState({}, '/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible)
     const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible)
     const [graficoActualPartidas, setGraficoActualPartidas] = useState("resultados");
-   
+    const [logrosMios,setLogrosMios]=useState(true)
     const [listaMisLogros, setListaMisLogros] = useFetchState([], '/api/v1/logros/misLogros', jwt, setMessage, setVisible);
+    const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], '/api/v1/logros', jwt, setMessage, setVisible);
+    const [totalLogros, setTotalLogros] = useFetchState(0, '/api/v1/logros/total', jwt, setMessage, setVisible);
+      const [roles, setRoles] = useState([]);
+    function getRolesFromJWT(jwt) {
+        return jwt_decode(jwt).authorities;
+    }
+    
+        useEffect(() => {
+            if (jwt) {
+                setRoles(jwt_decode(jwt).authorities);
+            }
+        }, [jwt])
 
-
+    function cambiarLogros(){
+        setLogrosMios(logrosMios?false:true )
+    }
     //LOGROS
     const renderLogros = () => {
-        let logrosObtenidos = listaMisLogros;
+        let logros;
+        let soyAdmin = roles.includes('ADMIN')
+        if(logrosMios){
+            logros = listaMisLogros
+        }else{
+            logros = listaLogrosGlobales
+        }
 
-        if (logrosObtenidos && logrosObtenidos.length > 0) {
+        if (logros && logros.length > 0) {
             return (
                 <>
-                    <h3 style={{ color: 'white', marginBottom: '20px' }}>Logros Obtenidos</h3>
+                    <h3 style={{ color: 'white', marginBottom: '20px' }}>{logrosMios?"Logros obtenidos": soyAdmin?"Logros globales":"Logros por conseguir"}</h3>
                     <div style={logrosGridStyle}>
-                        {logrosObtenidos.map((logro, index) => (
+                        {logros.map((logro, index) => (
                             <div key={index} style={logroCardStyle}>
                                 <LogroComponent logro={logro} />
                             </div>
@@ -38,10 +59,17 @@ const EstadisticasModal = forwardRef((props, ref) => {
             );
         } else {
             return (
-                <div>
+                <>
+            
+                {logrosMios&& <div>
                     <h3 style={{ color: 'white' }}>No has obtenido logros todavía</h3>
-                    <p style={{ color: 'white' }}>Segui jugando para desbloquear logros.</p>
-                </div>
+                    <p style={{ color: 'white' }}>Seguí jugando para desbloquear logros.</p>
+                </div>}
+                {!logrosMios && <div>
+                    <h3 style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Tenes todos los logros!": `Todavia te quedan ${totalLogros-listaMisLogros.length} logros por conseguir`}</h3>
+                    <p style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Realmente sos el amo del Truco": `Mucha suerte!`}</p>
+                </div>}
+                </>
             );
         }
     };
@@ -333,7 +361,10 @@ const EstadisticasModal = forwardRef((props, ref) => {
                             {console.log(listaMisLogros?.[0]?.metrica)}
                             {console.log(listaMisLogros?.[0]?.oculto)}
                             {console.log(listaMisLogros?.[0]?.valor)}
+            
+                            <button onClick={()=> cambiarLogros()}>{logrosMios? (roles.includes('ADMIN')?"Ver logros globales": "Ver logros que te faltan"): "Ver tus logros"}</button>
                         </div>
+                        
              
                 </div>
             </div>

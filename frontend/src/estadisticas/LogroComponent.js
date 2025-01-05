@@ -6,7 +6,7 @@ const LogroComponent = ({ logro }) => {
     const nombre = logro.name;
     const descripcion = logro.descripcion;
     const urlImagen = logro.imagencita;
-    
+    const oculto = logro.oculto
 
     function convertirMetrica (metrica){
         let res = metrica.toLowerCase()
@@ -87,7 +87,7 @@ const LogroComponent = ({ logro }) => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            <h4 style={nombreStyle}>{nombre}</h4>
+            <h4 style={nombreStyle}>{nombre}{logro.oculto && <span style={{ color: 'gold', marginLeft: '8px' }}>⭐</span>}</h4>
             <div style={imageWrapperStyle}>
                 <img
                     src={urlImagen}

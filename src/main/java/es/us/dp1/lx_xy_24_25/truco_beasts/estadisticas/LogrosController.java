@@ -42,10 +42,18 @@ public class LogrosController {
     @GetMapping
     public ResponseEntity<List<Logros>> getTodosLosLogros(){
         Boolean esAdmin = false;
-        if (userService.findCurrentUser().hasAuthority("ADMIN")) {
+        User currentUser= userService.findCurrentUser();
+        Integer jugadorId = jugadorService.findJugadorByUserId(currentUser.getId()).getId();
+        if (currentUser.hasAuthority("ADMIN")) {
             esAdmin=true;
         }
-        return new ResponseEntity<>(logrosService.findAllLogros(esAdmin), HttpStatus.OK);
+        return new ResponseEntity<>(logrosService.findAllLogros(esAdmin,jugadorId), HttpStatus.OK);
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<Integer> getTotalLogros(){
+     
+        return new ResponseEntity<>(logrosService.findTotalLogros(), HttpStatus.OK);
     }
 
 
