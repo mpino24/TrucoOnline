@@ -17,6 +17,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.PlayerNotConnectedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
@@ -117,6 +118,14 @@ public class PartidaService {
 		if(partida==null){
 			throw new ResourceNotFoundException("La partida no existe");
 		}
+		
+		List<PartidaJugador> jugadores = pjRepository.findPlayersConnectedTo(codigo);
+		for(PartidaJugador pj: jugadores){
+			if(!pj.getPlayer().getUser().getIsConnected()){
+				throw new PlayerNotConnectedException(pj.getPlayer().getUser().getUsername());
+			}
+		}
+
 		Integer jugadorMano =  (int) (Math.random() * partida.getNumJugadores());
 		partida.setJugadorMano(jugadorMano);
 		User currentUser= userService.findCurrentUser();

@@ -15,21 +15,20 @@
  */
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
-import jakarta.validation.Valid;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NameDuplicatedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import jakarta.validation.Valid;
 
 @Service
 public class UserService {
@@ -132,6 +131,13 @@ public class UserService {
 //		deleteRelations(id, toDelete.getAuthority().getAuthority());
 //		this.userRepository.deletePlayerRelation(id);
 		this.userRepository.delete(toDelete);
+	}
+
+	@Transactional
+	public void updateConnection(Integer id,Boolean isConnected) {
+		User user = findUser(id);
+		user.setIsConnected(isConnected);
+		userRepository.save(user);
 	}
 	
 

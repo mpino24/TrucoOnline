@@ -94,11 +94,16 @@ const GetCreationModal=forwardRef((props,ref) =>{
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message) {
-          setMessage(json.message);
-          setVisible(true); 
-        } else 
-        window.location.href = "/partidas?partidaCode="+partidaParseada.codigo;
+        if(json.statusCode === 500){
+            alert("Error al crear la partida");
+        }else{
+            if (json.message) {
+                setMessage(json.message);
+                setVisible(true); 
+              } else 
+              window.location.href = "/partidas?partidaCode="+partidaParseada.codigo;
+        }
+
       })
       .catch((message) => alert(message));
   }
