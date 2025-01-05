@@ -46,9 +46,15 @@ public class LogrosService {
     }
 
     @Transactional(readOnly=true)
-    public List<Logros> findAllLogros(){
+    public List<Logros> findAllLogros(Boolean ocultosTambien){
         List<Logros> res= new ArrayList<>();
-        logroRepository.findAll().forEach(x-> res.add(x));
+        if(ocultosTambien){
+            res = logroRepository.findOcultosTambien();
+        }else{ 
+            res = logroRepository.findAll();
+        }
+        
+
         return res;
     }
 
@@ -70,7 +76,7 @@ public class LogrosService {
 
     @Transactional
     public List<Logros> logrosConseguidos(Integer jugadorId){
-        List<Logros> listaLogros= findAllLogros();
+        List<Logros> listaLogros= findAllLogros(true);
         List<Logros> misLogros= new ArrayList<>();
         EstadisticaJugador estadisticaGeneral = estadisticasService.getEstadisticasJugador(jugadorId);
         for(Logros logro:listaLogros){

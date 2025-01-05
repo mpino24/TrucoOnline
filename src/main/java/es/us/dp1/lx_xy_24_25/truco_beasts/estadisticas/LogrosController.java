@@ -38,6 +38,17 @@ public class LogrosController {
         this.jugadorService=jugadorService;
     }
 
+
+    @GetMapping
+    public ResponseEntity<List<Logros>> getTodosLosLogros(){
+        Boolean esAdmin = false;
+        if (userService.findCurrentUser().hasAuthority("ADMIN")) {
+            esAdmin=true;
+        }
+        return new ResponseEntity<>(logrosService.findAllLogros(esAdmin), HttpStatus.OK);
+    }
+
+
     @GetMapping("/misLogros")
     public ResponseEntity<List<Logros>> getMisLogros(){
         User currentUser= userService.findCurrentUser();
