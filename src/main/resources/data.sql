@@ -97,3 +97,12 @@ INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (41, 'NADA', 0, 0, 'http://l
 INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (42, 'NADA', 0, 0, 'http://localhost:8080/resources/images/cartas/2cartas.jpg');
 INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (43, 'NADA', 0, 0, 'http://localhost:8080/resources/images/cartas/3cartas.jpg');
 INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (44, 'NADA', 0, 0, 'http://localhost:8080/resources/images/cartas/mazo.png');
+
+
+-- Logros
+
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (1,'Sos la bestia del truco', 'Obtene mas de 5 victorias en el Truco', 5, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo1.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (2,'Empezando', 'Juga 1 partida', 1, 'PARTIDAS_JUGADAS','http://localhost:8080/resources/images/trofeos/trofeo2.jpg', TRUE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (3,'Un pequeño gran paso', 'Gana tu primera partida', 1, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo3.jpg', TRUE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (4,'Malardo', 'Perde tu primera partida', 1, 'DERROTAS','http://localhost:8080/resources/images/trofeos/trofeo4.jpg', TRUE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (5,'Comenzo el vicio', 'Juga durante media hora', 1800, 'TIEMPO_JUGADO','http://localhost:8080/resources/images/trofeos/trofeo5.jpg', TRUE);

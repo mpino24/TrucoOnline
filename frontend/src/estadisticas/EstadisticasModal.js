@@ -5,6 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { IoCloseCircle } from "react-icons/io5";
 import tokenService from '../services/token.service.js';
 import HighchartsMore from 'highcharts/highcharts-more';
+import LogroComponent from './LogroComponent.js';
 const jwt = tokenService.getLocalAccessToken();
 const EstadisticasModal = forwardRef((props, ref) => {
     const closeModal = () => props.setModalVisible(false);
@@ -14,6 +15,66 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [estadisticas, setEstadisticas] = useFetchState({}, '/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible)
     const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible)
     const [graficoActualPartidas, setGraficoActualPartidas] = useState("resultados");
+   
+    const [listaMisLogros, setListaMisLogros] = useFetchState([], '/api/v1/logros/misLogros', jwt, setMessage, setVisible);
+
+
+    //LOGROS
+    const renderLogros = () => {
+        let logrosObtenidos = listaMisLogros;
+
+        if (logrosObtenidos && logrosObtenidos.length > 0) {
+            return (
+                <>
+                    <h3 style={{ color: 'white', marginBottom: '20px' }}>Logros Obtenidos</h3>
+                    <div style={logrosGridStyle}>
+                        {logrosObtenidos.map((logro, index) => (
+                            <div key={index} style={logroCardStyle}>
+                                <LogroComponent logro={logro} />
+                            </div>
+                        ))}
+                    </div>
+                </>
+            );
+        } else {
+            return (
+                <div>
+                    <h3 style={{ color: 'white' }}>No has obtenido logros todavía</h3>
+                    <p style={{ color: 'white' }}>Segui jugando para desbloquear logros.</p>
+                </div>
+            );
+        }
+    };
+
+
+
+    const logrosGridStyle = {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)', 
+        gap: '20px',
+        maxHeight: '600px',
+        overflowY: 'auto',
+        padding: '20px',
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        borderRadius: '10px',
+        scrollbarWidth: 'none', 
+        msOverflowStyle: 'none', 
+    };
+
+    const logroCardStyle = {
+        border: '1px solid #ddd',
+        borderRadius: '10px',
+        padding: '10px',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        textAlign: 'center',
+        position: 'relative',
+    };
+
+   
+
+
+    // ESTADISTICAS:
     const victoriasDerrotas = {
         chart: {
             type: 'pie',
@@ -120,9 +181,9 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     estadisticas.victorias / estadisticas.partidasJugadas || 0,
                     estadisticas.derrotas / estadisticas.partidasJugadas || 0,
                     estadisticas.floresCantadas / estadisticas.partidasConFlor || 0,
-                    estadisticas.partidasA2 / (estadisticas.partidasJugadas *2) || 0,
-                    estadisticas.partidasA4 / (estadisticas.partidasJugadas*4) || 0, //no estoy del todo seguro, pero al ser 4 jugadores, 
-                    estadisticas.partidasA6 / (estadisticas.partidasJugadas*6) || 0, //deberia dividirse para que la media no se infle artificalmente, no?
+                    estadisticas.partidasA2 / (estadisticas.partidasJugadas * 2) || 0,
+                    estadisticas.partidasA4 / (estadisticas.partidasJugadas * 4) || 0, //no estoy del todo seguro, pero al ser 4 jugadores, 
+                    estadisticas.partidasA6 / (estadisticas.partidasJugadas * 6) || 0, //deberia dividirse para que la media no se infle artificalmente, no?
                 ],
                 pointPlacement: 'on',
                 color: '#4caf50',
@@ -173,17 +234,21 @@ const EstadisticasModal = forwardRef((props, ref) => {
     function calcularTiempo(tiemposEnSegundos, partidasTotales) {
         let promedio = partidasTotales !== 0 ? tiemposEnSegundos / partidasTotales : tiemposEnSegundos;
         if (isNaN(promedio)) {
-            promedio = tiemposEnSegundos;  
+            promedio = tiemposEnSegundos;
         }
-        let horas = Math.floor(promedio / 3600); 
-        let minutos = Math.floor((promedio % 3600) / 60); 
-        let segundos = Math.floor(promedio % 60); 
-    
-        
+        let horas = Math.floor(promedio / 3600);
+        let minutos = Math.floor((promedio % 3600) / 60);
+        let segundos = Math.floor(promedio % 60);
+
+
         let tiempoFormateado = `${horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-    
+
         return tiempoFormateado;
     }
+
+
+
+
     return (
         <div style={{
             position: 'fixed',
@@ -198,7 +263,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             alignItems: 'stretch',
             zIndex: 1000,
         }}>
-            {console.log(calcularTiempo(estadisticas.tiempoJugado,estadisticas.partidasJugadas))}
+            {console.log(calcularTiempo(estadisticas.tiempoJugado, estadisticas.partidasJugadas))}
             <div style={{
                 position: 'relative',
                 flex: 1,
@@ -220,43 +285,56 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     }}
                     onClick={closeModal}
                 />
-                <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                    <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas</h2>
-                    <div style={{ width: '90%', maxWidth: '600px' }}>
-                        {!graficoComparativo && <HighchartsReact
-                            highcharts={Highcharts}
-                            options={graficoActualPartidas === "resultados" ? victoriasDerrotas : tiposPartidas}
-                        />}
-                        {graficoComparativo && <HighchartsReact
-                            highcharts={Highcharts}
-                            options={globalModoAraña}
-                        />}
+                <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas</h2>
+                        <div style={{ width: '90%', maxWidth: '600px' }}>
+                            {!graficoComparativo && <HighchartsReact
+                                highcharts={Highcharts}
+                                options={graficoActualPartidas === "resultados" ? victoriasDerrotas : tiposPartidas}
+                            />}
+                            {graficoComparativo && <HighchartsReact
+                                highcharts={Highcharts}
+                                options={globalModoAraña}
+                            />}
+                        </div>
+                        {!graficoComparativo && <button
+                            onClick={() => cambiarGrafico()}
+                            style={{
+                                marginRight: '10px',
+                                padding: '10px 20px',
+                                backgroundColor: cambiarGrafico === "resultados" ? '#4caf50' : '#757575',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            {graficoActualPartidas === "resultados" ? "Tipos de Partidas" : "Resultados"}
+                        </button>}
+                        <button
+                            onClick={() => cambiarAGraficoComparativo()}
+                            style={{
+                                padding: '10px 20px',
+                                backgroundColor: graficoComparativo ? '#4caf50' : '#757575',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                        >{graficoComparativo ? "Volver" : "Ver comparativa global"}</button>
                     </div>
-                    {!graficoComparativo && <button
-                        onClick={() => cambiarGrafico()}
-                        style={{
-                            marginRight: '10px',
-                            padding: '10px 20px',
-                            backgroundColor: cambiarGrafico === "resultados" ? '#4caf50' : '#757575',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        {graficoActualPartidas === "resultados" ? "Tipos de Partidas" : "Resultados"}
-                    </button>}
-                    <button
-                        onClick={() => cambiarAGraficoComparativo()}
-                        style={{
-                            padding: '10px 20px',
-                            backgroundColor: graficoComparativo ? '#4caf50' : '#757575',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                        }}
-                    >{graficoComparativo ? "Volver" : "Ver comparativa global"}</button>
+                    
+                        <div style={{ display: 'flex', width: '100%', height: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                            {renderLogros()}
+                            {console.log(listaMisLogros?.[0]?.name)}
+                            {console.log(listaMisLogros?.[0]?.descripcion)}
+                            {console.log(listaMisLogros?.[0]?.imagencita)}
+                            {console.log(listaMisLogros?.[0]?.metrica)}
+                            {console.log(listaMisLogros?.[0]?.oculto)}
+                            {console.log(listaMisLogros?.[0]?.valor)}
+                        </div>
+             
                 </div>
             </div>
         </div>
