@@ -22,6 +22,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 
 
 
@@ -36,7 +37,7 @@ public class TestManoService {
     String codigo = null;
     
     ManoService manoService = null;
-
+    PartidaJugadorService partidaJugadorService;
    
     CartaRepository cartaRepository;
     PartidaService partidaService;
@@ -65,7 +66,7 @@ public class TestManoService {
         
 
 
-        manoService = new ManoService(cartaRepository, partidaService);
+        manoService = new ManoService(cartaRepository, partidaService, partidaJugadorService);
         codigo = partida.getCodigo();
         manoService.actualizarMano(mano, codigo);
         
@@ -92,7 +93,7 @@ public class TestManoService {
 
         when(cartaRepository.findById(anyInt())).thenReturn(Optional.of(carta));
         
-        manoService = new ManoService(cartaRepository, partidaService);
+        manoService = new ManoService(cartaRepository, partidaService, partidaJugadorService);
     
         List<List<Carta>> cartasRepartidas = manoService.repartirCartas(partida);
     

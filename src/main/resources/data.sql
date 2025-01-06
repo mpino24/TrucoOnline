@@ -49,7 +49,7 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1
 -- INSERT INTO solicitud(solicitado_id,solicitante_id) VALUES (4,3);
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (0,0,9,0,TRUE);
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (1,1,1,0,TRUE);
-INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE); --No borrar estos 4 casos ya que se usan en los tests
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (3,2,1,1,TRUE);
 
 -- Insertar las cartas

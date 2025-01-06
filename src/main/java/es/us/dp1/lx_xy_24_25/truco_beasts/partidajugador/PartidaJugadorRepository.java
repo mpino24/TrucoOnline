@@ -48,4 +48,7 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     @Query("SELECT new es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView(j.user.username, j.photo, pj.posicion,pj.game.id) FROM PartidaJugador pj JOIN pj.player j JOIN pj.game p WHERE p.codigo=:codigo")
     List<PartidaJugadorView> findAllJugadoresPartida(String codigo);
 
+    @Query("SELECT pj FROM PartidaJugador pj WHERE pj.game.codigo = :codigo AND pj.posicion = :posicion")
+    PartidaJugador findPartidaJugadorByCodigoPartidaAndPosicionJugador(String codigo, Integer posicion);
+
 }

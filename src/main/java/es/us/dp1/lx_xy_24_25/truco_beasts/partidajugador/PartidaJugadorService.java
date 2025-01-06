@@ -40,6 +40,13 @@ public class PartidaJugadorService {
         this.partidaService = partidaService;
     }
 
+    @Transactional
+    public void sumarEngaño(String codigoPartida, Integer posicionJugador){
+        Partida partida = partidaService.findPartidaByCodigo(codigoPartida);
+       
+    }
+
+
 
     @Transactional(readOnly = true)
     public Integer getNumJugadoresInPartida(Integer partidaId) {
