@@ -22,6 +22,7 @@ public class EstadisticaJugador {
     public Integer quieros = 0;
     public Integer noQuieros = 0;
     public Integer partidasConFlor=0;
+    public Integer atrapado = 0;
 
     public Integer getEstadisticaPorMetrica(Metrica metrica) {
         switch (metrica) {
@@ -43,6 +44,8 @@ public class EstadisticaJugador {
                 return numeroFlores;
             case NUMERO_ENGANOS:
                 return numeroEnganos;
+            case ATRAPADO:
+                return atrapado;
             case QUIEROS:
                 return quieros;
             case NO_QUIEROS:

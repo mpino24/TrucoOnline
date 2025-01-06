@@ -49,7 +49,7 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1
 -- INSERT INTO solicitud(solicitado_id,solicitante_id) VALUES (4,3);
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (0,0,9,0,TRUE);
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (1,1,1,0,TRUE);
-INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE); --No borrar estos 4 casos ya que se usan en los tests
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (3,2,1,1,TRUE);
 
 -- Insertar las cartas
@@ -101,8 +101,13 @@ INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (44, 'NADA', 0, 0, 'http://l
 
 -- Logros
 
-INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (1,'Sos la bestia del truco', 'Obtene mas de 5 victorias en el Truco', 5, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo1.jpg', TRUE);
-INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (2,'Empezando', 'Juga 1 partida', 1, 'PARTIDAS_JUGADAS','http://localhost:8080/resources/images/trofeos/trofeo2.jpg', FALSE);
-INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (3,'Un pequeño gran paso', 'Gana tu primera partida', 1, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo3.jpg', FALSE);
-INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (4,'Malardo', 'Perde tu primera partida', 1, 'DERROTAS','http://localhost:8080/resources/images/trofeos/trofeo4.jpg', TRUE);
-INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (5,'Comenzo el vicio', 'Juga durante media hora', 1800, 'TIEMPO_JUGADO','http://localhost:8080/resources/images/trofeos/trofeo5.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (0,'Sos la bestia del truco', 'Obtene mas de 5 victorias en el Truco', 5, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo1.jpg', TRUE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (1,'Empezando', 'Juga 1 partida', 1, 'PARTIDAS_JUGADAS','http://localhost:8080/resources/images/trofeos/trofeo2.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (2,'Un pequeño gran paso', 'Gana tu primera partida', 1, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo3.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (3,'Malardo', 'Perde tu primera partida', 1, 'DERROTAS','http://localhost:8080/resources/images/trofeos/trofeo4.jpg', TRUE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (4,'Comenzo el vicio', 'Juga durante media hora', 1800, 'TIEMPO_JUGADO','http://localhost:8080/resources/images/trofeos/trofeo5.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (5,'El arte del engaño', 'Engaña con tu envido 1 vez', 1, 'NUMERO_ENGANOS','http://localhost:8080/resources/images/trofeos/trofeo6.jpg', TRUE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (6,'Tendrias que abrir una jardineria', 'Canta al menos 1 flor', 1, 'NUMERO_FLORES','http://localhost:8080/resources/images/trofeos/trofeo7.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (7,'Vamos con todooo', 'Acepta al menos 1 canto', 1, 'QUIEROS','http://localhost:8080/resources/images/trofeos/trofeo8.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (8,'A veces la calma lo es todo', 'Deci al menos 1 no quiero a algun canto', 1, 'NO_QUIEROS','http://localhost:8080/resources/images/trofeos/trofeo9.jpg', FALSE);
+INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (9,'Alguna vez te iban a agarrar', 'Se atrapado con un envido bajo 1 vez', 1, 'ATRAPADO','http://localhost:8080/resources/images/trofeos/trofeo10.jpg', TRUE);

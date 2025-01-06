@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 import tokenService from '../services/token.service.js';
 import HighchartsMore from 'highcharts/highcharts-more';
 import LogroComponent from './LogroComponent.js';
+import {calcularTiempo} from './calcularTiempo.js'
 const jwt = tokenService.getLocalAccessToken();
 const EstadisticasModal = forwardRef((props, ref) => {
     const closeModal = () => props.setModalVisible(false);
@@ -264,20 +265,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             }]
         }
     }
-    function calcularTiempo(tiemposEnSegundos, partidasTotales) {
-        let promedio = partidasTotales !== 0 ? tiemposEnSegundos / partidasTotales : tiemposEnSegundos;
-        if (isNaN(promedio)) {
-            promedio = tiemposEnSegundos;
-        }
-        let horas = Math.floor(promedio / 3600);
-        let minutos = Math.floor((promedio % 3600) / 60);
-        let segundos = Math.floor(promedio % 60);
-
-
-        let tiempoFormateado = `${horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-
-        return tiempoFormateado;
-    }
+   
 
 
 
@@ -296,7 +284,9 @@ const EstadisticasModal = forwardRef((props, ref) => {
             alignItems: 'stretch',
             zIndex: 1000,
         }}>
-            {console.log(calcularTiempo(estadisticas.tiempoJugado, estadisticas.partidasJugadas))}
+            
+            {console.log(estadisticas)}  {/* Para debuggear*/}
+            {console.log(listaMisLogros)}
             <div style={{
                 position: 'relative',
                 flex: 1,
@@ -320,7 +310,8 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 />
                 <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas</h2>
+                        <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas</h2> 
+                        <p style={{fontSize:"18px"}}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado</p>{/*En cero para tener el tiempo total */}
                         <div style={{ width: '90%', maxWidth: '600px' }}>
                             {!graficoComparativo && <HighchartsReact
                                 highcharts={Highcharts}

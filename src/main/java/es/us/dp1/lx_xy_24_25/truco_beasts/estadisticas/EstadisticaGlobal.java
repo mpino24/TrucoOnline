@@ -10,7 +10,7 @@ import org.jpatterns.gof.CompositePattern.Component;
 public class EstadisticaGlobal extends EstadisticaJugador {
 
     public Integer jugadoresTotales=0;
-    public Integer partidasConFlor=0;
+    
 
 
     

@@ -5,7 +5,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 public interface EstadisticasRepository extends CrudRepository<PartidaJugador, Integer> {
     
@@ -18,7 +17,6 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
     Integer findTiempoJugado(Integer jugadorId);
 
 
-    //No me puedo creer que haya hecho esta megaquery y encima que funcione (o mejor dicho, que no de error)
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL AND ((p.posicion%2 = 0 AND p.game.puntosEquipo1 > p.game.puntosEquipo2) OR (p.posicion%2 = 1 AND p.game.puntosEquipo2 > p.game.puntosEquipo1))")
     Integer findVictorias(Integer jugadorId);
 
@@ -35,6 +33,9 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
 
     @Query("SELECT SUM(p.enganos) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
     Integer findNumeroEnganos(Integer jugadorId);
+
+    @Query("SELECT SUM(p.atrapado) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
+    Integer findNumeroAtrapado(Integer jugadorId);
 
     @Query("SELECT SUM(p.quierosCantados) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
     Integer findQuieros (Integer jugadorId);
@@ -71,6 +72,10 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
 
     @Query("SELECT SUM(p.enganos) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
     Integer findNumeroEnganosGlobal();
+
+    @Query("SELECT SUM(p.atrapado) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
+    Integer findNumeroAtrapadoGlobal();
+
 
     @Query("SELECT SUM(p.quierosCantados) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
     Integer findQuierosGlobal ();
