@@ -93,6 +93,10 @@ class UserRestController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody @Valid User user) {
 		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
+		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+			User usuarioExistente = userService.findUser(id);
+			usuarioExistente.setPassword(user.getPassword());
+		}
 		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
 	}
 
