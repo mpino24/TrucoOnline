@@ -44,6 +44,7 @@ public class Mano {
     private Boolean tresMismoPalo=false; 
     private Cantos ultimoMensaje;
 
+    private Boolean estaMintiendo= false; //PARA LAS ESTADISTICAS
 
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
@@ -166,6 +167,14 @@ public class Mano {
         return res;
     }
     
+    public Integer getTantoDe1Jugador(Integer posicion){ //PARA LAS ESTADISTICAS
+        Integer res = 0;
+        Map<Palo, List<Carta>> diccCartasPaloJugador= agrupaCartasPalo(getCartasDisp().get(posicion));
+        res = getMaxPuntuacion(diccCartasPaloJugador);
+        return res;
+    }
+
+
 
      public List<Integer> crearListaTantosCadaJugador(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
@@ -182,7 +191,7 @@ public class Mano {
         Integer equipoQueVaGanando = equipoMano;
         
         Integer puntajeGanador = listaEnvidosCadaJugador.get(jugadorMano);
-        for(int i = siguienteJugador(jugadorMano); i!=jugadorMano;i= siguienteJugador(i)){ //TIENE QUE SER MÁS FÁCIL SEGURO
+        for(int i = siguienteJugador(jugadorMano); i!=jugadorMano;i= siguienteJugador(i)){ 
             Integer puntajeNuevoJugador = listaEnvidosCadaJugador.get(i);
             if(puntajeNuevoJugador == puntajeGanador){
                 if(equipoQueVaGanando == equipoMano){
@@ -190,7 +199,7 @@ public class Mano {
                 } else {
                     equipoQueVaGanando = equipoMano;
                 }
-            } else if(puntajeNuevoJugador > puntajeGanador){ //TODO: NO SE CONTEMPLA SI HAY QUE HACER MARCHA ATRAS (CREO QUE NO LO VAMOS A HACER)
+            } else if(puntajeNuevoJugador > puntajeGanador){
                 equipoQueVaGanando = i%2;
                 puntajeGanador = puntajeNuevoJugador;
             }else{

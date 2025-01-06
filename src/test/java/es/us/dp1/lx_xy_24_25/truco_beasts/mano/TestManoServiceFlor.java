@@ -19,6 +19,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.FlorException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 
 public class TestManoServiceFlor {
 
@@ -30,6 +31,7 @@ public class TestManoServiceFlor {
     // Mocks
     CartaRepository cartaRepository;
     PartidaService partidaService;
+    PartidaJugadorService partidaJugadorService;
     
     /**
      * Se ejecuta antes de cada test. 
@@ -55,12 +57,13 @@ public class TestManoServiceFlor {
         // Inicializamos los mocks
         cartaRepository = mock(CartaRepository.class);
         partidaService = mock(PartidaService.class);
+        partidaJugadorService = mock(PartidaJugadorService.class);
 
         // Configuramos la partida en el mock
         when(partidaService.findPartidaByCodigo(partida.getCodigo()))
             .thenReturn(partida);
 
-        manoService = new ManoService(cartaRepository, partidaService);
+        manoService = new ManoService(cartaRepository, partidaService, partidaJugadorService);
 
         // Actualizamos la mano en el map interno de manoService
         codigo = partida.getCodigo();

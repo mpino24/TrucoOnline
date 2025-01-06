@@ -34,6 +34,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     "QUIEROS",
     "NO_QUIEROS",
     "PARTIDAS_CON_FLOR",
+    "ATRAPADO"
   ];
 
   const handleChange = (e) => {

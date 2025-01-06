@@ -165,7 +165,7 @@ public class TestMano {
         
         
         mano.setJugadorTurno(0);
-        mano.listaTantosCadaJugador();
+        mano.crearListaTantosCadaJugador();
         List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
         assertEquals(1, mano.getEquipoGanadorEnvido());
         assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
@@ -185,7 +185,7 @@ public class TestMano {
         
         
         mano.setJugadorTurno(0);
-        mano.listaTantosCadaJugador();
+        mano.crearListaTantosCadaJugador();
         List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
         assertEquals(0, mano.getEquipoGanadorEnvido());
         assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
@@ -205,7 +205,7 @@ public class TestMano {
         
         
         mano.setJugadorTurno(1);
-        mano.listaTantosCadaJugador();
+        mano.crearListaTantosCadaJugador();
         List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
         assertEquals(1, mano.getEquipoGanadorEnvido());
         assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
@@ -225,7 +225,7 @@ public class TestMano {
         
         
         mano.setJugadorTurno(3);
-        mano.listaTantosCadaJugador();
+        mano.crearListaTantosCadaJugador();
         List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
         assertEquals(1, mano.getEquipoGanadorEnvido());
         assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
@@ -245,7 +245,7 @@ public class TestMano {
         
         
         mano.setJugadorTurno(0);
-        mano.listaTantosCadaJugador();
+        mano.crearListaTantosCadaJugador();
         List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
         assertEquals(1, mano.getEquipoGanadorEnvido());
         assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);

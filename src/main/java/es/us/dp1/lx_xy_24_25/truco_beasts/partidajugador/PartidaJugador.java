@@ -43,6 +43,7 @@ public class PartidaJugador extends BaseEntity{
     public Integer quierosCantados = 0;
     public Integer noQuierosCantados = 0;
     public Integer enganos = 0;
+    public Integer atrapado = 0;
     
     @Transient
     public Gesto gesto;
@@ -54,6 +55,9 @@ public class PartidaJugador extends BaseEntity{
                 break;
             case NUMERO_ENGANOS:
                 setEnganos(getEnganos() + valor);
+                break;
+            case ATRAPADO:
+                setAtrapado(getAtrapado() + valor);
                 break;
             case QUIEROS:
                 setQuierosCantados(getQuierosCantados() + valor);
