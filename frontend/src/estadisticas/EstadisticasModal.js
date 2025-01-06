@@ -297,6 +297,8 @@ const EstadisticasModal = forwardRef((props, ref) => {
             zIndex: 1000,
         }}>
             {console.log(calcularTiempo(estadisticas.tiempoJugado, estadisticas.partidasJugadas))}
+            {console.log(estadisticas)}  {/* Para debuggear*/}
+            {console.log(listaMisLogros)}
             <div style={{
                 position: 'relative',
                 flex: 1,
