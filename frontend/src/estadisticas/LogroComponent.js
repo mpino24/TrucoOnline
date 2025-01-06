@@ -12,8 +12,12 @@ const LogroComponent = ({ logro }) => {
 
     function convertirMetrica (metrica){
         let res = metrica.toLowerCase()
+        if(res=== "numero_enganos"){ //Es el unico caso con ñ, asi que lo sustituimos así y listo
+            res = "numero_engaños"
+        }
         res = res.replace("_", " ")
         res = res.charAt(0).toUpperCase() + res.slice(1)
+        
         return res
     }
     const metricaValor = convertirMetrica(logro.metrica)
