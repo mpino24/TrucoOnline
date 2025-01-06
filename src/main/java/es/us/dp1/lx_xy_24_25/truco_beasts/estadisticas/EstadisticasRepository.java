@@ -5,7 +5,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 public interface EstadisticasRepository extends CrudRepository<PartidaJugador, Integer> {
     

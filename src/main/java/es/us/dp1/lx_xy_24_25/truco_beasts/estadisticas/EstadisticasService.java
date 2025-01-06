@@ -22,10 +22,11 @@ public class EstadisticasService {
     @Autowired
     public EstadisticasService(EstadisticasRepository estadisticasRepository, JugadorRepository jugadorRepository) {
         this.estadisticasRepository = estadisticasRepository;
-        this.jugadorRepository=jugadorRepository;
-    }
-    @Transactional(readOnly = true)
-    public EstadisticaJugador getEstadisticasJugador(Integer jugadorId) throws ResourceNotFoundException{
+        this.jugadorRepository = jugadorRepository;
+        }
+
+        @Transactional(readOnly = true)
+        public EstadisticaJugador getEstadisticasJugador(Integer jugadorId) throws ResourceNotFoundException {
         Optional<Jugador> j = jugadorRepository.findById(jugadorId);
         if (j.isEmpty()) {
             throw new ResourceNotFoundException("El jugador de ID " + jugadorId + " no fue encontrado");
@@ -34,43 +35,67 @@ public class EstadisticasService {
         EstadisticaJugador res = new EstadisticaJugador();
         Integer partidasJugadas = estadisticasRepository.findAllPartidasJugadas(jugadorId);
         Integer victorias = estadisticasRepository.findVictorias(jugadorId);
-        res.setDerrotas(partidasJugadas- victorias);
-        res.setPartidasJugadas(partidasJugadas);
         Integer tiempoJugado = estadisticasRepository.findTiempoJugado(jugadorId);
-        res.setTiempoJugado(tiempoJugado==null? 0: tiempoJugado);
-        res.setVictorias(victorias);
-        res.setPartidasA2(estadisticasRepository.findPartidasA2(jugadorId));
-        res.setPartidasA4(estadisticasRepository.findPartidasA4(jugadorId));
-        res.setPartidasA6(estadisticasRepository.findPartidasA6(jugadorId));
-        res.setNumeroFlores(estadisticasRepository.findNumeroFlores(jugadorId));
-        res.setQuieros(estadisticasRepository.findQuieros(jugadorId));
-        res.setNoQuieros(estadisticasRepository.findNoQuieros(jugadorId));
-        res.setNumeroEnganos(estadisticasRepository.findNumeroEnganos(jugadorId));
-        res.setPartidasConFlor(estadisticasRepository.findPartidasConFlor(jugadorId));
-        res.setAtrapado(estadisticasRepository.findNumeroAtrapado(jugadorId));
-        return res;
-    }
+        Integer partidasA2 = estadisticasRepository.findPartidasA2(jugadorId);
+        Integer partidasA4 = estadisticasRepository.findPartidasA4(jugadorId);
+        Integer partidasA6 = estadisticasRepository.findPartidasA6(jugadorId);
+        Integer numeroFlores = estadisticasRepository.findNumeroFlores(jugadorId);
+        Integer quiero = estadisticasRepository.findQuieros(jugadorId);
+        Integer noQuiero = estadisticasRepository.findNoQuieros(jugadorId);
+        Integer numeroEnganos = estadisticasRepository.findNumeroEnganos(jugadorId);
+        Integer partidasConFlor = estadisticasRepository.findPartidasConFlor(jugadorId);
+        Integer atrapado = estadisticasRepository.findNumeroAtrapado(jugadorId);
 
-    @Transactional(readOnly = true)
-    public EstadisticaGlobal getEstadisticasGlobales() {
+        res.setDerrotas(partidasJugadas == null ? 0 : partidasJugadas - (victorias == null ? 0 : victorias));
+        res.setPartidasJugadas(partidasJugadas == null ? 0 : partidasJugadas);
+        res.setTiempoJugado(tiempoJugado == null ? 0 : tiempoJugado);
+        res.setVictorias(victorias == null ? 0 : victorias);
+        res.setPartidasA2(partidasA2 == null ? 0 : partidasA2);
+        res.setPartidasA4(partidasA4 == null ? 0 : partidasA4);
+        res.setPartidasA6(partidasA6 == null ? 0 : partidasA6);
+        res.setNumeroFlores(numeroFlores == null ? 0 : numeroFlores);
+        res.setQuieros(quiero == null ? 0 : quiero);
+        res.setNoQuieros(noQuiero == null ? 0 : noQuiero);
+        res.setNumeroEnganos(numeroEnganos == null ? 0 : numeroEnganos);
+        res.setPartidasConFlor(partidasConFlor == null ? 0 : partidasConFlor);
+        res.setAtrapado(atrapado == null ? 0 : atrapado);
+
+        return res;
+        }
+
+        @Transactional(readOnly = true)
+        public EstadisticaGlobal getEstadisticasGlobales() {
         EstadisticaGlobal res = new EstadisticaGlobal();
         
-        res.setTiempoJugado(estadisticasRepository.findTiempoJugadoGlobal());
+        Integer tiempoJugado = estadisticasRepository.findTiempoJugadoGlobal();
         Integer victorias = estadisticasRepository.findVictoriasGlobal();
         Integer partidasJugadas = estadisticasRepository.findAllPartidasJugadasGlobal();
-        res.setVictorias(victorias);
-        res.setDerrotas(partidasJugadas-victorias);
-        res.setPartidasJugadas(partidasJugadas);
-        res.setPartidasA2(estadisticasRepository.findPartidasA2Global());
-        res.setPartidasA4(estadisticasRepository.findPartidasA4Global());
-        res.setPartidasA6(estadisticasRepository.findPartidasA6Global());
-        res.setNumeroFlores(estadisticasRepository.findNumeroFloresGlobal());
-        res.setNumeroEnganos(estadisticasRepository.findNumeroEnganosGlobal());
-        res.setQuieros(estadisticasRepository.findQuierosGlobal());
-        res.setNoQuieros(estadisticasRepository.findNoQuierosGlobal());
-        res.setJugadoresTotales(estadisticasRepository.findJugadoresTotales());
-        res.setPartidasConFlor(estadisticasRepository.findPartidasConFlor());
-        res.setAtrapado(estadisticasRepository.findNumeroAtrapadoGlobal());
+        Integer partidasA2 = estadisticasRepository.findPartidasA2Global();
+        Integer partidasA4 = estadisticasRepository.findPartidasA4Global();
+        Integer partidasA6 = estadisticasRepository.findPartidasA6Global();
+        Integer numeroFlores = estadisticasRepository.findNumeroFloresGlobal();
+        Integer numeroEnganos = estadisticasRepository.findNumeroEnganosGlobal();
+        Integer quiero = estadisticasRepository.findQuierosGlobal();
+        Integer noQuiero = estadisticasRepository.findNoQuierosGlobal();
+        Integer jugadoresTotales = estadisticasRepository.findJugadoresTotales();
+        Integer partidasConFlor = estadisticasRepository.findPartidasConFlor();
+        Integer atrapado = estadisticasRepository.findNumeroAtrapadoGlobal();
+
+        res.setTiempoJugado(tiempoJugado == null ? 0 : tiempoJugado);
+        res.setVictorias(victorias == null ? 0 : victorias);
+        res.setDerrotas(partidasJugadas == null ? 0 : partidasJugadas - (victorias == null ? 0 : victorias));
+        res.setPartidasJugadas(partidasJugadas == null ? 0 : partidasJugadas);
+        res.setPartidasA2(partidasA2 == null ? 0 : partidasA2);
+        res.setPartidasA4(partidasA4 == null ? 0 : partidasA4);
+        res.setPartidasA6(partidasA6 == null ? 0 : partidasA6);
+        res.setNumeroFlores(numeroFlores == null ? 0 : numeroFlores);
+        res.setNumeroEnganos(numeroEnganos == null ? 0 : numeroEnganos);
+        res.setQuieros(quiero == null ? 0 : quiero);
+        res.setNoQuieros(noQuiero == null ? 0 : noQuiero);
+        res.setJugadoresTotales(jugadoresTotales == null ? 0 : jugadoresTotales);
+        res.setPartidasConFlor(partidasConFlor == null ? 0 : partidasConFlor);
+        res.setAtrapado(atrapado == null ? 0 : atrapado);
+
         return res;
         
     }
