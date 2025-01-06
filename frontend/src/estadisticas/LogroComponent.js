@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { calcularTiempo } from './calcularTiempo';
 
 const LogroComponent = ({ logro }) => {
     const [hovered, setHovered] = useState(false);
@@ -6,6 +7,7 @@ const LogroComponent = ({ logro }) => {
     const nombre = logro.name;
     const descripcion = logro.descripcion;
     const urlImagen = logro.imagencita;
+    let valor = logro.valor
     const oculto = logro.oculto
 
     function convertirMetrica (metrica){
@@ -15,7 +17,10 @@ const LogroComponent = ({ logro }) => {
         return res
     }
     const metricaValor = convertirMetrica(logro.metrica)
-    const resumen = `${metricaValor} es ${logro.valor} o superior`;
+    if(logro.metrica=== "TIEMPO_JUGADO"){
+        valor = calcularTiempo(valor,0)
+    }
+    const resumen = `${metricaValor} es ${valor} o superior`;
 
     const logroContentStyle = {
         textAlign: 'center',
