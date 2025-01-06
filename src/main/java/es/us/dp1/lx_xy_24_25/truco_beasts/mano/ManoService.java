@@ -430,6 +430,21 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         return mano;
     }
 
+    public void sumarQuieroNoQuiero(Cantos canto, Integer jugador, String codigo){
+        switch (canto) {
+            case QUIERO:
+                partidaJugadorService.sumar1Estadistica(codigo, jugador, Metrica.QUIEROS);
+                break;
+            case NO_QUIERO:
+                partidaJugadorService.sumar1Estadistica(codigo, jugador, Metrica.NO_QUIEROS);
+                break;
+            default:
+                //nada
+                break;
+        }
+    }
+
+
     public Mano cantosEnvido(String codigo, Cantos canto){
         Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
@@ -493,6 +508,9 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         return manoActual;
     }
 
+    
+
+
     public Mano cantosFlor(String codigo, Cantos canto){
         Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
@@ -544,9 +562,9 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         manoActual.setEquipoCantor(null);
         Integer jugadorTurno = manoActual.getJugadorTurno();
         
+        sumarQuieroNoQuiero(respuesta, jugadorTurno, codigo); // ESTADISTICA
         switch (respuesta) {
             case QUIERO:
-                partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.QUIEROS); // ESTADISTICA. El iniciador es el que engaña, en este caso
                 manoActual = comprobarEngaño(manoActual, jugadorIniciador, false); //ESTADISTICA
                 gestionarPuntosEnvido(false, codigo);
                 manoActual = getMano(codigo);
@@ -558,7 +576,6 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 break;
             case NO_QUIERO:
                 
-                partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.NO_QUIEROS); // ESTADISTICA. El iniciador es el que engaña, en este caso
                 manoActual = comprobarEngaño(manoActual, jugadorIniciador, true); //ESTADISTICA
                 gestionarPuntosEnvido(true, codigo);
                 
@@ -587,11 +604,12 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         Integer numCantosFlores = manoActual.getFloresCantadas();
         Integer queFlorPuedeCantar = manoActual.getQueFlorPuedeCantar();
         Integer quienRespondeFlor = manoActual.quienRespondeFlor();
+        Integer jugadorTurno = manoActual.getJugadorTurno();
 
+        sumarQuieroNoQuiero(respuesta, jugadorTurno, codigo);
         
         switch (respuesta) {
             case QUIERO:
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.QUIEROS); // ESTADISTICA 
                 gestionarPuntosFlor(false, codigo,null);
                 manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS_FLOR);
                 manoActual.setJugadorTurno(jugadorIniciador);
@@ -600,7 +618,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 break;
 
             case CON_FLOR_ME_ACHICO:
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
+                partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
                 gestionarPuntosFlor(true, codigo,puntosRechazoAchicarse);
                 manoActual = getMano(codigo);
                 manoActual.setUltimoMensaje(Cantos.CON_FLOR_ME_ACHICO);
@@ -612,7 +630,6 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 break;
 
             case NO_QUIERO:
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.NO_QUIEROS); // ESTADISTICA 
 
                 gestionarPuntosFlor(true, codigo,puntosRechazoNoQuiero);
                 manoActual = getMano(codigo);
@@ -627,7 +644,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                     if(queFlorPuedeCantar!=2){
                         throw new EnvidoException("No podés cantar contraflor capo");
                     }
-                    partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
+                    partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
                     numCantosFlores=numCantosFlores+1;
                     manoActual.setFloresCantadas(numCantosFlores);
                     manoActual.setJugadorTurno(quienRespondeFlor);
@@ -796,18 +813,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         
 
         Mano mano = new Mano();
-        //ESTADISTICA!
-        switch (respuesta) {
-            case QUIERO:
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.QUIEROS); 
-                break;
-            case NO_QUIERO:
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.QUIEROS); 
-                break;
-            default:
-                // nada
-                break;
-        }
+        sumarQuieroNoQuiero(respuesta, manoActual.getJugadorTurno(), codigo);
 
         RespuestaTruco respuestaTruco =   converterRespuestaTruco.convertToEntityAttribute(respuesta);
         
