@@ -107,6 +107,7 @@ public class UserService {
 		User toUpdate = findUser(idToUpdate);
 	
 			BeanUtils.copyProperties(user, toUpdate, "id");
+			toUpdate.setPassword(encoder.encode(user.getPassword()));
 			userRepository.save(toUpdate);
 			return toUpdate;
 			
