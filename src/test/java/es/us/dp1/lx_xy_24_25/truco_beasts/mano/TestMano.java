@@ -293,6 +293,7 @@ public class TestMano {
         ganadoresRonda.add(0);
         ganadoresRonda.add(0);
         mano.setGanadoresRondas(ganadoresRonda);
+        mano.setFloresCantadas(0);
         ganadoresRonda.add(0);
         mano.setEnvidosCantados(ganadoresRonda);
     }

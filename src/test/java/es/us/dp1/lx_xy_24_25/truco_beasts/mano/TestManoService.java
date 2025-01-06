@@ -47,6 +47,7 @@ public class TestManoService {
         partida.setNumJugadores(numJugadores);
         partida.setJugadorMano(jugMano);
         partida.setCodigo("TESTS");
+        partida.setConFlor(false);
         mano.setPartida(partida);
         List<Integer> ganadoresRonda = new ArrayList<>();
         
@@ -61,11 +62,10 @@ public class TestManoService {
             envidos.add(envidosIniciales);
         }
         mano.setEnvidosCantados(envidos);
-        
+        mano.setFloresCantadas(0);
         mano.setCartasLanzadasTotales(inicializarCartasLanzadasTotales(numJugadores));
         
-
-
+        partidaJugadorService = mock(PartidaJugadorService.class);
         manoService = new ManoService(cartaRepository, partidaService, partidaJugadorService);
         codigo = partida.getCodigo();
         manoService.actualizarMano(mano, codigo);
