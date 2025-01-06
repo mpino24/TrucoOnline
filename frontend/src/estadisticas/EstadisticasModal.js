@@ -7,7 +7,7 @@ import jwt_decode from "jwt-decode";
 import tokenService from '../services/token.service.js';
 import HighchartsMore from 'highcharts/highcharts-more';
 import LogroComponent from './LogroComponent.js';
-import {calcularTiempo} from './calcularTiempo.js'
+import { calcularTiempo } from './calcularTiempo.js'
 const jwt = tokenService.getLocalAccessToken();
 const EstadisticasModal = forwardRef((props, ref) => {
     const closeModal = () => props.setModalVisible(false);
@@ -17,38 +17,38 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [estadisticas, setEstadisticas] = useFetchState({}, '/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible)
     const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible)
     const [graficoActualPartidas, setGraficoActualPartidas] = useState("resultados");
-    const [logrosMios,setLogrosMios]=useState(true)
+    const [logrosMios, setLogrosMios] = useState(true)
     const [listaMisLogros, setListaMisLogros] = useFetchState([], '/api/v1/logros/misLogros', jwt, setMessage, setVisible);
     const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], '/api/v1/logros', jwt, setMessage, setVisible);
     const [totalLogros, setTotalLogros] = useFetchState(0, '/api/v1/logros/total', jwt, setMessage, setVisible);
-      const [roles, setRoles] = useState([]);
+    const [roles, setRoles] = useState([]);
     function getRolesFromJWT(jwt) {
         return jwt_decode(jwt).authorities;
     }
-    
-        useEffect(() => {
-            if (jwt) {
-                setRoles(jwt_decode(jwt).authorities);
-            }
-        }, [jwt])
 
-    function cambiarLogros(){
-        setLogrosMios(logrosMios?false:true )
+    useEffect(() => {
+        if (jwt) {
+            setRoles(jwt_decode(jwt).authorities);
+        }
+    }, [jwt])
+
+    function cambiarLogros() {
+        setLogrosMios(logrosMios ? false : true)
     }
     //LOGROS
     const renderLogros = () => {
         let logros;
         let soyAdmin = roles.includes('ADMIN')
-        if(logrosMios){
+        if (logrosMios) {
             logros = listaMisLogros
-        }else{
+        } else {
             logros = listaLogrosGlobales
         }
 
         if (logros && logros.length > 0) {
             return (
                 <>
-                    <h3 style={{ color: 'white', marginBottom: '20px' }}>{logrosMios?"Logros obtenidos": soyAdmin?"Logros globales":"Logros por conseguir"}</h3>
+                    <h3 style={{ color: 'white', marginBottom: '20px' }}>{logrosMios ? "Logros obtenidos" : soyAdmin ? "Logros globales" : "Logros por conseguir"}</h3>
                     <div style={logrosGridStyle}>
                         {logros.map((logro, index) => (
                             <div key={index} style={logroCardStyle}>
@@ -59,22 +59,22 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 </>
             );
         } else {
-            let logrosRestantes = totalLogros-listaMisLogros.length
-            let textoLogrosRestantes= `Todavia te quedan ${logrosRestantes} logros por conseguir`
-            if(logrosRestantes===1){
+            let logrosRestantes = totalLogros - listaMisLogros.length
+            let textoLogrosRestantes = `Todavia te quedan ${logrosRestantes} logros por conseguir`
+            if (logrosRestantes === 1) {
                 textoLogrosRestantes = 'Solamente te falta un logro!!!'
             }
             return (
                 <>
-            
-                {logrosMios&& <div>
-                    <h3 style={{ color: 'white' }}>No has obtenido logros todavía</h3>
-                    <p style={{ color: 'white' }}>Seguí jugando para desbloquear logros.</p>
-                </div>}
-                {!logrosMios && <div>
-                    <h3 style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Tenes todos los logros!": textoLogrosRestantes}</h3>
-                    <p style={{ color: 'white' }}>{listaMisLogros.length === totalLogros? "Realmente sos el amo del Truco": `Mucha suerte!`}</p>
-                </div>}
+
+                    {logrosMios && <div>
+                        <h3 style={{ color: 'white' }}>No has obtenido logros todavía</h3>
+                        <p style={{ color: 'white' }}>Seguí jugando para desbloquear logros.</p>
+                    </div>}
+                    {!logrosMios && <div>
+                        <h3 style={{ color: 'white' }}>{listaMisLogros.length === totalLogros ? "Tenes todos los logros!" : textoLogrosRestantes}</h3>
+                        <p style={{ color: 'white' }}>{listaMisLogros.length === totalLogros ? "Realmente sos el amo del Truco" : `Mucha suerte!`}</p>
+                    </div>}
                 </>
             );
         }
@@ -84,15 +84,15 @@ const EstadisticasModal = forwardRef((props, ref) => {
 
     const logrosGridStyle = {
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)', 
+        gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '20px',
         maxHeight: '600px',
         overflowY: 'auto',
         padding: '20px',
         backgroundColor: 'rgba(255, 255, 255, 0)',
         borderRadius: '10px',
-        scrollbarWidth: 'none', 
-        msOverflowStyle: 'none', 
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
     };
 
     const logroCardStyle = {
@@ -105,7 +105,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
         position: 'relative',
     };
 
-   
+
 
 
     // ESTADISTICAS:
@@ -265,7 +265,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             }]
         }
     }
-   
+
 
 
 
@@ -284,8 +284,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             alignItems: 'stretch',
             zIndex: 1000,
         }}>
-            
-            {console.log(estadisticas)}  {/* Para debuggear*/}
+            {console.log(estadisticas)}  {/* Para debuggear */}
             {console.log(listaMisLogros)}
             <div style={{
                 position: 'relative',
@@ -310,8 +309,8 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 />
                 <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ display: 'flex', width: '80%', height: '80%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas</h2> 
-                        <p style={{fontSize:"18px"}}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado</p>{/*En cero para tener el tiempo total */}
+                        <h2 style={{ color: 'white', marginBottom: '20px' }}>📊 Estadísticas</h2>
+                        <p style={{ fontSize: "18px" }}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado</p>{/* En cero para tener el tiempo total */}
                         <div style={{ width: '90%', maxWidth: '600px' }}>
                             {!graficoComparativo && <HighchartsReact
                                 highcharts={Highcharts}
@@ -326,13 +325,17 @@ const EstadisticasModal = forwardRef((props, ref) => {
                             onClick={() => cambiarGrafico()}
                             style={{
                                 marginRight: '10px',
-                                padding: '10px 20px',
-                                backgroundColor: cambiarGrafico === "resultados" ? '#4caf50' : '#757575',
+                                padding: '8px 16px',
+                                backgroundColor: graficoActualPartidas === "resultados" ? '#2196f3' : '#4caf50',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '5px',
                                 cursor: 'pointer',
+                                transition: 'background-color 0.3s',
+                                fontSize: '14px',
                             }}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = graficoActualPartidas === "resultados" ? '#1e88e5' : '#45a049'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = graficoActualPartidas === "resultados" ? '#2196f3' : '#4caf50'}
                         >
                             {graficoActualPartidas === "resultados" ? "Tipos de Partidas" : "Resultados"}
                         </button>}
@@ -340,28 +343,51 @@ const EstadisticasModal = forwardRef((props, ref) => {
                             onClick={() => cambiarAGraficoComparativo()}
                             style={{
                                 padding: '10px 20px',
-                                backgroundColor: graficoComparativo ? '#4caf50' : '#757575',
+                                backgroundColor: '#9c27b0', // Changed to a purple color
                                 color: 'white',
                                 border: 'none',
-                                borderRadius: '5px',
+                                borderRadius: '25px', // More rounded corners
                                 cursor: 'pointer',
+                                transition: 'background-color 0.3s, transform 0.3s', // Added transition for transform
+                                fontSize: '16px', // Increased font size
+                                top: '20px',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Added box shadow
                             }}
-                        >{graficoComparativo ? "Volver" : "Ver comparativa global"}</button>
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#7b1fa2'; // Darker purple on hover
+                                e.target.style.transform = 'scale(1.05)'; // Slightly enlarge on hover
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#9c27b0'; // Original purple color
+                                e.target.style.transform = 'scale(1)'; // Reset size on mouse leave
+                            }}
+                        >
+                            {graficoComparativo ? "Volver" : "Ver comparativa global"}
+                        </button>
                     </div>
-                    
-                        <div style={{ display: 'flex', width: '100%', height: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                            {renderLogros()}
-                            {console.log(listaMisLogros?.[0]?.name)}
-                            {console.log(listaMisLogros?.[0]?.descripcion)}
-                            {console.log(listaMisLogros?.[0]?.imagencita)}
-                            {console.log(listaMisLogros?.[0]?.metrica)}
-                            {console.log(listaMisLogros?.[0]?.oculto)}
-                            {console.log(listaMisLogros?.[0]?.valor)}
-            
-                            <button onClick={()=> cambiarLogros()}>{logrosMios? (roles.includes('ADMIN')?"Ver logros globales": "Ver logros que te faltan"): "Ver tus logros"}</button>
-                        </div>
-                        
-             
+                    <div style={{ display: 'flex', width: '100%', height: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        {renderLogros()}
+                        {console.log(listaMisLogros?.[0]?.name)}
+                        {console.log(listaMisLogros?.[0]?.descripcion)}
+                        {console.log(listaMisLogros?.[0]?.imagencita)}
+                        {console.log(listaMisLogros?.[0]?.metrica)}
+                        {console.log(listaMisLogros?.[0]?.oculto)}
+                        {console.log(listaMisLogros?.[0]?.valor)}
+                        <button onClick={() => cambiarLogros()} style={{
+                            padding: '8px 16px',
+                            backgroundColor: '#4caf50',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s',
+                            marginTop: '20px',
+                            fontSize: '14px',
+                        }}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = '#45a049'}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = '#4caf50'}
+                        >{logrosMios ? (roles.includes('ADMIN') ? "Ver logros globales" : "Ver logros que te faltan") : "Ver tus logros"}</button>
+                    </div>
                 </div>
             </div>
         </div>
