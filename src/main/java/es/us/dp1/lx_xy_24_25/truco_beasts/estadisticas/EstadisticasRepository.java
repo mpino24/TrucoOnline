@@ -74,6 +74,10 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
     @Query("SELECT SUM(p.enganos) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
     Integer findNumeroEnganosGlobal();
 
+    @Query("SELECT SUM(p.atrapado) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
+    Integer findNumeroAtrapadoGlobal();
+
+
     @Query("SELECT SUM(p.quierosCantados) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
     Integer findQuierosGlobal ();
 

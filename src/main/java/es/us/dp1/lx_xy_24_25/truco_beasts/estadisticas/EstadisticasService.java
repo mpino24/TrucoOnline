@@ -47,6 +47,7 @@ public class EstadisticasService {
         res.setNoQuieros(estadisticasRepository.findNoQuieros(jugadorId));
         res.setNumeroEnganos(estadisticasRepository.findNumeroEnganos(jugadorId));
         res.setPartidasConFlor(estadisticasRepository.findPartidasConFlor(jugadorId));
+        res.setAtrapado(estadisticasRepository.findNumeroAtrapado(jugadorId));
         return res;
     }
 
@@ -69,6 +70,7 @@ public class EstadisticasService {
         res.setNoQuieros(estadisticasRepository.findNoQuierosGlobal());
         res.setJugadoresTotales(estadisticasRepository.findJugadoresTotales());
         res.setPartidasConFlor(estadisticasRepository.findPartidasConFlor());
+        res.setAtrapado(estadisticasRepository.findNumeroAtrapadoGlobal());
         return res;
         
     }
