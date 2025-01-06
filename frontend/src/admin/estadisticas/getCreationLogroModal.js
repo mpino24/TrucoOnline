@@ -112,7 +112,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
             >
               {metricaOptions.map((metrica) => (
                 <option key={metrica} value={metrica}>
-                  {metrica.replace("_", " ")}
+                  {metrica.replaceAll("_", " ")}
                 </option>
               ))}
             </Input>

@@ -15,7 +15,7 @@ const LogroComponent = ({ logro }) => {
         if(res=== "numero_enganos"){ //Es el unico caso con ñ, asi que lo sustituimos así y listo
             res = "numero_engaños"
         }
-        res = res.replace("_", " ")
+        res = res.replaceAll("_", " ")
         res = res.charAt(0).toUpperCase() + res.slice(1)
         
         return res
