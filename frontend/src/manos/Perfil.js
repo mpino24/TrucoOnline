@@ -2,8 +2,14 @@ import useFetchState from "../util/useFetchState";
 import React, { useState, forwardRef } from 'react';
 import tokenService from "../services/token.service";
 import "../static/css/mano/perfil.css";
+import { useEffect } from "react";
+import { Client } from "@stomp/stompjs";
+import { MdEmojiEmotions } from "react-icons/md";
+import GestosMenu from "./GestosMenu";
 
 const jwt = tokenService.getLocalAccessToken();
+
+
 
 const renderJugador = (persona, index) => {
     return (
@@ -42,8 +48,8 @@ const renderJugador = (persona, index) => {
 const DistribuirJugadoresFijos = ({ perfil, game }) => {
     return perfil.map((persona, index) => {
         let playerStyle = {};
-        if(game.numJugadores === 2){
-            if(index===0){
+        if (game.numJugadores === 2) {
+            if (index === 0) {
                 playerStyle = {
                     position: 'absolute',
                     top: '50%',
@@ -51,7 +57,7 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
                     transform: 'translateY(-50%)',
                     zIndex: 1000
                 };
-            }else{
+            } else {
                 playerStyle = {
                     position: 'absolute',
                     top: '50%',
@@ -60,9 +66,9 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
                     zIndex: 1000
                 };
             }
-            
 
-        }else{
+
+        } else {
             if (index === 2) {
                 playerStyle = {
                     position: 'absolute',
@@ -97,7 +103,7 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
                 };
             }
         }
-        
+
         return (
             <div key={index} style={playerStyle}>
                 {renderJugador(persona, index)}
@@ -196,20 +202,153 @@ const Perfil = forwardRef((props, ref) => {
         setVisible
     );
 
-    console.log(posicionJugador);
+
+
+    /*Código para los gestos*/
+    const [gestosVisible, setGestosVisible] = useState(false);
+    const [stompClient, setStompClient] = useState(null);
+    const [imagenOriginal, setImagenOriginal] = useState(null);
+    const toggleGestos = () => {
+        setGestosVisible(!gestosVisible);
+    };
+
+    useEffect(() => {
+        const cliente = new Client({
+            brokerURL: "ws://localhost:8080/ws",
+            connectHeaders: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+
+        cliente.onConnect = () => {
+            console.log("Conectado exitosamente");
+            cliente.subscribe(`/topic/partida/${props.game.id}`, (partJugador) => {
+                const partJugadorParse = JSON.parse(partJugador.body);
+                setPerfil(perfil.map(partJugador => partJugador.userName === partJugadorParse.userName ? partJugadorParse : partJugador));
+                console.log("Gesto recibido");
+                console.log(partJugadorParse);
+            });
+        };
+
+        cliente.onDisconnect = () => {
+            console.log("Desconectado del servidor STOMP");
+        };
+
+        cliente.onStompError = (frame) => {
+            console.error("Error de STOMP: ", frame.headers["message"]);
+            console.error("Detalles: ", frame.body);
+        };
+
+        cliente.activate();
+        setStompClient(cliente);
+
+        return () => {
+            if (cliente) {
+                cliente.deactivate();
+            }
+        };
+    }, [perfil, props.game.id, setPerfil]);
+
+    const enviarGesto = (gestoUrl) => {
+        if (!imagenOriginal) {
+            setImagenOriginal(perfil[posicionJugador].foto);
+        }
+        const partJugador = perfil[posicionJugador];
+        partJugador.foto = gestoUrl;
+        console.log(partJugador);
+
+        if (stompClient && stompClient.connected && partJugador) {
+            stompClient.publish({
+                destination: "/app/partjugador",
+                body: JSON.stringify(partJugador),
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+            console.log("Gesto enviado");
+        } else {
+            console.error("STOMP aún no está listo o no está conectado");
+        }
+    };
+
+
+
+    const gestosDisp = [
+        { nombre: "1 Espada", photo: "/gestos/unoespada.png", codigo: "UNOESPADA" },
+        { nombre: "1 Basto", photo: "/gestos/unobasto.png", codigo: "UNOBASTO" },
+        { nombre: "7 Espada", photo: "/gestos/sieteespada.png", codigo: "SIETEESPADA" },
+        { nombre: "7 Oro", photo: "/gestos/sieteoro.png", codigo: "SIETEORO" },
+        { nombre: "Los 3", photo: "/gestos/tres.png", codigo: "TRES" },
+        { nombre: "Los 2", photo: "/gestos/dos.png", codigo: "DOS" },
+        { nombre: "1 Copa o 1 Oro", photo: "/gestos/unocopaoro.png", codigo: "UNOCOPAORO" },
+        { nombre: "Son malas", photo: "/gestos/malas.png", codigo: "MALAS" },
+        { nombre: "Corazón", photo: "/gestos/corazon.png", codigo: "CORAZON" },
+        { nombre: "Calavera", photo: "/gestos/calavera.png", codigo: "CALAVERA" },
+        { nombre: "Tiempo", photo: "/gestos/tiempo.png", codigo: "TIEMPO" },
+        { nombre: "Estrella", photo: "/gestos/estrella.png", codigo: "ESTRELLA" }
+    ];
+
+
+
+    /*Fin del código para los gestos*/
 
     return (
         <>
             {posicionJugador < 4 ? (
-                <DistribuirJugadoresDinamicos 
-                    perfil={perfil} 
-                    game={game} 
+                <DistribuirJugadoresDinamicos
+                    perfil={perfil}
+                    game={game}
                     posicionJugador={posicionJugador}
                 />
-            
+
             ) : (
-                <DistribuirJugadoresFijos perfil={perfil} game ={game} />
+                <DistribuirJugadoresFijos perfil={perfil} game={game} />
             )}
+            <MdEmojiEmotions
+                style={{
+                    fontSize: '50px',
+                    color: 'yellow',
+                    position: 'fixed',
+                    bottom: '5',
+                    left: '5',
+                    cursor: 'pointer'
+                }}
+                onClick={toggleGestos} 
+            />
+                {perfil[posicionJugador] && gestosVisible && (
+                    <img
+                        src={perfil[posicionJugador].foto}
+                        alt="Foto del usuario"
+                        style={{
+                            width: '50px',
+                            height: '50px',
+                            borderRadius: '50%',
+                            marginLeft: '10px',
+                            position: 'fixed',
+                            bottom: '5px',
+                            left: '60px',
+                            zIndex: 1000
+
+                        }}
+                    />
+
+                )}
+            {gestosVisible && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '60px',
+                    left: '5px',
+                    zIndex: 1000
+                }}>
+                    <GestosMenu
+                        partJugador={perfil[posicionJugador]}
+                        enviarGesto={enviarGesto}
+                        gestosDisp={gestosDisp}
+                        imagenOriginal={imagenOriginal}
+                    />
+                </div>
+            )}
+
         </>
     );
 });
