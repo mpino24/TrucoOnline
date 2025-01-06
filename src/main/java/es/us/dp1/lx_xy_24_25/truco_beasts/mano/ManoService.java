@@ -444,7 +444,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         manoActual.comprobarSiPuedeCantarEnvido(false);
         Integer queEnvidoPuedoCantar = manoActual.getQueEnvidoPuedeCantar();
         manoActual.setEsTrucoEnvidoFlor(1);
-        manoActual = comprobarEngaño(manoActual, queEnvidoPuedoCantar, null);
+        manoActual = comprobarEngaño(manoActual, jugadorTurno, null);
             switch (canto) {
                 case ENVIDO:
                     if (queEnvidoPuedoCantar<3) {

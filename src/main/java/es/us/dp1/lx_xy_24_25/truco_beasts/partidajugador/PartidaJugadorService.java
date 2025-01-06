@@ -152,6 +152,11 @@ public class PartidaJugadorService {
             jugadorExpulsadoId=jugadorActualId;
         }
 
+        if (partidaActual.getEstado().equals(Estado.ACTIVE)) {
+            checkEndGame(parJug);
+            return;
+        }
+
 
         if (jugadorExpulsadoId != null && jugadorExpulsadoId !=jugadorActualId) {
             if (jugadorActualId ==creadorId) {
@@ -181,10 +186,7 @@ public class PartidaJugadorService {
             
         }
 
-        if (partidaActual.getEstado().equals(Estado.ACTIVE)) {
-            checkEndGame(parJug);
-            
-        }
+       
         
             
         
