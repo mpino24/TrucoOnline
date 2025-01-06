@@ -546,7 +546,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
         
         switch (respuesta) {
             case QUIERO:
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.QUIEROS); // ESTADISTICA 
+                partidaJugadorService.sumar1Estadistica(codigo, jugadorIniciador,  Metrica.QUIEROS); // ESTADISTICA. El iniciador es el que engaña, en este caso
                 manoActual = comprobarEngaño(manoActual, jugadorTurno, false); //ESTADISTICA
                 gestionarPuntosEnvido(false, codigo);
                 manoActual = getMano(codigo);
@@ -558,7 +558,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 break;
             case NO_QUIERO:
                 
-                partidaJugadorService.sumar1Estadistica(codigo, manoActual.getJugadorTurno(),  Metrica.NO_QUIEROS); // ESTADISTICA 
+                partidaJugadorService.sumar1Estadistica(codigo, jugadorIniciador,  Metrica.NO_QUIEROS); // ESTADISTICA. El iniciador es el que engaña, en este caso
                 manoActual = comprobarEngaño(manoActual, jugadorTurno, true); //ESTADISTICA
                 gestionarPuntosEnvido(true, codigo);
                 
