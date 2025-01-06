@@ -16,8 +16,7 @@ const CartasVolteadas = forwardRef((props, ref) => {
 
 
   const eresEspectador= typeof posicionListaCartas === 'object'
-  console.log("ESPECTADOOOOOOOOOOOOOOOOOOOR")
-  console.log(eresEspectador)
+
   if(eresEspectador){
     posicionListaCartas=0
   }
@@ -142,7 +141,6 @@ const CartasVolteadas = forwardRef((props, ref) => {
         let estiloSegunPosicionYNumCartas;
         if (cartasRestantes === 3) {
           if(eresEspectador && pos===0){
-            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
             estiloSegunPosicionYNumCartas = listaEstilos[13];
           }
           else if ((posicionListaCartas + pos) % 2 === 0)
@@ -160,7 +158,6 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[7];
         } else if (cartasRestantes === 2) {
           if(eresEspectador && pos===0){
-            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
             estiloSegunPosicionYNumCartas = listaEstilos[14];
           }
           else if ((posicionListaCartas + pos) % 2 === 0)
@@ -176,7 +173,6 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[4];
         } else {
           if(eresEspectador && pos===0){
-            console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
             estiloSegunPosicionYNumCartas = listaEstilos[15];
           }
           else if ((posicionListaCartas + pos) % 2 === 0)
@@ -192,23 +188,10 @@ const CartasVolteadas = forwardRef((props, ref) => {
             estiloSegunPosicionYNumCartas = listaEstilos[1];
         }
 
-        // Logging for debugging
-        console.log("Eres el jugador: " + posicionListaCartas);
-        console.log("Posicion siendo recorrida: " + pos);
-        console.log("");
-        console.log(
-          "Resultado de la condicion: ",
-          posicionListaCartas - 1 === pos || posicionListaCartas - 1 < 0
-        );
-        console.log("Deberia entrar al bucle de mano?: ", pos === jugadorMano);
-        console.log("");
 
-        // Initialize posicionMazo with default values
         let posicionMazo = { width: '0px' };
 
         if (pos === jugadorMano) {
-          console.log("Efectivamente ha entrado en el bucle de la mano");
-          console.log("");
 
           if (posicionListaCartas === jugadorMano)
             posicionMazo = listaEstilos[12];
