@@ -8,11 +8,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import jakarta.persistence.ManyToOne;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +26,7 @@ public class Mano {
     private Integer rondaActual = 1;
     private Integer puntosTruco=1;
     private Integer puntosEnvido =0;
+    private Integer puntosFlor= 0;
     private List<List<Carta>> cartasLanzadasTotales; //Esta lista contiene las cartas que lanzo cada jugador siendo el indice de la lista grande, el jugador, y el de la sublista, la ronda en la que la lanzo
     private Integer esTrucoEnvidoFlor = 0; // 0 -> Truco, 1 -> envido, 2 -> flor
     private Integer equipoCantor = null;
@@ -36,9 +35,13 @@ public class Mano {
     private Boolean terminada = false;
     private Boolean puedeCantarTruco = true;
     private Boolean puedeCantarEnvido = false;
+    private Boolean puedeCantarFlor= false;
+    private List<Boolean> listaTienenFlores;
     private Integer queEnvidoPuedeCantar = 2; //1 -> solo falta envido, 2 -> falta y real, 3 -> falta, real y envido, otro -> nada
+    private Integer queFlorPuedeCantar = 0; //2-> Contraflor y con flor me achico, 1->Flor, 0->Nada
     private Integer equipoGanadorEnvido;
-
+    private Integer equipoGanadorFlor;
+    private Boolean tresMismoPalo=false; 
     private Cantos ultimoMensaje;
 
 
@@ -47,8 +50,11 @@ public class Mano {
     private final Integer rondasMaximasGanables = 2;
     
     List<Integer> envidosCadaJugador;
+    List<Integer> envidosFlorCadaJugador;
 
     private List<Integer> envidosCantados;
+    private Integer floresCantadas; //Este integer se encargará de saber las veces que se cantó algo relacionado con la flor 
+
     @ManyToOne
     private Partida partida;
 
@@ -83,7 +89,7 @@ public class Mano {
 
     public Boolean comprobarSiPuedeCantarEnvido(Boolean fueraDeCantos) { //O SUS OTRAS POSIBILIDADES
         Boolean res;
-        if(getRondaActual() != 1 || getPuntosEnvido() !=0 || getPuntosTruco() > 1){
+        if(getRondaActual() != 1 || getPuntosEnvido() !=0 || getPuntosTruco() > 1 || getFloresCantadas()!=0){
             res = false;
         } else{
             List<Integer> listaEnvidos = getEnvidosCantados();
@@ -116,10 +122,52 @@ public class Mano {
     }
 
 
+    public Boolean comprobarSiPuedeCantarFlor() {
+        Boolean res = false;
+        Integer numeroCantosDeFlor = getFloresCantadas();
+        Integer numFloresParaPoderResponder = 1;
+        Integer numFloresParaNoPoderDecirNada = 2;
+        
+    
+        // 1) Verifica las condiciones:
+        //    - puntosTruco == 1 no se cantó truco  
+        //    - puntosEnvido == 0 no se ha ido mas allá del primer envido
+       
+        if (getPuntosTruco() == 1 && getPuntosEnvido() == 0 && getRondaActual()==1 && partida.getConFlor()) {
+            List<Carta> cartasJugadorActual = getCartasDisp().get(getJugadorTurno());
+            
+            if(tiene3CartasMismoPalo(cartasJugadorActual)){
+                setTresMismoPalo(true);
 
-   
+                // 2) Revisa si el jugador tiene 3 cartas del mismo palo y si no se ha cantado flor antes
+                if (numeroCantosDeFlor==0) {
+                    res = true;
+                    // Por defecto, configuramos "queFlorPuedeCantar" en 1 (puede cantar flor)
+                    setQueFlorPuedeCantar(1);
+                }
+                // 3) Si hubo un solo canto previo de Flor,
+                //    entonces habilitamos "Contraflor" / "Con flor me achico"
+                    
+                else if (numeroCantosDeFlor == numFloresParaPoderResponder) {
+                        // Segunda vez que se canta algo de Flor (=> Contraflor).
+                        res = true;
+                        setQueFlorPuedeCantar(2);
+                    }
+                else if (numeroCantosDeFlor >= numFloresParaNoPoderDecirNada) {
+                    // Tercera vez en adelante => no se puede seguir subiendo
+                    res = false;
+                    setQueFlorPuedeCantar(0);
+                    }
+                }
+            }
+        
+        // 4) Se registra si, finalmente, este jugador puede (o no) cantar algo en relacion a la Flor.
+        setPuedeCantarFlor(res);
+        return res;
+    }
+    
 
-     public List<Integer> listaTantosCadaJugador(){ 
+     public List<Integer> crearListaTantosCadaJugador(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
         for(int i=0; i<getCartasDisp().size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
@@ -154,6 +202,74 @@ public class Mano {
         setEnvidosCadaJugador(nuevaLista);
         return nuevaLista;
     }
+
+    public List<Integer> crearListaTantosCadaJugadorFlor() {
+        // 1) Calculamos la puntuación "de Flor" para cada jugador.
+        List<Integer> listaFlorCadaJugador = new ArrayList<>();
+        List<Boolean> listaTieneFlor=new ArrayList<>();
+        for (int i = 0; i < getCartasDisp().size(); i++) {
+            List<Carta> cartasJugador = getCartasDisp().get(i);
+            
+            if (tiene3CartasMismoPalo(cartasJugador)) {
+                // Si el jugador tiene 3 cartas del mismo palo,
+                // calculamos su puntuación de la forma habitual.
+                Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasJugador);
+                Integer sumaJugador = getMaxPuntuacion(diccCartasPaloJugador);
+                listaFlorCadaJugador.add(sumaJugador);
+                listaTieneFlor.add(true);
+            } else {
+                // Si NO tiene Flor, forzamos el valor a 0 para que no
+                // compita con quienes sí tienen Flor.
+                listaTieneFlor.add(false);
+                listaFlorCadaJugador.add(0);
+            }
+        }
+        setListaTienenFlores(listaTieneFlor);
+        // 2) Copiamos la lista original para manipular
+        //    qué jugadores quedan con su puntaje o en null,
+        //    según la lógica de "quién gana".
+        Integer jugadorMano = getJugadorTurno();
+        List<Integer> nuevaLista = new ArrayList<>(listaFlorCadaJugador);
+    
+        Integer equipoMano = jugadorMano % 2;
+        Integer equipoQueVaGanando = equipoMano;
+    
+        // 3) Empezamos asumiendo que el que "va ganando" es el jugador Mano.
+        Integer puntajeGanador = listaFlorCadaJugador.get(jugadorMano);
+    
+        // 4) Recorremos todos los jugadores y comparamos puntajes
+        for (int i = siguienteJugador(jugadorMano); i != jugadorMano; i = siguienteJugador(i)) {
+            Integer puntajeNuevoJugador = listaFlorCadaJugador.get(i);
+    
+            // Comparación habitual
+            if (puntajeNuevoJugador.equals(puntajeGanador)) {
+                if (equipoQueVaGanando == equipoMano) {
+                    nuevaLista.set(i, null);
+                } else {
+                    equipoQueVaGanando = equipoMano;
+                }
+            } else if (puntajeNuevoJugador > puntajeGanador) {
+                equipoQueVaGanando = i % 2;
+                puntajeGanador = puntajeNuevoJugador;
+            } else {
+                nuevaLista.set(i, null);
+            }
+        }
+    
+        // 5) Guardamos el resultado final (qué equipo gana) y
+        //    asignamos en la Mano los puntos de cada jugador (o null).
+        setEquipoGanadorFlor(equipoQueVaGanando);
+        setEnvidosFlorCadaJugador(nuevaLista);
+    
+        return nuevaLista;
+    }
+    
+    private boolean tiene3CartasMismoPalo(List<Carta> cartasJugador) {
+        Palo paloInicial = cartasJugador.get(0).getPalo();
+        return cartasJugador.stream()
+                            .allMatch(c -> c.getPalo().equals(paloInicial));
+    }
+    
 
     
      public Integer getMaxPuntuacion (Map<Palo, List<Carta>> diccCartasPaloJugador) {
@@ -339,6 +455,27 @@ public class Mano {
         }else{
             jugadorQueResponde=jugadorIniciador;
         }
+        return jugadorQueResponde;
+    }
+
+    public Integer quienRespondeFlor(){
+        Integer jugadorQueResponde=0;
+        Integer jugadorActual = getJugadorTurno();
+        Integer jugadorIniciador=getJugadorIniciadorDelCanto();
+        List<Boolean> listaFloreh=getListaTienenFlores();
+
+        if(jugadorActual!=jugadorIniciador){
+            jugadorQueResponde=jugadorIniciador;
+        }
+      
+        for(int i = siguienteJugador(jugadorActual); i!=jugadorActual;i= siguienteJugador(i)){
+            Boolean tieneFlor=listaFloreh.get(i);
+            if(tieneFlor && jugadorActual%2!=i%2){
+                jugadorQueResponde=i;
+                break;
+            }
+        }
+
         return jugadorQueResponde;
     }
 }

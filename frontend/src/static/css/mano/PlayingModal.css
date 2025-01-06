@@ -190,7 +190,7 @@
 /* Base Card Styles */
 .base-card {
   width: 100px;
-  height: 150px;
+  height: 159px;
   background-color: #fff;
   border: 1px solid #ccc;
   box-shadow: 5px 4px 8px rgba(227, 128, 41, 1);
@@ -198,7 +198,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
   cursor: pointer;
   filter: none;
-  border-radius: 8px;
+  border-radius: 6px;
   position: relative;
   overflow: hidden;
 }
@@ -244,6 +244,7 @@
 
 .card-container.mesa {
   width: 83px;
+  top: -26%;
   height: 120px;
 }
 
@@ -424,78 +425,77 @@
 /* First cluster of confetti: reduced spread */
 .cuadros-canto::before {
   box-shadow:
-    -10px -10px orange,
-    15px -20px orange,
-    -20px 15px orange,
-    25px 10px orange,
-    -30px 5px orange,
-    30px -15px orange,
-    -5px 30px orange,
-    10px 25px orange,
-    -25px -25px orange,
-    20px -5px orange,
-    -40px 20px orange,
-    40px -10px orange,
-    -15px 40px orange,
-    15px 35px orange,
-    -35px -15px orange,
-    35px 5px orange,
-    -10px 50px orange,
-    10px -35px orange,
-    -45px 0px orange,
-    45px 25px orange,
-    /* Reduced spread: limiting to ±60px */
-    -60px -40px orange,
-    60px -20px orange,
-    -50px 60px orange,
-    50px 50px orange,
-    -55px 30px orange, /* You can reduce or remove these for tighter spread */
-    55px -10px orange,
-    -20px 55px orange,
-    20px -60px orange,
-    -60px -25px orange, /* Consider reducing to -60px */
-    80px 15px orange,
-    -60px 40px orange, /* Reduced spread: change to -60px 40px */
-    60px -50px orange; /* Change to 60px -50px */
+    /* Reemplazamos 'orange' por tonos variados en un ciclo */
+    -10px -10px #FF4500,
+    15px -20px #FF7F50,
+    -20px 15px #FFA500,
+    25px 10px #FF8C00,
+    -30px 5px #FF6347,
+    30px -15px #FFD700,
+    -5px 30px #FFB347,
+    10px 25px #FFAE42,
+    -25px -25px #FF4500,
+    20px -5px #FF7F50,
+    -40px 20px #FFA500,
+    40px -10px #FF8C00,
+    -15px 40px #FF6347,
+    15px 35px #FFD700,
+    -35px -15px #FFB347,
+    35px 5px #FFAE42,
+    -10px 50px #FF4500,
+    10px -35px #FF7F50,
+    -45px 0px #FFA500,
+    45px 25px #FF8C00,
+    -60px -40px #FF6347,
+    60px -20px #FFD700,
+    -50px 60px #FFB347,
+    50px 50px #FFAE42,
+    -55px 30px #FF4500,
+    55px -10px #FF7F50,
+    -20px 55px #FFA500,
+    20px -60px #FF8C00,
+    -60px -25px #FF6347,
+    80px 15px #FFD700,
+    -60px 40px #FFB347,
+    60px -50px #FFAE42;
   animation-delay: 0.5s;
 }
 
-/* Second cluster: reduced spread */
+/* Segundo bloque con menor dispersión */
 .cuadros-canto::after {
   box-shadow:
-    -5px -30px orange,
-    5px -40px orange,
-    -25px -20px orange,
-    25px -25px orange,
-    -35px 30px orange,
-    35px 20px orange,
-    -20px 40px orange,
-    20px 50px orange,
-    -50px 10px orange,
-    50px -5px orange,
-    -15px -45px orange,
-    15px -10px orange,
-    -45px 35px orange,
-    45px 40px orange,
-    -30px 50px orange,
-    30px -30px orange,
-    -10px -50px orange,
-    5px 35px orange,
-    -25px -5px orange,
-    25px -15px orange,
-    /* Reduced spread: limiting to ±60px */
-    -60px -60px orange,
-    60px -45px orange,
-    -55px 65px orange, /* Change to -55px 45px */
-    55px 70px orange,  /* Change to 55px 40px */
-    -75px -15px orange, /* Change to -60px -15px */
-    75px -40px orange,  /* Change to 60px -40px */
-    -90px 20px orange,  /* Change to -60px 20px */
-    90px 60px orange,   /* Change to 60px 60px */
-    -35px -80px orange, /* Change to -35px -60px */
-    35px -90px orange,  /* Change to 35px -60px */
-    -100px -20px orange, /* Change to -60px -20px */
-    100px 35px orange;  /* Change to 60px 35px */
+    -5px -30px #FF4500,
+    5px -40px #FF7F50,
+    -25px -20px #FFA500,
+    25px -25px #FF8C00,
+    -35px 30px #FF6347,
+    35px 20px #FFD700,
+    -20px 40px #FFB347,
+    20px 50px #FFAE42,
+    -50px 10px #FF4500,
+    50px -5px #FF7F50,
+    -15px -45px #FFA500,
+    15px -10px #FF8C00,
+    -45px 35px #FF6347,
+    45px 40px #FFD700,
+    -30px 50px #FFB347,
+    30px -30px #FFAE42,
+    -10px -50px #FF4500,
+    5px 35px #FF7F50,
+    -25px -5px #FFA500,
+    25px -15px #FF8C00,
+    -60px -60px #FF6347,
+    60px -45px #FFD700,
+    -55px 45px #FFB347, /* Ajustado */
+    55px 40px #FFAE42,  /* Ajustado */
+    -60px -15px #FF4500, /* Ajustado */
+    60px -40px #FF7F50,  /* Ajustado */
+    -60px 20px #FFA500,  /* Ajustado */
+    60px 60px #FF8C00,   /* Ajustado */
+    -35px -60px #FF6347, /* Ajustado */
+    35px -60px #FFD700,  /* Ajustado */
+    -60px -20px #FFB347, /* Ajustado */
+    60px 35px #FFAE42;   /* Ajustado */
   animation-delay: 1s;
 }
 
