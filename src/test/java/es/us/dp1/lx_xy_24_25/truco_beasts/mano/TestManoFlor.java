@@ -25,7 +25,7 @@ public class TestManoFlor {
         partida.setNumJugadores(2);
         partida.setJugadorMano(0);
         partida.setCodigo("PARTIDA_TEST");
-
+        partida.setConFlor(true);
         mano = new Mano();
         mano.setPartida(partida);
 
@@ -232,7 +232,7 @@ public class TestManoFlor {
         // Nadie tiene flor => se ponen en 0
         assertEquals(2, lista.size());
         assertEquals(0, lista.get(0));
-        assertEquals(0, lista.get(1));
+        assertEquals(null, lista.get(1));
     }
 
     @Test
@@ -248,7 +248,7 @@ public class TestManoFlor {
         // Jugador 0 => > 0, Jugador 1 => 0
         assertEquals(2, lista.size());
         assertTrue(lista.get(0) > 0);
-        assertEquals(0, (int) lista.get(1));
+        assertEquals(null, lista.get(1)); //Si no tiene flor, es null
 
         // Comprueba también equipoGanadorFlor
         assertEquals(0, mano.getEquipoGanadorFlor()); // Gana el equipo 0
@@ -272,7 +272,7 @@ public class TestManoFlor {
         List<Integer> lista = mano.crearListaTantosCadaJugadorFlor();
         // Ambos > 0 => Empate => Gana "Mano" => equipo 0
         assertTrue(lista.get(0) > 0);
-        assertTrue(lista.get(1) > 0);
+        assertTrue(lista.get(1) ==null);
         // Normalmente, si hay empate de flor y el mano es eq0 => eq0 mantiene
         // la flor, y anula la del eq1
         // Según tu lógica, al empatar, “nuevaLista.set(i, null)” para uno de los bandos

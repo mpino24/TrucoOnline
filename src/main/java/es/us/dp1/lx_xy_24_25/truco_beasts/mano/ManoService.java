@@ -615,6 +615,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
+                manoActual.setQueFlorPuedeCantar(0);
                 break;
 
             case CON_FLOR_ME_ACHICO:
@@ -625,6 +626,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
+                manoActual.setQueFlorPuedeCantar(0);
 
 
                 break;
@@ -637,6 +639,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 manoActual.setJugadorTurno(jugadorIniciador);
                 manoActual.setJugadorIniciadorDelCanto(null);
                 manoActual.comprobarSiPuedeCantarTruco();
+                manoActual.setQueFlorPuedeCantar(0);
                 
                 break;
 
@@ -648,6 +651,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                     numCantosFlores=numCantosFlores+1;
                     manoActual.setFloresCantadas(numCantosFlores);
                     manoActual.setJugadorTurno(quienRespondeFlor);
+                    manoActual.setUltimoMensaje(Cantos.CONTRAFLOR);
                     manoActual.comprobarSiPuedeCantarFlor();
                     break;
           

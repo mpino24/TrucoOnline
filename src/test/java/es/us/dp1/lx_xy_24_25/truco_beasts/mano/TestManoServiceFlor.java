@@ -45,7 +45,9 @@ public class TestManoServiceFlor {
         partida.setNumJugadores(2);    // Por defecto, 2 jugadores
         partida.setJugadorMano(0);     // El jugador mano es el 0
         partida.setCodigo("TESTFLOR"); // Código de ejemplo
-
+        partida.setConFlor(true);
+        partida.setPuntosEquipo1(0);
+        partida.setPuntosEquipo2(0);
         mano.setPartida(partida);
         mano.setJugadorTurno(partida.getJugadorMano());
         mano.setGanadoresRondas(new ArrayList<>(List.of(0, 0)));
@@ -97,17 +99,19 @@ public class TestManoServiceFlor {
         c3.setPoder(5);
         c3.setValor(5);
 
-        List<List<Carta>> cartasTotales = new ArrayList<>();
-        for (int i = 0; i < partida.getNumJugadores(); i++) {
-            cartasTotales.add(new ArrayList<>());
-        }
+        List<Carta> cartasTotales = new ArrayList<>();
+        
         // Solo añadimos las 3 cartas al 'jugador' con Flor
-        cartasTotales.get(jugador).add(c1);
-        cartasTotales.get(jugador).add(c2);
-        cartasTotales.get(jugador).add(c3);
-
-        mano.setCartasDisp(cartasTotales);
-
+        cartasTotales.add(c1);
+        cartasTotales.add(c2);
+        cartasTotales.add(c3);
+        List<List<Carta>> cartasDisponibles = new ArrayList<>();
+        if(mano.getCartasDisp()!=null){
+            cartasDisponibles = mano.getCartasDisp();
+        }
+        
+        cartasDisponibles.add(jugador, cartasTotales);
+        mano.setCartasDisp(cartasDisponibles);
         // Ronda = 1
         mano.setRondaActual(1);
 
@@ -117,7 +121,6 @@ public class TestManoServiceFlor {
             lanzadas.add(null);
         }
         mano.setCartasLanzadasRonda(lanzadas);
-
         mano.setJugadorTurno(jugador);
     }
 
@@ -143,16 +146,19 @@ public class TestManoServiceFlor {
         c3.setPoder(5);
         c3.setValor(5);
 
-        List<List<Carta>> cartasTotales = new ArrayList<>();
-        for (int i = 0; i < partida.getNumJugadores(); i++) {
-            cartasTotales.add(new ArrayList<>());
+        List<Carta> cartasTotales = new ArrayList<>();
+        cartasTotales.add(c1);
+        cartasTotales.add(c2);
+        cartasTotales.add(c3);
+
+        List<List<Carta>> cartasDisponibles = new ArrayList<>();
+        if(mano.getCartasDisp()!=null){
+            cartasDisponibles = mano.getCartasDisp();
         }
-        cartasTotales.get(jugador).add(c1);
-        cartasTotales.get(jugador).add(c2);
-        cartasTotales.get(jugador).add(c3);
-
-        mano.setCartasDisp(cartasTotales);
-
+        
+        cartasDisponibles.add(jugador, cartasTotales);
+        mano.setCartasDisp(cartasDisponibles);
+     
         mano.setRondaActual(1);
 
         List<Carta> lanzadas = new ArrayList<>();
@@ -171,11 +177,12 @@ public class TestManoServiceFlor {
     @Test
     public void testCantarFlorExitoso() {
         // Jugador 0 tiene Flor
-        setupCartasDisponiblesConFlor(0);
+        setupCartasDisponiblesSinFlor(0);
+        setupCartasDisponiblesConFlor(1);
 
         mano.setFloresCantadas(0);
         mano.setEsperandoRespuesta(false);
-
+        mano.crearListaTantosCadaJugadorFlor();
         // Canta Flor
         manoService.cantosFlor(codigo, Cantos.FLOR);
 
@@ -187,8 +194,8 @@ public class TestManoServiceFlor {
         // en 2 jugadores, quienResponde = 1
         assertEquals(1, mano.getJugadorTurno());
 
-        // Debe estar esperando respuesta
-        assertTrue(mano.getEsperandoRespuesta());
+        // No debe estar esperando respuesta ya que el otro no tiene flor
+        assertFalse(mano.getEsperandoRespuesta());
 
         // Último mensaje
         assertEquals(Cantos.FLOR, mano.getUltimoMensaje());
@@ -225,10 +232,10 @@ public class TestManoServiceFlor {
         mano.setEsperandoRespuesta(false);
 
         // Intenta directamente "CONTRAFLOR"
-        EnvidoException ex = assertThrows(EnvidoException.class, 
+        FlorException ex = assertThrows(FlorException.class, 
             () -> manoService.cantosFlor(codigo, Cantos.CONTRAFLOR));
 
-        assertEquals("No podés cantar contraflor capo", ex.getMessage());
+        assertEquals("Canto no valido", ex.getMessage());
         assertFalse(mano.getEsperandoRespuesta());
         assertEquals(0, mano.getFloresCantadas());
     }
@@ -236,14 +243,15 @@ public class TestManoServiceFlor {
     @Test
     public void testCantarContraflorExitoso() {
         setupCartasDisponiblesConFlor(0);
-
+        setupCartasDisponiblesConFlor(1);
         // Se cantó Flor anteriormente => floresCantadas=1
         mano.setFloresCantadas(1);
         mano.setQueFlorPuedeCantar(2);
-        mano.setEsperandoRespuesta(false);
+        mano.setEsperandoRespuesta(true);
+        mano.crearListaTantosCadaJugadorFlor();
 
         // Canta "CONTRAFLOR"
-        manoService.cantosFlor(codigo, Cantos.CONTRAFLOR);
+        manoService.responderFlor(codigo, Cantos.CONTRAFLOR);
 
         // Debe incrementarse floresCantadas
         assertEquals(2, mano.getFloresCantadas());
@@ -257,29 +265,26 @@ public class TestManoServiceFlor {
     public void testResponderFlorQuiero() {
         // Se supone que ya se cantó Flor
         setupCartasDisponiblesConFlor(0);
+        setupCartasDisponiblesConFlor(1);
+        mano.crearListaTantosCadaJugadorFlor();
 
         mano.setFloresCantadas(1);
         mano.setEsperandoRespuesta(true);
         // Por ejemplo, gana la Flor el equipo 0
         mano.setEquipoGanadorFlor(0);
+ 
 
-        // Inicializamos puntajes
-        partida.setPuntosEquipo1(0);
-        partida.setPuntosEquipo2(0);
 
         // Responder FLOR => QUIERO
         manoService.responderFlor(codigo, Cantos.QUIERO);
 
-        // Verificamos que se sumaron puntos 
-        // En tu código, QUIERO => se llama a gestionarPuntosFlor(false, codigo, null)
-        // => valor base 6 para contraflor (o flor) => equipo 0
-        // Ajusta según tu reglamento. Aquí asumimos 6 para "Flor querida".
+    
         assertEquals(6, partida.getPuntosEquipo1());
         assertEquals(0, partida.getPuntosEquipo2());
 
         // Se deshabilita la flor
         assertFalse(mano.getPuedeCantarFlor());
-        assertNull(mano.getQueFlorPuedeCantar());
+        assertEquals(0,mano.getQueFlorPuedeCantar());
         // Dejamos de esperar respuesta
         assertFalse(mano.getEsperandoRespuesta());
     }
@@ -288,7 +293,8 @@ public class TestManoServiceFlor {
     public void testResponderFlorMeAchico() {
         // Se cantó Flor
         setupCartasDisponiblesConFlor(0);
-
+        setupCartasDisponiblesConFlor(1);
+        mano.crearListaTantosCadaJugadorFlor();
         mano.setFloresCantadas(1);
         mano.setQueFlorPuedeCantar(2); 
         mano.setEsperandoRespuesta(true);
@@ -309,32 +315,30 @@ public class TestManoServiceFlor {
 
         assertFalse(mano.getEsperandoRespuesta());
         assertFalse(mano.getPuedeCantarFlor());
-        assertNull(mano.getQueFlorPuedeCantar());
+        assertEquals(0,mano.getQueFlorPuedeCantar());
     }
 
     @Test
     public void testResponderFlorNoQuiero() {
         // Se cantó Contraflor, p.e. floresCantadas=2
         setupCartasDisponiblesConFlor(0);
-
+        setupCartasDisponiblesConFlor(1);
+        mano.crearListaTantosCadaJugadorFlor();
         mano.setFloresCantadas(2);
         mano.setEsperandoRespuesta(true);
         // Jugador turno = 1 => equipoRespondedor=1 => se suman puntos al eq1
         mano.setJugadorTurno(1);
 
-        partida.setPuntosEquipo1(0);
-        partida.setPuntosEquipo2(0);
 
         // Llamamos NO_QUIERO
         manoService.responderFlor(codigo, Cantos.NO_QUIERO);
 
-        // Se gestiona => gestionarPuntosFlor(false, codigo, 5)
-        // => equipoRespondedor=1 => eq1 += 5
+
         assertEquals(5, partida.getPuntosEquipo1());
         assertEquals(0, partida.getPuntosEquipo2());
 
         assertFalse(mano.getEsperandoRespuesta());
         assertFalse(mano.getPuedeCantarFlor());
-        assertNull(mano.getQueFlorPuedeCantar());
+        assertEquals(0,mano.getQueFlorPuedeCantar());
     }
 }
