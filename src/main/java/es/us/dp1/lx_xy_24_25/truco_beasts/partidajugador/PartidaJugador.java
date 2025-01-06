@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Metrica;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
@@ -46,7 +47,27 @@ public class PartidaJugador extends BaseEntity{
     @Transient
     public Gesto gesto;
 
+    public void actualizarAtributoPorMetrica(Metrica metrica, Integer valor){
+        switch (metrica) {
+            case NUMERO_FLORES:
+                setFloresCantadas(getFloresCantadas() + valor);
+                break;
+            case NUMERO_ENGANOS:
+                setEnganos(getEnganos() + valor);
+                break;
+            case QUIEROS:
+                setQuierosCantados(getQuierosCantados() + valor);
+                break;
+            case NO_QUIEROS:
+                setNoQuierosCantados(getNoQuierosCantados() + valor);
+                break;
+            default:
+                break;
+        }
+    }
 
+   
+    
 
 }
 

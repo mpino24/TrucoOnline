@@ -191,6 +191,10 @@ public class ManoService {
         
     }
 
+    public void comprobarEngaño(Mano mano, Integer jugadorDelTurno){ //TODO
+
+    }
+
     public Mano cantosEnvido(String codigo, Cantos canto){
         Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
@@ -286,7 +290,7 @@ public class ManoService {
         actualizarMano(manoActual, codigo);
     }
 
-    //TODO: PROBABLEMENTE SEA MÁS CONVENIENTE EN MANOSERVICE
+    
     public Integer gestionarPuntosEnvido(Boolean noQuiero, String codigo){
         Mano manoActual = getMano(codigo);
 
@@ -362,7 +366,7 @@ public class ManoService {
 
 
 
-	//TODO: FALTAN TEST NEGATIVOS
+	
     public Mano cantosTruco(String codigo, Cantos canto){
 		Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();

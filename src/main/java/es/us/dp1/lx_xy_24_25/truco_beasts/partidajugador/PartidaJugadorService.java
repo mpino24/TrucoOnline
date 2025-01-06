@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Metrica;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -40,10 +42,40 @@ public class PartidaJugadorService {
         this.partidaService = partidaService;
     }
 
-    @Transactional
-    public void sumarEngaño(String codigoPartida, Integer posicionJugador){
-        Partida partida = partidaService.findPartidaByCodigo(codigoPartida);
+    @Transactional(readOnly = true)
+    public PartidaJugador obtenerPartidaJugadorSegunCodigoYPosicion(String codigoPartida, Integer posicionJugador){
+        PartidaJugador res = pjRepository.findPartidaJugadorByCodigoPartidaAndPosicionJugador(codigoPartida, posicionJugador);
+        if(res == null){
+            throw new ResourceNotFoundException("No se encontro la partida jugador con codigo de partida " + codigoPartida + " y posicion del jugador " + posicionJugador);
+        }
+        return res;
        
+    }
+
+    @Transactional
+    public void actualizarPartidaJugador(Integer idPartidaJugadorAActualizar, PartidaJugador partidaJugadorActualizada){
+        if (partidaJugadorActualizada == null) {
+            throw new IllegalArgumentException("La partida jugador actualizada no debe ser null");
+        }
+    
+        PartidaJugador nueva;
+        if (idPartidaJugadorAActualizar != null) {
+            nueva = pjRepository.findById(idPartidaJugadorAActualizar)
+                    .orElseThrow(() -> new ResourceNotFoundException("No se encontro la partida jugador con id: " + idPartidaJugadorAActualizar));
+        } else {
+            nueva = new PartidaJugador();
+        }
+        BeanUtils.copyProperties(partidaJugadorActualizada, nueva, "id");
+        pjRepository.save(nueva);
+    }
+
+
+    @Transactional
+    public void sumar1Estadistica(String codigoPartida, Integer posicionJugador, Metrica metrica){
+        Integer constanteDeSuma = 1; //siempre sumamos de 1 en 1, se podria cambiar
+        PartidaJugador partidaJugadorActualizada = obtenerPartidaJugadorSegunCodigoYPosicion(codigoPartida, posicionJugador);
+        partidaJugadorActualizada.actualizarAtributoPorMetrica(metrica, constanteDeSuma);
+        actualizarPartidaJugador(partidaJugadorActualizada.getId(), partidaJugadorActualizada);
     }
 
 
