@@ -45,6 +45,7 @@ public class Mano {
     private Cantos ultimoMensaje;
 
     private Boolean estaMintiendo= false; //PARA LAS ESTADISTICAS
+    private List<Integer> envidosNoBorrados; //necesario para estadisticas
 
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
@@ -169,8 +170,7 @@ public class Mano {
     
     public Integer getTantoDe1Jugador(Integer posicion){ //PARA LAS ESTADISTICAS
         Integer res = 0;
-        Map<Palo, List<Carta>> diccCartasPaloJugador= agrupaCartasPalo(getCartasDisp().get(posicion));
-        res = getMaxPuntuacion(diccCartasPaloJugador);
+        res = getEnvidosNoBorrados().get(posicion);
         return res;
     }
 
@@ -178,11 +178,14 @@ public class Mano {
 
      public List<Integer> crearListaTantosCadaJugador(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
+        List<Integer> envidosParaEstadisticas = new ArrayList<>();// ESTADISTICAS
         for(int i=0; i<getCartasDisp().size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
             listaEnvidosCadaJugador.add(i, sumaJugador);
+            envidosParaEstadisticas.add(i,sumaJugador);// ESTADISTICAS
         }
+        setEnvidosNoBorrados(envidosParaEstadisticas); // ESTADISTICAS
 
         Integer jugadorMano = getJugadorTurno(); //Como esta funcion se llama al principio, será el mano
         List<Integer> nuevaLista = new ArrayList<>(listaEnvidosCadaJugador);
