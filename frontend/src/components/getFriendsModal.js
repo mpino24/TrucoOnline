@@ -25,6 +25,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
     const [requestView, setRequestView] = useState(false);
     const [chatVisible, setChatVisible] = useState(false);
     const [chatId, setChatId] = useState(null);
+    const [jugadorChat, setJugadorChat] = useState(null);
 
     useEffect(() => {
         if (!userName) {
@@ -146,8 +147,11 @@ const GetFriendsModal = forwardRef((props, ref) => {
             .then((data) => {
                 if (data.length === 0) {
                     setChatId(null);
+                    setJugadorChat(null);
+
                 } else {
-                    setChatId(data.id)
+                    setChatId(data.id);
+                    setJugadorChat(player);
 
                 }
             })
@@ -234,10 +238,10 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 }
                 {chatVisible &&
                     <>
-                        
                         <hr></hr>
                         <Chat
-                            idChat={chatId} />
+                            idChat={chatId}
+                            player={jugadorChat} />
                     </>
                 }
             </div>
