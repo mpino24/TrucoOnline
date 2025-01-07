@@ -161,7 +161,7 @@ function App() {
     }
   }
 
-  window.addEventListener('beforeunload', function (event) {
+  window.addEventListener('unload', function (event) {
     disconnectUser();
   });
 
