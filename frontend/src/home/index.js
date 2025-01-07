@@ -113,7 +113,7 @@ export default function Home() {
 
     return (
         <>
-            {roles.includes('ADMIN') && (
+            {roles.includes('ADMIN') && !estadisticasView &&(
                 <div expand='md' style={{ float: 'left' }}>
                     <button className="button-admin" onClick={() => { navigate("/admin") }}>
                         FUNCIONES DE ADMINISTRADOR
