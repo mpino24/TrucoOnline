@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -24,31 +25,44 @@ public class ChatService {
         this.partJugService=partJugService;
         this.chatRepository =chatRepository;
     }
-    public Mensaje guardarMensaje(Mensaje mensaje) throws NotYourChatException {
+    public MensajeDTO guardarMensaje(Mensaje mensaje) throws NotYourChatException {
         mensaje.setFechaEnvio(LocalDateTime.now());
-
-        //perteneceAChat(mensaje.getChat().getId());
-
-        return mensajeRepository.save(mensaje);
+        Chat chat = chatRepository.findById(mensaje.getChat().getId()).orElse(null);
+        if(chat==null){
+            throw new NotYourChatException("No puedes enviar mensajes a un chat que no existe");
+        }
+        mensaje.setChat(chat);
+        return new MensajeDTO(mensajeRepository.save(mensaje));
     }
 
     public void createChat(Chat chat){
         chatRepository.save(chat);
     }
 
-    public List<Mensaje> getMensajesDe(Integer chatId) throws NotYourChatException{
+    public List<MensajeDTO> getMensajesDe(Integer chatId) throws NotYourChatException{
         perteneceAChat(chatId);
-        return mensajeRepository.findMessagesFrom(chatId);
+        List<Mensaje> mensajes=mensajeRepository.findMessagesFrom(chatId);
+        List<MensajeDTO> mensajesDTO= mensajes.stream().map(MensajeDTO::new).toList();
+        return mensajesDTO;
     }
 
-    public Mensaje getLastMessage(Integer chatId) throws NotYourChatException{
+    public MensajeDTO getLastMessage(Integer chatId) throws NotYourChatException{
         perteneceAChat(chatId);
-        return mensajeRepository.findLastMessage(chatId).orElse(null);
+        return new MensajeDTO(mensajeRepository.findLastMessage(chatId).orElse(null));
     }
 
     public Chat findChatWith(Integer amigoId){
         return chatRepository.findChatBetween(amigoId,userService.findCurrentUser().getId());
 
+    }
+
+    public List<User> findUsersByChat(Integer chatId){
+        return chatRepository.findUsersByChat(chatId);
+    }
+
+    @Transactional
+    public void eliminarChat(Integer chatId){
+        chatRepository.deleteById(chatId);
     }
 
 

@@ -283,7 +283,7 @@ const Perfil = forwardRef((props, ref) => {
         { nombre: "1 Copa o 1 Oro", photo: "/gestos/unocopaoro.png", codigo: "UNOCOPAORO" },
         { nombre: "Son malas", photo: "/gestos/malas.png", codigo: "MALAS" },
         { nombre: "Corazón", photo: "/gestos/corazon.png", codigo: "CORAZON" },
-        { nombre: "Calavera", photo: "/gestos/calavera.png", codigo: "CALAVERA" },
+        { nombre: "Calavera", photo: "/gestos/calavera.gif", codigo: "CALAVERA" },
         { nombre: "Tiempo", photo: "/gestos/tiempo.png", codigo: "TIEMPO" },
         { nombre: "Estrella", photo: "/gestos/estrella.png", codigo: "ESTRELLA" }
     ];

@@ -1,25 +1,44 @@
-import React, { forwardRef, useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { forwardRef, useState, useEffect, useRef } from "react";
 import tokenService from "../services/token.service";
-import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
 import "./Chat.css";
-import RenderContent from "./RenderContent";
-
+import MessageList from "./MessageList";
+import { IoCloseCircle } from "react-icons/io5";
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
   const user = tokenService.getUser();
   const [stompClient, setStompClient] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [visible, setVisible] = useState(false);
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [mensajes, setMensajes] = useState([]);
+
+  function fetchMensajesIniciales() {
+    fetch('api/v1/chat/' + props.idChat, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 0) {
+            setMensajes(data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Hubo un problema al cargar los mensajes.");
+      });
+  }
+
+  useEffect(() => {
+    fetchMensajesIniciales();
+  }, []);
 
 
-  const [mensajes, setMensajes] = useFetchState(
-    [],
-    `/api/v1/chat/${props.idChat}`,
-    jwt,
-    setMessage,
-    setVisible
-  );
+
+
+
 
   const [mensaje, setMensaje] = useState("");
 
@@ -32,22 +51,6 @@ const Chat = forwardRef((props, ref) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      moveScroll();
-    });
-
-    if (messagesContainerRef.current) {
-      observer.observe(messagesContainerRef.current, { childList: true, subtree: true });
-    }
-
-    return () => {
-      if (messagesContainerRef.current) {
-        observer.disconnect();
-      }
-    };
-  }, [mensajes]);
-
 
   useEffect(() => {
     const cliente = new Client({
@@ -58,8 +61,9 @@ const Chat = forwardRef((props, ref) => {
     });
 
     cliente.onConnect = () => {
-      console.log("Conectado exitosamente");
+      console.log("Conectado exitosamente a " + props.idChat);
       cliente.subscribe(`/topic/chat/${props.idChat}`, (mensaje) => {
+        console.log("Mensaje recibido: ", mensaje.body);
         const nuevoMensaje = JSON.parse(mensaje.body);
         setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
       });
@@ -99,84 +103,159 @@ const Chat = forwardRef((props, ref) => {
         },
       });
       console.log("Mensaje enviado");
+
       setMensaje("");
+
     } else {
       console.error("STOMP aún no está listo o no está conectado");
     }
   };
 
+
   const handleEnviar = () => {
     evtEnviarMensaje();
   };
 
-  const formatFecha = (fecha) => {
-    const date = new Date(fecha);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  const handleRemoveFriend = (friendId) => {
+    fetch(`/api/v1/jugador/isFriend/${friendId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("No se pudo eliminar al amigo.");
+        }
+        alert("Amigo eliminado exitosamente.");
+        props.setChatVisible(false);
+
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Hubo un problema al eliminar al amigo.");
+
+      });
   };
 
+
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "stretch",
-        height: "85vh",
-      }}
-    >
-      <div
-        className="messages-container"
-        style={{
-          flexGrow: 1,
-          overflowY: "auto",
-          padding: "10px",
-          
-        }}
-        ref={messagesContainerRef}
-      >
-        {mensajes.map((msg, i) => {
-          return (
-            msg.remitente.id === user.id ? (
-              <div key={i} className="own-message" style={{ display: 'flex', flexDirection: 'column'}}>
-
-                <RenderContent contenido={msg.contenido} />
-                <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
-              </div>
-            ) : (
-              <>
-                <div key={i}>{msg.remitente.username}</div>
-                <div key={i} className="other-message">
-                  <RenderContent contenido={msg.contenido} style={{ display: 'flex', flexDirection: 'column' }} />
-                  <p style={{fontSize:10 ,color:'gray'}}>{formatFecha(msg.fechaEnvio)}</p>
-                </div>
-              </>
-            )
-          );
-        }
+    <>
+    <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 }} onClick={() => props.setChatVisible(false)} />
+      <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
+        {props.player?.userName || "Cargando..."}
+        {true && (
+          <button
+            style={{
+              background: "#ff4d4f",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "5px 10px",
+              cursor: "pointer",
+              fontSize: "14px",
+              position: "absolute",
+              right: "0", 
+              marginRight: "10px",
+            }}
+            onClick={() => setShowConfirmModal(true)}
+          >
+            Eliminar Amigo
+          </button>
         )}
-        <div ref={messagesEndRef} />
-
-
+      </h1>
+      <hr></hr>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "stretch",
+          height: "85vh",
+          paddingBottom: "0px",
+        }}
+      >
+     
+        <MessageList mensajes={mensajes} userId={user.id} />
+  
+        <div className="input-container">
+          <input
+            type="text"
+            value={mensaje}
+            onChange={(e) => setMensaje(e.target.value)}
+            placeholder="Escribe un mensaje..."
+            className="input-text"
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleEnviar();
+              }
+            }}
+          />
+          <button onClick={handleEnviar} className="btn-send">
+            Enviar
+          </button>
+        </div>
       </div>
-
-      <div className="input-container">
-        <input
-          type="text"
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-          placeholder="Escribe un mensaje..."
-          className="input-text"
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              handleEnviar();
-            }
+      {showConfirmModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
           }}
-        />
-        <button onClick={handleEnviar} className="btn-send">
-          Enviar
-        </button>
-      </div>
-    </div>
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              textAlign: "center",
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <p>¿Estás seguro de que quieres eliminar este amigo?</p>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+              <button
+                onClick={() => {
+                  handleRemoveFriend(props.player.id);
+                  setShowConfirmModal(false);
+                }}
+                style={{
+                  background: "#ff4d4f",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Sí
+              </button>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                style={{
+                  background: "#ccc",
+                  color: "black",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 });
 
