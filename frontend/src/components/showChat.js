@@ -127,11 +127,13 @@ const Chat = forwardRef((props, ref) => {
           throw new Error("No se pudo eliminar al amigo.");
         }
         alert("Amigo eliminado exitosamente.");
+        props.setChatVisible(false);
 
       })
       .catch((error) => {
         console.error(error);
         alert("Hubo un problema al eliminar al amigo.");
+
       });
   };
 
@@ -159,14 +161,16 @@ const Chat = forwardRef((props, ref) => {
       </h1>
       <div
         style={{
-          flexGrow: 1,
-          overflowY: "auto",
-          padding: "10px",
-          
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "stretch",
+          height: "85vh",
         }}
       >
-
+     
         <MessageList mensajes={mensajes} userId={user.id} />
+  
         <div className="input-container">
           <input
             type="text"
@@ -184,7 +188,6 @@ const Chat = forwardRef((props, ref) => {
             Enviar
           </button>
         </div>
-
       </div>
       {showConfirmModal && (
         <div
@@ -216,7 +219,6 @@ const Chat = forwardRef((props, ref) => {
                 onClick={() => {
                   handleRemoveFriend(props.player.id);
                   setShowConfirmModal(false);
-                  props.setChatVisible(false);
                 }}
                 style={{
                   background: "#ff4d4f",
