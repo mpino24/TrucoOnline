@@ -11,7 +11,7 @@ import { calcularTiempo } from './calcularTiempo.js';
 import RenderizarLogros from './RenderizarLogros.js';
 import GraficoProgresion from './GraficoProgresion.js';
 import GraficoCorrelacion from './GraficoCorrelacion.js';
-import GraficoBurbujas from './GraficoBurbujas.js';
+import GraficoColumnas from './GraficoColumnas.js';
 import BotonDeCambio from './BotonDeCambio';
 import GraficoGlobalAraña from './GraficoGlobalAraña.js';
 import GraficoPartidas from './GraficoPartidas.js';
@@ -111,7 +111,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     textoMostrar="Mostrar relación de flores/victorias"
                     textoOcultar="Ocultar relación de flores/victorias"
                 >
-                    <GraficoBurbujas estadisticasAvanzadas={estadisticasAvanzadas} estadisticas={estadisticas} />
+                    <GraficoColumnas estadisticasAvanzadas={estadisticasAvanzadas} estadisticas={estadisticas} />
                 </BotonDeCambio>
 
             </div>
