@@ -225,9 +225,13 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 {chatVisible &&
                     <>
                         <hr></hr>
+                        {chatId &&
                         <Chat
                             idChat={chatId}
-                            player={jugadorChat} />
+                            player={jugadorChat}
+                            setChatVisible={setChatVisible}
+                            />
+                        }
                     </>
                 }
             </div>

@@ -25,7 +25,7 @@ public class ChatService {
         this.partJugService=partJugService;
         this.chatRepository =chatRepository;
     }
-    public Mensaje guardarMensaje(Mensaje mensaje) throws NotYourChatException {
+    public Mensaje guardarMensaje(Mensaje mensaje)  {
         mensaje.setFechaEnvio(LocalDateTime.now());
 
         //perteneceAChat(mensaje.getChat().getId());

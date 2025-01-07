@@ -2,8 +2,11 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -27,7 +30,8 @@ public class Mensaje extends BaseEntity{
     @Column(name="FECHA")
     LocalDateTime fechaEnvio;
 
-    @ManyToOne
+    @ManyToOne()
+    @JsonIgnore
     Chat chat;
 
     public Mensaje(){

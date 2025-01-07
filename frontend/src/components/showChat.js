@@ -14,7 +14,6 @@ const Chat = forwardRef((props, ref) => {
   const [chatUser, setChatUser] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-
   const [mensajes, setMensajes] = useFetchState(
     [],
     `/api/v1/chat/${props.idChat}`,
@@ -33,38 +32,7 @@ const Chat = forwardRef((props, ref) => {
   function moveScroll() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
-  /*
-  useEffect(() => {
-    fetch(`/api/v1/chat/users/${props.idChat}`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((users) => {
-        const otherUser = users.find((u) => u.id !== user.id);
-        setChatUser(otherUser);
-      })
-      .catch((error) => console.error("Error al obtener los usuarios del chat:", error));
-  }, [props.idChat, jwt, user.id]);
-*/
-/*
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      moveScroll();
-    });
 
-    if (messagesContainerRef.current) {
-      observer.observe(messagesContainerRef.current, { childList: true, subtree: true });
-    }
-
-    return () => {
-      if (messagesContainerRef.current) {
-        observer.disconnect();
-      }
-    };
-  }, [mensajes]);
-*/
 
   useEffect(() => {
     const cliente = new Client({
@@ -75,8 +43,9 @@ const Chat = forwardRef((props, ref) => {
     });
 
     cliente.onConnect = () => {
-      console.log("Conectado exitosamente");
+      console.log("Conectado exitosamente a "+props.idChat);
       cliente.subscribe(`/topic/chat/${props.idChat}`, (mensaje) => {
+        console.log("Mensaje recibido: ", mensaje.body);
         const nuevoMensaje = JSON.parse(mensaje.body);
         setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
       });
@@ -184,9 +153,7 @@ const Chat = forwardRef((props, ref) => {
         }}
       >
         {/* Aquiiiiiii*/}
-        
         <MessageList mensajes={mensajes} userId={user.id} />
-  
         <div className="input-container">
           <input
             type="text"
@@ -235,6 +202,7 @@ const Chat = forwardRef((props, ref) => {
                 onClick={() => {
                   handleRemoveFriend(props.player.id);
                   setShowConfirmModal(false);
+                  props.setChatVisible(false);
                 }}
                 style={{
                   background: "#ff4d4f",
