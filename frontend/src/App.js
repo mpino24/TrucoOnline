@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ErrorBoundary } from "react-error-boundary";
@@ -19,7 +19,8 @@ import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import Game from "./game"
 import SwaggerDocs from "./public/swagger";
-import './App.css'; // Make sure to import your CSS file with the transition styles
+import './App.css';
+import { useNavigate } from "react-router-dom";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -34,7 +35,43 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 function App() {
   const location = useLocation();
   const jwt = tokenService.getLocalAccessToken();
+  const [validToken, setValidToken] = React.useState(false);
   let roles = [];
+  const navigate = useNavigate();
+  const usuario = tokenService.getUser();
+
+  function redirectToLogin() {
+    if (location.pathname !== "/login" && location.pathname !== "/register" && location.pathname !== "/") {
+      navigate("/");
+    }
+  }
+
+  useEffect(() => {
+    if (jwt) {
+      fetch(`/api/v1/jugador?userId=` + usuario.id, { //Esta llamada es simplemente para comprobar si el jwt es válido
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }).then((response) => {
+        if (!response.ok) {
+          console.log("Invalid token");
+          tokenService.removeUser();
+          setValidToken(false);
+          redirectToLogin();
+        } else {
+          setValidToken(true);
+
+        }
+      }
+      )
+    } else {
+      redirectToLogin();
+    }
+
+
+  }, []);
 
   function connectUser() {
     fetch(
@@ -54,7 +91,7 @@ function App() {
       .catch((message) => alert(message));
   }
 
-  if (jwt) {
+  if (jwt && validToken) {
     connectUser();
     roles = getRolesFromJWT(jwt);
   }
@@ -76,17 +113,19 @@ function App() {
           <Route path="/users/:username" element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
           <Route path="/admin/partidas" element={<PrivateRoute><PartidasAdmin /></PrivateRoute>} />
           <Route path="/admin/partidas/terminadas" element={<PrivateRoute><PartidasTerminadasAdmin /></PrivateRoute>} />
-          <Route path="/admin/estadisticas" element={<PrivateRoute><EstadisticasAdmin/></PrivateRoute>} />
+          <Route path="/admin/estadisticas" element={<PrivateRoute><EstadisticasAdmin /></PrivateRoute>} />
         </>
       );
     }
   });
 
-  if (!jwt) {
+  if (!jwt || !validToken) {
     publicRoutes = (
       <>
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+
       </>
     );
   } else {
@@ -104,7 +143,7 @@ function App() {
   }
 
   function disconnectUser() {
-    if (jwt) {
+    if (jwt && validToken) {
       console.log("Disconnecting user");
       fetch("/api/v1/profile/disconnect", {
         method: "PATCH",
@@ -122,7 +161,7 @@ function App() {
     }
   }
 
-  window.addEventListener('beforeunload', function (event) {
+  window.addEventListener('unload', function (event) {
     disconnectUser();
   });
 

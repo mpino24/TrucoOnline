@@ -27,15 +27,11 @@ export default function Home() {
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
     const [estadisticasView, setEstadisticasView] = useState(false);
     const [roles, setRoles] = useState([]);
-
-
-
-    const usuario = tokenService.getUser();
-    const jwt = tokenService.getLocalAccessToken();
-
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
-
+    const usuario = tokenService.getUser();
+    const jwt = tokenService.getLocalAccessToken();
+    const navigate = useNavigate();
 
     const [player, setPlayer] = useFetchState(
         [],
@@ -55,6 +51,33 @@ export default function Home() {
     const toggleAccountMenu = useCallback(() => {
         setShowAccountMenu((current) => !current);
     }, []);
+
+    function fetchCurrentGame() { //Redirección automática a la partida a la que este conectado el usuario
+        fetch(
+            "/api/v1/partidajugador/partidaJugadorActual",
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                  },
+            }
+        )
+        .then((response) => {
+            if (response.status === 202) { 
+                return null; 
+            }
+            return response.json(); 
+        })
+        .then((data) => {
+            if (data !== null) { 
+                if (data.game && data.game.estado !== "FINALIZADA") {
+                    navigate("/partidas?partidaCode="+data.game.codigo);
+                }
+            }
+        })
+            .catch((message) => alert(message));
+    }
+
     useEffect(() => {
         const backgrounds = [
             '/fondos/fondo0.jpg',
@@ -70,6 +93,8 @@ export default function Home() {
         ];
         const randomIndex = Math.floor(Math.random() * backgrounds.length)
         setBackgroundUrl(backgrounds[randomIndex])
+
+        fetchCurrentGame();
     }, []);
 
 
@@ -99,7 +124,7 @@ export default function Home() {
         }
     }, [usuario, player])
 
-    const navigate = useNavigate();
+
     const handleRedirect = (path) => {
         navigate(path);
     };

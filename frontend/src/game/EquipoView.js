@@ -69,6 +69,7 @@ const EquipoView = forwardRef((props, ref) => {
                         <FaRegHandPointRight style={{ width: 40, height: 40 }} />
                     }
                     <JugadorView
+                        key={getPlayerKey(player)}
                         jugador={player}
                         isFriend={false}
                         interfaz={'partida'}
