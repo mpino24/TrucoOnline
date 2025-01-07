@@ -420,12 +420,14 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 mano.setEstaMintiendo(true);
             }
         }else{ //Ya se sabe que el otro jugador estaba mintiendo  
-            
-            if(dijoNoQuiero){ //Es decir, el otro, aunque ganaba, tuvo miedo y dijo no quiero
-                partidaJugadorService.sumar1Estadistica(mano.getPartida().getCodigo(),jugadorDelTurno, Metrica.NUMERO_ENGANOS); //le sumamos el engaño
-            }else{ //no tuvo miedo :(
-                partidaJugadorService.sumar1Estadistica(mano.getPartida().getCodigo(),jugadorDelTurno, Metrica.ATRAPADO); //Fue atrapado
+            if(dijoNoQuiero!=null){
+                if(dijoNoQuiero){ //Es decir, el otro, aunque ganaba, tuvo miedo y dijo no quiero
+                    partidaJugadorService.sumar1Estadistica(mano.getPartida().getCodigo(),jugadorDelTurno, Metrica.NUMERO_ENGANOS); //le sumamos el engaño
+                }else{ //no tuvo miedo :(
+                    partidaJugadorService.sumar1Estadistica(mano.getPartida().getCodigo(),jugadorDelTurno, Metrica.ATRAPADO); //Fue atrapado
+                }
             }
+            
         }
         return mano;
     }
