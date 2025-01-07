@@ -56,7 +56,8 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
     "p.game.instanteFin, " +
     "p.game.conFlor, " +
     "COALESCE(p.enganos, 0), " +
-    "COALESCE(p.atrapado, 0) " +
+    "COALESCE(p.atrapado, 0), " +
+    "COALESCE(p.floresCantadas,0)"+
     "FROM PartidaJugador p " +
     "WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
 List<Object[]> findAllDatosPorPartidaByJugadorId(Integer jugadorId);

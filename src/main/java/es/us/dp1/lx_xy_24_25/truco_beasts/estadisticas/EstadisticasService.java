@@ -120,7 +120,8 @@ public class EstadisticasService {
             (LocalDateTime) row[1],
             (Boolean) row[2],
             (Integer) row[3],
-            (Integer) row[4]))
+            (Integer) row[4],
+            (Integer)row[5]))
         .collect(Collectors.toList());
 
     return result;

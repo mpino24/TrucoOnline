@@ -14,15 +14,16 @@ public class DatosPorPartida {
     LocalDateTime fecha;
 
     Boolean conFlor;
-
+    Integer floresCantadas;
     Integer enganos;
     Integer atrapados;
 
-    public DatosPorPartida(Boolean victorioso, LocalDateTime fecha, Boolean conFlor, Integer enganos, Integer atrapados) {
+    public DatosPorPartida(Boolean victorioso, LocalDateTime fecha, Boolean conFlor, Integer enganos, Integer atrapados, Integer floresCantadas) {
         this.victorioso = victorioso;
         this.fecha = fecha;
         this.conFlor = conFlor;
         this.enganos = (enganos != null) ? enganos : 0;
         this.atrapados = (atrapados != null) ? atrapados : 0;
+        this.floresCantadas=(floresCantadas!=null)?floresCantadas:0;
     }
 }

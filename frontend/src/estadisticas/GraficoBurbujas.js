@@ -3,25 +3,39 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 
 const GraficoBurbujas = ({ estadisticasAvanzadas, estadisticas }) => {
+    // Filtrar partidas con flor
+    const partidasConFlor = estadisticasAvanzadas.filter(item => item.conFlor);
 
-    const victoriasEnPartidasConFlor = estadisticasAvanzadas.filter(item => item.conFlor && item.victorioso).length;
-    const partidasConFlor = estadisticas.partidasConFlor;
-    const floresCantadas = estadisticas.floresCantadas;
+    // Cálculos para victorias
+    const partidasConFlorGanadas = partidasConFlor.filter(item => item.victorioso);
+    const victoriasEnPartidasConFlor = partidasConFlorGanadas.length;
+    const floresCantadasEnVictorias = partidasConFlorGanadas.reduce((acc, item) => acc + item.floresCantadas, 0);
+    const promedioFloresPorVictoria = victoriasEnPartidasConFlor > 0
+        ? floresCantadasEnVictorias / victoriasEnPartidasConFlor
+        : 0;
 
+    // Cálculos para derrotas
+    const partidasConFlorPerdidas = partidasConFlor.filter(item => !item.victorioso);
+    const derrotasEnPartidasConFlor = partidasConFlorPerdidas.length;
+    const floresCantadasEnDerrotas = partidasConFlorPerdidas.reduce((acc, item) => acc + item.floresCantadas, 0);
+    const promedioFloresPorDerrota = derrotasEnPartidasConFlor > 0
+        ? floresCantadasEnDerrotas / derrotasEnPartidasConFlor
+        : 0;
 
-    const promedioFloresPorPartidaConFlor = partidasConFlor > 0 ? floresCantadas / partidasConFlor : 0;
+    // Datos para las series
+    const datosFloresVictorias = [{
+        x: victoriasEnPartidasConFlor,
+        y: promedioFloresPorVictoria,
+        z: floresCantadasEnVictorias,
+    }];
 
-    const datosBurbujas = [
-        {
-            x: partidasConFlor,
-            y: promedioFloresPorPartidaConFlor,
-            z: floresCantadas,
-            name: 'Partidas con Flor',
-            victorioso: victoriasEnPartidasConFlor
-        }
-    ];
+    const datosFloresDerrotas = [{
+        x: derrotasEnPartidasConFlor,
+        y: promedioFloresPorDerrota,
+        z: floresCantadasEnDerrotas,
+    }];
 
-
+    // Configuración del gráfico
     const graficoBurbujas = {
         chart: {
             type: 'bubble',
@@ -30,12 +44,12 @@ const GraficoBurbujas = ({ estadisticasAvanzadas, estadisticas }) => {
             backgroundColor: 'rgba(0, 0, 0, 0)'
         },
         title: {
-            text: 'Relación entre Partidas Flores Cantadas y Victorias',
-            style: { color: '#ffffff' }
+            text: 'Relación Flores/Victorias y Flores/Derrotas',
+            style: { color: '#ffffff', fontSize: '20px' }
         },
         xAxis: {
             title: {
-                text: 'Total Partidas con Flor',
+                text: 'Cantidad de Partidas',
                 style: { color: '#ffffff' }
             },
             labels: {
@@ -44,7 +58,7 @@ const GraficoBurbujas = ({ estadisticasAvanzadas, estadisticas }) => {
         },
         yAxis: {
             title: {
-                text: 'Promedio de Flores Cantadas por Partida con Flor',
+                text: 'Promedio de Flores Cantadas',
                 style: { color: '#ffffff' }
             },
             labels: {
@@ -52,26 +66,35 @@ const GraficoBurbujas = ({ estadisticasAvanzadas, estadisticas }) => {
             }
         },
         tooltip: {
-            pointFormat: 'Partidas con Flor: {point.x}<br>' +
-                'Promedio de Flores Cantadas: {point.y:.2f}<br>' +
-                'Total de Flores Cantadas: {point.z}<br>' +
-                'Victorias en Partidas con Flor: {point.victorioso}'
+            useHTML: true,
+            pointFormat: `
+                <b>{series.name}</b><br>
+                Partidas: <b>{point.x}</b><br>
+                Promedio de Flores: <b>{point.y:.2f}</b><br>
+                Total de Flores Cantadas: <b>{point.z}</b>
+            `
         },
-        series: [{
-            data: datosBurbujas.map(item => ({
-                x: item.x,
-                y: item.y,
-                z: item.z,
-                victorioso: item.victorioso,
+        series: [
+            {
+                name: 'Flores/Victorias',
+                data: datosFloresVictorias,
+                color: '#4caf50', 
                 marker: {
-                    fillColor: item.victorioso > 0 ? '#4caf50' : '#f44336',
+                    lineWidth: 2,
                     lineColor: '#ffffff'
                 }
-            })),
-            name: 'Relación Flores/Victorias',
-        }]
+            },
+            {
+                name: 'Flores/Derrotas',
+                data: datosFloresDerrotas,
+                color: '#f44336', 
+                marker: {
+                    lineWidth: 2,
+                    lineColor: '#ffffff'
+                }
+            }
+        ]
     };
-
 
     return (
         <HighchartsReact

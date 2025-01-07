@@ -20,12 +20,10 @@ const BotonDeCambio = ({ color, textoMostrar, textoOcultar, children }) => {
 
     const cambiarMostrar = () => {
         setMostrar(!mostrar);
-
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {mostrar && children} {/* Si "mostrar" es verdadero, renderiza lo que esté dentro de "children" */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
             <button
                 onClick={cambiarMostrar}
                 style={{
@@ -39,6 +37,8 @@ const BotonDeCambio = ({ color, textoMostrar, textoOcultar, children }) => {
                     fontSize: '16px',
                     marginTop: '10px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                    width: '50%', // Ensure uniform width
+                    textAlign: 'center', // Center the text
                 }}
                 onMouseEnter={(e) => {
                     e.target.style.backgroundColor = hoverColor;
@@ -51,6 +51,13 @@ const BotonDeCambio = ({ color, textoMostrar, textoOcultar, children }) => {
             >
                 {mostrar ? textoOcultar : textoMostrar}
             </button>
+            <div style={{ marginTop: '8px', width: '65%%', overflow: 'hidden', transition: 'max-height 0.3s ease', maxHeight: mostrar ? '1000px' : '0' }}>
+                {mostrar && (
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {children}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

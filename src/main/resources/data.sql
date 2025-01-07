@@ -20,9 +20,9 @@ INSERT INTO appusers(id,username,password,authority,is_connected) VALUES (12,'pl
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (0,2,'WWWWW',FALSE,15,0,0,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (1,2,'ABCDE',FALSE,15,1,2,'PUBLICA','2024-11-08 21:28', '2025-11-07 23:45');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (2,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2020-11-08 20:28:02','2024-11-08 20:37');
---INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (2,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
---INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (3,2,'QWERT',FALSE,15,1,2,'PUBLICA',null,null);
---INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (4,6,'YHGDT',FALSE,15,1,2,'PRIVADA',null,null);
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (3,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (4,2,'QWERT',TRUE,15,1,2,'PUBLICA','2023-11-08 10:12','2023-12-01 05:37');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (5,6,'YHGDT',TRUE,15,1,2,'PRIVADA','2025-01-01 17:06','2025-01-01 17:45:02');
 --INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (5,2,'APCDE',FALSE,15,1,2,'PRIVADA','2024-10-05 15:07','2024-10-05 15:34');
 --INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (6,4,'PCDEF',TRUE,30,1,2,'PUBLICA',null,null);
 --INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (7,2,'PWERT',FALSE,15,1,2,'PUBLICA',null,null);
@@ -51,7 +51,9 @@ INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (0,
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (1,1,1,0,TRUE);
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE); --No borrar estos 4 casos ya que se usan en los tests
 INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (3,2,1,1,TRUE);
-
+INSERT INTO Partida_Jugador(id, posicion, player_id, game_id, is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (4, 1, 1, 3, TRUE, 3, 2, 5, 4, 2);
+INSERT INTO Partida_Jugador(id, posicion, player_id, game_id, is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (5, 2, 1, 4, FALSE, 1, 1, 5, 1, 1);
+INSERT INTO Partida_Jugador(id, posicion, player_id, game_id, is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (6, 3, 1, 5, TRUE, 2, 3, 12, 2, 1);
 -- Insertar las cartas
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (1, 'ESPADAS', 1, 14, 'http://localhost:8080/resources/images/cartas/1espadas.jpg');
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (2, 'BASTOS', 1, 13, 'http://localhost:8080/resources/images/cartas/1bastos.jpg');
