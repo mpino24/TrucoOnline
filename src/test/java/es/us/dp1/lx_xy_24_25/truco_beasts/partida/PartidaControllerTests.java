@@ -72,7 +72,7 @@ public class PartidaControllerTests {
         autoridadAdmin.setAuthority("ADMIN");
 
         usuarioAdmin.setId(1);
-        usuarioAdmin.setIsConnected(true);
+        usuarioAdmin.setLastConnection(LocalDateTime.now());
         usuarioAdmin.setUsername("admin");
         usuarioAdmin.setAuthority(autoridadAdmin);
 
@@ -81,7 +81,7 @@ public class PartidaControllerTests {
         autoridadJugador.setAuthority("PLAYER");
 
         usuarioJugador.setId(2);
-        usuarioJugador.setIsConnected(true);
+        usuarioJugador.setLastConnection(LocalDateTime.now());
         usuarioJugador.setUsername("player");
         usuarioJugador.setAuthority(autoridadJugador);
 

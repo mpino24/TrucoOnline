@@ -59,7 +59,6 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 				.collect(Collectors.toList());
-			userService.updateConnection(userDetails.getId(),true); // Para gestionar los usuarios conectados
 			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
 		}catch(BadCredentialsException exception){
 			return ResponseEntity.badRequest().body("Bad Credentials!");

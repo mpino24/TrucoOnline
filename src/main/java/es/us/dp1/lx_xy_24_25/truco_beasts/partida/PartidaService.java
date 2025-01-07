@@ -147,7 +147,7 @@ public class PartidaService {
 		
 		List<PartidaJugador> jugadores = pjRepository.findPlayersConnectedTo(codigo);
 		for(PartidaJugador pj: jugadores){
-			if(!pj.getPlayer().getUser().getIsConnected()){
+			if(!pj.getPlayer().getUser().isConnected()){
 				throw new PlayerNotConnectedException(pj.getPlayer().getUser().getUsername());
 			}
 		}

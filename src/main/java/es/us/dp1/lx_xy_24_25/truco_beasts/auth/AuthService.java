@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.auth;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,7 @@ public class AuthService {
 	public void createUser(@Valid SignupRequest request) {
 		User user = new User();
 		user.setUsername(request.getUsername());
-		user.setIsConnected(false);
+		user.setLastConnection(LocalDateTime.now());
 		user.setPassword(encoder.encode(request.getPassword()));
 		String strRoles = request.getAuthority();
 		Authorities role;
