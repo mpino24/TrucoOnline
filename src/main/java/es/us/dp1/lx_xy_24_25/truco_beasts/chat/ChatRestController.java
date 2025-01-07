@@ -32,12 +32,12 @@ public class ChatRestController {
     }
 
     @GetMapping("/{chatId}")
-    public List<Mensaje> getMensajesDe(@PathVariable Integer chatId) throws NotYourChatException {
+    public List<MensajeDTO> getMensajesDe(@PathVariable Integer chatId) throws NotYourChatException {
         return chatService.getMensajesDe(chatId);
     }
 
     @GetMapping("/lastMessage/{chatId}")
-    public Mensaje getLastMessageFrom(@PathVariable Integer chatId) throws NotYourChatException {
+    public MensajeDTO getLastMessageFrom(@PathVariable Integer chatId) throws NotYourChatException {
         return chatService.getLastMessage(chatId);
     }
 
@@ -47,12 +47,12 @@ public class ChatRestController {
     }
 
     @GetMapping("/with/{userId}")
-    public Chat getChatOf(@PathVariable Integer userId) {
-        return chatService.findChatWith(userId);
+    public ChatDTO getChatOf(@PathVariable Integer userId) {
+        return new ChatDTO(chatService.findChatWith(userId));
     }
 
     @PostMapping("/sendto/{userId}")
-    public Mensaje sendNewMessage(@PathVariable Integer userId, @RequestBody Mensaje mensaje) throws NotYourChatException {
+    public MensajeDTO sendNewMessage(@PathVariable Integer userId, @RequestBody Mensaje mensaje) throws NotYourChatException {
         mensaje.setChat(chatService.findChatWith(userId));
         mensaje.setRemitente(userService.findCurrentUser());
         return chatService.guardarMensaje(mensaje);

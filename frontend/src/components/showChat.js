@@ -1,26 +1,43 @@
-import React, { forwardRef, useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { forwardRef, useState, useEffect, useRef } from "react";
 import tokenService from "../services/token.service";
-import useFetchState from "../util/useFetchState";
 import { Client } from "@stomp/stompjs";
 import "./Chat.css";
-import RenderContent from "./RenderContent";
 import MessageList from "./MessageList";
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
   const user = tokenService.getUser();
   const [stompClient, setStompClient] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [visible, setVisible] = useState(false);
-  const [chatUser, setChatUser] = useState(null);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const [mensajes, setMensajes] = useFetchState(
-    [],
-    `/api/v1/chat/${props.idChat}`,
-    jwt,
-    setMessage,
-    setVisible
-  );
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [mensajes, setMensajes] = useState([]);
+
+  function fetchMensajesIniciales() {
+    fetch('api/v1/chat/' + props.idChat, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 0) {
+            setMensajes(data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Hubo un problema al cargar los mensajes.");
+      });
+  }
+
+  useEffect(() => {
+    fetchMensajesIniciales();
+  }, []);
+
+
+
+
+
 
   const [mensaje, setMensaje] = useState("");
 
@@ -43,7 +60,7 @@ const Chat = forwardRef((props, ref) => {
     });
 
     cliente.onConnect = () => {
-      console.log("Conectado exitosamente a "+props.idChat);
+      console.log("Conectado exitosamente a " + props.idChat);
       cliente.subscribe(`/topic/chat/${props.idChat}`, (mensaje) => {
         console.log("Mensaje recibido: ", mensaje.body);
         const nuevoMensaje = JSON.parse(mensaje.body);
@@ -85,16 +102,19 @@ const Chat = forwardRef((props, ref) => {
         },
       });
       console.log("Mensaje enviado");
+
       setMensaje("");
+
     } else {
       console.error("STOMP aún no está listo o no está conectado");
     }
   };
 
+
   const handleEnviar = () => {
     evtEnviarMensaje();
   };
-  
+
   const handleRemoveFriend = (friendId) => {
     fetch(`/api/v1/jugador/isFriend/${friendId}`, {
       method: "DELETE",
@@ -114,14 +134,8 @@ const Chat = forwardRef((props, ref) => {
         alert("Hubo un problema al eliminar al amigo.");
       });
   };
- 
 
-  /*
-  const formatFecha = (fecha) => {
-    const date = new Date(fecha);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-  };
-*/
+
   return (
     <>
       <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
