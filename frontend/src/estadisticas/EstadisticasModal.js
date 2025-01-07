@@ -324,69 +324,75 @@ const EstadisticasModal = forwardRef((props, ref) => {
     };
 
 
-    const datosBurbujas = [
-        {
-            x: estadisticas.partidasA2, // Eje X: Partidas jugadas a 2 jugadores
-            y: estadisticas.partidasConFlor / estadisticas.partidasJugadas, // Eje Y: Proporción de partidas con flor
-            z: estadisticas.numeroFlores, // Tamaño: Cantidad de flores cantadas
-            name: 'Partidas a 2 jugadores'
-        },
-        {
-            x: estadisticas.partidasA4, // Eje X: Partidas jugadas a 4 jugadores
-            y: estadisticas.partidasConFlor / estadisticas.partidasJugadas, // Eje Y: Proporción de partidas con flor
-            z: estadisticas.numeroFlores , // Tamaño: Cantidad de flores cantadas dividida por 2
-            name: 'Partidas a 4 jugadores'
-        },
-        {
-            x: estadisticas.partidasA6, // Eje X: Partidas jugadas a 6 jugadores
-            y: estadisticas.partidasConFlor / estadisticas.partidasJugadas, // Eje Y: Proporción de partidas con flor
-            z: estadisticas.numeroFlores , // Tamaño: Cantidad de flores cantadas dividida por 3
-            name: 'Partidas a 6 jugadores'
-        }
-    ];
-    
-    const graficoBurbujas = {
-        chart: {
-            type: 'bubble',
-            plotBorderWidth: 1,
-            zoomType: 'xy',
-            backgroundColor: 'rgba(0, 0, 0, 0)'
-        },
+const victoriasEnPartidasConFlor = estadisticasAvanzadas.filter(item => item.conFlor && item.victorioso).length;
+const partidasConFlor = estadisticas.partidasConFlor;
+const floresCantadas = estadisticas.floresCantadas;
+
+
+const promedioFloresPorPartidaConFlor = partidasConFlor > 0 ? floresCantadas / partidasConFlor : 0;
+
+const datosBurbujas = [
+    {
+        x: partidasConFlor,
+        y: promedioFloresPorPartidaConFlor, 
+        z: floresCantadas, 
+        name: 'Partidas con Flor',
+        victorioso: victoriasEnPartidasConFlor 
+    }
+];
+
+
+const graficoBurbujas = {
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy',
+        backgroundColor: 'rgba(0, 0, 0, 0)'
+    },
+    title: {
+        text: 'Relación entre Partidas con Flor, Flores Cantadas y Victorias',
+        style: { color: '#ffffff' }
+    },
+    xAxis: {
         title: {
-            text: 'Relación entre Partidas con Flor y Flores Cantadas',
+            text: 'Total Partidas con Flor',
             style: { color: '#ffffff' }
         },
-        xAxis: {
-            title: {
-                text: 'Partidas Jugadas por Modalidad',
-                style: { color: '#ffffff' }
-            },
-            labels: {
-                style: { color: '#ffffff' }
-            }
+        labels: {
+            style: { color: '#ffffff' }
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Promedio de Flores Cantadas por Partida con Flor',
+            style: { color: '#ffffff' }
         },
-        yAxis: {
-            title: {
-                text: 'Proporción de Partidas con Flor',
-                style: { color: '#ffffff' }
-            },
-            labels: {
-                style: { color: '#ffffff' }
-            }
-        },
-        tooltip: {
-            pointFormat: 'Modalidad: {point.name}<br>' +
-                         'Partidas Jugadas: {point.x}<br>' +
-                         'Proporción Partidas con Flor: {point.y:.2f}<br>' +
-                         'Flores Cantadas: {point.z}'
-        },
-        series: [{
-            data: datosBurbujas,
+        labels: {
+            style: { color: '#ffffff' }
+        }
+    },
+    tooltip: {
+        pointFormat: 'Partidas con Flor: {point.x}<br>' +
+                     'Promedio de Flores Cantadas: {point.y:.2f}<br>' +
+                     'Total de Flores Cantadas: {point.z}<br>' +
+                     'Victorias en Partidas con Flor: {point.victorioso}'
+    },
+    series: [{
+        data: datosBurbujas.map(item => ({
+            x: item.x,
+            y: item.y,
+            z: item.z,
+            victorioso: item.victorioso,
             marker: {
+                fillColor: item.victorioso > 0 ? '#4caf50' : '#f44336', 
                 lineColor: '#ffffff'
             }
-        }]
-    };
+        })),
+        name: 'Relación Flor/Victoria',
+    }]
+};
+
+
     
 
     

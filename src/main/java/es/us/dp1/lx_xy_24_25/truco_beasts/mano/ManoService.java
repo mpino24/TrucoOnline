@@ -588,7 +588,7 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
                 break;
 
             default:
-                cantosEnvido(codigo, respuesta);
+                manoActual =cantosEnvido(codigo, respuesta);
                 break;
         }
     
