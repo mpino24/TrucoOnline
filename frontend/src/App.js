@@ -33,6 +33,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 }
 
 function App() {
+  const TIEMPO_CONEXION_SEGUNDOS = 30000; 
   const location = useLocation();
   const jwt = tokenService.getLocalAccessToken();
   const [validToken, setValidToken] = React.useState(false);
@@ -44,6 +45,23 @@ function App() {
     if (location.pathname !== "/login" && location.pathname !== "/register" && location.pathname !== "/") {
       navigate("/");
     }
+  }
+
+  function updateConnectionTime() {
+      fetch("/api/v1/profile/updateConnection", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }).then((response) => {
+        if (!response.ok) {
+          alert(response.statusText);
+        }else{
+          console.log("Tiempo de conexión actualizado");
+        }
+      }
+      );
   }
 
   useEffect(() => {
@@ -62,6 +80,12 @@ function App() {
           redirectToLogin();
         } else {
           setValidToken(true);
+          updateConnectionTime();
+          
+          const timer = setInterval(() => {
+            updateConnectionTime();
+          },TIEMPO_CONEXION_SEGUNDOS-1);
+          return () => clearInterval(timer);
 
         }
       }
@@ -69,30 +93,11 @@ function App() {
     } else {
       redirectToLogin();
     }
-
-
   }, []);
 
-  function connectUser() {
-    fetch(
-      "/api/v1/profile/connect",
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          alert("There was an error connecting the user");
-        }
-      })
-      .catch((message) => alert(message));
-  }
+
 
   if (jwt && validToken) {
-    connectUser();
     roles = getRolesFromJWT(jwt);
   }
 
@@ -141,30 +146,6 @@ function App() {
       </>
     );
   }
-
-  function disconnectUser() {
-    if (jwt && validToken) {
-      console.log("Disconnecting user");
-      fetch("/api/v1/profile/disconnect", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }).then((response) => {
-        if (!response.ok) {
-          alert(response.statusText);
-          alert("There was an error closing the session");
-        }
-      }
-      );
-    }
-  }
-
-  window.addEventListener('unload', function (event) {
-    disconnectUser();
-  });
-
 
   return (
     <div>

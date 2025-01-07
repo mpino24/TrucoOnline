@@ -33,7 +33,7 @@ public class JugadorDTO {
         this.firstName=j.getFirstName();
         this.lastName=j.getLastName();
         this.photo=j.getPhoto();
-        this.isConnected=j.getUser().getIsConnected();
+        this.isConnected=j.getUser().isConnected();
 
     }
     

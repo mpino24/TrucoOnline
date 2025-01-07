@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
+import java.time.LocalDateTime;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "appusers")
 public class User extends BaseEntity {
+	private static final long TIEMPO_CONEXION_SEGUNDOS= 30;
 
 	@Column(unique = true)
 	@NotNull
@@ -29,8 +32,7 @@ public class User extends BaseEntity {
 	Authorities authority;
 
 	@NotNull
-	@Column(columnDefinition = "boolean default false")
-	Boolean isConnected;
+	LocalDateTime lastConnection;
 
 	public Boolean hasAuthority(String auth) {
 		return authority.getAuthority().equals(auth);
@@ -43,6 +45,10 @@ public class User extends BaseEntity {
 				cond = true;
 		}
 		return cond;
+	}
+
+	public Boolean isConnected(){
+		return !this.lastConnection.isBefore(LocalDateTime.now().minusSeconds(TIEMPO_CONEXION_SEGUNDOS));
 	}
 
 	public User(){

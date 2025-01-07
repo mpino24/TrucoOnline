@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.auth;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,7 +61,7 @@ public class AuthServiceTests {
 			User playerUser = new User();
 			playerUser.setUsername("clinicOwnerTest");
 			playerUser.setPassword("clinicOwnerTest");
-			playerUser.setIsConnected(false);
+			playerUser.setLastConnection(LocalDateTime.now());
 			playerUser.setAuthority(authoritiesService.findByAuthority("PLAYER"));
 			userService.saveUser(playerUser);			
 		}
