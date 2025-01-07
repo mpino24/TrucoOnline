@@ -82,6 +82,12 @@ public class JugadorController {
             throw new ResourceNotFoundException("Jugador no encontrado");
         }
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteJugadorWithUserId(@PathVariable("userId") Integer userId) {
+        jugadorService.deleteJugadorByUserId(userId);
+        return new ResponseEntity<>(void.class, HttpStatus.OK);
+    }
     
     @PostMapping
     public ResponseEntity<Jugador> saveJugador(@RequestBody @Valid Jugador jugador, @Valid User user) {
