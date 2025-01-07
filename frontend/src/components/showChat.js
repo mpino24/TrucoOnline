@@ -140,7 +140,7 @@ const Chat = forwardRef((props, ref) => {
 
   return (
     <>
-      <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+      <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
         {props.player?.userName || "Cargando..."}
         {true && (
           <button
@@ -152,6 +152,9 @@ const Chat = forwardRef((props, ref) => {
               padding: "5px 10px",
               cursor: "pointer",
               fontSize: "14px",
+              position: "absolute",
+              right: "0", 
+              marginRight: "10px",
             }}
             onClick={() => setShowConfirmModal(true)}
           >
@@ -159,6 +162,7 @@ const Chat = forwardRef((props, ref) => {
           </button>
         )}
       </h1>
+      <hr></hr>
       <div
         style={{
           display: "flex",
@@ -166,6 +170,7 @@ const Chat = forwardRef((props, ref) => {
           justifyContent: "space-between",
           alignItems: "stretch",
           height: "85vh",
+          paddingBottom: "0px",
         }}
       >
      

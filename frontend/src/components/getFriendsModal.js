@@ -50,7 +50,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     Authorization: `Bearer ${jwt}`,
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -75,7 +75,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     Authorization: `Bearer ${jwt}`,
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -117,7 +117,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     Authorization: `Bearer ${jwt}`,
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -236,12 +236,11 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 }
                 {chatVisible &&
                     <>
-                        <hr></hr>
                         {chatId &&
-                        <Chat
-                            idChat={chatId}
-                            player={jugadorChat}
-                            setChatVisible={setChatVisible}
+                            <Chat
+                                idChat={chatId}
+                                player={jugadorChat}
+                                setChatVisible={setChatVisible}
                             />
                         }
                     </>
