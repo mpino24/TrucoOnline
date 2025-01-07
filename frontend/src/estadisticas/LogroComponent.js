@@ -7,22 +7,22 @@ const LogroComponent = ({ logro }) => {
     const nombre = logro.name;
     const descripcion = logro.descripcion;
     const urlImagen = logro.imagencita;
-    let valor = logro.valor
-    const oculto = logro.oculto
+    let valor = logro.valor;
+    const oculto = logro.oculto;
 
-    function convertirMetrica (metrica){
-        let res = metrica.toLowerCase()
-        if(res=== "numero_enganos"){ //Es el unico caso con ñ, asi que lo sustituimos así y listo
-            res = "numero_engaños"
+    function convertirMetrica(metrica) {
+        let res = metrica.toLowerCase();
+        if (res === "numero_enganos") {
+            res = "numero_engaños";
         }
-        res = res.replaceAll("_", " ")
-        res = res.charAt(0).toUpperCase() + res.slice(1)
-        
-        return res
+        res = res.replaceAll("_", " ");
+        res = res.charAt(0).toUpperCase() + res.slice(1);
+        return res;
     }
-    const metricaValor = convertirMetrica(logro.metrica)
-    if(logro.metrica=== "TIEMPO_JUGADO"){
-        valor = calcularTiempo(valor,0)
+
+    const metricaValor = convertirMetrica(logro.metrica);
+    if (logro.metrica === "TIEMPO_JUGADO") {
+        valor = calcularTiempo(valor, 0);
     }
     const resumen = `${metricaValor} es ${valor} o superior`;
 
@@ -36,6 +36,7 @@ const LogroComponent = ({ logro }) => {
         borderRadius: '10px',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         backgroundColor: 'rgba(255, 255, 255, 0)',
+        transition: 'transform 0.3s ease',
     };
 
     const imageWrapperStyle = {
@@ -43,13 +44,15 @@ const LogroComponent = ({ logro }) => {
         width: '150px',
         height: '150px',
         marginBottom: '10px',
+        overflow: 'hidden',
+        borderRadius: '10px',
     };
 
     const logroImageStyle = {
         width: '100%',
         height: '100%',
-        borderRadius: '10px',
         objectFit: 'cover',
+        transition: 'transform 0.3s ease',
     };
 
     const hoverOverlayStyle = {
@@ -79,7 +82,7 @@ const LogroComponent = ({ logro }) => {
         fontWeight: 'bold',
         color: '#FFFFFF',
         margin: '10px 0',
-        wordWrap: 'break-word', 
+        wordWrap: 'break-word',
         textAlign: 'center',
     };
 
@@ -87,7 +90,7 @@ const LogroComponent = ({ logro }) => {
         fontSize: '18px',
         color: '#FFFFFF',
         marginTop: '5px',
-        wordWrap: 'break-word', 
+        wordWrap: 'break-word',
         textAlign: 'center',
     };
 
@@ -97,12 +100,15 @@ const LogroComponent = ({ logro }) => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            <h4 style={nombreStyle}>{nombre}{logro.oculto && <span style={{ color: 'gold', marginLeft: '8px' }}>⭐</span>}</h4>
+            <h4 style={nombreStyle}>
+                {nombre}
+                {oculto && <span style={{ color: 'gold', marginLeft: '8px' }}>⭐</span>}
+            </h4>
             <div style={imageWrapperStyle}>
                 <img
                     src={urlImagen}
                     alt={resumen}
-                    style={logroImageStyle}
+                    style={{ ...logroImageStyle, transform: hovered ? 'scale(1.1)' : 'scale(1)' }}
                 />
                 <div style={hoverOverlayStyle}>
                     <small style={hoverTextStyle}>{resumen}</small>

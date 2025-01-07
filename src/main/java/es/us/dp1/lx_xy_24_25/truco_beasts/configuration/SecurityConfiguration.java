@@ -72,6 +72,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partida/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).authenticated() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).authenticated() 
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/manos/**")).authenticated()
 			.requestMatchers("/api/v1/profile/edit").authenticated()
 			.requestMatchers("/ws").permitAll()
 			.requestMatchers("/app/mensaje").permitAll()

@@ -1,8 +1,11 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -99,5 +102,29 @@ public class EstadisticasService {
         return res;
         
     }
+
+   public List<DatosPorPartida> getEstadisticasJugadorAvanzadas(Integer jugadorId) {
+    Optional<Jugador> j = jugadorRepository.findById(jugadorId);
+    if (j.isEmpty()) {
+        throw new ResourceNotFoundException("El jugador de ID " + jugadorId + " no fue encontrado");
+    }
+    List<Object[]> rawData = estadisticasRepository.findAllDatosPorPartidaByJugadorId(jugadorId);
+
+    if (rawData == null) {
+        throw new ResourceNotFoundException("Los datos por partida del jugador con ID " + jugadorId + " no fueron encontrados");
+    }
+
+    List<DatosPorPartida> result = rawData.stream()
+        .map(row -> new DatosPorPartida(
+            (Boolean) row[0],
+            (LocalDateTime) row[1],
+            (Boolean) row[2],
+            (Integer) row[3],
+            (Integer) row[4],
+            (Integer)row[5]))
+        .collect(Collectors.toList());
+
+    return result;
+}
 
 }

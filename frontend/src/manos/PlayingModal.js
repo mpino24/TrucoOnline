@@ -482,7 +482,7 @@ const PlayingModal = forwardRef((props, ref) => {
                         Cargando mano...  
                     </div>
                 )}
-                {console.log("------------------------FloresCantadas?-----------------------------"+mano?.floresCantadas)}
+
 
 
 
@@ -503,9 +503,11 @@ const PlayingModal = forwardRef((props, ref) => {
                                 zIndex: -1
                             }}
                         >
-                            <h3 className="player-heading">
+                            <h3 className="player-heading" >
                                 {typeof posicion  === 'object' ? "Viendo la partida..." : `Jugador: ${Number(posicion)}` }
+                                
                             </h3>
+                            <h3 className="turno-heading">{mano?.esperandoRespuesta&& mano?.jugadorTurno=== posicion ? "Tenés que responder": (mano?.jugadorTurno===posicion? "Es tu turno" : "No es tu turno") }</h3>
                         </div>
 
                         <h4 className={"puntos-nuestros"}>Nos:</h4>
@@ -821,8 +823,13 @@ const PlayingModal = forwardRef((props, ref) => {
                                             </button>
                                         </div>
                                     )}
+
+                                   
+                                        
+                                    
                                     </div>
                         )}
+                        
 
                         {/* Cartas Volteadas */}
                         <CartasVolteadas
@@ -836,6 +843,7 @@ const PlayingModal = forwardRef((props, ref) => {
 
             <div style={{ zIndex: 100000000000000 }}>
                 <Perfil game={game} posicion={posicion} />
+                
             </div>
         </>
     );

@@ -549,6 +549,14 @@
   position: fixed;
   animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
 }
+.turno-heading {
+  color: orange;
+  top: 2%;
+  right: 7%;
+  font-style: italic;
+  position: fixed;
+  animation: slighterSwirl 5s ease-in-out infinite, dropShadowGlow 3s ease-in-out infinite;
+}
 
 .puntos-nuestros {
   color: orange;
