@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,12 @@ public class EstadisticasController {
         User currentUser= userService.findCurrentUser();
         Integer jugadorId = jugadorService.findJugadorByUserId(currentUser.getId()).getId();
         return ResponseEntity.ok(estadisticasService.getEstadisticasJugador(jugadorId));
+    }
+    @GetMapping("/misEstadisticas/datosPorPartida")
+    public ResponseEntity<List<DatosPorPartida>> getMisEstadisticasAvanzado(){
+        User currentUser= userService.findCurrentUser();
+        Integer jugadorId = jugadorService.findJugadorByUserId(currentUser.getId()).getId();
+        return ResponseEntity.ok(estadisticasService.getEstadisticasJugadorAvanzadas(jugadorId));
     }
 
     @GetMapping("/estadisticasGlobales")

@@ -3,6 +3,8 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -46,6 +48,22 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
 
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL AND p.game.conFlor = true")
     Integer findPartidasConFlor(Integer jugadorId);
+
+    
+    @Query("SELECT " +
+    "CASE WHEN ((p.posicion%2 = 0 AND p.game.puntosEquipo1 > p.game.puntosEquipo2) OR " +
+    "(p.posicion%2 = 1 AND p.game.puntosEquipo2 > p.game.puntosEquipo1)) THEN true ELSE false END, " +
+    "p.game.instanteFin, " +
+    "p.game.conFlor, " +
+    "COALESCE(p.enganos, 0), " +
+    "COALESCE(p.atrapado, 0) " +
+    "FROM PartidaJugador p " +
+    "WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
+List<Object[]> findAllDatosPorPartidaByJugadorId(Integer jugadorId);
+
+
+
+
 
     //GLOBALES
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
