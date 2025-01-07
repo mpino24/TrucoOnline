@@ -126,7 +126,7 @@ public class JugadorService {
     }
 
     @Transactional()
-    public void addNewFriends(int userId, int amigoPlayerId) {
+    public void addNewFriends(int userId, int amigoPlayerId)  {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
         Optional<Jugador> amigoOpt = jugadorRepository.findById(amigoPlayerId);
         if (!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()) {
@@ -189,6 +189,10 @@ public class JugadorService {
             Jugador amigo = amigoOpt.get();
             if (jugador.getAmigos().contains(amigo)) {
                 if (!jugador.getId().equals(amigo.getId())) {
+
+                    Integer chatId = chatService.findChatWith(amigo.getId()).getId();
+                    chatService.eliminarChat(chatId);
+
                     jugador.getAmigos().remove(amigo);
                     amigo.getAmigos().remove(jugador);
                     jugadorRepository.save(jugador);
