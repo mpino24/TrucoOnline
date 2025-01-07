@@ -25,6 +25,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [totalLogros, setTotalLogros] = useFetchState(0, '/api/v1/logros/total', jwt, setMessage, setVisible);
     const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], '/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
     const [mostrarProgresion, setMostrarProgresion] = useState(false)
+    const [mostrarCorrelacion,setMostrarCorrelacion] =useState(false)
 
     const [roles, setRoles] = useState([]);
 
@@ -180,6 +181,9 @@ const EstadisticasModal = forwardRef((props, ref) => {
     function cambiarGraficoDeProgresion() {
         setMostrarProgresion(!mostrarProgresion);
     }
+    function cambiarGraficoDeCorrelacion() {
+        setMostrarCorrelacion(!mostrarCorrelacion);
+    }
 
 
     //PROGRESION VICTORIAS DERROTAS EN BASE AL TIEMPO
@@ -193,7 +197,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 defeats++;
             }
             return {
-                fecha: new Date(item.fecha), // Ensure fecha is a Date object
+                fecha: new Date(item.fecha), 
                 victories,
                 defeats
             };
@@ -244,6 +248,76 @@ const EstadisticasModal = forwardRef((props, ref) => {
         ]
     };
 
+
+    //Correlacion victorias con partidas con flor y engaños y derrotas con atrapados
+    const parsearDatosDeCorrelacion = (data) => {
+        return data.map((item) => ({
+            fecha: new Date(item.fecha),
+            victoriasFlorEngano: item.victorioso && item.conFlor ? item.enganos : 0,
+            derrotasAtrapados: !item.victorioso ? item.atrapados : 0,
+        }));
+    };
+    
+    const datosCorrelacion = parsearDatosDeCorrelacion(estadisticasAvanzadas);
+    
+    const graficoCorrelacion = {
+        chart: {
+            type: 'scatter',
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            zoomType: 'xy'
+        },
+        title: {
+            text: 'Correlación: Victorias y Derrotas',
+            style: { color: '#ffffff' }
+        },
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Fecha y Hora',
+                style: { color: '#ffffff' }
+            },
+            labels: {
+                style: { color: '#ffffff' }
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Cantidad',
+                style: { color: '#ffffff' }
+            },
+            labels: {
+                style: { color: '#ffffff' }
+            }
+        },
+        tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: 'Fecha: {point.x:%e %b %Y, %H:%M}<br>Valor: {point.y}'
+        },
+        series: [
+            {
+                name: 'Victorias con Flor y Engaños',
+                data: datosCorrelacion
+                    .filter(item => item.victoriasFlorEngano > 0)
+                    .map(item => [item.fecha.getTime(), item.victoriasFlorEngano]),
+                color: '#4caf50',
+                marker: {
+                    symbol: 'circle',
+                    radius: 5
+                }
+            },
+            {
+                name: 'Derrotas con Atrapados',
+                data: datosCorrelacion
+                    .filter(item => item.derrotasAtrapados > 0)
+                    .map(item => [item.fecha.getTime(), item.derrotasAtrapados]),
+                color: '#f44336',
+                marker: {
+                    symbol: 'triangle',
+                    radius: 5
+                }
+            }
+        ]
+    };
 
 
 
@@ -400,9 +474,15 @@ const EstadisticasModal = forwardRef((props, ref) => {
                                 highcharts={Highcharts}
                                 options={globalModoAraña}
                             />}
+                            <div style={{display:'flex', flexDirection:'row'}}>
                             {mostrarProgresion && <HighchartsReact
                                 highcharts= {Highcharts}
                             options={graficoProgresion}/>}
+                            {mostrarCorrelacion && <HighchartsReact
+                                highcharts= {Highcharts}
+                                options={graficoCorrelacion}/>}
+                            </div>
+                            
                         </div>
                         {!graficoComparativo && <button
                             onClick={() => cambiarGrafico()}
@@ -478,6 +558,31 @@ const EstadisticasModal = forwardRef((props, ref) => {
                             }}
                         >
                             {mostrarProgresion ? "Ocultar Progresión" : "Mostrar Progresión"}
+                        </button>
+                        <button
+                            onClick={cambiarGraficoDeCorrelacion}
+                            style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#ff5722',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '25px',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.3s, transform 0.3s',
+                                fontSize: '16px',
+                                marginTop: '10px',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#e64a19';
+                                e.target.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#ff5722';
+                                e.target.style.transform = 'scale(1)';
+                            }}
+                        >
+                            {mostrarCorrelacion ? "Ocultar Correlacion" : "Mostrar Correlacion"}
                         </button>
                     </div>
                     <div style={{ display: 'flex', width: '100%', height: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>

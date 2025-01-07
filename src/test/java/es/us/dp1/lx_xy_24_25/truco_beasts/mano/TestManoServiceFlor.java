@@ -112,6 +112,8 @@ public class TestManoServiceFlor {
         
         cartasDisponibles.add(jugador, cartasTotales);
         mano.setCartasDisp(cartasDisponibles);
+        mano.setCartasNoBorradas(cartasDisponibles);
+
         // Ronda = 1
         mano.setRondaActual(1);
 
@@ -158,6 +160,7 @@ public class TestManoServiceFlor {
         
         cartasDisponibles.add(jugador, cartasTotales);
         mano.setCartasDisp(cartasDisponibles);
+        mano.setCartasNoBorradas(cartasDisponibles);
      
         mano.setRondaActual(1);
 

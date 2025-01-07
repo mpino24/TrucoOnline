@@ -45,7 +45,8 @@ public class Mano {
     private Cantos ultimoMensaje;
 
     private Boolean estaMintiendo= false; //PARA LAS ESTADISTICAS
-    private List<Integer> envidosNoBorrados; //necesario para estadisticas
+
+    List<List<Carta>> cartasNoBorradas;
 
     private final Integer constanteEnvido=20;
     private final Integer puntosMaximosDelTruco = 4;
@@ -136,7 +137,7 @@ public class Mano {
         //    - puntosEnvido == 0 no se ha ido mas allá del primer envido
        
         if (getPuntosTruco() == 1 && getPuntosEnvido() == 0 && getRondaActual()==1 && partida.getConFlor()) {
-            List<Carta> cartasJugadorActual = getCartasDisp().get(getJugadorTurno());
+            List<Carta> cartasJugadorActual = getCartasNoBorradas().get(getJugadorTurno()); //TIENE QUE SER OTRA VARIABLE SI SE VAN A COMPROBAR SIEMPRE, YA QUE CARTAS DISPONIBLES SE VA BORRANDO
             
             if(tiene3CartasMismoPalo(cartasJugadorActual)){
                 setTresMismoPalo(true);
@@ -170,7 +171,8 @@ public class Mano {
     
     public Integer getTantoDe1Jugador(Integer posicion){ //PARA LAS ESTADISTICAS
         Integer res = 0;
-        res = getEnvidosNoBorrados().get(posicion);
+        Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasNoBorradas.get(posicion));
+        res = getMaxPuntuacion(diccCartasPaloJugador);
         return res;
     }
 
@@ -178,14 +180,13 @@ public class Mano {
 
      public List<Integer> crearListaTantosCadaJugador(){ 
         List<Integer> listaEnvidosCadaJugador = new ArrayList<>();
-        List<Integer> envidosParaEstadisticas = new ArrayList<>();// ESTADISTICAS
+
         for(int i=0; i<getCartasDisp().size(); i++){
             Map<Palo, List<Carta>> diccCartasPaloJugador = agrupaCartasPalo(cartasDisp.get(i));
             Integer sumaJugador= getMaxPuntuacion(diccCartasPaloJugador);
             listaEnvidosCadaJugador.add(i, sumaJugador);
-            envidosParaEstadisticas.add(i,sumaJugador);// ESTADISTICAS
+
         }
-        setEnvidosNoBorrados(envidosParaEstadisticas); // ESTADISTICAS
 
         Integer jugadorMano = getJugadorTurno(); //Como esta funcion se llama al principio, será el mano
         List<Integer> nuevaLista = new ArrayList<>(listaEnvidosCadaJugador);
@@ -219,6 +220,9 @@ public class Mano {
         // 1) Calculamos la puntuación "de Flor" para cada jugador.
         List<Integer> listaFlorCadaJugador = new ArrayList<>();
         List<Boolean> listaTieneFlor=new ArrayList<>();
+        if(getCartasNoBorradas()==null){
+            setCartasNoBorradas(getCartasDisp());
+        }
         for (int i = 0; i < getCartasDisp().size(); i++) {
             List<Carta> cartasJugador = getCartasDisp().get(i);
             
@@ -236,6 +240,7 @@ public class Mano {
                 listaFlorCadaJugador.add(0);
             }
         }
+    
         setListaTienenFlores(listaTieneFlor);
         // 2) Copiamos la lista original para manipular
         //    qué jugadores quedan con su puntaje o en null,

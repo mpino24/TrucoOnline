@@ -75,6 +75,8 @@ public class TestManoFlor {
         mano.getCartasDisp().get(jugador).add(c1);
         mano.getCartasDisp().get(jugador).add(c2);
         mano.getCartasDisp().get(jugador).add(c3);
+
+        mano.setCartasNoBorradas(mano.getCartasDisp());
     }
 
     private void asignarCartasDistintoPalo(Integer jugador) {
@@ -97,6 +99,7 @@ public class TestManoFlor {
         mano.getCartasDisp().get(jugador).add(c1);
         mano.getCartasDisp().get(jugador).add(c2);
         mano.getCartasDisp().get(jugador).add(c3);
+        mano.setCartasNoBorradas(mano.getCartasDisp());
     }
 
     // ----------------------------
