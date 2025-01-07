@@ -13,7 +13,12 @@ const EquipoView = forwardRef((props, ref) => {
         fetch(
             "/api/v1/partidajugador/changeteam?userId=" + usuario.id,
             {
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => {
@@ -42,10 +47,18 @@ const EquipoView = forwardRef((props, ref) => {
 
     }
 
+    function getPlayerKey(player) {
+        let res = player.id;
+        if(player.isConnected===false){
+            res+=props.jugadores.length;
+        }
+        return res;
+    }
+
     function getJugadoresList() {
         const jugadoresList = props.jugadores.map(j => j.player).map((player) => {
             return (
-                <div key={player.id} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+                <div key={getPlayerKey(player)} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
                     {props.gameCreator && props.gameCreator.id === usuario.id && player.id !== usuario.id &&
                         <AiOutlineUserDelete style={{ width: 40, height: 40, cursor: "pointer" }} onClick={()=> handleExpelPlayer(player.id)} />
                     }
@@ -58,6 +71,7 @@ const EquipoView = forwardRef((props, ref) => {
                     <JugadorView
                         jugador={player}
                         isFriend={false}
+                        interfaz={'partida'}
                     />
                 </div>
             )

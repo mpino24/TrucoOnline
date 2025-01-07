@@ -75,7 +75,7 @@ public class PartidaJugadorRepositoryTest {
     public void allJugadoresPartida(){
         List<PartidaJugadorView> res= pjRepo.findAllJugadoresPartida("ABCDE");
         assertEquals(2, res.size());
-        assertEquals("http://localhost:8080/resources/images/jaguar.jpg", res.get(0).getFoto());
+        assertEquals("http://localhost:8080/resources/images/jorge.jpg", res.get(0).getFoto());
     }
     
     @Test
@@ -95,4 +95,40 @@ public class PartidaJugadorRepositoryTest {
         Optional<Partida> res= pjRepo.findPartidaByCodigoPartida("SDGER");
         assertTrue(res.isEmpty());
     } 
+
+    @Test
+    public void partidaJugadorByCodigoAndPosicion(){
+        PartidaJugador res = pjRepo.findPartidaJugadorByCodigoPartidaAndPosicionJugador("WWWWW", 0);
+        PartidaJugador expected = pjRepo.findById(0).get();
+        assertEquals(expected, res);
+    }
+    @Test
+    public void partidaJugadorByCodigoAndPosicionPartidaCon2Jugadores(){
+        PartidaJugador res = pjRepo.findPartidaJugadorByCodigoPartidaAndPosicionJugador("ABCDE", 0);
+        PartidaJugador expected = pjRepo.findById(1).get();
+        assertEquals(expected, res);
+
+        PartidaJugador res2 = pjRepo.findPartidaJugadorByCodigoPartidaAndPosicionJugador("ABCDE", 1);
+        PartidaJugador expected2 = pjRepo.findById(2).get();
+        assertEquals(expected2, res2);
+    }
+
+    @Test
+    public void partidaJugadorByCodigoAndPosicionBadCodigo(){
+        PartidaJugador res = pjRepo.findPartidaJugadorByCodigoPartidaAndPosicionJugador("AAAAAAAAAAAAAAAAAAA", 0);
+      
+        assertEquals(null, res);
+    }
+    @Test
+    public void partidaJugadorByCodigoAndPosicionBadPosition(){
+        PartidaJugador res = pjRepo.findPartidaJugadorByCodigoPartidaAndPosicionJugador("WWWWW", 8);
+      
+        assertEquals(null, res);
+    }
+    @Test
+    public void partidaJugadorByCodigoAndPosicionBadPositionBadCodigo(){
+        PartidaJugador res = pjRepo.findPartidaJugadorByCodigoPartidaAndPosicionJugador("AAAAAAAAAAAAAAAAAAA", 8);
+      
+        assertEquals(null, res);
+    }
 }

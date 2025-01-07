@@ -45,7 +45,12 @@ const GetFriendsModal = forwardRef((props, ref) => {
         fetch(
             `/api/v1/jugador/amigos?userId=` + user.id,
             {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())
@@ -65,7 +70,12 @@ const GetFriendsModal = forwardRef((props, ref) => {
         fetch(
             "/api/v1/jugador/" + userName,
             {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())
@@ -105,7 +115,9 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                }
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())

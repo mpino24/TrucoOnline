@@ -11,17 +11,32 @@ import useFetchState from "../../util/useFetchState";
 const jwt = tokenService.getLocalAccessToken();
 
 export default function UserEditAdmin() {
-  const emptyItem = {
+  const emptyUser = {
     id: null,
     username: "",
     password: "",
     authority: null,
   };
+  const emptyPlayer = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    photo: ""
+  }
+  const [newPassword, setNewPassword] = useState();
   const id = getIdFromUrl(2);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [player, setPlayer] = useFetchState(
+    emptyPlayer,
+    `/api/v1/jugador/edit/${id}`,
+    jwt,
+    setMessage,
+    setVisible,
+    id
+  );
   const [user, setUser] = useFetchState(
-    emptyItem,
+    emptyUser,
     `/api/v1/users/${id}`,
     jwt,
     setMessage,
@@ -30,7 +45,7 @@ export default function UserEditAdmin() {
   );
   const auths = useFetchData(`/api/v1/users/authorities`, jwt);
 
-  function handleChange(event) {
+  function handleUserChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -40,9 +55,20 @@ export default function UserEditAdmin() {
     } else setUser({ ...user, [name]: value });
   }
 
+  function handlePlayerChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    setPlayer({...player, [name]: value})
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
 
+    if (newPassword) {
+      user.password = newPassword;
+  }
+  
     fetch("/api/v1/users" + (user.id ? "/" + user.id : ""), {
       method: user.id ? "PUT" : "POST",
       headers: {
@@ -57,9 +83,29 @@ export default function UserEditAdmin() {
         if (json.message) {
           setMessage(json.message);
           setVisible(true);
-        } else window.location.href = "/users";
+        } else {
+          const userId = json.id || user.id;
+          return fetch(`/api/v1/jugador/edit/${userId}`, {
+            method: user.id ? "PUT" : "POST",
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({...player, userId: user.id}),
+          });
+        }
       })
-      .catch((message) => alert(message));
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message) {
+          setMessage(json.message);
+          setVisible(true);
+        } else {
+          window.location.href = "/users";
+        }
+      })
+      .catch((error) => alert(error.message));
   }
 
   const modal = getErrorModal(setVisible, visible, message);
@@ -69,15 +115,20 @@ export default function UserEditAdmin() {
     </option>
   ));
 
+  function handlePasswordChange(event) {
+    setNewPassword(event.target.value);
+  }
+
   return (
+    <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
     <div className="auth-page-container">
-      {<h2>{user.id ? "Edit User" : "Add User"}</h2>}
+      {<h2>{user.id ? "Editar usuario" : "Añadir usuario"}</h2>}
       {modal}
       <div className="auth-form-container">
         <Form onSubmit={handleSubmit}>
           <div className="custom-form-input">
             <Label for="username" className="custom-form-input-label">
-              Username
+              Nombre de usuario
             </Label>
             <Input
               type="text"
@@ -85,26 +136,77 @@ export default function UserEditAdmin() {
               name="username"
               id="username"
               value={user.username || ""}
-              onChange={handleChange}
+              onChange={handleUserChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+          <Label for="password" className="custom-form-input-label">Contraseña</Label>
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              value={newPassword}
+              onChange={handlePasswordChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="firstName" className="custom-form-input-label">
+              FirstName
+            </Label>
+            <Input
+              type="text"
+              required
+              name="firstName"
+              id="firstName"
+              value={player.firstName || ""}
+              onChange={handlePlayerChange}
               className="custom-input"
             />
           </div>
           <div className="custom-form-input">
             <Label for="lastName" className="custom-form-input-label">
-              Password
+              LastName
             </Label>
             <Input
-              type="password"
+              type="text"
               required
-              name="password"
-              id="password"
-              value={user.password || ""}
-              onChange={handleChange}
+              name="lastName"
+              id="lastName"
+              value={player.lastName || ""}
+              onChange={handlePlayerChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="email" className="custom-form-input-label">
+              Email
+            </Label>
+            <Input
+              type="text"
+              name="email"
+              id="email"
+              value={player.email || ""}
+              onChange={handlePlayerChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="photo" className="custom-form-input-label">
+              Foto
+            </Label>
+            <Input
+              type="text"
+              name="photo"
+              id="photo"
+              value={player.photo || ""}
+              onChange={handlePlayerChange}
               className="custom-input"
             />
           </div>
           <Label for="authority" className="custom-form-input-label">
-            Authority
+            Autoridad
           </Label>
           <div className="custom-form-input">
             {user.id ? (
@@ -114,7 +216,7 @@ export default function UserEditAdmin() {
                 name="authority"
                 id="authority"
                 value={user.authority?.id || ""}
-                onChange={handleChange}
+                onChange={handleUserChange}
                 className="custom-input"
               >
                 <option value="">None</option>
@@ -127,7 +229,7 @@ export default function UserEditAdmin() {
                 name="authority"
                 id="authority"
                 value={user.authority?.id || ""}
-                onChange={handleChange}
+                onChange={handleUserChange}
                 className="custom-input"
               >
                 <option value="">None</option>
@@ -136,17 +238,18 @@ export default function UserEditAdmin() {
             )}
           </div>
           <div className="custom-button-row">
-            <button className="auth-button">Save</button>
+            <button className="auth-button">Guardar</button>
             <Link
               to={`/users`}
               className="auth-button"
               style={{ textDecoration: "none" }}
             >
-              Cancel
+              Cancelar
             </Link>
           </div>
         </Form>
       </div>
+    </div>
     </div>
   );
 }

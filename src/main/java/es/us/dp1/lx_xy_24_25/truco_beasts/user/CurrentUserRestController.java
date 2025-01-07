@@ -2,13 +2,12 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
 import java.security.Principal;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +15,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.PerfilJugadorUsuario;
-import es.us.dp1.lx_xy_24_25.truco_beasts.util.RestPreconditions;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,14 +29,15 @@ public class CurrentUserRestController {
     
     private final UserService userService;
     private final JugadorService jugadorService;
+    private final PartidaJugadorService partidaJugadorService;
     private final static String relog = "RELOG";
     private final static String home = "HOME";
 
 	@Autowired
-	public CurrentUserRestController(UserService userService, JugadorService jugadorService)   {
+	public CurrentUserRestController(UserService userService, JugadorService jugadorService, PartidaJugadorService partidaJugadorService) {
 		this.userService = userService;
         this.jugadorService=jugadorService;
-
+        this.partidaJugadorService=partidaJugadorService;
 	}
 
     @GetMapping
@@ -81,7 +81,20 @@ public class CurrentUserRestController {
 		return ResponseEntity.ok(new MessageResponse("¡Tu cuenta fue borrada con éxito!"));
 		
 	}
-    
 
+    @PatchMapping("/disconnect")
+    public ResponseEntity<?> disconnect() {
+        User user = userService.findCurrentUser();
+        userService.updateConnection(user.getId(),false);
+    
+        return ResponseEntity.ok(new MessageResponse("¡Desconexión exitosa!"));
+    }
+
+    @PatchMapping("/connect")
+    public ResponseEntity<?> connect() {
+        User user = userService.findCurrentUser();
+        userService.updateConnection(user.getId(),true);
+        return ResponseEntity.ok(new MessageResponse("Conexión exitosa!"));
+    }
 
 }

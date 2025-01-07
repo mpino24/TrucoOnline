@@ -159,14 +159,13 @@ const Chat = forwardRef((props, ref) => {
       </h1>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignItems: "stretch",
-          height: "85vh",
+          flexGrow: 1,
+          overflowY: "auto",
+          padding: "10px",
+          
         }}
       >
-        {/* Aquiiiiiii*/}
+
         <MessageList mensajes={mensajes} userId={user.id} />
         <div className="input-container">
           <input
@@ -185,6 +184,7 @@ const Chat = forwardRef((props, ref) => {
             Enviar
           </button>
         </div>
+
       </div>
       {showConfirmModal && (
         <div

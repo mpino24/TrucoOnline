@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,29 @@ public class JugadorController {
     @GetMapping
     public ResponseEntity<JugadorDTO> findJugadorByUserId(@RequestParam(required=true) String userId) {
         return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+    }
+
+    @GetMapping("/edit/{userId}")
+    public ResponseEntity<JugadorDTO> findJugadorByUserIdEdit(@PathVariable("userId") Integer userId) {
+        return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+    }
+
+    @PutMapping("/edit/{userId}")
+    public ResponseEntity<Jugador> updateJugadorByUserIdEdit( @PathVariable("userId") Integer userId, 
+    @RequestBody @Valid Jugador jugador) {
+        Jugador res = jugadorService.updateJugador(jugador, userService.findUser(userId));
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<Jugador> saveJugadorEdit(@RequestBody @Valid Jugador jugador, @RequestParam Integer userId) {
+        User user = userService.findUser(userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("Usuario no encontrado");
+        }
+        jugador.setUser(user);
+        Jugador savedJugador = jugadorService.saveJugador(jugador);
+        return new ResponseEntity<>(savedJugador, HttpStatus.OK);
     }
 
     @GetMapping("/amigos")

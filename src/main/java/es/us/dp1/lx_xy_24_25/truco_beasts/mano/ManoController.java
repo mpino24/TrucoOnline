@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.FlorException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 
 
@@ -74,5 +75,18 @@ public class ManoController {
     public ResponseEntity<Cantos> patchResponderEnvido(@PathVariable String codigo, @PathVariable Cantos cantoEnvido) throws EnvidoException {
         manoService.responderEnvido(codigo, cantoEnvido);
         return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
+    }
+    @PatchMapping("/cantarFlor/{cantoFlor}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Cantos> patchCantarFlor(@PathVariable String codigo, @PathVariable Cantos cantoFlor) throws FlorException {
+        manoService.cantosFlor(codigo, cantoFlor);
+        return new ResponseEntity<>(cantoFlor, HttpStatus.OK);
+    }
+
+    @PatchMapping("/responderFlor/{cantoFlor}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Cantos> patchResponderFlor(@PathVariable String codigo, @PathVariable Cantos cantoFlor) throws FlorException {
+        manoService.responderFlor(codigo, cantoFlor);
+        return new ResponseEntity<>(cantoFlor, HttpStatus.OK);
     }
 }

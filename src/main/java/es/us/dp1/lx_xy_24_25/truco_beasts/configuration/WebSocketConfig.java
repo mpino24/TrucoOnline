@@ -1,4 +1,4 @@
-package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
+package es.us.dp1.lx_xy_24_25.truco_beasts.configuration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;

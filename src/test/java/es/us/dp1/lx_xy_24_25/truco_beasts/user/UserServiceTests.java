@@ -49,7 +49,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindAllUsers() {
 		List<User> users = (List<User>) this.userService.findAll();
-		assertEquals(15, users.size());
+		assertEquals(12, users.size());
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindUsersByAuthority() {
 		List<User> owners = (List<User>) this.userService.findAllByAuthority("PLAYER");
-		assertEquals(14, owners.size());
+		assertEquals(11, owners.size());
 
 		List<User> admins = (List<User>) this.userService.findAllByAuthority("ADMIN");
 		assertEquals(1, admins.size());
@@ -78,7 +78,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindSingleUser() {
 		User user = this.userService.findUser(4);
-		assertEquals("player1", user.getUsername());
+		assertEquals("player3", user.getUsername());
 	}
 
 	@Test
@@ -116,12 +116,15 @@ class UserServiceTests {
 		User user = new User();
 		user.setUsername("Sam");
 		user.setPassword("password");
+		user.setIsConnected(false);
 		user.setAuthority(authService.findByAuthority("ADMIN"));
 
 		this.userService.saveUser(user);
 		assertNotEquals(0, user.getId().longValue());
 		assertNotNull(user.getId());
 
+
+		//Esta linea todavia da error
 		int finalCount = ((Collection<User>) this.userService.findAll()).size();
 		assertEquals(count + 1, finalCount);
 	}

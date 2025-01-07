@@ -35,6 +35,8 @@ function AppNavbar() {
         }
     })
 
+
+
     function handleClick() {
         if (jwt) {
             fetch(
