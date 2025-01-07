@@ -26,6 +26,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], '/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
     const [mostrarProgresion, setMostrarProgresion] = useState(false)
     const [mostrarCorrelacion,setMostrarCorrelacion] =useState(false)
+    const [mostrarBurbujas,setMostrarBurbujas] =useState(false)
 
     const [roles, setRoles] = useState([]);
 
@@ -184,6 +185,9 @@ const EstadisticasModal = forwardRef((props, ref) => {
     function cambiarGraficoDeCorrelacion() {
         setMostrarCorrelacion(!mostrarCorrelacion);
     }
+    function cambiarGraficoDeBurbujas() {
+        setMostrarBurbujas(!mostrarBurbujas);
+    }
 
 
     //PROGRESION VICTORIAS DERROTAS EN BASE AL TIEMPO
@@ -249,11 +253,11 @@ const EstadisticasModal = forwardRef((props, ref) => {
     };
 
 
-    //Correlacion victorias con partidas con flor y engaños y derrotas con atrapados
+    //Correlacion victorias con engaños y derrotas con atrapados
     const parsearDatosDeCorrelacion = (data) => {
         return data.map((item) => ({
             fecha: new Date(item.fecha),
-            victoriasFlorEngano: item.victorioso && item.conFlor ? item.enganos : 0,
+            victoriasEnganos: item.victorioso ? item.enganos : 0,
             derrotasAtrapados: !item.victorioso ? item.atrapados : 0,
         }));
     };
@@ -295,10 +299,10 @@ const EstadisticasModal = forwardRef((props, ref) => {
         },
         series: [
             {
-                name: 'Victorias con Flor y Engaños',
+                name: 'Victorias con Engaños',
                 data: datosCorrelacion
-                    .filter(item => item.victoriasFlorEngano > 0)
-                    .map(item => [item.fecha.getTime(), item.victoriasFlorEngano]),
+                    .filter(item => item.victoriasEnganos > 0)
+                    .map(item => [item.fecha.getTime(), item.victoriasEnganos]),
                 color: '#4caf50',
                 marker: {
                     symbol: 'circle',
@@ -306,7 +310,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 }
             },
             {
-                name: 'Derrotas con Atrapados',
+                name: 'Derrotas siendo atrapado',
                 data: datosCorrelacion
                     .filter(item => item.derrotasAtrapados > 0)
                     .map(item => [item.fecha.getTime(), item.derrotasAtrapados]),
@@ -320,6 +324,73 @@ const EstadisticasModal = forwardRef((props, ref) => {
     };
 
 
+    const datosBurbujas = [
+        {
+            x: estadisticas.partidasA2, // Eje X: Partidas jugadas a 2 jugadores
+            y: estadisticas.partidasConFlor / estadisticas.partidasJugadas, // Eje Y: Proporción de partidas con flor
+            z: estadisticas.numeroFlores, // Tamaño: Cantidad de flores cantadas
+            name: 'Partidas a 2 jugadores'
+        },
+        {
+            x: estadisticas.partidasA4, // Eje X: Partidas jugadas a 4 jugadores
+            y: estadisticas.partidasConFlor / estadisticas.partidasJugadas, // Eje Y: Proporción de partidas con flor
+            z: estadisticas.numeroFlores , // Tamaño: Cantidad de flores cantadas dividida por 2
+            name: 'Partidas a 4 jugadores'
+        },
+        {
+            x: estadisticas.partidasA6, // Eje X: Partidas jugadas a 6 jugadores
+            y: estadisticas.partidasConFlor / estadisticas.partidasJugadas, // Eje Y: Proporción de partidas con flor
+            z: estadisticas.numeroFlores , // Tamaño: Cantidad de flores cantadas dividida por 3
+            name: 'Partidas a 6 jugadores'
+        }
+    ];
+    
+    const graficoBurbujas = {
+        chart: {
+            type: 'bubble',
+            plotBorderWidth: 1,
+            zoomType: 'xy',
+            backgroundColor: 'rgba(0, 0, 0, 0)'
+        },
+        title: {
+            text: 'Relación entre Partidas con Flor y Flores Cantadas',
+            style: { color: '#ffffff' }
+        },
+        xAxis: {
+            title: {
+                text: 'Partidas Jugadas por Modalidad',
+                style: { color: '#ffffff' }
+            },
+            labels: {
+                style: { color: '#ffffff' }
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Proporción de Partidas con Flor',
+                style: { color: '#ffffff' }
+            },
+            labels: {
+                style: { color: '#ffffff' }
+            }
+        },
+        tooltip: {
+            pointFormat: 'Modalidad: {point.name}<br>' +
+                         'Partidas Jugadas: {point.x}<br>' +
+                         'Proporción Partidas con Flor: {point.y:.2f}<br>' +
+                         'Flores Cantadas: {point.z}'
+        },
+        series: [{
+            data: datosBurbujas,
+            marker: {
+                lineColor: '#ffffff'
+            }
+        }]
+    };
+    
+
+    
+    
 
 
 
@@ -481,6 +552,12 @@ const EstadisticasModal = forwardRef((props, ref) => {
                             {mostrarCorrelacion && <HighchartsReact
                                 highcharts= {Highcharts}
                                 options={graficoCorrelacion}/>}
+                            {mostrarCorrelacion && <HighchartsReact
+                                highcharts= {Highcharts}
+                                options={graficoCorrelacion}/>}
+                            {mostrarBurbujas && <HighchartsReact
+                                highcharts= {Highcharts}
+                                options={graficoBurbujas}/>}
                             </div>
                             
                         </div>
@@ -583,6 +660,31 @@ const EstadisticasModal = forwardRef((props, ref) => {
                             }}
                         >
                             {mostrarCorrelacion ? "Ocultar Correlacion" : "Mostrar Correlacion"}
+                        </button>
+                        <button
+                            onClick={cambiarGraficoDeBurbujas}
+                            style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#ff5722',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '25px',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.3s, transform 0.3s',
+                                fontSize: '16px',
+                                marginTop: '10px',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#e64a19';
+                                e.target.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#ff5722';
+                                e.target.style.transform = 'scale(1)';
+                            }}
+                        >
+                            {mostrarBurbujas ? "Ocultar Relacion de Flores" : "Mostrar Relacion de Flores"}
                         </button>
                     </div>
                     <div style={{ display: 'flex', width: '100%', height: '90%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
