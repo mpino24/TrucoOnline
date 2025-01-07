@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -53,6 +54,11 @@ public class ChatService {
 
     public List<User> findUsersByChat(Integer chatId){
         return chatRepository.findUsersByChat(chatId);
+    }
+
+    @Transactional
+    public void eliminarChat(Integer chatId){
+        chatRepository.deleteById(chatId);
     }
 
 

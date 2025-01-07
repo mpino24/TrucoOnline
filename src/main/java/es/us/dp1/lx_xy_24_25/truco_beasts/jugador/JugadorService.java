@@ -126,7 +126,7 @@ public class JugadorService {
     }
 
     @Transactional()
-    public void addNewFriends(int userId, int amigoPlayerId) {
+    public void addNewFriends(int userId, int amigoPlayerId)  {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
         Optional<Jugador> amigoOpt = jugadorRepository.findById(amigoPlayerId);
         if (!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()) {
