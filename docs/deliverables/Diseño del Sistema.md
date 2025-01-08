@@ -78,6 +78,7 @@ Describir porqué era interesante aplicar el patrón.
 Se ha utilizado el patrón estrategia principalmente en la lógica del canto truco. Esta lógica se utiliza en el juego para aumentar la apuesta de modo que tenemos un cante y una respuesta que se irán sucediendo hasta la finalización de esta subtrama del juego. Las posibles respuestas las encontramos en la clase enumerado Cantos y pueden ser Retruco, Vale cuatro, Envido, Quiero y No quiero. En función de las respuestas, el jugador que responde tendrá unas posibilidades u otras dependiendo del momento en el que se encuentre la subtrama de modo que, según la respuesta, el sistema se comporta de una forma u otra ofreciendo las respuestas y la lógica correspondientes.
 
 Para la realización del patrón se han debido crear el paquete patronEstrategiaTruco donde se han creado las siguientes clases:
+
         Clases para poder realizar la conversión de Respuestas y Cantos y poder aplicar la lógica correspondiente de cada Canto o Respuesta cuando sea utilizada.
                 - CoverterRespuestaTruco
                 - ConverterTruco
