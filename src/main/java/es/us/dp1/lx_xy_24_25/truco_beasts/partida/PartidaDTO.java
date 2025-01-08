@@ -12,11 +12,18 @@ public class PartidaDTO {
     private String creador;
     @NotNull
     private String participantes;
+    @NotNull
+    private String tipo;
+    @NotNull
+    private String visibilidad;
+
     public PartidaDTO() {
     }
-    public PartidaDTO(String codigo, String creador, String participantes) {
+    public PartidaDTO(String codigo, String creador, String participantes, String tipo, String visibilidad) {
         this.codigo = codigo;
         this.creador = creador;
         this.participantes = participantes;
+        this.tipo = tipo;
+        this.visibilidad = visibilidad;
     }
 }

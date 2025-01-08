@@ -13,7 +13,6 @@ import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
 import AdminHome from "./admin/AdminHome";
 import PartidasAdmin from "./admin/partidas/PartidasAdmin";
-import PartidasTerminadasAdmin from "./admin/partidas/PartidasTerminadasAdmin";
 import EstadisticasAdmin from "./admin/estadisticas/EstadisticasAdmin";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
@@ -117,7 +116,6 @@ function App() {
           <Route path="/users" element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
           <Route path="/users/:username" element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
           <Route path="/admin/partidas" element={<PrivateRoute><PartidasAdmin /></PrivateRoute>} />
-          <Route path="/admin/partidas/terminadas" element={<PrivateRoute><PartidasTerminadasAdmin /></PrivateRoute>} />
           <Route path="/admin/estadisticas" element={<PrivateRoute><EstadisticasAdmin /></PrivateRoute>} />
         </>
       );

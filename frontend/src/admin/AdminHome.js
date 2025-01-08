@@ -35,10 +35,7 @@ export default function AdminHome() {
                 USUARIOS
                 </button>
                 <button className="home-button" onClick={() => {navigate("/admin/partidas")}}>
-                PARTIDAS EN CURSO
-                </button>
-                <button className="home-button" onClick={() => {navigate("/admin/partidas/terminadas")}}>
-                PARTIDAS JUGADAS
+                PARTIDAS
                 </button>
                 <button className="home-button" onClick={() => {navigate("/admin/estadisticas")}}>
                 ESTADÍSTICAS
