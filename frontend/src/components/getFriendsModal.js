@@ -56,7 +56,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
             .then((response) => response.text())
             .then((data) => {
                 setAmigos(JSON.parse(data))
-                console.log("el fallo encontrado"+data)
+                
 
             })
             .catch((message) => alert(message));
