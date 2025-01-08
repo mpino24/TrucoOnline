@@ -6,12 +6,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoRetruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.TipoValeCuatro;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.TipoRetruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.TipoTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.TipoValeCuatro;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.Truco;
 
 public class TestConverterTruco {
 

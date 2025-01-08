@@ -836,6 +836,8 @@ const PlayingModal = forwardRef((props, ref) => {
                             cartasDispo={mano?.cartasDisp}
                             posicionListaCartas={posicion}
                             jugadorMano={game.jugadorMano}
+                            esperandoRespuesta={mano?.esperandoRespuesta}
+                            jugadorTurno={mano?.jugadorTurno}
                         />
                     </>
                 )}

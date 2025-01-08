@@ -21,10 +21,10 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.ConverterRespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.RespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.Truco;
 
 
 @Service
