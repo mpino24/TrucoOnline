@@ -249,8 +249,12 @@ public class JugadorService {
             if (checkIfAreFriends(j,jugadorActual)) {
                 res.setAmistad(Amistad.AMIGOS);
                 Chat chat = chatService.findChatWith(j.getId());
-                MensajeDTO mensaje = chatService.getLastMessage(chat.getId());
-                res.setUltimoMensaje(mensaje);
+                if (chat != null) { // Verifica si el chat no es nulo
+                    MensajeDTO mensaje = chatService.getLastMessage(chat.getId());
+                    if (mensaje != null) { // Verifica si el mensaje no es nulo
+                        res.setUltimoMensaje(mensaje);
+                    }
+                }
             } else if (comprobarExistenciaSolicitud(j,jugadorActual) || comprobarExistenciaSolicitud(jugadorActual,j)) {
                 res.setAmistad(Amistad.SOLICITADO);
             } else {

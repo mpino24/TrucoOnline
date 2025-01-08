@@ -47,8 +47,7 @@ public class ChatService {
     }
 
     public MensajeDTO getLastMessage(Integer chatId){
-        //perteneceAChat(chatId);
-        return new MensajeDTO(mensajeRepository.findLastMessage(chatId).orElse(null));
+        return mensajeRepository.findLastMessage(chatId).map(MensajeDTO::new).orElse(null);  
     }
 
     public Chat findChatWith(Integer amigoId){
