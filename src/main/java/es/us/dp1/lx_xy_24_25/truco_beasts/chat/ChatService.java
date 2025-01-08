@@ -27,6 +27,7 @@ public class ChatService {
     }
     public MensajeDTO guardarMensaje(Mensaje mensaje) throws NotYourChatException {
         mensaje.setFechaEnvio(LocalDateTime.now());
+        mensaje.setRemitente(userService.findUser(mensaje.getRemitente().getId()));
         Chat chat = chatRepository.findById(mensaje.getChat().getId()).orElse(null);
         if(chat==null){
             throw new NotYourChatException("No puedes enviar mensajes a un chat que no existe");

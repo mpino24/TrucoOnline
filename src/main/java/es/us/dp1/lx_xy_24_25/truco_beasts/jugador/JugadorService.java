@@ -81,14 +81,7 @@ public class JugadorService {
             throw new ResourceNotFoundException("El jugador de ID " + user.getId() + " no fue encontrado");
         } else {
             Jugador toUpdate = j.get();
-            BeanUtils.copyProperties(jugador, toUpdate, "id", "user", "amigos");
-            if (jugador.getAmigos() != null) {
-                toUpdate.getAmigos().clear();
-                for (Jugador amigo : jugador.getAmigos()) {
-                    toUpdate.getAmigos().add(amigo);
-                    amigo.getAmigos().add(toUpdate);
-                }
-            }
+            BeanUtils.copyProperties(jugador, toUpdate, "id", "user", "amigos", "solicitudes");
             saveJugador(toUpdate);
             return toUpdate;
 

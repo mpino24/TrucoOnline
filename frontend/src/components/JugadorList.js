@@ -9,6 +9,9 @@ const JugadorList = forwardRef((props, ref)  => {
         if(player.isConnected){
             res+=props.jugadores.length+1;
         }
+        if(player.ultimoMensaje){
+            res+= player.ultimoMensaje.fechaEnvio.substring(20,26);
+        }
         return res;
     }
 
@@ -17,8 +20,7 @@ const JugadorList = forwardRef((props, ref)  => {
             <div key={playerKey(player)} onClick={()=> props.mostrarChat(player)}>
             <JugadorView
             jugador={player}
-            isFriend={true}
-            isSolicitud={false}
+            
             />
             </div>
         )
