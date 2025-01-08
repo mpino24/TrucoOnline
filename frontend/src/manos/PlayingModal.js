@@ -676,9 +676,17 @@ const PlayingModal = forwardRef((props, ref) => {
                                 </div>
                             )}
                             
-                            {/* Cantar envido */}
-                            {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && mano?.puedeCantarEnvido && (
+                            {/* Cantar envido y flor */}
+                            {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && (
                                 <div className="envido-button-container">
+                                    {/* Cantar Flor */}
+                                {mano?.puedeCantarFlor && mano?.queFlorPuedeCantar === 1 && mano.floresCantadas==0 && (
+                                        <button onClick={() => cantarFlor('FLOR')} style={{right:'20%'}}>
+                                            <span>¡Flor!</span>
+                                        </button>
+                                    )}
+                                    { mano?.puedeCantarEnvido && (
+                                        <>
                                     {mano?.queEnvidoPuedeCantar >= 3 && (
                                         <button onClick={() => cantarEnvido('ENVIDO')}>
                                             <span>Envido</span>
@@ -694,19 +702,14 @@ const PlayingModal = forwardRef((props, ref) => {
                                             <span className="swirl-glow-text">Falta Envido</span>
                                         </button>
                                     )}
+                                </>)}
+
+                                
                                 </div>
                             )}
 
-                            {/* Cantar Flor */}
-                            {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && mano?.puedeCantarFlor && (
-                                <div className="envido-button-container" style={{ top: "30%", position: "absolute" }}>
-                                    {mano?.queFlorPuedeCantar === 1 && mano.floresCantadas==0 && (
-                                        <button onClick={() => cantarFlor('FLOR')}>
-                                            <span>¡Flor!</span>
-                                        </button>
-                                    )}
-                                </div>
-                            )}
+                            
+                           
                         </div>
 
                         {/* Responder Truco Buttons */}
