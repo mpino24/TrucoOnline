@@ -10,7 +10,7 @@ const listaUrlCartasVacias = [
 ];
 
 const CartasVolteadas = forwardRef((props, ref) => {
-  let { cartasDispo, posicionListaCartas, jugadorMano, numJugadores } = props;
+  let { cartasDispo, posicionListaCartas, jugadorMano, numJugadores, esperandoRespuesta,jugadorTurno } = props;
 
   // Define card sizes 
 
@@ -116,6 +116,97 @@ const CartasVolteadas = forwardRef((props, ref) => {
   { ...cartaDeUna,
     top: '80%',
     left: '50%',
+  }, //15
+
+  //COSAS DE LA PARTIDA DE A 6 
+  { ...cartaDeTres,
+    top: '22%',
+    left: '22%',
+    rotate: '120deg'
+  },  //16
+  
+  { ...cartaDeDos,
+    top: '22%',
+    left: '22%',
+    rotate: '120deg'
+
+  },  
+  
+  { ...cartaDeUna,
+    top: '22%',
+    left: '22%',
+    rotate: '120deg'
+
+  },
+  { ...cartaDeTres,
+    top: '27%',
+    left: '70%',
+    rotate: '250deg'
+
+  }, //19
+  
+  { ...cartaDeDos,
+    top: '27%',
+    left: '70%',
+    rotate: '250deg'
+  }, 
+  
+  { ...cartaDeUna,
+    top: '27%',
+    left: '70%',
+    rotate: '250deg'
+  },
+  { ...cartaDeTres,
+    top: '75%',
+    left: '70%',
+    rotate: '-40deg'
+  },  //22
+  
+  { ...cartaDeDos,
+    top: '75%',
+    left: '70%',
+    rotate: '-40deg'
+  },  
+  
+  { ...cartaDeUna,
+    top: '75%',
+    left: '70%',
+    rotate: '-40deg'
+  },
+  { ...cartaDeTres,
+    top: '70%',
+    left: '20%',
+    rotate: '40deg'
+
+  },   //25
+  
+  { ...cartaDeDos,
+    top: '70%',
+    left: '20%',
+    rotate: '40deg'
+  },  
+  { ...cartaDeUna,
+    top: '70%',
+    left: '20%',
+    rotate: '40deg'
+  },
+  ////
+  { ...cartaDeTres,
+    top: '75%',
+    left: '88%',
+    rotate: '-40deg'
+  },  //28
+  
+  { ...cartaDeDos,
+    top: '75%',
+    left: '88%',
+    rotate: '-40deg'
+  },  
+  
+  { ...cartaDeUna,
+    top: '75%',
+    left: '88%',
+    rotate: '-40deg'
   },
   ];
 
@@ -143,6 +234,37 @@ const CartasVolteadas = forwardRef((props, ref) => {
           if(eresEspectador && pos==0 && cartasDispo.length==2){
             estiloSegunPosicionYNumCartas = listaEstilos[6];
           }
+
+
+          else if(cartasDispo.length==6){ //Todos los IF de la partida de a 6
+            if((posicionListaCartas + pos) % 2 === 0){
+              if(posicionListaCartas+2===pos || (posicionListaCartas==4 && pos==0) || (posicionListaCartas==5  && pos==1) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[19]; //arriba derecha
+              }
+              else if(posicionListaCartas+4==pos || (posicionListaCartas==2 && pos==0) || (posicionListaCartas==4 && pos==2) || (posicionListaCartas==5 && pos==3) || (posicionListaCartas==3 && pos==1) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[16]; //arriba izquierda
+              }
+              else estiloSegunPosicionYNumCartas=listaEstilos[8];
+            }
+
+            else {
+              if(posicionListaCartas+1===pos || (posicionListaCartas==5 && pos==0)){
+                if(esperandoRespuesta && jugadorTurno==posicionListaCartas){
+                  estiloSegunPosicionYNumCartas=listaEstilos[28]; //abajo derecha
+                }
+                else{
+                  estiloSegunPosicionYNumCartas=listaEstilos[22];
+                }
+              }
+              else if(posicionListaCartas+3==pos || (posicionListaCartas==4 && pos==3) || (posicionListaCartas==5 && pos==4) || (posicionListaCartas==3 && pos==0) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[25]; //abajo izquierda
+              }
+              else estiloSegunPosicionYNumCartas=listaEstilos[8];
+
+                }
+
+          }
+
           else if(eresEspectador && pos===0){
             console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR Y ESTA ES LA LISTAAAAAAAAAAAA     " + cartasDispo.length)
             estiloSegunPosicionYNumCartas = listaEstilos[13];
@@ -168,6 +290,36 @@ const CartasVolteadas = forwardRef((props, ref) => {
             console.log("HOLAAAAAAAAAAAAAAAAAAA SOY ESPECTADOOOOOOOOOOOOOOOOOOOOOOR")
             estiloSegunPosicionYNumCartas = listaEstilos[14];
           }
+
+          else if(cartasDispo.length==6){ //Todos los IF de la partida de a 6
+            if((posicionListaCartas + pos) % 2 === 0){
+              if(posicionListaCartas+2===pos || (posicionListaCartas==4 && pos==0) || (posicionListaCartas==5  && pos==1) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[20]; //arriba derecha
+              }
+              else if(posicionListaCartas+4==pos || (posicionListaCartas==2 && pos==0) || (posicionListaCartas==4 && pos==2) || (posicionListaCartas==5 && pos==3) || (posicionListaCartas==3 && pos==1) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[17]; //arriba izquierda
+              }
+              else estiloSegunPosicionYNumCartas=listaEstilos[5];
+            }
+
+            else {
+              if(posicionListaCartas+1===pos || (posicionListaCartas==5 && pos==0)){
+                if(esperandoRespuesta && jugadorTurno==posicionListaCartas){
+                  estiloSegunPosicionYNumCartas=listaEstilos[29]; //abajo derecha
+                }
+                else{
+                  estiloSegunPosicionYNumCartas=listaEstilos[23];
+                }
+              }
+              else if(posicionListaCartas+3==pos || (posicionListaCartas==4 && pos==3) || (posicionListaCartas==5 && pos==4) || (posicionListaCartas==3 && pos==0) ){
+              
+                estiloSegunPosicionYNumCartas=listaEstilos[26]; //abajo izquierda
+              }
+              else estiloSegunPosicionYNumCartas=listaEstilos[5];
+
+                }
+
+          }
           else if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[5];
           else if (
@@ -186,6 +338,36 @@ const CartasVolteadas = forwardRef((props, ref) => {
           if(eresEspectador && pos===0){
             estiloSegunPosicionYNumCartas = listaEstilos[15];
           }
+
+          else if(cartasDispo.length==6){ //Todos los IF de la partida de a 6
+            if((posicionListaCartas + pos) % 2 === 0){
+              if(posicionListaCartas+2===pos || (posicionListaCartas==4 && pos==0) || (posicionListaCartas==5  && pos==1) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[21]; //arriba derecha
+              }
+              else if(posicionListaCartas+4==pos || (posicionListaCartas==2 && pos==0) || (posicionListaCartas==4 && pos==2) || (posicionListaCartas==5 && pos==3) || (posicionListaCartas==3 && pos==1) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[18]; //arriba izquierda
+              }
+              else estiloSegunPosicionYNumCartas=listaEstilos[2];
+            }
+
+            else {
+              if(posicionListaCartas+1===pos || (posicionListaCartas==5 && pos==0)){
+                if(esperandoRespuesta && jugadorTurno==posicionListaCartas){
+                  estiloSegunPosicionYNumCartas=listaEstilos[30]; //abajo derecha
+                }
+                else{
+                  estiloSegunPosicionYNumCartas=listaEstilos[24];
+                }
+              }
+              else if(posicionListaCartas+3==pos || (posicionListaCartas==4 && pos==3) || (posicionListaCartas==5 && pos==4) || (posicionListaCartas==3 && pos==0) ){
+                estiloSegunPosicionYNumCartas=listaEstilos[27]; //abajo izquierda
+              }
+              else estiloSegunPosicionYNumCartas=listaEstilos[2];
+
+                }
+
+          }
+
           else if ((posicionListaCartas + pos) % 2 === 0)
             estiloSegunPosicionYNumCartas = listaEstilos[2];
           else if (

@@ -1,5 +1,4 @@
-package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
-
+package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco;
 
 import java.util.Objects;
 
@@ -9,14 +8,17 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Cantos;
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
+
+
 @StatePattern.ConcreteState
-public class TipoValeCuatro extends Truco{
+public class TipoRetruco extends Truco{
+
 
     @Override 
     public boolean equals(Object o) { 
         if (this == o) return true; 
         if (o == null || getClass() != o.getClass()) return false; 
-        TipoValeCuatro TipoValeCuatro = (TipoValeCuatro) o; 
+        TipoRetruco TipoRetruco = (TipoRetruco) o; 
         return true; 
     }
         
@@ -27,24 +29,25 @@ public class TipoValeCuatro extends Truco{
 
     @Override
     public Cantos getTipoTruco(){
-        return Cantos.VALECUATRO;
+        return Cantos.RETRUCO;
     }
 
     @Override
-    public Mano accionAlTipoTruco(Mano manoActual,Integer jugadorTurno, Integer equipoCantor) {
+    public Mano accionAlTipoTruco(Mano manoActual, Integer jugadorTurno, Integer equipoCantor) {
         Integer puntosTruco = manoActual.getPuntosTruco();
-        Integer puntosHayRetruco = 3;
-        if (puntosTruco < puntosHayRetruco) {
-            throw new TrucoException( "No se cantó el retruco"); 
-        }else if(puntosTruco > puntosHayRetruco){
-            throw new TrucoException("Ya se canto el valecuatro");
-        }
-        Integer elQueResponde = manoActual.quienResponde();
-        manoActual.setJugadorTurno(elQueResponde);
+        Integer puntosHayTruco = 2;
+        if (puntosTruco < puntosHayTruco) {
+                throw new TrucoException( "No se cantó el truco");
+            } else if(puntosTruco>puntosHayTruco){
+                throw new TrucoException("Ya se canto el retruco");
+            }
+        Integer elQueRespondeAlRetruco = manoActual.quienResponde();
+        manoActual.setJugadorTurno(elQueRespondeAlRetruco);
         manoActual.setEquipoCantor((equipoCantor==0 ? 1:0));
         
         
         return manoActual;
     }
-    
+
+
 }
