@@ -265,8 +265,8 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                         posicionUsada = true;
                         playerStyle = {
                             position: 'absolute',
-                            top: '-80%',  // Abajo
-                            right: '40%', // Esquina inferior izquierda
+                            top: '-70%',  // 
+                            right: '40%', // Arriba
                             transform: 'translate(50%, 600%)',
                             zIndex: 1000
                         };
