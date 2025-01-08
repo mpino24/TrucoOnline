@@ -43,7 +43,7 @@ public class CurrentUserRestController {
     @GetMapping
     public ResponseEntity<PerfilJugadorUsuario> getProfile(Principal principal) {
         User user = userService.findCurrentUser();
-        JugadorDTO jugadorDto = jugadorService.findJugadorByUserId(user.getId());
+        JugadorDTO jugadorDto = jugadorService.findJugadorDTOByUserId(user.getId());
         Jugador jugador = jugadorService.findJugadorById(jugadorDto.getId());
         PerfilJugadorUsuario perfil = new PerfilJugadorUsuario();
         perfil.setJugador(jugador);

@@ -48,9 +48,17 @@ public class JugadorService {
     }
 
     @Transactional(readOnly = true)
-    public JugadorDTO findJugadorByUserId(int userId) throws DataAccessException {
-        return convertirJugadorADto(userId);
+    public Jugador findJugadorByUserId(int userId) throws DataAccessException {
+        Optional<Jugador> jugador = jugadorRepository.findByUserId(userId); 
+        if(jugador.isEmpty()){
+            throw new ResourceNotFoundException("Jugador no encontrado");
+        }
+        return jugador.get();
 
+    }
+
+    public JugadorDTO findJugadorDTOByUserId(int userId) {
+        return convertirJugadorADto(findJugadorByUserId(userId));
     }
 
     @Transactional(readOnly = true)
@@ -91,7 +99,7 @@ public class JugadorService {
     public List<JugadorDTO> findAmigosByUserId(int userId) {
         List<Jugador> amigos= jugadorRepository.findAmigosByUserId(userId);
         return amigos.stream()
-                 .map(j -> convertirJugadorADto(j.getId()))
+                 .map(j -> convertirJugadorADto(j))
                  .collect(Collectors.toList());
     }
 
@@ -99,7 +107,7 @@ public class JugadorService {
     public List<JugadorDTO> findSolicitudesByUserId(int userId) {
         List<Jugador> solicitudes= jugadorRepository.findSolicitudesByUserId(userId);
         return solicitudes.stream()
-                 .map(j -> convertirJugadorADto(j.getId()))
+                 .map(j -> convertirJugadorADto(j))
                  .collect(Collectors.toList());
     }
 
@@ -109,25 +117,22 @@ public class JugadorService {
         if (res.isEmpty()) {
             throw new ResourceNotFoundException("Jugador no encontrado");
         } else {
-            return convertirJugadorADto(res.get().getId());
+            return convertirJugadorADto(res.get());
         }
 
     }
 
     @Transactional(readOnly = true)
-    public boolean checkIfAreFriends(int friendId, int userId) throws DataAccessException{
-        JugadorDTO jugadorDTO = findJugadorByUserId(friendId);
-        List<Jugador> amigos = jugadorRepository.findAmigosByUserId(userId);
-        return amigos.stream().anyMatch(a -> userService.findUser(a.getId()).getUsername().equals(jugadorDTO.getUserName()));
+    public boolean checkIfAreFriends(Jugador jugador1, Jugador jugador2) throws DataAccessException{
+        List<Jugador> amigos = jugadorRepository.findAmigosByUserId(jugador1.getId());
+        return amigos.stream().anyMatch(a -> a.getId().equals(jugador2.getId()));
 
     }
 
     @Transactional(readOnly = true)
-    public boolean comprobarExistenciaSolicitud(int friendId, int userId) throws DataAccessException {
-        JugadorDTO jugadorDTO = findJugadorByUserId(friendId);
-        List<Jugador> solicitudes = jugadorRepository.findSolicitudesByUserId(userId);
-        return solicitudes.stream()
-                      .anyMatch(a -> userService.findUser(a.getId()).getUsername().equals(jugadorDTO.getUserName()));
+    public boolean comprobarExistenciaSolicitud(Jugador jugador1, Jugador jugador2) throws DataAccessException {
+        List<Jugador> solicitudes = jugadorRepository.findSolicitudesByUserId(jugador1.getId());
+        return solicitudes.stream().anyMatch(a -> a.getId().equals(jugador2.getId()));
 
     }
 
@@ -228,19 +233,25 @@ public class JugadorService {
         }
     }
 
-    public JugadorDTO convertirJugadorADto(Integer userId) {
-        Optional<Jugador> j = jugadorRepository.findByUserId(userId);
+    public Jugador findCurrentPlayer(){
         User currentUser = userService.findCurrentUser();
-        JugadorDTO res = new JugadorDTO(j.get());
+        return jugadorRepository.findByUserId(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
+    }
+
+    public JugadorDTO convertirJugadorADto(Jugador  j) {
+        Jugador jugadorActual = findCurrentPlayer();
+        
+        JugadorDTO res = new JugadorDTO(j);
         res.setUltimoMensaje(null);
         res.setAmistad(null);
-        if (!userId.equals(currentUser.getId())) {
-            if (checkIfAreFriends(userId, currentUser.getId()) == true) {
+
+        if (!j.getId().equals(jugadorActual.getId())) {
+            if (checkIfAreFriends(j,jugadorActual)) {
                 res.setAmistad(Amistad.AMIGOS);
-                Chat chat = chatService.findChatWith(userId);
+                Chat chat = chatService.findChatWith(j.getId());
                 MensajeDTO mensaje = chatService.getLastMessage(chat.getId());
                 res.setUltimoMensaje(mensaje);
-            } else if (comprobarExistenciaSolicitud(userId, currentUser.getId()) == true || comprobarExistenciaSolicitud(currentUser.getId(), userId) == true) {
+            } else if (comprobarExistenciaSolicitud(j,jugadorActual) || comprobarExistenciaSolicitud(jugadorActual,j)) {
                 res.setAmistad(Amistad.SOLICITADO);
             } else {
                 res.setAmistad(Amistad.DESCONOCIDOS);

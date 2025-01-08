@@ -37,12 +37,12 @@ public class JugadorController {
 
     @GetMapping
     public ResponseEntity<JugadorDTO> findJugadorByUserId(@RequestParam(required=true) String userId) {
-        return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(jugadorService.findJugadorDTOByUserId(Integer.valueOf(userId)), HttpStatus.OK);
     }
 
     @GetMapping("/edit/{userId}")
     public ResponseEntity<JugadorDTO> findJugadorByUserIdEdit(@PathVariable("userId") Integer userId) {
-        return new ResponseEntity<>(jugadorService.findJugadorByUserId(Integer.valueOf(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(jugadorService.findJugadorDTOByUserId(Integer.valueOf(userId)), HttpStatus.OK);
     }
 
     @PutMapping("/edit/{userId}")
@@ -96,7 +96,9 @@ public class JugadorController {
 
     @GetMapping("/{userId}/isFriend/{friendUserName}")
     public ResponseEntity<Boolean> checkIfAreFriends(@PathVariable int userId, @PathVariable int friendId){
-        return new ResponseEntity<>(jugadorService.checkIfAreFriends(friendId, userId),HttpStatus.OK);
+        Jugador jugador1= jugadorService.findJugadorByUserId(userId);
+        Jugador jugador2= jugadorService.findJugadorByUserId(friendId);
+        return new ResponseEntity<>(jugadorService.checkIfAreFriends(jugador1,jugador2),HttpStatus.OK);
     }
 
     @PatchMapping("/isFriend/{amigoId}")

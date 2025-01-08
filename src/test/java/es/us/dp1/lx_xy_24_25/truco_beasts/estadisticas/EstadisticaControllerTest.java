@@ -96,7 +96,7 @@ public class EstadisticaControllerTest {
     void obtenerMisEstadisticas() throws Exception{
 
         when(userService.findCurrentUser()).thenReturn(user1);
-        when(jugadorService.findJugadorByUserId(user1.getId())).thenReturn(jugador1);
+        when(jugadorService.findJugadorDTOByUserId(user1.getId())).thenReturn(jugador1);
         when(estadisticasService.getEstadisticasJugador(user1.getId())).thenReturn(estadisticasJugador1);
         mockMvc.perform(get(BASE_URL + "/misEstadisticas"))
                 .andExpect(status().isOk())
