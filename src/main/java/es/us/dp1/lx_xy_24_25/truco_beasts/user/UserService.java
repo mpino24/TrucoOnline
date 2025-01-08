@@ -107,11 +107,20 @@ public class UserService {
 	@Transactional
 	public User updateUser(@Valid User user, Integer idToUpdate) {
 		User toUpdate = findUser(idToUpdate);
-	
-			BeanUtils.copyProperties(user, toUpdate, "id");
-			toUpdate.setPassword(encoder.encode(user.getPassword()));
-			userRepository.save(toUpdate);
-			return toUpdate;
+		if(toUpdate == null) {
+            throw new AccessDeniedException("Tu usuario no ha sido encontrado");
+        }
+		
+        if(!existsUser(user.getUsername()) || (existsUser(user.getUsername()) && (user.getUsername().equals(toUpdate.getUsername())))){
+            toUpdate.setUsername(user.getUsername());
+            if(!(user.getPassword()==null)) {
+                toUpdate.setPassword(encoder.encode(user.getPassword()));
+            }
+            saveUser(toUpdate);
+            return toUpdate;
+        }else{
+            throw new NameDuplicatedException("Ese nombre está en uso");
+        } 
 			
 	}
 	@Transactional(rollbackFor = {AccessDeniedException.class,NameDuplicatedException.class})
