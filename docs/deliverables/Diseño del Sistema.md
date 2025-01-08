@@ -72,6 +72,30 @@ Indicar las clases o paquetes creados como resultado de la aplicación del patr�
 
 Describir porqué era interesante aplicar el patrón.
 
+### Patrón: Strategy
+*Tipo*: Arquitectónico | de Comportamiento
+
+Se ha utilizado el patrón estrategia principalmente en la lógica del canto truco. Esta lógica se utiliza en el juego para aumentar la apuesta de modo que tenemos un cante y una respuesta que se irán sucediendo hasta la finalización de esta subtrama del juego. Las posibles respuestas las encontramos en la clase enumerado Cantos y pueden ser Retruco, Vale cuatro, Envido, Quiero y No quiero. En función de las respuestas, el jugador que responde tendrá unas posibilidades u otras dependiendo del momento en el que se encuentre la subtrama de modo que, según la respuesta, el sistema se comporta de una forma u otra ofreciendo las respuestas y la lógica correspondientes.
+
+Para la realización del patrón se han debido crear el paquete patronEstrategiaTruco donde se han creado las siguientes clases:
+        Clases para poder realizar la conversión de Respuestas y Cantos y poder aplicar la lógica correspondiente de cada Canto o Respuesta cuando sea utilizada.
+                - CoverterRespuestaTruco
+                - ConverterTruco
+        Clases con la lógica de cada Respuesta
+                - RespuestaTruco: interfaz común a todas las estrategias de respuesta.
+                - RespuestaEnvido
+                - RespuestaNoQuieroTruco
+                - RespuestaQuieroTruco
+                - RespuestaSubirTruco
+        Clases con la lógica de cada Canto
+                - Truco: interfaz común a todas las estrategias de canto.
+                - TipoTruco
+                - TipoRetruco
+                - TipoValeCuatro
+Además, en el paquete mano se encuentra el enum Cantos.
+                
+El uso de este patrón nos trae la gran ventaja de no tener un código excesivamente largo con muchos condicionales en la propia lógica del service y poder modularizarlo, aislando parte del código. Además, no es necesario establecer distintos métodos en función de la acción sino que con un mismo método en la interfaz lo definimos de distintas formas según el caso haciendo el software más eficiente. De igual manera, si en un futuro se quisieran añadir otras respuestas o cantos, con este patrón sería más sencillo agregarlos, lo cuál crea un software más flexible y mantenible. 
+
 ### Patrón: Single Page Application (SPA)
 *Tipo*: Arquitectónico | de Diseño
 
