@@ -66,19 +66,28 @@ export default function UserEditAdmin() {
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    if (newPassword) {
-      user.password = newPassword;
-  }
   
-    fetch("/api/v1/users" + (user.id ? "/" + user.id : ""), {
-      method: user.id ? "PUT" : "POST",
+    const request = {
+      username: user.username,
+      password: newPassword || user.password,
+      authority: user.authority?.id,
+      firstName: player.firstName,
+      lastName: player.lastName,
+      email: player.email,
+      photo: player.photo,
+    };
+  
+    const endpoint = user.id ? `/api/v1/users/${user.id}` : "/api/v1/auth/signup";
+    const method = user.id ? "PUT" : "POST";
+  
+    fetch(endpoint, {
+      method: method,
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: user.id ? `Bearer ${jwt}` : undefined,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(request),
     })
       .then((response) => response.json())
       .then((json) => {
@@ -86,21 +95,24 @@ export default function UserEditAdmin() {
           setMessage(json.message);
           setVisible(true);
         } else {
-          const userId = json.id || user.id;
-          return fetch(`/api/v1/jugador/edit/${userId}`, {
-            method: user.id ? "PUT" : "POST",
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({...player, userId: user.id}),
-          });
+          if (user.id) {
+            return fetch(`/api/v1/jugador/edit/${user.id}`, {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ ...player, userId: user.id }),
+            });
+          } else {
+            window.location.href = "/users";
+          }
         }
       })
-      .then((response) => response.json())
+      .then((response) => response?.json())
       .then((json) => {
-        if (json.message) {
+        if (json?.message) {
           setMessage(json.message);
           setVisible(true);
         } else {
