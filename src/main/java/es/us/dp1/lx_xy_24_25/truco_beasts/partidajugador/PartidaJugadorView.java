@@ -11,11 +11,13 @@ public class PartidaJugadorView {
     String userName;
     String foto;
     Integer posicion;
+    Integer partidaId;
 
-    public PartidaJugadorView(String userName, String foto, Integer posicion) {
+    public PartidaJugadorView(String userName, String foto, Integer posicion,Integer partidaId) {
         this.userName = userName;
         this.foto = foto;
         this.posicion=posicion;
+        this.partidaId=partidaId;
     }
     
     

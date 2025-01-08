@@ -10,7 +10,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import tokenService from "../services/token.service";
 
-const jwt = tokenService.getLocalAccessToken();
+const jwt = tokenService.getLocalAccessToken()
+
 const GetJoinModal = forwardRef((props, ref) => {
 
     const [message, setMessage] = useState(null);

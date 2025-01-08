@@ -44,6 +44,7 @@ public class Jugador extends Person{
 
     @OneToOne(cascade= {CascadeType.ALL}, optional = false)
     private User user;
+
     
     
 }

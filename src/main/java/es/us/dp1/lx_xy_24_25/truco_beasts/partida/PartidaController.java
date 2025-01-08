@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -67,18 +68,23 @@ public class PartidaController {
 	}
 
 	@GetMapping("/partidas/participantes/activas")
-	public ResponseEntity<List<PartidaDTO>> findPartidasActivasYParticipantes() {
-        return new ResponseEntity<>(partidaService.getPartidasActivasYParticipantes(), HttpStatus.OK);
+	public ResponseEntity<List<PartidaDTO>> findPartidasActivasConParticipantes() {
+        return new ResponseEntity<>(partidaService.findPartidasActivasYParticipantes(), HttpStatus.OK);
     }
 	
 	@GetMapping("/partidas/participantes/terminadas")
-	public ResponseEntity<List<PartidaDTO>> findPartidasTerminadasYParticipantes() {
-        return new ResponseEntity<>(partidaService.getPartidasTerminadasYParticipantes(), HttpStatus.OK);
+	public ResponseEntity<List<PartidaDTO>> findPartidasTerminadasConParticipantes() {
+        return new ResponseEntity<>(partidaService.findPartidasTerminadasYParticipantes(), HttpStatus.OK);
     }
 
 	@PostMapping
 	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida,@RequestParam(required=true) Integer userId) throws AlreadyInGameException {
 		
+		PartidaJugador partidaJugador = partJugService.getPartidaJugadorUsuarioActual();
+		if(partidaJugador!=null){
+			throw new AlreadyInGameException();
+		}
+
 		Partida newPartida = new Partida();
 		BeanUtils.copyProperties(Partida, newPartida, "id");
 		newPartida.setInstanteInicio(null);

@@ -189,6 +189,10 @@ public class JugadorService {
             Jugador amigo = amigoOpt.get();
             if (jugador.getAmigos().contains(amigo)) {
                 if (!jugador.getId().equals(amigo.getId())) {
+
+                    Integer chatId = chatService.findChatWith(amigo.getId()).getId();
+                    chatService.eliminarChat(chatId);
+
                     jugador.getAmigos().remove(amigo);
                     amigo.getAmigos().remove(jugador);
                     jugadorRepository.save(jugador);

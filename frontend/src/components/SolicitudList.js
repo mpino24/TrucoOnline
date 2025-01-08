@@ -13,56 +13,52 @@ import tokenService from '../services/token.service';
 const SolicitudList = forwardRef((props, ref) => {
     const jwt = tokenService.getLocalAccessToken();
 
-    function handleDeleteRequest(player){
+    function handleDeleteRequest(player) {
         fetch(
             "/api/v1/jugador/isSolicitado/" + player.id,
             {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
             .then((data) => {
-                if(JSON.parse(data).statusCode===500){
+                if (JSON.parse(data).statusCode === 500) {
                     alert("No se puede eliminar amigo." + data)
-                }else{
-                    props.setJugadores(prevJugadores => 
+                } else {
+                    props.setJugadores(prevJugadores =>
                         prevJugadores.filter(p => p.id !== player.id)
                     );
                 }
-                
+
 
             })
             .catch((message) => alert(message));
 
     }
 
-    function handleAddFriend(player){
+    function handleAddFriend(player) {
         fetch(
             "/api/v1/jugador/isFriend/" + player.id,
             {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
             .then((data) => {
-                if(JSON.parse(data).statusCode===500){
+                if (JSON.parse(data).statusCode === 500) {
                     alert("No se puede añadir amigo")
-                }else{
-                    props.setJugadores(prevJugadores => 
+                } else {
+                    props.setJugadores(prevJugadores =>
                         prevJugadores.filter(p => p.id !== player.id)
                     );
                 }
-                
+
 
             })
             .catch((message) => alert(message));
@@ -71,18 +67,27 @@ const SolicitudList = forwardRef((props, ref) => {
 
     const jugadoresList = props.jugadores.map((player) => {
         return (
-            <div key={player.id} style={{ display: 'flex', alignItems: 'center' }}>
-                <JugadorView
-                    jugador={player}
-                    isFriend={false}
-                    isSolicitud={true}
-                />
-                <button onClick={()=>{handleAddFriend(player)}} style={{marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer'}}>
-                    <IoMdPersonAdd style={{ fontSize: '50px', backfaceVisibility: 'hidden' }} />
-                </button>
-                <button onClick={()=>{handleDeleteRequest(player)}} style={{marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer'}}>
-                    <MdOutlinePersonAddDisabled style={{ fontSize: '50px' }} />
-                </button>
+            <div style={{ transition: 'background-color 0.3s ease, border 0.3s ease' }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+            >
+                <div key={player.id} style={{ display: 'flex', alignItems: 'center' }}>
+                    <JugadorView
+                        jugador={player}
+                        isFriend={false}
+                        isSolicitud={true}
+                    />
+                    <button onClick={() => { handleAddFriend(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
+                        <IoMdPersonAdd style={{ fontSize: '50px', backfaceVisibility: 'hidden' }} />
+                    </button>
+                    <button onClick={() => { handleDeleteRequest(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
+                        <MdOutlinePersonAddDisabled style={{ fontSize: '50px' }} />
+                    </button>
+                </div>
             </div>
 
         )

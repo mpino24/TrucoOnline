@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,6 +36,16 @@ public class RespuestaNoQuieroTruco extends RespuestaTruco{
     public Mano accionRespuestaTruco(Mano manoActual, Integer puntosTruco) {
 
         manoActual.setPuntosTruco(puntosTruco);
+        List<Integer> parche = new ArrayList<>();
+        parche.add(0);
+        parche.add(0);
+        Integer equipo= manoActual.getJugadorTurno() %2;
+        if(equipo==1){
+            parche.set(0, 3);
+        }else{
+            parche.set(1, 3);
+        }
+        manoActual.setGanadoresRondas(parche);
         manoActual.setTerminada(true);
         Integer jugadorActual = manoActual.getJugadorTurno();
         List<Integer> listaE1= List.of(0, 3);

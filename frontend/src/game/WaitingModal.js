@@ -11,6 +11,8 @@ import ExpeledModal from './ExpeledModal';
 import { FaUserFriends } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
 import { Client } from "@stomp/stompjs";
+import Modal from 'react-modal';
+import JugadorView from '../components/JugadorView.js';
 
 const WaitingModal = forwardRef((props, ref) => {
     const game = props.game;
@@ -24,11 +26,10 @@ const WaitingModal = forwardRef((props, ref) => {
     const [expeledView, setExpeledView] = useState(false);
     const [friendList, showFriendList] = useState(false);
     const [friends, setFriends] = useState([]);
-    const user = tokenService.getUser();
     const navigate = useNavigate();
     const [stompClient, setStompClient] = useState(null);
-    const [mensaje, setMensaje] = useState("");
-    const [chatId, setChatId] = useState(null);
+    const [numDesconectados, setNumDesconectados] = useState(0);
+
 
 
     useEffect(() => {
@@ -48,19 +49,22 @@ const WaitingModal = forwardRef((props, ref) => {
                 .then((data) => {
                     setJugadores(data)
                     setConnectedUsers(data.length)
-                    const isConnected = (jugadores.find(pj => pj.player.id === usuario.id) ? true : false);
-                    if (connected && !isConnected) {
+                    const inTheGame = (jugadores.find(pj => pj.player.id === usuario.id) ? true : false);
+                    if (connected && !inTheGame) {
                         setExpeledView(true);
                     }
-                    setConnected(isConnected);
+                    setConnected(inTheGame);
+                    setNumDesconectados(data.filter(jugador => jugador.player.isConnected===false).length);
                 })
         }
         fetchPlayers();
 
-        const intervalId = setInterval(fetchPlayers, 500);
+        const timer = setInterval(() => {
+            fetchPlayers();
+        }, 2000);
+        return () => clearInterval(timer);
 
-        return () => clearInterval(intervalId)
-    }, [connected, game.codigo, jugadores, navigate, usuario.id])
+    }, [game.codigo, navigate, usuario.id])
 
     function getGameCreator() {
         if (jugadores.length > 0) {
@@ -84,40 +88,49 @@ const WaitingModal = forwardRef((props, ref) => {
     }
 
     function startGame() {
-        if (getJugadoresEquipo(1).length === game.numJugadores / 2 && getJugadoresEquipo(2).length === game.numJugadores / 2) {
-            fetch(
-                `/api/v1/partida/${game.codigo}/start`,
-                {
-                    method: "PATCH",
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                    },
-                }
-            )
-                .then((response) => {
-                    if (!response.ok) {
-                        return response.text().then((errorMessage) => {
-                            throw new Error("Error al empezar la partida: " + errorMessage);
-                        });
-                    }
-                })
-                .then(() => {
-
-                })
-                .catch((error) => {
-                    alert(error.message);
-                });
-
+        if (numDesconectados > 0) {
+            alert("No se puede comenzar la partida, hay jugadores desconectados. Considere expulsarlos: " + numDesconectados);
         } else {
-            alert(`Faltan jugadores para comenzar la partida. Equipo 1:${getJugadoresEquipo(1).length}. Equipo 2:${getJugadoresEquipo(2).length}`)
+            if (getJugadoresEquipo(1).length === game.numJugadores / 2 && getJugadoresEquipo(2).length === game.numJugadores / 2) {
+                fetch(
+                    `/api/v1/partida/${game.codigo}/start`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            Authorization: `Bearer ${jwt}`,
+                        },
+                    }
+                )
+                    .then((response) => {
+                        if (!response.ok) {
+                            return response.text().then((errorMessage) => {
+                                throw new Error("Error al empezar la partida: " + errorMessage);
+                            });
+                        }
+                    })
+                    .then(() => {
+
+                    })
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+
+            } else {
+                alert(`Faltan jugadores para comenzar la partida.`)
+            }
         }
 
     }
     function getFriends() {
         fetch(
-            `/api/v1/jugador/amigos?userId=` + user.id,
+            `/api/v1/jugador/amigos?userId=` + usuario.id,
             {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  }
             }
         )
             .then((response) => response.text())
@@ -125,9 +138,9 @@ const WaitingModal = forwardRef((props, ref) => {
                 const amigos = JSON.parse(data);
                 if (amigos.length !== 0) {
                     const jugadoresEnPartida = jugadores.map(j => j.player.id);
-                    const amigosFiltrados = amigos.filter(amigo => !jugadoresEnPartida.includes(amigo.id));
+                    const amigosFiltrados = amigos.filter(amigo => !jugadoresEnPartida.includes(amigo.id) && amigo.isConnected);
                     setFriends(amigosFiltrados)
-                }else{
+                } else {
                     setFriends([]);
                 }
 
@@ -138,70 +151,74 @@ const WaitingModal = forwardRef((props, ref) => {
 
     }
 
-    function findChatId(friendId) {
-        fetch(
-            `/api/v1/chat/with/` + friendId,
-            {
+    async function findChatId(friendId) {
+        try {
+            const response = await fetch(`/api/v1/chat/with/` + friendId, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
-            }
-        ).then((response) => {
+            });
+
             if (!response.ok) {
-                return response.text().then((errorMessage) => {
-                    throw new Error("Error al buscar el chat: " + errorMessage);
-                });
-            } else {
-                return response.json();
+                const errorMessage = await response.text();
+                throw new Error("Error al buscar el chat: " + errorMessage);
             }
-        }).then((data) => {
-            setChatId(data.id);
-        }).catch((message) => alert("Error al buscar el chat: " + message));
+
+            const data = await response.json();
+            return data.id; // Devuelve el ID del chat
+        } catch (error) {
+            alert("Error al buscar el chat: " + error.message);
+            throw error; // Lanza el error para que la función llamante pueda manejarlo
+        }
     }
 
+    async function sendInvitation(friendId) {
+        try {
+            const chatId = await findChatId(friendId);
+            const cliente = new Client({
+                brokerURL: "ws://localhost:8080/ws",
+                connectHeaders: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
 
-    function sendInvitation(friendId) {
-        findChatId(friendId);
+            // Crea una promesa para esperar la conexión STOMP
+            const connectPromise = new Promise((resolve, reject) => {
+                cliente.onConnect = () => {
+                    console.log("Conectado exitosamente");
+                    cliente.subscribe(`/topic/chat/${chatId}`);
+                    setStompClient(cliente); // Asigna el cliente STOMP una vez conectado
+                    resolve(cliente); // Resuelve la promesa con el cliente STOMP
+                };
 
-        const cliente = new Client({
-            brokerURL: "ws://localhost:8080/ws",
-            connectHeaders: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
+                cliente.onDisconnect = () => {
+                    console.log("Desconectado del servidor STOMP");
+                };
 
-        cliente.onConnect = () => {
-            console.log("Conectado exitosamente");
-            cliente.subscribe(`/topic/chat/${chatId}`);
-            setStompClient(cliente);
+                cliente.onStompError = (frame) => {
+                    console.error("Error de STOMP: ", frame.headers["message"]);
+                    console.error("Detalles: ", frame.body);
+                    reject(new Error("Error de STOMP: " + frame.headers["message"]));
+                };
+            });
 
-            evtEnviarMensaje();
-        };
+            cliente.activate(); // Activa el cliente STOMP
 
-        cliente.onDisconnect = () => {
-            console.log("Desconectado del servidor STOMP");
-        };
+            const connectedClient = await connectPromise; // Espera a que el cliente esté completamente conectado
 
-        cliente.onStompError = (frame) => {
-            console.error("Error de STOMP: ", frame.headers["message"]);
-            console.error("Detalles: ", frame.body);
-        };
-
-        cliente.activate();
-        
-
-        
-
+            evtEnviarMensaje(chatId, connectedClient); // Pasa el cliente conectado a evtEnviarMensaje
+        } catch (error) {
+            console.error("Error en sendInvitation: ", error.message);
+        }
     }
 
-    const evtEnviarMensaje = () => {
-        setMensaje("Te invito a la partida {" + game.codigo + "}");
-        if (stompClient && stompClient.connected) {
-            stompClient.publish({
+    const evtEnviarMensaje = (chatId, connectedClient) => {
+        if (connectedClient && connectedClient.connected) {
+            connectedClient.publish({
                 destination: "/app/mensaje",
                 body: JSON.stringify({
-                    contenido: mensaje,
+                    contenido: `Te invito a la partida {${game.codigo}}`,
                     chat: { id: chatId },
                     remitente: { id: tokenService.getUser().id, username: tokenService.getUser().username },
                     username: { username: tokenService.getUser().username },
@@ -211,17 +228,13 @@ const WaitingModal = forwardRef((props, ref) => {
                 },
             });
             console.log("Mensaje enviado");
-
-            stompClient.deactivate();
+            connectedClient.deactivate(); // Desactiva el cliente después de enviar el mensaje
+            alert("Invitación enviada");
 
         } else {
             console.error("STOMP aún no está listo o no está conectado");
         }
     };
-
-
-
-
 
     return (
         <>
@@ -235,7 +248,7 @@ const WaitingModal = forwardRef((props, ref) => {
                             style={{ overflowY: 'auto', height: '200px', width: '200px' }}
                         >
                             <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Invitar amigos</p>
-                            {friends.map((friend) => (
+                            {friends.map((friend, index) => (
                                 <div
                                     key={friend.id}
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}
@@ -260,6 +273,7 @@ const WaitingModal = forwardRef((props, ref) => {
                                             height: '20px',
                                             cursor: 'pointer',
                                             marginLeft: '10px',
+                                            color: 'black',
                                         }}
                                         onClick={() => sendInvitation(friend.id)}
                                     />
@@ -331,7 +345,7 @@ const WaitingModal = forwardRef((props, ref) => {
             <LeavingGameModal
                 modalIsOpen={leavingModal}
                 setIsOpen={setLeavingModal}
-                />
+            />
             <ExpeledModal
                 modalIsOpen={expeledView} />
         </>

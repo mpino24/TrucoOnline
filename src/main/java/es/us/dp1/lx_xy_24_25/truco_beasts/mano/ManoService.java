@@ -13,11 +13,14 @@ import org.springframework.stereotype.Service;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.Carta;
 import es.us.dp1.lx_xy_24_25.truco_beasts.carta.CartaRepository;
+import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Metrica;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.FlorException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
 import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
@@ -35,14 +38,15 @@ public class ManoService {
 
 	private final ConverterTruco converterTruco = new ConverterTruco();
     private final ConverterRespuestaTruco converterRespuestaTruco = new ConverterRespuestaTruco(this);
-
+    private final PartidaJugadorService partidaJugadorService;
 	
     
 
     @Autowired
-    public ManoService(CartaRepository cartaRepository, PartidaService partidaService) {
+    public ManoService(CartaRepository cartaRepository, PartidaService partidaService, PartidaJugadorService partidaJugadorService) {
         this.cartaRepository = cartaRepository;
         this.partidaService = partidaService;
+        this.partidaJugadorService= partidaJugadorService;
     }
 
     public void actualizarMano(Mano mano, String codigo){
@@ -86,6 +90,211 @@ public class ManoService {
 		return res;
 	}
 
+public List<List<Carta>> repartirCartasSoloFlor(Partida partida) {
+    Integer numJugadores = partida.getNumJugadores();
+    Integer cartasEnLaBaraja = 40;
+    Integer cartasPorJugador = 3;
+
+    // 1) Verificamos que haya suficientes cartas
+    if (numJugadores * cartasPorJugador > cartasEnLaBaraja) {
+        throw new IllegalArgumentException("No hay suficientes cartas para todos los jugadores.");
+    }
+
+    // 2) Obtenemos los IDs del 1 al 40
+    List<Integer> listaCartasId = IntStream.rangeClosed(1, cartasEnLaBaraja)
+                                          .boxed()
+                                          .collect(Collectors.toList());
+
+    // 3) "Barajamos" los IDs para luego repartir
+    Collections.shuffle(listaCartasId);
+
+    // 4) Agrupamos las cartas por Palo en un Map<Palo, List<Carta>>
+    Map<Palo, List<Carta>> cartasPorPalo = new HashMap<>();
+    for (Palo p : Palo.values()) {
+        cartasPorPalo.put(p, new ArrayList<>()); 
+    }
+
+    // 5) Cargamos las 40 cartas en el Map (según su palo)
+    for (Integer id : listaCartasId) {
+        Carta carta = findCarta(id);
+        if (carta != null) {
+            Palo palo = carta.getPalo();
+            cartasPorPalo.get(palo).add(carta);
+        }
+    }
+
+    // 6) Asegurarnos de "barajar" internamente la lista de cada palo
+    for (Palo palo : cartasPorPalo.keySet()) {
+        Collections.shuffle(cartasPorPalo.get(palo));
+    }
+
+    // 7) Ahora repartimos 3 cartas del mismo palo a cada jugador
+    List<List<Carta>> res = new ArrayList<>();
+    for (int i = 0; i < numJugadores; i++) {
+        List<Carta> cartasJugador = new ArrayList<>();
+
+        // 7a) Buscamos un palo que aún tenga >= 3 cartas disponibles
+        //     Podrías escoger un "palo" al azar, o simplemente iterar los palos en orden
+        Palo paloSeleccionado = null;
+        for (Palo p : Palo.values()) {
+            if (cartasPorPalo.get(p).size() >= cartasPorJugador) {
+                paloSeleccionado = p;
+                break;
+            }
+        }
+
+        // Si no encontraste ningún palo con 3 cartas disponibles, error
+        if (paloSeleccionado == null) {
+            throw new IllegalArgumentException("No hay palos suficientes para repartir flor a todos los jugadores");
+        }
+
+        // 7b) Tomamos las 3 primeras cartas de ese palo
+        List<Carta> listaDelPalo = cartasPorPalo.get(paloSeleccionado);
+        for (int j = 0; j < cartasPorJugador; j++) {
+            cartasJugador.add(listaDelPalo.remove(0)); 
+        }
+
+        res.add(cartasJugador);
+    }
+
+    return res;
+}
+
+public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
+    Integer numJugadores = partida.getNumJugadores();
+    Integer cartasEnLaBaraja = 40;       // Asumiendo baraja de 40 cartas
+    Integer cartasPorJugador = 3;
+
+    // 1) Verificamos que haya cartas suficientes
+    if (numJugadores * cartasPorJugador > cartasEnLaBaraja) {
+        throw new IllegalArgumentException("No hay suficientes cartas para todos los jugadores.");
+    }
+
+    // 2) Generamos la lista de IDs de 1..40 y la barajamos
+    List<Integer> listaCartasId = IntStream.rangeClosed(1, cartasEnLaBaraja)
+                                          .boxed()
+                                          .collect(Collectors.toList());
+    Collections.shuffle(listaCartasId);
+
+    // 3) Cargamos todas las cartas en memoria, agrupadas por Palo
+    Map<Palo, List<Carta>> cartasPorPalo = new HashMap<>();
+    for (Palo p : Palo.values()) {
+        cartasPorPalo.put(p, new ArrayList<>());
+    }
+
+    // Rellenamos el Map<Palo, List<Carta>> con los 40 IDs (barajeados)
+    for (Integer id : listaCartasId) {
+        Carta c = findCarta(id);
+        if (c != null) {
+            cartasPorPalo.get(c.getPalo()).add(c);
+        }
+    }
+
+    // 4) Seleccionamos al "jugadorFlor": puede ser el primero (índice 0) 
+    //    o uno aleatorio. Aquí, elegimos el primero por simplicidad.
+    int jugadorFlor = 0;
+
+    // 5) Elegimos un palo que tenga al menos 3 cartas
+    //    (Por simplicidad, nos quedamos con el primero que encontremos)
+    Palo paloFlor = null;
+    for (Palo p : Palo.values()) {
+        if (cartasPorPalo.get(p).size() >= 3) {
+            paloFlor = p;
+            break;
+        }
+    }
+    if (paloFlor == null) {
+        throw new IllegalArgumentException("No hay ningún palo con >=3 cartas disponibles.");
+    }
+
+    // 6) Extraemos 3 cartas de ese palo
+    List<Carta> listaFlor = cartasPorPalo.get(paloFlor);
+    // Barajamos internamente para tomar 3 aleatorias de ese palo
+    Collections.shuffle(listaFlor);
+    List<Carta> manoFlor = new ArrayList<>();
+    for (int i = 0; i < cartasPorJugador; i++) {
+        manoFlor.add(listaFlor.remove(0));
+    }
+
+    // 7) Para el resto de jugadores, repartimos 3 cartas de palos distintos.
+    //    (Para asegurar que NO tengan flor.)
+    //    Tomamos las cartas restantes en la baraja y las "barajamos".
+    List<Carta> barajaRestante = new ArrayList<>();
+    for (Palo p : Palo.values()) {
+        barajaRestante.addAll(cartasPorPalo.get(p));
+    }
+    Collections.shuffle(barajaRestante);
+
+    // Estructura final: 
+    // Repartiremos [ [flor para jugadorFlor], [3 cartas sin flor], [3 cartas sin flor], ... ]
+    List<List<Carta>> resultado = new ArrayList<>();
+    // Ponemos primero la mano del jugadorFlor
+    resultado.add(jugadorFlor, manoFlor);
+
+    // 8) Para los demás jugadores, sacamos 3 cartas de la barajaRestante asegurando NO sean flor.
+    //    => Si por casualidad salen 3 del mismo palo, "forzamos" un cambio.
+    //    => Lo haremos de forma sencilla: 
+    //       - Cogemos la barajaRestante en orden
+    //       - Vamos dando cartas y verificamos que no formen flor.
+    
+    int jugador = 0; // índice de jugador
+    for (int i = 0; i < numJugadores; i++) {
+        if (i == jugadorFlor) {
+            continue; // ya repartimos las 3 cartas del palo
+        }
+        List<Carta> manoJugador = new ArrayList<>();
+
+        // Sacamos cartas una a una, garantizando que no salgan 3 de mismo palo
+        while (manoJugador.size() < 3) {
+            Carta siguienteCarta = barajaRestante.remove(0);
+            manoJugador.add(siguienteCarta);
+
+            // Si ya tiene 3, chequeamos si es flor (mismo palo)
+            if (manoJugador.size() == 3) {
+                Palo p1 = manoJugador.get(0).getPalo();
+                Palo p2 = manoJugador.get(1).getPalo();
+                Palo p3 = manoJugador.get(2).getPalo();
+                if (p1.equals(p2) && p2.equals(p3)) {
+                    // => Se formó flor "por accidente". 
+                    //    REEMPLAZAMOS la 3ra carta por otra para forzar que no sea flor
+                    //    (o repetimos la selección).
+                    boolean encontreDistinta = false;
+                    for (int idx = 0; idx < barajaRestante.size(); idx++) {
+                        Carta cartaAlternativa = barajaRestante.get(idx);
+                        if (!cartaAlternativa.getPalo().equals(p1)) {
+                            // Reemplazamos
+                            manoJugador.set(2, cartaAlternativa);
+                            barajaRestante.remove(idx);
+                            // Regresamos la carta previa al final de la baraja
+                            barajaRestante.add(siguienteCarta);
+                            encontreDistinta = true;
+                            break;
+                        }
+                    }
+                    if (!encontreDistinta) {
+                        // Si no encontré ninguna carta de distinto palo,
+                        // es que la baraja no permite "no dar flor".
+                        throw new IllegalArgumentException(
+                            "No hay suficientes cartas para evitar flor al resto de jugadores."
+                        );
+                    }
+                }
+            }
+        }
+        // insertamos en la posición i
+        if (resultado.size() <= i) {
+            // Expandimos la lista con nulls si hace falta
+            while (resultado.size() <= i) {
+                resultado.add(null);
+            }
+        }
+        resultado.set(i, manoJugador);
+    }
+
+    return resultado;
+}
+
+
 	public Carta findCarta(Integer cartaId){
 		Carta res = cartaRepository.findById(cartaId).orElse(null);
 		return res;
@@ -97,17 +306,20 @@ public class ManoService {
 		
 		nuevaMano.setPartida(partida);
 		nuevaMano.setJugadorTurno(partida.getJugadorMano());
-		nuevaMano.setCartasDisp(repartirCartas(partida));
+		nuevaMano.setCartasDisp(repartirCartas(partida)); 
 
         Integer tiposDeEnvido = 3;
         Integer envidosIniciales=0;
+        Integer numCantosFlorIniciales=0;
         List<Integer> envidos = new ArrayList<>();
         for(int i = 0; i<tiposDeEnvido;i++){
             envidos.add(envidosIniciales);
         }
         nuevaMano.setEnvidosCantados(envidos);
-        nuevaMano.listaTantosCadaJugador();
-
+        nuevaMano.crearListaTantosCadaJugador();
+        nuevaMano.crearListaTantosCadaJugadorFlor();
+        nuevaMano.setFloresCantadas(numCantosFlorIniciales);
+        
 		Integer ganadasIniciales = 0;
 		List<Integer> ganadoresRonda = new ArrayList<>();
 		ganadoresRonda.add(ganadasIniciales);
@@ -124,6 +336,8 @@ public class ManoService {
         nuevaMano.setCartasLanzadasTotales(inicializarCartasLanzadasTotales(numJugadores));
         nuevaMano.setCartasLanzadasRonda(listaCartasLanzadas);
         nuevaMano.comprobarSiPuedeCantarEnvido(true);
+        nuevaMano.comprobarSiPuedeCantarFlor();
+
         actualizarMano(nuevaMano, partida.getCodigo());
 		return nuevaMano;
 	}
@@ -180,6 +394,7 @@ public class ManoService {
             }
             manoActual.comprobarSiPuedeCantarTruco();
             manoActual.comprobarSiPuedeCantarEnvido(true);
+            manoActual.comprobarSiPuedeCantarFlor();
             actualizarMano(manoActual, codigo);
             return cartaALanzar;
         } else{
@@ -187,6 +402,50 @@ public class ManoService {
         }
         
     }
+
+    public Boolean envidoBajoMenorAlResto(Mano mano, Integer jugadorDelTurno){ //FALTA TEST TODO
+        Boolean res = false;
+        Integer envidoBajo =24; //segun los ojos del que juege puede pensarse que no es tan bajo, por eso una variable
+        if(mano.getEquipoGanadorEnvido()%2 != jugadorDelTurno%2 && mano.getTantoDe1Jugador(jugadorDelTurno)<=envidoBajo){
+            res = true;
+
+        }
+        return res;
+    }
+
+    public Mano comprobarEngaño(Mano mano, Integer jugadorDelTurno, Boolean dijoNoQuiero){ //TODO hacer tests
+
+        if(!mano.getEstaMintiendo()){
+            if(envidoBajoMenorAlResto(mano, jugadorDelTurno)){
+                mano.setEstaMintiendo(true);
+            }
+        }else{ //Ya se sabe que el otro jugador estaba mintiendo  
+            if(dijoNoQuiero!=null){
+                if(dijoNoQuiero){ //Es decir, el otro, aunque ganaba, tuvo miedo y dijo no quiero
+                    partidaJugadorService.sumar1Estadistica(mano.getPartida().getCodigo(),jugadorDelTurno, Metrica.NUMERO_ENGANOS); //le sumamos el engaño
+                }else{ //no tuvo miedo :(
+                    partidaJugadorService.sumar1Estadistica(mano.getPartida().getCodigo(),jugadorDelTurno, Metrica.ATRAPADO); //Fue atrapado
+                }
+            }
+            
+        }
+        return mano;
+    }
+
+    public void sumarQuieroNoQuiero(Cantos canto, Integer jugador, String codigo){
+        switch (canto) {
+            case QUIERO:
+                partidaJugadorService.sumar1Estadistica(codigo, jugador, Metrica.QUIEROS);
+                break;
+            case NO_QUIERO:
+                partidaJugadorService.sumar1Estadistica(codigo, jugador, Metrica.NO_QUIEROS);
+                break;
+            default:
+                //nada
+                break;
+        }
+    }
+
 
     public Mano cantosEnvido(String codigo, Cantos canto){
         Mano manoActual = getMano(codigo);
@@ -202,6 +461,7 @@ public class ManoService {
         manoActual.comprobarSiPuedeCantarEnvido(false);
         Integer queEnvidoPuedoCantar = manoActual.getQueEnvidoPuedeCantar();
         manoActual.setEsTrucoEnvidoFlor(1);
+        manoActual = comprobarEngaño(manoActual, jugadorTurno, null);
             switch (canto) {
                 case ENVIDO:
                     if (queEnvidoPuedoCantar<3) {
@@ -210,6 +470,8 @@ public class ManoService {
                     Integer envidos = envidosCantados.get(0);
                     envidosCantados.set(0, envidos+1);
                     manoActual.setJugadorTurno(quienResponde);
+                    manoActual.comprobarSiPuedeCantarFlor();
+
                     break;
                 case REAL_ENVIDO:
                     if(queEnvidoPuedoCantar<2){
@@ -218,6 +480,8 @@ public class ManoService {
                     Integer realEnvidos = envidosCantados.get(1);
                     envidosCantados.set(1, realEnvidos+1);
                     manoActual.setJugadorTurno(quienResponde);
+                    manoActual.comprobarSiPuedeCantarFlor();
+
                     break;
                 case FALTA_ENVIDO:
                     if(queEnvidoPuedoCantar<1){
@@ -226,6 +490,8 @@ public class ManoService {
                     Integer faltaEnvidos = envidosCantados.get(2);
                     envidosCantados.set(2, faltaEnvidos+1);
                     manoActual.setJugadorTurno(quienResponde);
+                    manoActual.comprobarSiPuedeCantarFlor();
+
                     break;
                 default:
                     throw new EnvidoException("Canto no valido");
@@ -244,16 +510,64 @@ public class ManoService {
         return manoActual;
     }
 
+    
+
+
+    public Mano cantosFlor(String codigo, Cantos canto){
+        Mano manoActual = getMano(codigo);
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+        Integer numCantosFlores = manoActual.getFloresCantadas();
+        
+        if(manoActual.getEsperandoRespuesta()==false){
+            manoActual.setJugadorIniciadorDelCanto(jugadorTurno);
+        }
+        manoActual.setEsperandoRespuesta(true);
+        try {
+        manoActual.comprobarSiPuedeCantarFlor();
+        Integer queFlorPuedeCantar = manoActual.getQueFlorPuedeCantar();
+        manoActual.setEsTrucoEnvidoFlor(2);
+
+            if(canto.equals(Cantos.FLOR)){ //AQUI ESTA LA FLOOOOOOOOOOOOOOOOOOOOOOOOR
+                    if (queFlorPuedeCantar!=1) {
+                        throw new FlorException("No podés cantar más veces flor/No tenés flor");
+                    }
+                    partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
+                    numCantosFlores=numCantosFlores+1;
+                    manoActual.setEquipoCantor(null); //PARA RESETEAR EL TRUCO
+                    Integer envidosIniciales=0;
+                    Integer tiposDeEnvido=3;
+                    List<Integer> envidos = new ArrayList<>();
+                    for(int i = 0; i<tiposDeEnvido;i++){
+                        envidos.add(envidosIniciales);
+                    }
+                    manoActual.setEnvidosCantados(envidos); //PARA RESETEAR EL ENVIDO
+                    sumar3PuntosSiSoloUnJugadorTieneFlor(manoActual);
+                    manoActual=getMano(codigo);
+                    manoActual.setFloresCantadas(numCantosFlores);
+            }
+
+            else throw new FlorException("Canto no valido");
+        } catch (Exception e) {
+            manoActual.setEsperandoRespuesta(false);
+            throw e;
+        }
+        manoActual.setUltimoMensaje(canto);
+        manoActual.comprobarSiPuedeCantarFlor();
+        manoActual.setPuedeCantarEnvido(false);
+        actualizarMano(manoActual, codigo);
+        return manoActual;
+    }
+
     public void responderEnvido(String codigo, Cantos respuesta){
         Mano manoActual = getMano(codigo);
         Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
         manoActual.setEquipoCantor(null);
+        Integer jugadorTurno = manoActual.getJugadorTurno();
         
+        sumarQuieroNoQuiero(respuesta, jugadorTurno, codigo); // ESTADISTICA
         switch (respuesta) {
             case QUIERO:
-                
-                
-                
+                manoActual = comprobarEngaño(manoActual, jugadorIniciador, false); //ESTADISTICA
                 gestionarPuntosEnvido(false, codigo);
                 manoActual = getMano(codigo);
                 manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS);
@@ -264,7 +578,7 @@ public class ManoService {
                 break;
             case NO_QUIERO:
                 
-                
+                manoActual = comprobarEngaño(manoActual, jugadorIniciador, true); //ESTADISTICA
                 gestionarPuntosEnvido(true, codigo);
                 
                 manoActual = getMano(codigo);
@@ -276,14 +590,81 @@ public class ManoService {
                 break;
 
             default:
-                cantosEnvido(codigo, respuesta);
+                manoActual =cantosEnvido(codigo, respuesta);
                 break;
         }
     
         actualizarMano(manoActual, codigo);
     }
 
-    //TODO: PROBABLEMENTE SEA MÁS CONVENIENTE EN MANOSERVICE
+    public void responderFlor(String codigo, Cantos respuesta){
+        Mano manoActual = getMano(codigo);
+        Integer jugadorIniciador = manoActual.getJugadorIniciadorDelCanto();
+        manoActual.setEquipoCantor(null);
+        Integer puntosRechazoNoQuiero=5;
+        Integer puntosRechazoAchicarse=4;
+        Integer numCantosFlores = manoActual.getFloresCantadas();
+        Integer queFlorPuedeCantar = manoActual.getQueFlorPuedeCantar();
+        Integer quienRespondeFlor = manoActual.quienRespondeFlor();
+        Integer jugadorTurno = manoActual.getJugadorTurno();
+
+        sumarQuieroNoQuiero(respuesta, jugadorTurno, codigo);
+        
+        switch (respuesta) {
+            case QUIERO:
+                gestionarPuntosFlor(false, codigo,null);
+                manoActual.setUltimoMensaje(Cantos.LISTA_ENVIDOS_FLOR);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
+                manoActual.comprobarSiPuedeCantarTruco();
+                manoActual.setQueFlorPuedeCantar(0);
+                break;
+
+            case CON_FLOR_ME_ACHICO:
+                partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
+                gestionarPuntosFlor(true, codigo,puntosRechazoAchicarse);
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.CON_FLOR_ME_ACHICO);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
+                manoActual.comprobarSiPuedeCantarTruco();
+                manoActual.setQueFlorPuedeCantar(0);
+
+
+                break;
+
+            case NO_QUIERO:
+
+                gestionarPuntosFlor(true, codigo,puntosRechazoNoQuiero);
+                manoActual = getMano(codigo);
+                manoActual.setUltimoMensaje(Cantos.NO_QUIERO);
+                manoActual.setJugadorTurno(jugadorIniciador);
+                manoActual.setJugadorIniciadorDelCanto(null);
+                manoActual.comprobarSiPuedeCantarTruco();
+                manoActual.setQueFlorPuedeCantar(0);
+                
+                break;
+
+             case CONTRAFLOR:
+                    if(queFlorPuedeCantar!=2){
+                        throw new EnvidoException("No podés cantar contraflor capo");
+                    }
+                    partidaJugadorService.sumar1Estadistica(codigo, jugadorTurno,  Metrica.NUMERO_FLORES); // ESTADISTICA (IMPORTANTE QUE ESTE ANTES DE QUE SE CAMBIE DE TURNO)
+                    numCantosFlores=numCantosFlores+1;
+                    manoActual.setFloresCantadas(numCantosFlores);
+                    manoActual.setJugadorTurno(quienRespondeFlor);
+                    manoActual.setUltimoMensaje(Cantos.CONTRAFLOR);
+                    manoActual.comprobarSiPuedeCantarFlor();
+                    break;
+          
+            default:
+                 throw new FlorException("Canto no valido");
+        }
+        manoActual.comprobarSiPuedeCantarTruco();
+        actualizarMano(manoActual, codigo);
+    }
+
+   
     public Integer gestionarPuntosEnvido(Boolean noQuiero, String codigo){
         Mano manoActual = getMano(codigo);
 
@@ -356,10 +737,47 @@ public class ManoService {
         return res;
         
     }
+    public Integer gestionarPuntosFlor(Boolean rechazoFlor, String codigo, Integer puntosRechazo){
+        Mano manoActual = getMano(codigo);
+        Integer res = manoActual.getPuntosFlor(); //Siempre sera cero en un principio
+        Partida partida = partidaService.findPartidaByCodigo(codigo);
+        Integer equipoRespondedor = manoActual.getJugadorTurno()%2;
+        Integer puntosEquipo1 = partida.getPuntosEquipo1();
+        Integer puntosEquipo2 = partida.getPuntosEquipo2();
+        Integer equipoGanadorContraflor = manoActual.getEquipoGanadorFlor();
+       
+        Integer puntosContraflorQuiero = 6;
+        
+        if(rechazoFlor){
+            res=puntosRechazo;
+
+            if(equipoRespondedor==0){
+                partida.setPuntosEquipo2(puntosEquipo2 + res);
+            }else{
+                partida.setPuntosEquipo1(puntosEquipo1 + res);
+            }
+            
+        }else{
+            res=puntosContraflorQuiero;
+            if(equipoGanadorContraflor==0){
+                partida.setPuntosEquipo1(puntosEquipo1 + res);
+            }else{
+                partida.setPuntosEquipo2(puntosEquipo2 + res);
+            }
+            
+        }
+        manoActual.setPuntosFlor(res);
+        manoActual.setPuedeCantarFlor(false);
+        manoActual.setFloresCantadas(9);
+        manoActual.setEsperandoRespuesta(false);
+        partidaService.updatePartida(partida, partida.getId());
+        actualizarMano(manoActual, codigo);
+        return res;
+        
+    }
 
 
-
-	//TODO: FALTAN TEST NEGATIVOS
+	
     public Mano cantosTruco(String codigo, Cantos canto){
 		Mano manoActual = getMano(codigo);
         Integer jugadorTurno = manoActual.getJugadorTurno();
@@ -401,7 +819,7 @@ public class ManoService {
         
 
         Mano mano = new Mano();
-        
+        sumarQuieroNoQuiero(respuesta, manoActual.getJugadorTurno(), codigo);
 
         RespuestaTruco respuestaTruco =   converterRespuestaTruco.convertToEntityAttribute(respuesta);
         
@@ -449,5 +867,47 @@ public class ManoService {
 		
 		
 	}
+    private void sumar3PuntosSiSoloUnJugadorTieneFlor(Mano manoActual) {
+        // 1) Obtenemos la lista de tantos de Flor de cada jugador
+        Integer jugadorIniciador=manoActual.getJugadorIniciadorDelCanto();
+        Integer jugadorActual=manoActual.getJugadorTurno();
+        String codigo= manoActual.getPartida().getCodigo();
+        Boolean jugadorDeOtroEquipoConFlor=false;
+        List<Boolean> listaFloreh=manoActual.getListaTienenFlores();
+   
+        for(int i = manoActual.siguienteJugador(jugadorActual); i!=jugadorActual;i= manoActual.siguienteJugador(i)){
+            Boolean tieneFlor=listaFloreh.get(i);
+            if(tieneFlor && jugadorActual%2!=i%2){
+                jugadorDeOtroEquipoConFlor=true;
+            }
+        }
+        // 2) Si sólo 1 jugador tiene Flor, sumamos 3 puntos a quien la cantó
+        if (!jugadorDeOtroEquipoConFlor) {
+            // El equipo del que cantó la Flor
+            Integer equipoCantorFlor = manoActual.getJugadorIniciadorDelCanto() % 2;
+            Partida partida = manoActual.getPartida();
+            Integer puntosEquipo1 = partida.getPuntosEquipo1();
+            Integer puntosEquipo2 = partida.getPuntosEquipo2();
+            manoActual.setEsperandoRespuesta(false);
+            manoActual.setJugadorTurno(jugadorIniciador);
+            manoActual.comprobarSiPuedeCantarTruco();
+
+            if (equipoCantorFlor == 0) {
+                partida.setPuntosEquipo1(puntosEquipo1 + 3);
+            } else {
+                partida.setPuntosEquipo2(puntosEquipo2 + 3);
+            }
+    
+            // 4) Actualizamos la partida
+            partidaService.updatePartida(partida, partida.getId());
+            
+        }
+        else{ manoActual.setJugadorTurno(manoActual.quienRespondeFlor());
+            manoActual.setPuedeCantarTruco(false);
+            manoActual.comprobarSiPuedeCantarFlor();
+
+    }
+    
+    actualizarMano(manoActual, codigo);}
 
 }

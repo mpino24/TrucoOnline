@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
@@ -41,6 +40,8 @@ public class PartidaControllerTests {
     @MockBean
     private PartidaService partidaService;
 
+    @MockBean
+    private PartidaJugadorService partJugService;
     
 
     @MockBean
@@ -71,6 +72,7 @@ public class PartidaControllerTests {
         autoridadAdmin.setAuthority("ADMIN");
 
         usuarioAdmin.setId(1);
+        usuarioAdmin.setIsConnected(true);
         usuarioAdmin.setUsername("admin");
         usuarioAdmin.setAuthority(autoridadAdmin);
 
@@ -79,6 +81,7 @@ public class PartidaControllerTests {
         autoridadJugador.setAuthority("PLAYER");
 
         usuarioJugador.setId(2);
+        usuarioJugador.setIsConnected(true);
         usuarioJugador.setUsername("player");
         usuarioJugador.setAuthority(autoridadJugador);
 

@@ -367,8 +367,8 @@ public class PartidaJugadorControllerTest {
 
     
     public void setupListaPartidaJugadorView(){
-        partidaJugadorView1 = new PartidaJugadorView("player1", "hola", 1);
-        partidaJugadorView2 = new PartidaJugadorView("player2", "adios", 2);
+        partidaJugadorView1 = new PartidaJugadorView("player1", "hola", 1,1);
+        partidaJugadorView2 = new PartidaJugadorView("player2", "adios", 2,1);
 
     }
 

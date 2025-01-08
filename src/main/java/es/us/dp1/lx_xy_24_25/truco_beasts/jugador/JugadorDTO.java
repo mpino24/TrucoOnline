@@ -4,6 +4,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Mensaje;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,8 @@ public class JugadorDTO {
     String lastName;
     @NotEmpty
     String photo;
+    @NotNull
+    Boolean isConnected;
 
     @Enumerated(EnumType.STRING)
     Amistad amistad;
@@ -39,7 +42,7 @@ public class JugadorDTO {
         this.firstName=j.getFirstName();
         this.lastName=j.getLastName();
         this.photo=j.getPhoto();
-
+        this.isConnected=j.getUser().getIsConnected();
 
     }
     

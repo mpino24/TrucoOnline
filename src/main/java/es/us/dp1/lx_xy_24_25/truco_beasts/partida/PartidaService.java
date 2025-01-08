@@ -1,7 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partida;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,11 +18,11 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.PlayerNotConnectedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import jakarta.validation.Valid;
@@ -106,25 +105,16 @@ public class PartidaService {
 		
 	}
 
-	
 	@Transactional(readOnly = true)
-	public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
-		Optional<Partida> p = partidaRepository.findPartidaByCodigo(codigo);
-		return p.isEmpty()?null: p.get();
-	}
-
-	@Transactional(readOnly = true)
-	public List<PartidaDTO> getPartidasActivasYParticipantes() {
+	public List<PartidaDTO> findPartidasActivasYParticipantes() {
 		List<Partida> partidas = partidaRepository.findPartidasActivasAdmin();
         return recogedorDePartidas(partidas);
     }
-
 	@Transactional(readOnly = true)
-	public List<PartidaDTO> getPartidasTerminadasYParticipantes() {
+	public List<PartidaDTO> findPartidasTerminadasYParticipantes() {
 		List<Partida> partidas = partidaRepository.findPartidasTerminadasAdmin();
         return recogedorDePartidas(partidas);
     }
-
 	public List<PartidaDTO> recogedorDePartidas(List<Partida> partidas) {
 		List<PartidaDTO> res = new ArrayList<>();
 		for(int i=0;i<partidas.size();i++) {
@@ -140,6 +130,12 @@ public class PartidaService {
 		}
         return res;
 	}
+	
+	@Transactional(readOnly = true)
+	public Partida findPartidaByCodigo(String codigo) throws DataAccessException {
+		Optional<Partida> p = partidaRepository.findPartidaByCodigo(codigo);
+		return p.isEmpty()?null: p.get();
+	}
 
 	@Transactional
 	public void startGame(String codigo){
@@ -148,6 +144,14 @@ public class PartidaService {
 		if(partida==null){
 			throw new ResourceNotFoundException("La partida no existe");
 		}
+		
+		List<PartidaJugador> jugadores = pjRepository.findPlayersConnectedTo(codigo);
+		for(PartidaJugador pj: jugadores){
+			if(!pj.getPlayer().getUser().getIsConnected()){
+				throw new PlayerNotConnectedException(pj.getPlayer().getUser().getUsername());
+			}
+		}
+
 		Integer jugadorMano =  (int) (Math.random() * partida.getNumJugadores());
 		partida.setJugadorMano(jugadorMano);
 		User currentUser= userService.findCurrentUser();

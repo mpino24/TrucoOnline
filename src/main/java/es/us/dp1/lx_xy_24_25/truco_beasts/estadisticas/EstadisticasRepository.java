@@ -8,12 +8,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
 public interface EstadisticasRepository extends CrudRepository<PartidaJugador, Integer> {
     
-
+    
     //POR JUGADOR
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
     Integer findAllPartidasJugadas(Integer jugadorId);
@@ -22,7 +19,6 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
     Integer findTiempoJugado(Integer jugadorId);
 
 
-    //No me puedo creer que haya hecho esta megaquery y encima que funcione (o mejor dicho, que no de error)
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL AND ((p.posicion%2 = 0 AND p.game.puntosEquipo1 > p.game.puntosEquipo2) OR (p.posicion%2 = 1 AND p.game.puntosEquipo2 > p.game.puntosEquipo1))")
     Integer findVictorias(Integer jugadorId);
 
@@ -40,6 +36,9 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
     @Query("SELECT SUM(p.enganos) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
     Integer findNumeroEnganos(Integer jugadorId);
 
+    @Query("SELECT SUM(p.atrapado) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
+    Integer findNumeroAtrapado(Integer jugadorId);
+
     @Query("SELECT SUM(p.quierosCantados) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
     Integer findQuieros (Integer jugadorId);
 
@@ -49,6 +48,23 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
 
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL AND p.game.conFlor = true")
     Integer findPartidasConFlor(Integer jugadorId);
+
+    
+    @Query("SELECT " +
+    "CASE WHEN ((p.posicion%2 = 0 AND p.game.puntosEquipo1 > p.game.puntosEquipo2) OR " +
+    "(p.posicion%2 = 1 AND p.game.puntosEquipo2 > p.game.puntosEquipo1)) THEN true ELSE false END, " +
+    "p.game.instanteFin, " +
+    "p.game.conFlor, " +
+    "COALESCE(p.enganos, 0), " +
+    "COALESCE(p.atrapado, 0), " +
+    "COALESCE(p.floresCantadas,0)"+
+    "FROM PartidaJugador p " +
+    "WHERE p.player.id = :jugadorId AND p.game.instanteFin IS NOT NULL")
+List<Object[]> findAllDatosPorPartidaByJugadorId(Integer jugadorId);
+
+
+
+
 
     //GLOBALES
     @Query("SELECT COUNT(p) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
@@ -75,6 +91,10 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
 
     @Query("SELECT SUM(p.enganos) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
     Integer findNumeroEnganosGlobal();
+
+    @Query("SELECT SUM(p.atrapado) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
+    Integer findNumeroAtrapadoGlobal();
+
 
     @Query("SELECT SUM(p.quierosCantados) FROM PartidaJugador p WHERE p.game.instanteFin IS NOT NULL")
     Integer findQuierosGlobal ();

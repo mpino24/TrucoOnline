@@ -17,7 +17,6 @@ public interface PartidaRepository extends CrudRepository<Partida, Integer> {
 
     @Query("SELECT p FROM Partida p WHERE (p.instanteInicio IS NULL OR p.instanteFin IS NULL)")
     List<Partida> findPartidasActivasAdmin();
-
     @Query("SELECT p FROM Partida p WHERE (p.instanteFin IS NOT NULL)")
     List<Partida> findPartidasTerminadasAdmin();
 

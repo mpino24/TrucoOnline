@@ -92,7 +92,7 @@ class UserControllerTests {
 	}
 
 	@Test
-	@WithMockUser("admin")
+	@WithMockUser(username = "admin1", authorities = "ADMIN")
 	void shouldFindAll() throws Exception {
 		User sara = new User();
 		sara.setId(2);
@@ -166,11 +166,12 @@ class UserControllerTests {
 	}
 
 	@Test
-	@WithMockUser("admin")
+	@WithMockUser(username = "admin1", authorities = "ADMIN")
 	void shouldCreateUser() throws Exception {
 		User aux = new User();
 		aux.setUsername("Prueba");
 		aux.setPassword("Prueba");
+		aux.setIsConnected(false);
 		aux.setAuthority(auth);
 
 		mockMvc.perform(post(BASE_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -182,6 +183,7 @@ class UserControllerTests {
 	void shouldUpdateUser() throws Exception {
 		user.setUsername("UPDATED");
 		user.setPassword("CHANGED");
+		user.setIsConnected(false);
 
 		when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
 		when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);
@@ -196,6 +198,7 @@ class UserControllerTests {
 	void shouldReturnNotFoundUpdateUser() throws Exception {
 		user.setUsername("UPDATED");
 		user.setPassword("UPDATED");
+		user.setIsConnected(false);
 
 		when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
 		when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);
