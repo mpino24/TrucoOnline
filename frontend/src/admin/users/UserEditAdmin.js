@@ -67,18 +67,30 @@ export default function UserEditAdmin() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (newPassword) {
-      user.password = newPassword;
-  }
+    const request = {
+      username: user.username,
+      password: user.password,
+      authority: user.authority?.id,
+      firstName: player.firstName,
+      lastName: player.lastName,
+      email: player.email,
+      photo: player.photo,
+    };
+
+    user.password = newPassword ? newPassword : undefined;
   
-    fetch("/api/v1/users" + (user.id ? "/" + user.id : ""), {
-      method: user.id ? "PUT" : "POST",
+    const endpoint = user.id ? `/api/v1/users/${user.id}` : "/api/v1/auth/signup";
+    const method = user.id ? "PUT" : "POST";
+    const body = user.id ? JSON.stringify(user) : JSON.stringify(request)
+  
+    fetch(endpoint, {
+      method: method,
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
+      body: body,
     })
       .then((response) => response.json())
       .then((json) => {
@@ -86,21 +98,24 @@ export default function UserEditAdmin() {
           setMessage(json.message);
           setVisible(true);
         } else {
-          const userId = json.id || user.id;
-          return fetch(`/api/v1/jugador/edit/${userId}`, {
-            method: user.id ? "PUT" : "POST",
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({...player, userId: user.id}),
-          });
+          if (user.id) {
+            return fetch(`/api/v1/jugador/edit/${user.id}`, {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ ...player, userId: user.id }),
+            });
+          } else {
+            window.location.href = "/users";
+          }
         }
       })
-      .then((response) => response.json())
+      .then((response) => response?.json())
       .then((json) => {
-        if (json.message) {
+        if (json?.message) {
           setMessage(json.message);
           setVisible(true);
         } else {
@@ -118,7 +133,9 @@ export default function UserEditAdmin() {
   ));
 
   function handlePasswordChange(event) {
-    setNewPassword(event.target.value);
+    const newPass = event.target.value;
+    setNewPassword(newPass);
+    setUser({ ...user, password: newPass });
   }
 
   return (
@@ -218,20 +235,6 @@ export default function UserEditAdmin() {
             <Label for="authority" className="custom-form-input-label">
               Autoridad
             </Label>
-            {user.id ? (
-              <Input
-                type="select"
-                disabled
-                name="authority"
-                id="authority"
-                value={user.authority?.id || ""}
-                onChange={handleUserChange}
-                className="custom-input"
-              >
-                <option value="">None</option>
-                {authOptions}
-              </Input>
-            ) : (
               <Input
                 type="select"
                 required
@@ -244,7 +247,6 @@ export default function UserEditAdmin() {
                 <option value="">None</option>
                 {authOptions}
               </Input>
-            )}
           </div>
           <div className="custom-button-row">
             <button className="auth-button">Guardar</button>
