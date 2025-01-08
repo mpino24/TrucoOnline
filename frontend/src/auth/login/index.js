@@ -12,7 +12,7 @@ export default function Login() {
   const loginFormRef = React.createRef();
   const jwt = tokenService.getLocalAccessToken();
 
-  if(jwt){ //Redirigimos a la página de inicio si ya hay un usuario logueado
+  if(jwt){
     window.location.href = "/home";
   }
 

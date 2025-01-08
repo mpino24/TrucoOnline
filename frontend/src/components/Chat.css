@@ -55,7 +55,7 @@
   border-radius: 5px; 
 }
 .input-container { 
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   display: flex; 
   padding: 10px; 
 }

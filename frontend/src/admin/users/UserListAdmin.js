@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Table } from "reactstrap";
+import { ButtonGroup, Table } from "reactstrap";
 import tokenService from "../../services/token.service";
 import "../../static/css/admin/adminPage.css";
 import deleteFromList from "../../util/deleteFromList";
 import getErrorModal from "../../util/getErrorModal";
 import useFetchState from "../../util/useFetchState";
+import { useNavigate } from 'react-router-dom';
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -19,6 +20,12 @@ export default function UserListAdmin() {
     setMessage,
     setVisible
   );
+
+  const navigate = useNavigate();
+  const handleRedirect = (path) => {
+    navigate(path);
+  };
+  
   const [paginaActual, setPaginaActual] = useState(0);
   const [alerts, setAlerts] = useState([]);
 
@@ -64,32 +71,30 @@ export default function UserListAdmin() {
         <td>{authority}</td>
         <td>
           <ButtonGroup>
-            <Button
-              size="sm"
-              color="primary"
+            <button
+              className="admin-home-button-edit"
               aria-label={"edit-" + user.id}
-              tag={Link}
-              to={"/users/" + user.id}
+              onClick={() => { navigate("/users/"+user.id) }}
             >
               Editar
-            </Button>
-            <Button
-              size="sm"
-              color="danger"
+            </button>
+            <button
+              className="admin-home-button-delete"
               aria-label={"delete-" + user.id}
-              onClick={() =>
+              onClick={() => {
                 deleteFromList(
-                  `/api/v1/users/${user.id}`,
+                  `/api/v1/jugador/${user.id}`,
                   user.id,
                   [users, setUsersData],
                   [alerts, setAlerts],
                   setMessage,
                   setVisible
-                )
+                ); navigate("/admin")
+                }
               }
             >
               Borrar
-            </Button>
+            </button>
           </ButtonGroup>
         </td>
       </tr>
@@ -99,45 +104,57 @@ export default function UserListAdmin() {
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
-    <div className="admin-page-container">
-      <h1 className="text-center">Usuarios</h1>
-      {alerts.map((a) => a.alert)}
-      {modal}
-      <Button color="success" tag={Link} to="/users/new">
-        Añadir usuario
-      </Button>
-      <div>
-        <Table aria-label="users" className="mt-4">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Authority</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{userList}</tbody>
-        </Table>
-      </div>
-      <div className="pagination-controls">
-        <Button
-          color="primary"
-          size="sm"
-          onClick={handlePaginaAnterior}
-          disabled={paginaActual === 0}
-        >
-          Anterior
-        </Button>
-        <span className="pagination-info">
-          Página {paginaActual + 1} de {totalPaginas}
-        </span>
-        <Button
-          color="primary"
-          size="sm"
-          onClick={handlePaginaSiguiente}
-          disabled={paginaActual === totalPaginas - 1}
-        >
-          Siguiente
-        </Button>
+    <div style={{ 
+      backgroundImage: 'url(/fondos/fondo_admin.png)', 
+      backgroundSize: 'cover', 
+      backgroundRepeat: 'no-repeat', 
+      backgroundPosition: 'center', 
+      height: '100vh', 
+      width: '100vw' 
+      }}>
+    <div expand='md' style={{ float: 'left' }}>
+        <button className="button-admin" onClick={() => { navigate("/admin") }}>
+          VOLVER
+       </button>
+    </div>
+      <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
+        <h1 className="text-center">USUARIOS</h1>
+        {alerts.map((a) => a.alert)}
+        {modal}
+        <button className="admin-home-button-1" onClick={() => {navigate("/users/new")}}>
+          Añadir usuario
+        </button>
+        <div>
+          <Table aria-label="users" className="admin-table mt-4">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Autoridad</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>{userList}</tbody>
+          </Table>
+        </div>
+        <div className="pagination-controls">
+          <button
+            className="admin-home-button-1"
+            onClick={handlePaginaAnterior}
+            disabled={paginaActual === 0}
+          >
+            &lt;
+          </button>
+          <span className="pagination-info">
+            {paginaActual + 1} de {totalPaginas}
+          </span>
+          <button
+            className="admin-home-button-1"
+            onClick={handlePaginaSiguiente}
+            disabled={paginaActual === totalPaginas - 1}
+          >
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
   );

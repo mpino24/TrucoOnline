@@ -15,6 +15,8 @@
  */
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -140,10 +142,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateConnection(Integer id,Boolean isConnected) {
-		User user = findUser(id);
-		user.setIsConnected(isConnected);
-		userRepository.save(user);
+	public void updateConnection() {
+		User usuarioActual = findCurrentUser();
+		usuarioActual.setLastConnection(LocalDateTime.now());
+		userRepository.save(usuarioActual);
 	}
 	
 

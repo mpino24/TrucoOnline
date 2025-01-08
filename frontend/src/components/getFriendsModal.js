@@ -50,7 +50,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     Authorization: `Bearer ${jwt}`,
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -75,7 +75,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     Authorization: `Bearer ${jwt}`,
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -117,7 +117,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     Authorization: `Bearer ${jwt}`,
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                  }
+                }
             }
         )
             .then((response) => response.text())
@@ -158,11 +158,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
     }
 
     function closeModal() {
-        if (chatVisible) {
-            setChatVisible(false);
-        } else {
-            handleModalVisible(props.setModalVisible, props.modalVisible)
-        }
+        handleModalVisible(props.setModalVisible, props.modalVisible)
 
     }
 
@@ -178,12 +174,14 @@ const GetFriendsModal = forwardRef((props, ref) => {
             }}
         >
             <div style={{ backgroundImage: 'url(/fondos/fondoAmigosModal.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100%', width: '100%', overflow: 'hidden', paddingBottom: '60px' }}>
-                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', textAlign: 'left' }} onClick={() => closeModal()} />
+
                 {!chatVisible &&
                     <>
-                        <h1 style={{ fontSize: 30, textAlign: 'center' }}>
-                            Amigos
-                        </h1>
+
+                        <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 }} onClick={() => closeModal()} />
+                        <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>Amigos</h1>
+
+                    
                         <hr></hr>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
@@ -236,12 +234,11 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 }
                 {chatVisible &&
                     <>
-                        <hr></hr>
                         {chatId &&
-                        <Chat
-                            idChat={chatId}
-                            player={jugadorChat}
-                            setChatVisible={setChatVisible}
+                            <Chat
+                                idChat={chatId}
+                                player={jugadorChat}
+                                setChatVisible={setChatVisible}
                             />
                         }
                     </>

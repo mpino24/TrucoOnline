@@ -3,6 +3,7 @@ import tokenService from "../services/token.service";
 import { Client } from "@stomp/stompjs";
 import "./Chat.css";
 import MessageList from "./MessageList";
+import { IoCloseCircle } from "react-icons/io5";
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
   const user = tokenService.getUser();
@@ -127,18 +128,21 @@ const Chat = forwardRef((props, ref) => {
           throw new Error("No se pudo eliminar al amigo.");
         }
         alert("Amigo eliminado exitosamente.");
+        props.setChatVisible(false);
 
       })
       .catch((error) => {
         console.error(error);
         alert("Hubo un problema al eliminar al amigo.");
+
       });
   };
 
 
   return (
     <>
-      <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+    <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 }} onClick={() => props.setChatVisible(false)} />
+      <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
         {props.player?.userName || "Cargando..."}
         {true && (
           <button
@@ -150,6 +154,9 @@ const Chat = forwardRef((props, ref) => {
               padding: "5px 10px",
               cursor: "pointer",
               fontSize: "14px",
+              position: "absolute",
+              right: "0", 
+              marginRight: "10px",
             }}
             onClick={() => setShowConfirmModal(true)}
           >
@@ -157,16 +164,20 @@ const Chat = forwardRef((props, ref) => {
           </button>
         )}
       </h1>
+      <hr></hr>
       <div
         style={{
-          flexGrow: 1,
-          overflowY: "auto",
-          padding: "10px",
-          
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "stretch",
+          height: "85vh",
+          paddingBottom: "0px",
         }}
       >
-
+     
         <MessageList mensajes={mensajes} userId={user.id} />
+  
         <div className="input-container">
           <input
             type="text"
@@ -184,7 +195,6 @@ const Chat = forwardRef((props, ref) => {
             Enviar
           </button>
         </div>
-
       </div>
       {showConfirmModal && (
         <div
@@ -216,7 +226,6 @@ const Chat = forwardRef((props, ref) => {
                 onClick={() => {
                   handleRemoveFriend(props.player.id);
                   setShowConfirmModal(false);
-                  props.setChatVisible(false);
                 }}
                 style={{
                   background: "#ff4d4f",

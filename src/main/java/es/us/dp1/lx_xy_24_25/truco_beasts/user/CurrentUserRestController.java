@@ -82,19 +82,11 @@ public class CurrentUserRestController {
 		
 	}
 
-    @PatchMapping("/disconnect")
-    public ResponseEntity<?> disconnect() {
-        User user = userService.findCurrentUser();
-        userService.updateConnection(user.getId(),false);
-    
-        return ResponseEntity.ok(new MessageResponse("¡Desconexión exitosa!"));
-    }
 
-    @PatchMapping("/connect")
-    public ResponseEntity<?> connect() {
-        User user = userService.findCurrentUser();
-        userService.updateConnection(user.getId(),true);
-        return ResponseEntity.ok(new MessageResponse("Conexión exitosa!"));
+    @PatchMapping("/updateConnection")
+    public ResponseEntity<MessageResponse> updateConnection() {
+        userService.updateConnection();
+        return ResponseEntity.ok(new MessageResponse("¡Conexión actualizada!"));
     }
 
 }

@@ -16,6 +16,7 @@ export default function UserEditAdmin() {
     username: "",
     password: "",
     authority: null,
+    isConnected: false
   };
   const emptyPlayer = {
     firstName: "",
@@ -35,6 +36,7 @@ export default function UserEditAdmin() {
     setVisible,
     id
   );
+  
   const [user, setUser] = useFetchState(
     emptyUser,
     `/api/v1/users/${id}`,
@@ -120,9 +122,16 @@ export default function UserEditAdmin() {
   }
 
   return (
-    <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
+    <div style={{ 
+      backgroundImage: 'url(/fondos/fondo_admin.png)', 
+      backgroundSize: 'cover', 
+      backgroundRepeat: 'no-repeat', 
+      backgroundPosition: 'center', 
+      height: '100vh', 
+      width: '100vw' }}>
     <div className="auth-page-container">
-      {<h2>{user.id ? "Editar usuario" : "Añadir usuario"}</h2>}
+      <div className="hero-div">
+      {<h2>{user.id ? "EDITAR USUARIO" : "AÑADIR USUARIO"}</h2>}
       {modal}
       <div className="auth-form-container">
         <Form onSubmit={handleSubmit}>
@@ -205,10 +214,10 @@ export default function UserEditAdmin() {
               className="custom-input"
             />
           </div>
-          <Label for="authority" className="custom-form-input-label">
-            Autoridad
-          </Label>
           <div className="custom-form-input">
+            <Label for="authority" className="custom-form-input-label">
+              Autoridad
+            </Label>
             {user.id ? (
               <Input
                 type="select"
@@ -248,6 +257,7 @@ export default function UserEditAdmin() {
             </Link>
           </div>
         </Form>
+      </div>
       </div>
     </div>
     </div>

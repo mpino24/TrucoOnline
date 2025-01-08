@@ -1,5 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -116,7 +117,7 @@ class UserServiceTests {
 		User user = new User();
 		user.setUsername("Sam");
 		user.setPassword("password");
-		user.setIsConnected(false);
+		user.setLastConnection(LocalDateTime.now());
 		user.setAuthority(authService.findByAuthority("ADMIN"));
 
 		this.userService.saveUser(user);

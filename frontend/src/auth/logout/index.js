@@ -11,25 +11,9 @@ const Logout = () => {
 
   function sendLogoutRequest() {
     if (jwt || typeof jwt === "undefined") {
-
-      fetch("/api/v1/profile/disconnect", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }).then((response) => {
-        if (response.ok) {
-          tokenService.removeUser();
-          window.localStorage.removeItem("jwt");
-          window.location.href = "/";
-        } else {
-          alert("There was an error logging out");
-        }
-      }
-      );
-    } else {
-      alert("There is no user logged in");
+      tokenService.removeUser();
+      window.localStorage.removeItem("jwt");
+      window.location.href = "/";
     }
   }
 

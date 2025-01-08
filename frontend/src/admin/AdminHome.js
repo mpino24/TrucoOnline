@@ -30,7 +30,7 @@ export default function AdminHome() {
       <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
         <div className="admin-page-container">
             <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-              <h1>ADMINISTRAR</h1>
+              <h1>ADMINISTRACIÓN</h1>
                 <button className="home-button" onClick={() => {navigate("/users")}}>
                 USUARIOS
                 </button>
