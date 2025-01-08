@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.MensajeDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
@@ -28,9 +30,9 @@ public class JugadorService {
     UserService userService;
 
     @Autowired
-    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService,UserService userService ) {
+    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService, UserService userService) {
         this.jugadorRepository = jugadorRepository;
-        this.chatService= chatService;
+        this.chatService = chatService;
         this.userService = userService;
     }
 
@@ -47,13 +49,7 @@ public class JugadorService {
 
     @Transactional(readOnly = true)
     public JugadorDTO findJugadorByUserId(int userId) throws DataAccessException {
-        Optional<Jugador> j = jugadorRepository.findByUserId(userId);
-        if (j.isEmpty()) {
-            throw new ResourceNotFoundException("El jugador de ID " + userId + " no fue encontrado");
-        } else {
-            JugadorDTO res = new JugadorDTO(j.get());
-            return res;
-        }
+        return convertirJugadorADto(userId);
 
     }
 
@@ -93,40 +89,50 @@ public class JugadorService {
 
     @Transactional(readOnly = true)
     public List<JugadorDTO> findAmigosByUserId(int userId) {
-        return jugadorRepository.findAmigosByUserId(userId);
+        List<Jugador> amigos= jugadorRepository.findAmigosByUserId(userId);
+        return amigos.stream()
+                 .map(j -> convertirJugadorADto(j.getId()))
+                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<JugadorDTO> findSolicitudesByUserId(int userId) {
-        return jugadorRepository.findSolicitudesByUserId(userId);
+        List<Jugador> solicitudes= jugadorRepository.findSolicitudesByUserId(userId);
+        return solicitudes.stream()
+                 .map(j -> convertirJugadorADto(j.getId()))
+                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public JugadorDTO findJugadorByUserName(String userName) {
-        Optional<JugadorDTO> res = jugadorRepository.findJugadorByUserName(userName);
+    public JugadorDTO findJugadorByUserName(String userName){
+        Optional<Jugador> res = jugadorRepository.findJugadorByUserName(userName);
         if (res.isEmpty()) {
             throw new ResourceNotFoundException("Jugador no encontrado");
         } else {
-            return res.get();
+            return convertirJugadorADto(res.get().getId());
         }
 
     }
 
     @Transactional(readOnly = true)
-    public boolean checkIfAreFriends(String friendUserName, int userId) {
-        List<JugadorDTO> amigos = jugadorRepository.findAmigosByUserId(userId);
-        return (amigos.stream().map(a -> a.getUserName()).toList().contains(friendUserName));
+    public boolean checkIfAreFriends(int friendId, int userId) throws DataAccessException{
+        JugadorDTO jugadorDTO = findJugadorByUserId(friendId);
+        List<Jugador> amigos = jugadorRepository.findAmigosByUserId(userId);
+        return amigos.stream().anyMatch(a -> userService.findUser(a.getId()).getUsername().equals(jugadorDTO.getUserName()));
 
     }
+
     @Transactional(readOnly = true)
-    public boolean comprobarExistenciaSolicitud(String friendUserName, int userId) {
-        List<JugadorDTO> solicitudes = jugadorRepository.findSolicitudesByUserId(userId);
-        return (solicitudes.stream().map(a -> a.getUserName()).toList().contains(friendUserName));
+    public boolean comprobarExistenciaSolicitud(int friendId, int userId) throws DataAccessException {
+        JugadorDTO jugadorDTO = findJugadorByUserId(friendId);
+        List<Jugador> solicitudes = jugadorRepository.findSolicitudesByUserId(userId);
+        return solicitudes.stream()
+                      .anyMatch(a -> userService.findUser(a.getId()).getUsername().equals(jugadorDTO.getUserName()));
 
     }
 
     @Transactional()
-    public void addNewFriends(int userId, int amigoPlayerId)  {
+    public void addNewFriends(int userId, int amigoPlayerId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
         Optional<Jugador> amigoOpt = jugadorRepository.findById(amigoPlayerId);
         if (!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()) {
@@ -140,12 +146,12 @@ public class JugadorService {
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
                     //Crear entidad de chat entre amigos
-                    Chat chat= new Chat();
-                    List<User> usuarios= new ArrayList<>();
+                    Chat chat = new Chat();
+                    List<User> usuarios = new ArrayList<>();
                     usuarios.add(userService.findCurrentUser());
                     usuarios.add(userService.findUser(amigo.getId()));
                     chat.setUsuarios(usuarios);
-			        chatService.createChat(chat);
+                    chatService.createChat(chat);
                 } else {
                     throw new IllegalStateException("No te puedes agregar a ti mismo");
                 }
@@ -159,7 +165,7 @@ public class JugadorService {
     }
 
     @Transactional
-    public void crearSolicitud(int userId, int solicitadoId){
+    public void crearSolicitud(int userId, int solicitadoId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
         Optional<Jugador> solicitadoOpt = jugadorRepository.findById(solicitadoId);
         if (!jugadorOpt.isEmpty() && !solicitadoOpt.isEmpty()) {
@@ -203,6 +209,7 @@ public class JugadorService {
             throw new ResourceNotFoundException("Usuarios no encontrados");
         }
     }
+
     @Transactional()
     public void deleteSolicitud(int userId, int solicitadoId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
@@ -221,9 +228,32 @@ public class JugadorService {
         }
     }
 
+    public JugadorDTO convertirJugadorADto(Integer userId) {
+        Optional<Jugador> j = jugadorRepository.findByUserId(userId);
+        User currentUser = userService.findCurrentUser();
+        JugadorDTO res = new JugadorDTO(j.get());
+        res.setUltimoMensaje(null);
+        res.setAmistad(null);
+        if (!userId.equals(currentUser.getId())) {
+            if (checkIfAreFriends(userId, currentUser.getId()) == true) {
+                res.setAmistad(Amistad.AMIGOS);
+                Chat chat = chatService.findChatWith(userId);
+                MensajeDTO mensaje = chatService.getLastMessage(chat.getId());
+                res.setUltimoMensaje(mensaje);
+            } else if (comprobarExistenciaSolicitud(userId, currentUser.getId()) == true || comprobarExistenciaSolicitud(currentUser.getId(), userId) == true) {
+                res.setAmistad(Amistad.SOLICITADO);
+            } else {
+                res.setAmistad(Amistad.DESCONOCIDOS);
+            }
+        }
+
+        return res;
+
+    }
+
     @Transactional
-    public void deleteJugadorByUserId(Integer userId){
-        Jugador jugador =  jugadorRepository.findByUserId(userId).orElseThrow(()-> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
+    public void deleteJugadorByUserId(Integer userId) {
+        Jugador jugador = jugadorRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
         jugadorRepository.delete(jugador);
     }
 }

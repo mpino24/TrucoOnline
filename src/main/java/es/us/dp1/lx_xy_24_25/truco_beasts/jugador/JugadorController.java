@@ -95,8 +95,8 @@ public class JugadorController {
     }
 
     @GetMapping("/{userId}/isFriend/{friendUserName}")
-    public ResponseEntity<Boolean> checkIfAreFriends(@PathVariable int userId, @PathVariable String friendUserName){
-        return new ResponseEntity<>(jugadorService.checkIfAreFriends(friendUserName, userId),HttpStatus.OK);
+    public ResponseEntity<Boolean> checkIfAreFriends(@PathVariable int userId, @PathVariable int friendId){
+        return new ResponseEntity<>(jugadorService.checkIfAreFriends(friendId, userId),HttpStatus.OK);
     }
 
     @PatchMapping("/isFriend/{amigoId}")

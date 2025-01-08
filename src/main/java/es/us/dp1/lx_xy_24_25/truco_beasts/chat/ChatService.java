@@ -46,8 +46,8 @@ public class ChatService {
         return mensajesDTO;
     }
 
-    public MensajeDTO getLastMessage(Integer chatId) throws NotYourChatException{
-        perteneceAChat(chatId);
+    public MensajeDTO getLastMessage(Integer chatId){
+        //perteneceAChat(chatId);
         return new MensajeDTO(mensajeRepository.findLastMessage(chatId).orElse(null));
     }
 

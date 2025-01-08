@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Mensaje;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.MensajeDTO;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
@@ -30,7 +31,7 @@ public class JugadorDTO {
     @Enumerated(EnumType.STRING)
     Amistad amistad;
 
-    Mensaje ultimoMensaje;
+    MensajeDTO ultimoMensaje;
 
 
     public JugadorDTO(){}

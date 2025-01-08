@@ -52,7 +52,7 @@ public class TestJugadorService {
     @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testCheckIfAreFriends(){   
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
-        assertTrue(jugadorService.checkIfAreFriends(jugador.getUser().getUsername(), jugador2.getUser().getId()));
+        assertTrue(jugadorService.checkIfAreFriends(jugador.getId(), jugador2.getUser().getId()));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class TestJugadorService {
     @Test
     void testComprobarExistenciaSolicitud(){
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
-        assertTrue(jugadorService.comprobarExistenciaSolicitud(jugador.getUser().getUsername(), jugador2.getUser().getId()));
+        assertTrue(jugadorService.comprobarExistenciaSolicitud(jugador.getId(), jugador2.getUser().getId()));
     }
     @Test
     void testCrearSolicitud(){
