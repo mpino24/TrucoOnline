@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { ButtonGroup, Table } from "reactstrap";
 import tokenService from "../../services/token.service";
 import "../../static/css/admin/adminPage.css";
@@ -112,11 +111,11 @@ export default function UserListAdmin() {
       height: '100vh', 
       width: '100vw' 
       }}>
-    <div expand='md' style={{ float: 'left' }}>
-        <button className="button-admin" onClick={() => { navigate("/admin") }}>
-          VOLVER
-       </button>
-    </div>
+      <div expand='md' style={{ float: 'left' }}>
+          <button className="button-admin" onClick={() => { navigate("/admin") }}>
+            VOLVER
+        </button>
+      </div>
       <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
         <h1 className="text-center">USUARIOS</h1>
         {alerts.map((a) => a.alert)}
@@ -141,6 +140,7 @@ export default function UserListAdmin() {
             className="admin-home-button-1"
             onClick={handlePaginaAnterior}
             disabled={paginaActual === 0}
+            style={{ visibility: paginaActual === 0 ? "hidden" : "visible" }}
           >
             &lt;
           </button>
@@ -151,6 +151,7 @@ export default function UserListAdmin() {
             className="admin-home-button-1"
             onClick={handlePaginaSiguiente}
             disabled={paginaActual === totalPaginas - 1}
+            style={{ visibility: paginaActual === totalPaginas - 1 ? "hidden" : "visible" }}
           >
             &gt;
           </button>

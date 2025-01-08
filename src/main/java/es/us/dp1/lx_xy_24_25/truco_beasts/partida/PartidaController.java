@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
@@ -67,14 +70,9 @@ public class PartidaController {
 		return new ResponseEntity<>(partidaService.findAllPartidasActivas(pageable), HttpStatus.OK);
 	}
 
-	@GetMapping("/partidas/participantes/activas")
-	public ResponseEntity<List<PartidaDTO>> findPartidasActivasConParticipantes() {
-        return new ResponseEntity<>(partidaService.findPartidasActivasYParticipantes(), HttpStatus.OK);
-    }
-	
-	@GetMapping("/partidas/participantes/terminadas")
-	public ResponseEntity<List<PartidaDTO>> findPartidasTerminadasConParticipantes() {
-        return new ResponseEntity<>(partidaService.findPartidasTerminadasYParticipantes(), HttpStatus.OK);
+	@GetMapping("/partidas/paginadas")
+	public ResponseEntity<Page<PartidaDTO>> findPartidasConParticipantes(Pageable pageable) {
+        return new ResponseEntity<>(partidaService.findPartidasYParticipantes(pageable), HttpStatus.OK);
     }
 
 	@PostMapping
