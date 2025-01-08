@@ -66,28 +66,31 @@ export default function UserEditAdmin() {
 
   function handleSubmit(event) {
     event.preventDefault();
-  
+
     const request = {
       username: user.username,
-      password: newPassword || user.password,
+      password: user.password,
       authority: user.authority?.id,
       firstName: player.firstName,
       lastName: player.lastName,
       email: player.email,
       photo: player.photo,
     };
+
+    user.password = newPassword ? newPassword : undefined;
   
     const endpoint = user.id ? `/api/v1/users/${user.id}` : "/api/v1/auth/signup";
     const method = user.id ? "PUT" : "POST";
+    const body = user.id ? JSON.stringify(user) : JSON.stringify(request)
   
     fetch(endpoint, {
       method: method,
       headers: {
-        Authorization: user.id ? `Bearer ${jwt}` : undefined,
+        Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(request),
+      body: body,
     })
       .then((response) => response.json())
       .then((json) => {
@@ -130,7 +133,9 @@ export default function UserEditAdmin() {
   ));
 
   function handlePasswordChange(event) {
-    setNewPassword(event.target.value);
+    const newPass = event.target.value;
+    setNewPassword(newPass);
+    setUser({ ...user, password: newPass });
   }
 
   return (
@@ -230,20 +235,6 @@ export default function UserEditAdmin() {
             <Label for="authority" className="custom-form-input-label">
               Autoridad
             </Label>
-            {user.id ? (
-              <Input
-                type="select"
-                disabled
-                name="authority"
-                id="authority"
-                value={user.authority?.id || ""}
-                onChange={handleUserChange}
-                className="custom-input"
-              >
-                <option value="">None</option>
-                {authOptions}
-              </Input>
-            ) : (
               <Input
                 type="select"
                 required
@@ -256,7 +247,6 @@ export default function UserEditAdmin() {
                 <option value="">None</option>
                 {authOptions}
               </Input>
-            )}
           </div>
           <div className="custom-button-row">
             <button className="auth-button">Guardar</button>
