@@ -81,7 +81,9 @@ const JugadorView = forwardRef((props, ref) => {
                         <p style={{ marginLeft: 10, fontSize: 12, marginBottom: 0 }}>{jugador.userName}</p>
 
                         {friendBool && jugador.id !== user.id &&
-                            <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap" }}> Último mensaje </p>
+                            <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap",fontStyle: 'italic' }}> 
+                                {jugador.ultimoMensaje ? jugador.ultimoMensaje.contenido : ''}
+                            </p>
                         }
                     </div>
                     {!friendBool && !solicitudBool && jugador.id !== user.id &&
