@@ -7,6 +7,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 @Setter
 public class Chat extends BaseEntity {
     @OneToOne
+    @Transient
     Partida partida;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)

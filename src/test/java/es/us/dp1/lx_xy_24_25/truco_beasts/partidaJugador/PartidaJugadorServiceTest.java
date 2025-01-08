@@ -115,8 +115,8 @@ public class PartidaJugadorServiceTest {
             Integer res = pjService.getNumJugadoresInPartida(0);
             assertTrue(res.equals(2));
 
-            pjService.eliminateJugadorPartidaByJugadorId(11);
-            res = pjService.getNumberOfGamesConnected(11);
+            pjService.eliminateJugadorPartidaByJugadorId(10);
+            res = pjService.getNumberOfGamesConnected(10);
             assertTrue(res.equals(0));
 
         } catch (AlreadyInGameException e) {
