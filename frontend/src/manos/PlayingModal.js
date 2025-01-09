@@ -715,9 +715,12 @@ const PlayingModal = forwardRef((props, ref) => {
                         {/* Responder Truco Buttons */}
                         {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && mano?.esperandoRespuesta && puntosTrucoActuales && mano?.esTrucoEnvidoFlor === 0 && (
                             <div className="truco-button-container responder-truco-buttons">
+                                
                                 {puntosTrucoActuales !== puntosConRetruco && 
                                     <button onClick={() => responderTruco("QUIERO")}>Quiero</button>
                                 }
+                                
+                                
                                 <button onClick={() => responderTruco("NO_QUIERO")}>No quiero</button>
                                 {puntosTrucoActuales === puntosConRetruco && 
                                     <button style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }} 
@@ -756,13 +759,13 @@ const PlayingModal = forwardRef((props, ref) => {
                                         )}
                                     </div>
                                 )}
-
-
                                 {mano?.puedeCantarFlor &&  mano.floresCantadas==0 &&  (
-                                        <button style={{zIndex:"100000000",position:"fixed",top:"20%" }} onClick={() => cantarFlor('FLOR')}>
+                                        <button className= "flor-button" style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite',  top:'-220%', position:'absolute', left:'20%' }} onClick={() => cantarFlor('FLOR')}>
                                             <span>¡Flor!</span>
                                         </button>
                                     )}
+
+
                             </div>
                         )}
 
