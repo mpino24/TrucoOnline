@@ -89,6 +89,7 @@ const PlayingModal = forwardRef((props, ref) => {
         })
         .catch((error) => {
             console.error("Error fetching mano:", error);
+            
             setMessage("Error fetching mano.");
             setVisible(true);
         });

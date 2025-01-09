@@ -24,7 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.PartidaNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -100,10 +100,10 @@ public class PartidaController {
 
 	
 	@DeleteMapping("/{codigo}")
-	public ResponseEntity<Void> deletePartida(@PathVariable("codigo") String codigo) throws NotPartidaFoundException{
+	public ResponseEntity<Void> deletePartida(@PathVariable("codigo") String codigo) throws PartidaNotFoundException{
 		Partida p= partidaService.findPartidaByCodigo(codigo);
 		if(p==null){
-			throw new NotPartidaFoundException();
+			throw new PartidaNotFoundException();
 		}
 		partidaService.deletePartida(codigo);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -111,7 +111,11 @@ public class PartidaController {
 
 	@GetMapping("/search")
 	public ResponseEntity<Partida> findPartidaByCodigo(@RequestParam(required=true) String codigo) {
-		return new ResponseEntity<>(partidaService.findPartidaByCodigo(codigo), HttpStatus.OK);
+		Partida partida = partidaService.findPartidaByCodigo(codigo);
+		if(partida==null){
+			throw new PartidaNotFoundException("La partida con código: " + codigo + " no fue encontrada");
+		}
+		return new ResponseEntity<>(partida, HttpStatus.OK);
 	}
 
 	@PatchMapping("/{codigo}/start")
