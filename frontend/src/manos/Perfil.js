@@ -164,13 +164,14 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
 
     return perfil.map((persona, index) => {
         let posicionJug = persona.posicion;
+        
+        // Evitar que el jugador con la misma posición que el actual se asignen a sí mismo
         if (posicionJug !== posicionJugador) {
             let playerStyle = {};
 
             // Para partidas de 2 jugadores
             if (game.numJugadores === 2) {
                 if (posicionJugador === 0) {
-                    // Si el jugador actual está en la posición 0, el contrario va a la derecha
                     if (index % 2 !== posicionJugador % 2) {
                         playerStyle = {
                             position: 'absolute',
@@ -181,7 +182,6 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                         };
                     }
                 } else if (posicionJugador === 1) {
-                    // Si el jugador actual está en la posición 1, el contrario va a la izquierda
                     if (index % 2 !== posicionJugador % 2) {
                         playerStyle = {
                             position: 'absolute',
@@ -197,7 +197,6 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
             // Para partidas de 4 jugadores
             if (game.numJugadores === 4) {
                 if (index % 2 === posicionJugador % 2) {
-                    // Si el jugador es de tu equipo, se coloca arriba
                     playerStyle = {
                         position: 'absolute',
                         top: '7%', // Jugador de tu equipo, arriba
@@ -228,55 +227,45 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
             // Para partidas de 6 jugadores
             if (game.numJugadores === 6) {
                 if (posicionJug % 2 === posicionJugador % 2) {
-                    // Jugadores de tu equipo (posiciones superiores en forma de triángulo)
                     if (posicionJug === obtenerPosicionEquipo(posicionJugador, 2, 6)) {
-                        // Jugador en la esquina superior derecha
                         playerStyle = {
                             position: 'absolute',
-                            top: '20%', // Esquina superior derecha
+                            top: '20%',
                             left: '85%',
-                            
                             zIndex: 1000
                         };
                     } else if (posicionJug === obtenerPosicionEquipo(posicionJugador, 4, 6)) {
-                        // Jugador en la esquina superior izquierda
                         playerStyle = {
                             position: 'absolute',
-                            top: '20%', // Esquina superior izquierda
+                            top: '20%',
                             left: '2%',
-                            
                             zIndex: 1000
                         };
                     }
                 } else {
-                    // Jugadores del equipo contrario (posiciones inferiores)
                     if (!posicionUsadaInferior) {
-                        // Primer jugador enemigo: en la parte inferior derecha
                         posicionUsadaInferior = true;
                         playerStyle = {
                             position: 'absolute',
-                            top: '-15%',  // Abajo
-                            left: '80%', // Esquina inferior derecha
+                            top: '-15%',
+                            left: '80%',
                             transform: 'translate(50%, 600%)',
                             zIndex: 1000
                         };
                     } else if (!posicionUsada) {
-                        // Arriba
                         posicionUsada = true;
                         playerStyle = {
                             position: 'absolute',
-                            top: '-70%',  // 
-                            right: '40%', // Arriba
+                            top: '-70%',
+                            right: '40%',
                             transform: 'translate(50%, 600%)',
                             zIndex: 1000
                         };
                     } else {
-                        // esquina inferior izquierda
                         playerStyle = {
                             position: 'absolute',
-                            top: '65%',  // Enfrente
-                            left: '5%', // Centrado horizontalmente
-
+                            top: '65%',
+                            left: '5%',
                             zIndex: 1000
                         };
                     }
@@ -292,6 +281,7 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
         return null;
     });
 };
+
 
 function obtenerPosicionEquipo(posicion, incremento, longitud) { 
     return (posicion + incremento) % longitud; 
@@ -404,7 +394,7 @@ const Perfil = forwardRef((props, ref) => {
 
     return (
         <>
-            {posicionJugador < 4 ? (
+            {posicionJugador < 6 ? (
                 <DistribuirJugadoresDinamicos
                     perfil={perfil}
                     game={game}
