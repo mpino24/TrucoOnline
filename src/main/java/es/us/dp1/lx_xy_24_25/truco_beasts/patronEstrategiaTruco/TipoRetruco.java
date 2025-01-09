@@ -10,7 +10,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Mano;
 
 
 
-@StatePattern.ConcreteState
+import org.jpatterns.gof.StrategyPattern;
+@StrategyPattern.ConcreteStrategy
 public class TipoRetruco extends Truco{
 
 

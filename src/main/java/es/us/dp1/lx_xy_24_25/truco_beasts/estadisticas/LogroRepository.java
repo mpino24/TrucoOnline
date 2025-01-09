@@ -11,7 +11,7 @@ public interface LogroRepository extends CrudRepository<Logros, Integer>{
 
 
     @Query("SELECT logro FROM Logros logro WHERE logro.metrica=:metrica")
-    Logros findByMetrica(Metrica metrica);
+    List<Logros> findByMetrica(Metrica metrica);
 
     
 }
