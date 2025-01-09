@@ -24,9 +24,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotPartidaFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.PartidaNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 //apa
@@ -47,23 +49,18 @@ public class PartidaController {
 	}
 
 
-	private String generateRandomCode() {
-		int length = 5;
-		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
-		Random random = new Random();
-		StringBuilder code = new StringBuilder(length);
 
-		for (int i = 0; i < length; i++) {
-			code.append(characters.charAt(random.nextInt(characters.length())));
-		}
-		return code.toString();
-	}
 
 	@GetMapping("/partidas")
 	public ResponseEntity<List<Partida>> findAll() {
 		return new ResponseEntity<>(partidaService.findAllPartidas(), HttpStatus.OK);
 	}
 
+	@GetMapping("/partidas/historial")
+	public ResponseEntity<Page<PartidaDTO>> findHistorialPartidas(Pageable pageable) {
+		User usuarioActual = partidaService.findUsuarioDelJugadorActual();
+		return new ResponseEntity<>(partidaService.findHistorialDePartidas(usuarioActual.getId(), pageable), HttpStatus.OK);
+	}
    
 	@GetMapping("/partidas/accesibles")
 	public ResponseEntity<Page<Partida>> findPartidasActivasPublicas(Pageable pageable) {
@@ -100,10 +97,10 @@ public class PartidaController {
 
 	
 	@DeleteMapping("/{codigo}")
-	public ResponseEntity<Void> deletePartida(@PathVariable("codigo") String codigo) throws NotPartidaFoundException{
+	public ResponseEntity<Void> deletePartida(@PathVariable("codigo") String codigo) throws PartidaNotFoundException{
 		Partida p= partidaService.findPartidaByCodigo(codigo);
 		if(p==null){
-			throw new NotPartidaFoundException();
+			throw new PartidaNotFoundException();
 		}
 		partidaService.deletePartida(codigo);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -111,7 +108,11 @@ public class PartidaController {
 
 	@GetMapping("/search")
 	public ResponseEntity<Partida> findPartidaByCodigo(@RequestParam(required=true) String codigo) {
-		return new ResponseEntity<>(partidaService.findPartidaByCodigo(codigo), HttpStatus.OK);
+		Partida partida = partidaService.findPartidaByCodigo(codigo);
+		if(partida==null){
+			throw new PartidaNotFoundException("La partida con código: " + codigo + " no fue encontrada");
+		}
+		return new ResponseEntity<>(partida, HttpStatus.OK);
 	}
 
 	@PatchMapping("/{codigo}/start")

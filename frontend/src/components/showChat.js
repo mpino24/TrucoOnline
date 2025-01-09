@@ -4,6 +4,7 @@ import { Client } from "@stomp/stompjs";
 import "./Chat.css";
 import MessageList from "./MessageList";
 import { IoCloseCircle } from "react-icons/io5";
+import InputContainer from "./InputContainer";
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
   const user = tokenService.getUser();
@@ -11,6 +12,7 @@ const Chat = forwardRef((props, ref) => {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [mensajes, setMensajes] = useState([]);
+  const [mensaje, setMensaje] = useState("");
 
   function fetchMensajesIniciales() {
     fetch('api/v1/chat/' + props.idChat, {
@@ -23,6 +25,7 @@ const Chat = forwardRef((props, ref) => {
       .then((data) => {
         if (data.length > 0) {
             setMensajes(data);
+           
         }
       })
       .catch((error) => {
@@ -31,16 +34,36 @@ const Chat = forwardRef((props, ref) => {
       });
   }
 
+  function updateChatLastConnection(){
+    fetch('api/v1/chat/' + props.idChat + '/updatetime', {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("No se pudo actualizar la conexión.");
+        }else{
+          console.log("Actualizada última fecha de conexión al chat");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Hubo un problema al actualizar la conexión.");
+      });
+  }
+
   useEffect(() => {
     fetchMensajesIniciales();
+    updateChatLastConnection();
+    const timer = setInterval(() => {
+      updateChatLastConnection();
+    }, 60000);
+    return () => clearInterval(timer);
+    
   }, []);
 
-
-
-
-
-
-  const [mensaje, setMensaje] = useState("");
 
   // Ref para el contenedor de mensajes
   const messagesEndRef = useRef(null);
@@ -127,7 +150,6 @@ const Chat = forwardRef((props, ref) => {
         if (!response.ok) {
           throw new Error("No se pudo eliminar al amigo.");
         }
-        alert("Amigo eliminado exitosamente.");
         props.setChatVisible(false);
 
       })
@@ -177,24 +199,7 @@ const Chat = forwardRef((props, ref) => {
       >
      
         <MessageList mensajes={mensajes} userId={user.id} />
-  
-        <div className="input-container">
-          <input
-            type="text"
-            value={mensaje}
-            onChange={(e) => setMensaje(e.target.value)}
-            placeholder="Escribe un mensaje..."
-            className="input-text"
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleEnviar();
-              }
-            }}
-          />
-          <button onClick={handleEnviar} className="btn-send">
-            Enviar
-          </button>
-        </div>
+        <InputContainer mensaje={mensaje} setMensaje={setMensaje} evtEnviarMensaje={evtEnviarMensaje} />
       </div>
       {showConfirmModal && (
         <div

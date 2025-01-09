@@ -22,7 +22,7 @@ const WaitingModal = forwardRef((props, ref) => {
     const [leavingModal, setLeavingModal] = useState(false);
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
-    const [connected, setConnected] = useState(null);
+    //const [connected, setConnected] = useState(null);
     const [expeledView, setExpeledView] = useState(false);
     const [friendList, showFriendList] = useState(false);
     const [friends, setFriends] = useState([]);
@@ -49,14 +49,18 @@ const WaitingModal = forwardRef((props, ref) => {
                 .then((data) => {
                     setJugadores(data)
                     setConnectedUsers(data.length)
-                    const inTheGame = (jugadores.find(pj => pj.player.id === usuario.id) ? true : false);
+                    const inTheGame = (data.find(pj => pj.player.id === usuario.id) ? true : false);
+                    if(connected===null){
+                        connected=inTheGame;
+                        console.log(connected)
+                    }
                     if (connected && !inTheGame) {
                         setExpeledView(true);
                     }
-                    setConnected(inTheGame);
                     setNumDesconectados(data.filter(jugador => jugador.player.isConnected===false).length);
                 })
         }
+        let connected=null;
         fetchPlayers();
 
         const timer = setInterval(() => {

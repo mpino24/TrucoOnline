@@ -21,8 +21,8 @@ public class ChatWebSocketController {
     @MessageMapping("/mensaje")
     public void enviarMensaje(@Payload Mensaje mensaje) throws NotYourChatException {
         try{
-            chatService.guardarMensaje(mensaje);
-            messagingTemplate.convertAndSend("/topic/chat/" + mensaje.getChat().getId(), new MensajeDTO(mensaje));
+            MensajeDTO mensajeDto = chatService.guardarMensaje(mensaje);
+            messagingTemplate.convertAndSend("/topic/chat/" + mensaje.getChat().getId(),mensajeDto);
         }catch (NotYourChatException e){
             mensaje.setContenido("ERROR: "+e.getMessage()+"\n"+"Te han eliminado de amigos.");
             messagingTemplate.convertAndSend("/topic/chat/" + mensaje.getChat().getId(), new MensajeDTO(mensaje));
@@ -30,6 +30,11 @@ public class ChatWebSocketController {
 
     }
 
+    @MessageMapping("/mensajepartida")
+    public void enviarMensajePartida(@Payload Mensaje mensaje) {
+        MensajeDTO mensajeDto = new MensajeDTO(mensaje);
+        messagingTemplate.convertAndSend("/topic/gamechat/" + mensaje.getChat().getPartida().getCodigo(),mensajeDto);
+    }
 
 
 }

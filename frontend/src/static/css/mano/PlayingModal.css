@@ -314,7 +314,7 @@
 }
 .envido-button-container {
   width: 150px;
-  height: 75px;
+  height: 75px; 
   margin: 5px;
   font-size: large;
   left: 82%;
@@ -324,6 +324,14 @@
   flex-direction: row;
   gap: 10px;
   top: 87%;
+}
+
+.envido-button-container .flor-button {
+  position: absolute;
+  top: -85px;
+  left: 28%;
+  transform: translateX(-50%);
+  height: 75px; 
 }
 /* Truco Buttons */
 .truco-button-container button {

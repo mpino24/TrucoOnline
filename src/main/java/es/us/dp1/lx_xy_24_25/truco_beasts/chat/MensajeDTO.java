@@ -2,7 +2,7 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 
 import java.time.LocalDateTime;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,7 +18,7 @@ public class MensajeDTO {
 
     @ManyToOne()
     @JoinColumn(name = "REMITENTE")
-    User remitente;
+    UserDTO remitente;
 
     @Column(name = "FECHA")
     LocalDateTime fechaEnvio;
@@ -29,7 +29,7 @@ public class MensajeDTO {
 
     public MensajeDTO(Mensaje mensaje) {
         this.contenido = mensaje.getContenido();
-        this.remitente = mensaje.getRemitente();
+        this.remitente = new UserDTO(mensaje.getRemitente());
         this.fechaEnvio = mensaje.getFechaEnvio();
     }
 

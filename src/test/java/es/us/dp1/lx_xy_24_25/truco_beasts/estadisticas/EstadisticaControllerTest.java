@@ -18,8 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.Authorities;
@@ -44,7 +46,7 @@ public class EstadisticaControllerTest {
     private UserService userService;
 
     private User user1;
-    private JugadorDTO jugador1;
+    private Jugador jugador1;
     private EstadisticaJugador estadisticasJugador1;
     private EstadisticaGlobal estadisticaGlobal1;
 
@@ -61,7 +63,7 @@ public class EstadisticaControllerTest {
         user1.setLastConnection(LocalDateTime.now());
         user1.setUsername("user1");
 
-        jugador1 = new JugadorDTO();
+        jugador1 = new Jugador();
         jugador1.setId(1);
         estadisticasJugador1 = new EstadisticaJugador();
 
@@ -97,7 +99,7 @@ public class EstadisticaControllerTest {
 
         when(userService.findCurrentUser()).thenReturn(user1);
         when(jugadorService.findJugadorByUserId(user1.getId())).thenReturn(jugador1);
-        when(estadisticasService.getEstadisticasJugador(user1.getId())).thenReturn(estadisticasJugador1);
+        when(estadisticasService.getEstadisticasJugador(jugador1.getId())).thenReturn(estadisticasJugador1);
         mockMvc.perform(get(BASE_URL + "/misEstadisticas"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.derrotas").value(2))

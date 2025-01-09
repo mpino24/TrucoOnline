@@ -1,14 +1,15 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
-import java.time.Duration;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,7 +115,7 @@ public class EstadisticasService {
         throw new ResourceNotFoundException("Los datos por partida del jugador con ID " + jugadorId + " no fueron encontrados");
     }
 
-    List<DatosPorPartida> result = rawData.stream()
+    List<DatosPorPartida> res = rawData.stream()
         .map(row -> new DatosPorPartida(
             (Boolean) row[0],
             (LocalDateTime) row[1],
@@ -124,7 +125,24 @@ public class EstadisticasService {
             (Integer)row[5]))
         .collect(Collectors.toList());
 
-    return result;
+    return res;
 }
+
+public List<JugadorVictorias> getRankingGlobal(Integer topPedido) { // Por defecto, top 10
+    List<Object[]> rawData = estadisticasRepository.findVictoriasPorJugador();
+
+    int topLimit = (topPedido == null) ? 10 : topPedido;
+
+    rawData = rawData.stream().limit(topLimit).collect(Collectors.toList());
+
+    List<JugadorVictorias> res = rawData.stream()
+            .map(row -> new JugadorVictorias(row[0] != null? jugadorRepository.findUsernameByJugadorId((Integer) row[0]): "Desconocido", (Long) row[1])) 
+            .collect(Collectors.toList());
+
+    return res;
+}
+
+
+
 
 }

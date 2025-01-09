@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NameDuplicatedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import jakarta.validation.Valid;
 
 @Service

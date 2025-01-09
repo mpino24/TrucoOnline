@@ -20,6 +20,8 @@
   gap: 10px; /* Espaciado entre mensajes */
   overflow-y: auto; /* Scroll vertical si excede el espacio */
   padding: 10px;
+  max-height: 100%;
+  
 
 }
 

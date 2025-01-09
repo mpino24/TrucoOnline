@@ -1,5 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Mensaje;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.MensajeDTO;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -23,6 +27,14 @@ public class JugadorDTO {
     String photo;
     @NotNull
     Boolean isConnected;
+
+    @Enumerated(EnumType.STRING)
+    Amistad amistad;
+
+    MensajeDTO ultimoMensaje;
+
+    Integer mensajesSinLeer;
+
 
     public JugadorDTO(){}
 

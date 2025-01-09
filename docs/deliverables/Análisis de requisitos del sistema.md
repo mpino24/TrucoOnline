@@ -50,6 +50,12 @@ Como jugador quiero poder editar y borrar mi cuenta.
  ### HU-3(NOISSUE): Poder cerrar sesion ([])
 Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
 ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
+ ### HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador ([])
+Como administador quiero poder ver un listado de partidas en curso y de partidas jugadas para tener constancia de todas las partidas que se juegan.
+ ### HU-27(ISSUE#183): Poder ver listado de usuarios como administrador ([])
+Como administrador quiero poder ver un listado de usuarios para saber en todo momento qué usuarios hay registrados.
+ ### HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador ([])
+Como administrador quiero poder crear un usuario, ver los datos de un usuario, editar los datos de un usuario y borrar un usuario para tener control total sobre todos los usuarios que hay registrados.
  ## Historias de Usuario Creación y configuración partidas:
  ### HU-4(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
@@ -95,13 +101,23 @@ Como jugador quiero poder responder Flor y sus variantes para subir la apuesta d
 ![Mockup Flor](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_Flor.jpg)
  
 
- ## Historia de Usuario Aspecto social:
+ ## Historias de Usuario Módulo social:
  ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
 Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
  ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
  ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
  Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
  ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+
+ ## Historias de Usuario Módulo Estadístico:
+ ### HU-22(ISSUE#): Ver mis estadísticas :
+Como jugador, quiero poder ver mis estadísticas para poder seguir mi progreso en el juego y mejorar mi rendimiento.
+### HU-23(ISSUE#): Ver logros :
+Como jugador, quiero poder ver mis logros conseguidos y aquellos que me faltan por alcanzar, para motivarme a seguir jugando y completar todos los logros.
+### HU-24(ISSUE#): Crear, editar y eliminar logros:
+Como administrador, quiero poder crear, editar y eliminar logros para mantener la experiencia de juego dinámica y actualizada, asegurando que los jugadores tengan nuevos objetivos que cumplir.
+### HU-25(ISSUE#342): Ver ranking global ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/342]):
+Como jugador quiero poder ver el ranking global para incentivarme a algún día estar primero.
 
 
 

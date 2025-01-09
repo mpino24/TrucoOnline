@@ -78,8 +78,7 @@ const SolicitudList = forwardRef((props, ref) => {
                 <div key={player.id} style={{ display: 'flex', alignItems: 'center' }}>
                     <JugadorView
                         jugador={player}
-                        isFriend={false}
-                        isSolicitud={true}
+                        
                     />
                     <button onClick={() => { handleAddFriend(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
                         <IoMdPersonAdd style={{ fontSize: '50px', backfaceVisibility: 'hidden' }} />
