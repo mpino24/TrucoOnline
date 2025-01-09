@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +63,13 @@ public class ChatRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity eliminarChat(@PathVariable Integer chatId){
         chatService.eliminarChat(chatId);
+        return new ResponseEntity<>(void.class,HttpStatus.OK);
+    }
+
+
+    @PatchMapping("/{chatId}/updatetime")
+    public ResponseEntity updateChatTime(@PathVariable Integer chatId){
+        chatService.updateChatTime(chatId);
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
 

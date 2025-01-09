@@ -1,6 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +19,15 @@ public class ChatService {
     private final UserService userService;
     private final PartidaJugadorService partJugService;
     private final ChatRepository chatRepository;
+    private final ChatUsuarioRepository chatUsuarioRepository;
 
-    public ChatService(MensajeRepository mensajeRepository,UserService userService,PartidaJugadorService partJugService, ChatRepository chatRepository) {
+    public ChatService(MensajeRepository mensajeRepository,UserService userService,PartidaJugadorService partJugService, ChatRepository chatRepository,ChatUsuarioRepository chatUsuarioRepository){
         this.mensajeRepository = mensajeRepository;
         this.userService=userService;
         this.partJugService=partJugService;
         this.chatRepository =chatRepository;
+        this.chatUsuarioRepository=chatUsuarioRepository;
+    
     }
     public MensajeDTO guardarMensaje(Mensaje mensaje) throws NotYourChatException {
         mensaje.setFechaEnvio(LocalDateTime.now());
@@ -84,6 +88,17 @@ public class ChatService {
             throw new IllegalArgumentException("El mensaje pasado como parámetro debe estar vinculado a una partida o a una lista de usuarios");
         }
 
+    }
+
+    @Transactional
+    public void updateChatTime(Integer chatId){
+        Optional<ChatUsuario> chatUsuario = chatUsuarioRepository.findChatUsuarioByUserAndChat(userService.findCurrentUser().getId(), chatId);
+        if(chatUsuario.isPresent()){
+            chatUsuario.get().setFecha(LocalDateTime.now());
+            chatUsuarioRepository.save(chatUsuario.get());
+        }else{
+            throw new ResourceNotFoundException("No se ha encontrado el chatUsuario");
+        }
     }
 
 }
