@@ -681,7 +681,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                 <div className="envido-button-container">
                                     {/* Cantar Flor */}
                                 {mano?.puedeCantarFlor && mano?.queFlorPuedeCantar === 1 && mano.floresCantadas==0 && (
-                                        <button onClick={() => cantarFlor('FLOR')} style={{right:'20%'}}>
+                                        <button onClick={() => cantarFlor('FLOR')} style={{right:'20%',animation:'dropShadowGlowContainer 3s ease-in-out infinite'}}>
                                             <span>¡Flor!</span>
                                         </button>
                                     )}
@@ -770,6 +770,14 @@ const PlayingModal = forwardRef((props, ref) => {
                         {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && mano?.esperandoRespuesta && mano?.esTrucoEnvidoFlor === 1 && (
                             <div className="envido-button-container" style={{ left:'70%', position:'fixed'}}>
                                 {/* Responder Envido */}
+                                
+                                
+                                {mano?.puedeCantarFlor &&  mano.floresCantadas==0 &&  (
+                                        <button className= "flor-button"
+                                        style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' } } onClick={() => cantarFlor('FLOR')}>
+                                            <span>¡Flor!</span>
+                                        </button>
+                                    )}
                                 <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
                                 <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
                                 
@@ -788,11 +796,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         <span className="swirl-glow-text">Falta Envido</span>
                                     </button>
                                 )}
-                                 {mano?.puedeCantarFlor &&  mano.floresCantadas==0 && (
-                                        <button style={{zIndex:"100000000",position:"fixed",top:"20%" }} onClick={() => cantarFlor('FLOR')}>
-                                            <span>¡Flor!</span>
-                                        </button>
-                                    )}
+                                
                        
                        
                             </div>
