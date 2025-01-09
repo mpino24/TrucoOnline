@@ -247,6 +247,8 @@ public class JugadorService {
                     if (mensaje != null) { // Verifica si el mensaje no es nulo
                         res.setUltimoMensaje(mensaje);
                     }
+                    Integer mensajesSinLeer = chatService.findNumNotReadMessages(chat.getId());
+                    res.setMensajesSinLeer(mensajesSinLeer);
                 }
             } else if (comprobarExistenciaSolicitud(j,jugadorActual) || comprobarExistenciaSolicitud(jugadorActual,j)) {
                 res.setAmistad(Amistad.SOLICITADO);

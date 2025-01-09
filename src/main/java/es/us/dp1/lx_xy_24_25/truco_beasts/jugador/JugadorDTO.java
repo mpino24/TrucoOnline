@@ -33,6 +33,8 @@ public class JugadorDTO {
 
     MensajeDTO ultimoMensaje;
 
+    Integer mensajesSinLeer;
+
 
     public JugadorDTO(){}
 

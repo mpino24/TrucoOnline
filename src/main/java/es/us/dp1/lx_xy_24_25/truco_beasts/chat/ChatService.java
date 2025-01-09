@@ -101,4 +101,10 @@ public class ChatService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Integer findNumNotReadMessages(Integer chatId){
+        LocalDateTime lastConnection = chatUsuarioRepository.findChatUsuarioByUserAndChat(userService.findCurrentUser().getId(), chatId).get().getFecha();
+        return mensajeRepository.findMessagesAfter(chatId,lastConnection,userService.findCurrentUser().getId());
+    }
+
 }
