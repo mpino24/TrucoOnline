@@ -16,6 +16,7 @@ import PartidasAdmin from "./admin/partidas/PartidasAdmin";
 import EstadisticasAdmin from "./admin/estadisticas/EstadisticasAdmin";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
+import GameHistory from "./gamehistory/GameHistory";
 import Game from "./game"
 import SwaggerDocs from "./public/swagger";
 import './App.css';
@@ -140,7 +141,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/partidas" element={<Game />} />
-
+        <Route path="/historial" element={<GameHistory />} />
       </>
     );
   }

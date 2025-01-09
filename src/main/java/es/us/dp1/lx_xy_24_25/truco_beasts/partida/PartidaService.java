@@ -25,6 +25,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import jakarta.validation.Valid;
@@ -108,27 +109,55 @@ public class PartidaService {
 	}
 
 	@Transactional(readOnly = true)
+	public User findUsuarioDelJugadorActual() {
+		return userService.findCurrentUser();
+	}
+
+	@Transactional(readOnly = true)
 	public Page<PartidaDTO> findPartidasYParticipantes(Pageable pageable) {
 		List<Partida> partidas = partidaRepository.findAllPartidas();
-        List<PartidaDTO> DTOs = new ArrayList<>();
+        return convertidorDTOs(pageable, partidas, null);
+    }
+	@Transactional(readOnly = true)
+	public Page<PartidaDTO> findHistorialDePartidas(Integer userId, Pageable pageable) {
+		List<Partida> partidas = partidaRepository.findAllPartidas();
+		String username = userService.findUser(userId).getUsername();
+		List<Partida> res = new ArrayList<>();
+		for(Partida p:partidas) {
+			List<String> nombresJugadoresDeLaPartida = pjRepository.findAllJugadoresPartida(p.getCodigo())
+											.stream()
+											.map(pj -> pj.getUserName())
+											.collect(Collectors.toList());
+			if(nombresJugadoresDeLaPartida.contains(username)) res.add(p);
+		}
+        return convertidorDTOs(pageable, res, username);
+    }
+	public Page<PartidaDTO> convertidorDTOs(Pageable pageable, List<Partida> partidas, String username) {
+		List<PartidaDTO> DTOs = new ArrayList<>();
 		for(int i=0;i<partidas.size();i++) {
 			Partida partida = partidas.get(i);
-			PartidaJugador pjCreador = pjRepository.findCreator(partida.getId()).orElse(null);
-			String creador = pjCreador == null ? "-" : pjCreador.getPlayer().getUser().getUsername();
-			String participantes = pjRepository.findAllJugadoresPartida(partida.getCodigo())
+			List<PartidaJugadorView> jugadoresDeLaPartida = pjRepository.findAllJugadoresPartida(partida.getCodigo());
+			String participantes = jugadoresDeLaPartida
 													.stream()
 													.map(pj -> pj.getUserName())
 													.collect(Collectors.joining(", "));
+			PartidaJugador pjCreador = pjRepository.findCreator(partida.getId()).orElse(null);
+			String creador = pjCreador == null ? "-" : pjCreador.getPlayer().getUser().getUsername();
 			String tipo = partida.getInstanteFin()==null ? "En curso" : "Terminada";
 			String visibilidad = partida.getVisibilidad().toString();
 			PartidaDTO partidaDTO = new PartidaDTO(partida.getCodigo(), creador, participantes, tipo, visibilidad);
+			if(username!=null) {
+				partidaDTO.setInicio(partida.getInstanteInicio().toString());
+				partidaDTO.setFin(partida.getInstanteFin().toString());
+				if(creador==username) partidaDTO.setCreador("SÍ"); else partidaDTO.setCreador("NO");
+			}
 			DTOs.add(partidaDTO);
 		}
 		int inicioPagina = (int) pageable.getOffset();
 		int finalPagina = Math.min(inicioPagina + pageable.getPageSize(), DTOs.size());
 		List<PartidaDTO> DTOsPaginados = DTOs.subList(inicioPagina, finalPagina);
         return new PageImpl<>(DTOsPaginados, pageable, DTOs.size());
-    }
+	}
 	
 	@Transactional(readOnly = true)
 	public Partida findPartidaByCodigo(String codigo) throws DataAccessException {

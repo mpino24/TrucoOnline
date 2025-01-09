@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { Table } from "reactstrap";
-import "../../static/css/admin/adminPage.css";
-import getErrorModal from "../../util/getErrorModal";
-import tokenService from "../../services/token.service";
-import useFetchState from "../../util/useFetchState";
+import "../static/css/admin/adminPage.css";
+import getErrorModal from "../util/getErrorModal";
+import tokenService from "../services/token.service";
+import useFetchState from "../util/useFetchState";
 import { useNavigate } from 'react-router-dom';
 
 const jwt = tokenService.getLocalAccessToken();
 
-export default function PartidasAdmin() {
+export default function GameHistory() {
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [gamesData, setGamesData] = useFetchState(
       {},
-      `/api/v1/partida/partidas/paginadas?page=0&size=6`,
+      `/api/v1/partida/partidas/historial?page=0&size=6`,
       jwt,
       setMessage,
       setVisible
@@ -47,7 +47,7 @@ export default function PartidasAdmin() {
   };
 
   const fetchPartidasPaginadas = (pagina) => {
-    fetch(`/api/v1/partida/partidas/paginadas?page=${pagina}&size=${partidasPorPagina}`, {
+    fetch(`/api/v1/partida/partidas/historial?page=${pagina}&size=${partidasPorPagina}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -57,13 +57,25 @@ export default function PartidasAdmin() {
       .catch((error) => setMessage("Error al cargar partidas"));
   };
 
+  const formatearFechaHora = (item) => {
+    const fecha = new Date(item);
+    const dia = fecha.getDay();
+    const mes = fecha.getMonth();
+    const anio = fecha.getFullYear();
+    const hora = fecha.getHours();
+    const minutos = fecha.getMinutes();
+    return `${dia}/${mes}/${anio} ${hora}:${minutos}`;
+  }
+ 
   const gameList = games.map((game) => (
+    
     <tr key={game.id}>
       <td>{game.codigo}</td>
       <td>{game.participantes}</td>
       <td>{game.creador}</td>
       <td>{game.visibilidad}</td>
-      <td>{game.tipo}</td>
+      <td>{formatearFechaHora(game.inicio)}</td>
+      <td>{formatearFechaHora(game.fin)}</td>
     </tr>
   ));
 
@@ -72,7 +84,7 @@ export default function PartidasAdmin() {
   return (
     <div
       style={{
-        backgroundImage: "url(/fondos/fondo_admin.png)",
+        backgroundImage: "url(/fondos/fondologin.jpg)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
@@ -81,12 +93,12 @@ export default function PartidasAdmin() {
       }}
     >
       <div expand='md' style={{ float: 'left' }}>
-        <button className="button-admin" onClick={() => { navigate("/admin") }}>
+        <button className="button-admin" onClick={() => { navigate("/home") }}>
           VOLVER
         </button>
       </div>
         <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-          <h1 className="text-center">PARTIDAS</h1>
+          <h1 className="text-center">HISTORIAL DE PARTIDAS</h1>
           {modal}
           <div>
             <Table aria-label="games" className="admin-table mt-4">
@@ -96,7 +108,8 @@ export default function PartidasAdmin() {
                   <th>Participantes</th>
                   <th>Creador</th>
                   <th>Visibilidad</th>
-                  <th>En curso/Terminada</th>
+                  <th>Inicio</th>
+                  <th>Fin</th>
                 </tr>
               </thead>
               <tbody>{gameList}</tbody>
