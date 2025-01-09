@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserRepository;
 
 import jakarta.validation.Valid;
@@ -65,14 +66,19 @@ public class LogrosService {
     }
 
     @Transactional(readOnly = true)
-    public Logros findLogroByMetrica(Metrica metrica){
+    public List<Logros> findLogroByMetrica(Metrica metrica){
         return logroRepository.findByMetrica(metrica);
     }
 
     @Transactional(readOnly = true)
-    public Logros findLogroById(Integer id){
-        return logroRepository.findById(id).get();
+    public Logros findLogroById(Integer id) {
+    Optional<Logros> logroOpt = logroRepository.findById(id);
+    if (logroOpt.isEmpty()) {
+        throw new ResourceNotFoundException("Logro no encontrado " + id);
     }
+    return logroOpt.get();
+}
+
 
     @Transactional
     public void deleteLogro(Integer logroId){
