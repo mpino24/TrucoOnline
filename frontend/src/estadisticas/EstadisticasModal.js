@@ -16,13 +16,16 @@ import BotonDeCambio from './BotonDeCambio';
 import GraficoGlobalAraña from './GraficoGlobalAraña.js';
 import GraficoPartidas from './GraficoPartidas.js';
 import { FaRankingStar } from "react-icons/fa6";
+import { FaTableList } from "react-icons/fa6";
 import RankingGlobal from './RankingGlobal.js'
+import TablaEstadisticasCompleta from './TablaEstadisticasCompletas.js'
 const jwt = tokenService.getLocalAccessToken();
 
 const EstadisticasModal = forwardRef((props, ref) => {
     const closeModal = () => {
         props.setModalVisible(false)
         setMostrarRanking(false)
+        setMostrarTablaEstadisticas(false)
     };
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -31,6 +34,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
 
     const [mostrarRanking, setMostrarRanking]=useState(false)
 
+    const [mostrarTablaEstadisticas, setMostrarTablaEstadisticas] = useState(false)
 
 
     return (
@@ -69,7 +73,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             {console.log(estadisticasAvanzadas)}  {/* Para debuggear */}
 
 
-            {!mostrarRanking && <>
+            {!mostrarRanking && !mostrarTablaEstadisticas && <>
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -157,11 +161,33 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 e.target.style.color = 'white';
                 e.target.style.transform = 'scale(1)';
             }} color='white' onClick={()=>setMostrarRanking(true)} />
+            
+
+            <FaTableList style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 60,
+                margin: '20px',
+                zIndex: 9999, scale: '3',
+                
+                
+            }}onMouseEnter={(e) => {
+                e.target.style.color = 'rgb(255, 255,255,0.8)';
+                e.target.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+                e.target.style.color = 'white';
+                e.target.style.transform = 'scale(1)';
+            }} color='white' onClick={()=>setMostrarTablaEstadisticas(true)} />
             </>}
             
             {mostrarRanking && (
                 <div style={{position:'fixed', width:"100%", height:"100%"}}> 
                     <RankingGlobal jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarRanking={setMostrarRanking}/>
+                </div>)}
+            {mostrarTablaEstadisticas && (
+                <div style={{position:'fixed', width:"100%", height:"100%"}}> 
+                    <TablaEstadisticasCompleta jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarTablaEstadisticas={setMostrarTablaEstadisticas} estadisticas={estadisticas}/>
                 </div>)}
         </div>
         

@@ -29,5 +29,6 @@ export function calcularTiempo(tiemposEnSegundos, partidasTotales) {
         tiempoFormateado += `${tiempoFormateado ? ' y ' : ''}${segundos < 10 ? '0' + segundos : segundos} segundos`;
     }
     
+    
     return tiempoFormateado;
 }
