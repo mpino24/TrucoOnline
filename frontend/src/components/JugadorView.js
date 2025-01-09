@@ -65,8 +65,12 @@ const JugadorView = forwardRef((props, ref) => {
 
                         {jugador.amistad === 'AMIGOS' && jugador.id !== user.id &&
                             <div>
-                                <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap", fontStyle: 'italic' }}>
-                                    {jugador.ultimoMensaje ? jugador.ultimoMensaje.contenido : ''}
+                                <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontStyle: 'italic' }}>
+                                    {jugador.ultimoMensaje ?
+                                        (jugador.ultimoMensaje.contenido.length > 40
+                                            ? `${jugador.ultimoMensaje.contenido.substring(0, 37)}...`
+                                            : jugador.ultimoMensaje.contenido)
+                                        : ''}
                                 </p>
 
                             </div>
@@ -86,7 +90,7 @@ const JugadorView = forwardRef((props, ref) => {
                             display: 'inline-block',
                             textAlign: 'center',
                             marginLeft: 'auto',
-                            marginRight:30
+                            marginRight: 30
                         }}>
                             {jugador.mensajesSinLeer}
                         </span>

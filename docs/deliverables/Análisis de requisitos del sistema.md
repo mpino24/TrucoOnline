@@ -50,6 +50,12 @@ Como jugador quiero poder editar y borrar mi cuenta.
  ### HU-3(NOISSUE): Poder cerrar sesion ([])
 Como jugador quiero poder cerrar sesion para que la web no se quede con mis datos
 ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
+ ### HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador ([])
+Como administador quiero poder ver un listado de partidas en curso y de partidas jugadas para tener constancia de todas las partidas que se juegan.
+ ### HU-27(ISSUE#183): Poder ver listado de usuarios como administrador ([])
+Como administrador quiero poder ver un listado de usuarios para saber en todo momento qué usuarios hay registrados.
+ ### HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador ([])
+Como administrador quiero poder crear un usuario, ver los datos de un usuario, editar los datos de un usuario y borrar un usuario para tener control total sobre todos los usuarios que hay registrados.
  ## Historias de Usuario Creación y configuración partidas:
  ### HU-4(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
 Como jugador quiero que el sistema me permita crear las partidas para poder jugar  
