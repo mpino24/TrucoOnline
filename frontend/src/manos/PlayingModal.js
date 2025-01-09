@@ -41,6 +41,7 @@ const PlayingModal = forwardRef((props, ref) => {
     );
 
     const [nombresJugadores, setNombresJugadores] = useState([]);
+    const eresEspectador= typeof posicion === 'object'
 
     const audioRef = useRef(null);
     const dropAreaRef = useRef(null);
@@ -49,6 +50,8 @@ const PlayingModal = forwardRef((props, ref) => {
     const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
 
     const [isPlaying, setIsPlaying] = useState(false);
+    const [volumeVisible, setVolumeVisible] = useState(false);
+
     const [volume, setVolume] = useState(50); // Default volume at 50%
 
     function fetchMano() {
@@ -89,6 +92,7 @@ const PlayingModal = forwardRef((props, ref) => {
         })
         .catch((error) => {
             console.error("Error fetching mano:", error);
+            
             setMessage("Error fetching mano.");
             setVisible(true);
         });
@@ -165,6 +169,7 @@ const PlayingModal = forwardRef((props, ref) => {
             audioRef.current.play()
             .then(() => {
                 setIsPlaying(true);
+                setVolumeVisible(true);
             })
             .catch((error) => {
                 console.error("Error playing audio:", error);
@@ -504,14 +509,17 @@ const PlayingModal = forwardRef((props, ref) => {
                             }}
                         >
                             <h3 className="player-heading" >
-                                {typeof posicion  === 'object' ? "Viendo la partida..." : `Jugador: ${Number(posicion)}` }
+                                {eresEspectador ? "Viendo la partida..." : `Jugador: ${Number(posicion)}` }
                                 
                             </h3>
-                            <h3 className="turno-heading">{mano?.esperandoRespuesta&& mano?.jugadorTurno=== posicion ? "Tenés que responder": (mano?.jugadorTurno===posicion? "Es tu turno" : "No es tu turno") }</h3>
+                          {!volumeVisible &&  <h3 className="turno-heading">{mano?.esperandoRespuesta&& mano?.jugadorTurno=== posicion ? "Tenés que responder": (mano?.jugadorTurno===posicion? "Es tu turno" : "No es tu turno") }</h3>}
                         </div>
+                            
+                        <h4 className={"puntos-nuestros"}>
+                            {eresEspectador ? "E1:":"Nos:"}</h4>
 
-                        <h4 className={"puntos-nuestros"}>Nos:</h4>
-                        <h4 className={"puntos-ellos"}>Ellos:</h4>
+                        <h4 className={"puntos-ellos"}>
+                            {eresEspectador ? "E2:":"Ellos:"}</h4>
 
                         {puntosTrucoActuales && (
                             <div style={{overflow:'hidden'}}> 
@@ -546,7 +554,10 @@ const PlayingModal = forwardRef((props, ref) => {
                                 <button onClick={handlePauseMusic} className="play-music-button">
                                     ⏸
                                 </button>
-                                <div className="volume-slider-container">
+                                <button style={{top:"10%" , position:"absolute"}} onClick={()=>setVolumeVisible(!volumeVisible)} className="play-music-button">
+                                    X
+                                </button>
+                                {volumeVisible&&  <div className="volume-slider-container">
                                     <label htmlFor="volume-slider">Volume:</label>
                                     <input
                                         type="range"
@@ -557,7 +568,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         onChange={handleVolumeChange}
                                     />
                                     <span>{volume}%</span>
-                                </div>
+                                </div>}
                             </>
                         )}
 
@@ -676,9 +687,17 @@ const PlayingModal = forwardRef((props, ref) => {
                                 </div>
                             )}
                             
-                            {/* Cantar envido */}
-                            {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && mano?.puedeCantarEnvido && (
+                            {/* Cantar envido y flor */}
+                            {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && (
                                 <div className="envido-button-container">
+                                    {/* Cantar Flor */}
+                                {mano?.puedeCantarFlor && mano?.queFlorPuedeCantar === 1 && mano.floresCantadas==0 && (
+                                        <button onClick={() => cantarFlor('FLOR')} style={{right:'20%',animation:'dropShadowGlowContainer 3s ease-in-out infinite'}}>
+                                            <span>¡Flor!</span>
+                                        </button>
+                                    )}
+                                    { mano?.puedeCantarEnvido && (
+                                        <>
                                     {mano?.queEnvidoPuedeCantar >= 3 && (
                                         <button onClick={() => cantarEnvido('ENVIDO')}>
                                             <span>Envido</span>
@@ -694,27 +713,25 @@ const PlayingModal = forwardRef((props, ref) => {
                                             <span className="swirl-glow-text">Falta Envido</span>
                                         </button>
                                     )}
+                                </>)}
+
+                                
                                 </div>
                             )}
 
-                            {/* Cantar Flor */}
-                            {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && !mano?.esperandoRespuesta && mano?.puedeCantarFlor && (
-                                <div className="envido-button-container" style={{ top: "30%", position: "absolute" }}>
-                                    {mano?.queFlorPuedeCantar === 1 && mano.floresCantadas==0 && (
-                                        <button onClick={() => cantarFlor('FLOR')}>
-                                            <span>¡Flor!</span>
-                                        </button>
-                                    )}
-                                </div>
-                            )}
+                            
+                           
                         </div>
 
                         {/* Responder Truco Buttons */}
                         {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && mano?.esperandoRespuesta && puntosTrucoActuales && mano?.esTrucoEnvidoFlor === 0 && (
                             <div className="truco-button-container responder-truco-buttons">
+                                
                                 {puntosTrucoActuales !== puntosConRetruco && 
                                     <button onClick={() => responderTruco("QUIERO")}>Quiero</button>
                                 }
+                                
+                                
                                 <button onClick={() => responderTruco("NO_QUIERO")}>No quiero</button>
                                 {puntosTrucoActuales === puntosConRetruco && 
                                     <button style={{ animation: 'dropShadowGlowContainer 3s ease-in-out infinite' }} 
@@ -753,13 +770,13 @@ const PlayingModal = forwardRef((props, ref) => {
                                         )}
                                     </div>
                                 )}
-
-
                                 {mano?.puedeCantarFlor &&  mano.floresCantadas==0 &&  (
-                                        <button style={{zIndex:"100000000",position:"fixed",top:"20%" }} onClick={() => cantarFlor('FLOR')}>
+                                        <button className= "flor-button" style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite',  top:'-220%', position:'absolute', left:'20%' }} onClick={() => cantarFlor('FLOR')}>
                                             <span>¡Flor!</span>
                                         </button>
                                     )}
+
+
                             </div>
                         )}
 
@@ -767,6 +784,14 @@ const PlayingModal = forwardRef((props, ref) => {
                         {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && mano?.esperandoRespuesta && mano?.esTrucoEnvidoFlor === 1 && (
                             <div className="envido-button-container" style={{ left:'70%', position:'fixed'}}>
                                 {/* Responder Envido */}
+                                
+                                
+                                {mano?.puedeCantarFlor &&  mano.floresCantadas==0 &&  (
+                                        <button className= "flor-button"
+                                        style={{animation:'dropShadowGlowContainer 3s ease-in-out infinite' } } onClick={() => cantarFlor('FLOR')}>
+                                            <span>¡Flor!</span>
+                                        </button>
+                                    )}
                                 <button onClick={() => responderEnvido("QUIERO")}>Quiero</button>
                                 <button onClick={() => responderEnvido("NO_QUIERO")}>No quiero</button>
                                 
@@ -785,11 +810,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         <span className="swirl-glow-text">Falta Envido</span>
                                     </button>
                                 )}
-                                 {mano?.puedeCantarFlor &&  mano.floresCantadas==0 && (
-                                        <button style={{zIndex:"100000000",position:"fixed",top:"20%" }} onClick={() => cantarFlor('FLOR')}>
-                                            <span>¡Flor!</span>
-                                        </button>
-                                    )}
+                                
                        
                        
                             </div>
@@ -799,7 +820,7 @@ const PlayingModal = forwardRef((props, ref) => {
                         {/* Responder Flor */}
                         {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && mano?.esperandoRespuesta && mano?.esTrucoEnvidoFlor === 2 && (
                             
-                            <div className="envido-button-container" style={{ left:'70%', position:'fixed'}}>
+                            <div className="envido-button-container" style={{ left:'75%', position:'fixed', width:'auto'}}>
                                 {mano?.floresCantadas==2 && (
                                 <>
                                 <button onClick={() => responderFlor("QUIERO")}>Quiero</button>
@@ -808,7 +829,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                 )}
                                 
                              {mano?.queFlorPuedeCantar == 2 && (
-                                        <div>
+                                        <>
                                             <button 
                                                 style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite' }}
                                                 onClick={() => responderFlor('CONTRAFLOR')}
@@ -816,18 +837,18 @@ const PlayingModal = forwardRef((props, ref) => {
                                                 <span className="swirl-glow-text">¡Contraflor!</span>
                                             </button>
                                             <button 
-                                                style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite' }}
+                                                style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite'}}
                                                 onClick={() => responderFlor('CON_FLOR_ME_ACHICO')}
                                             >
                                                 <span className="swirl-glow-text">Con flor me achico...</span>
                                             </button>
-                                        </div>
+                                            </>
                                     )}
 
                                    
                                         
                                     
-                                    </div>
+                            </div>
                         )}
                         
 
@@ -836,6 +857,8 @@ const PlayingModal = forwardRef((props, ref) => {
                             cartasDispo={mano?.cartasDisp}
                             posicionListaCartas={posicion}
                             jugadorMano={game.jugadorMano}
+                            esperandoRespuesta={mano?.esperandoRespuesta}
+                            jugadorTurno={mano?.jugadorTurno}
                         />
                     </>
                 )}

@@ -46,7 +46,9 @@ const renderJugador = (persona, index) => {
 
 // Componente para cuando `posicionJugador === null`, con distribución fija
 const DistribuirJugadoresFijos = ({ perfil, game }) => {
+    
     return perfil.map((persona, index) => {
+        let posicion= persona.posicion;
         let playerStyle = {};
         if (game.numJugadores === 2) {
             if (index === 0) {
@@ -68,7 +70,7 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
             }
 
 
-        } else {
+        } else if (game.numJugadores === 4){
             if (index === 2) {
                 playerStyle = {
                     position: 'absolute',
@@ -102,6 +104,49 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
                     zIndex: 1000
                 };
             }
+        } else if (game.numJugadores === 6) { 
+            if (posicion === 0) { 
+                playerStyle = { 
+                position: 'absolute', 
+                bottom: '7%', // Abajo 
+                left: '39%', 
+                transform: 'translateX(-50%)', 
+                zIndex: 1000 }; 
+            } else if (posicion === 1) { 
+                playerStyle = { 
+                    position: 'absolute', 
+                    bottom: '25%', // Arriba 
+                    left: '83%', // Esquina inferior izquierda
+                    transform: 'translateX(-50%)', 
+                    zIndex: 1000 }; 
+            } else if (posicion === 2) { 
+                playerStyle = { 
+                    position: 'absolute', 
+                    top: '25%', // Arriba 
+                    left: '85%', // Esquina superior derecha 
+                    transform: 'translateX(-50%)', 
+                    zIndex: 1000 }; 
+            } else if (posicion === 3) { 
+                    playerStyle = { position: 'absolute', 
+                    top: '7%', 
+                    left: '62%', // Esquina inferior izquierda 
+                    transform: 'translateY(-50%)', 
+                    zIndex: 1000 }; 
+            } else if (posicion === 4) { 
+                playerStyle = { 
+                    position: 'absolute', 
+                    top: '25%', 
+                    left: '5%', // Esquina inferior derecha 
+                    transform: 'translateY(-50%)', 
+                    zIndex: 1000 }; 
+            } else if (posicion === 5) { 
+                playerStyle = { 
+                    position: 'absolute', 
+                    bottom: '25%', // Arriba 
+                    left: '10%', // Enfrente 
+                    transform: 'translateX(-50%)', 
+                    zIndex: 1000 }; 
+            } 
         }
 
         return (
@@ -115,15 +160,18 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
 // Componente para cuando `posicionJugador !== null`, con distribución dinámica
 const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
     let posicionUsada = false;
+    let posicionUsadaInferior = false;
 
     return perfil.map((persona, index) => {
-        if (index !== posicionJugador) {
+        let posicionJug = persona.posicion;
+        
+        // Evitar que el jugador con la misma posición que el actual se asignen a sí mismo
+        if (posicionJug !== posicionJugador) {
             let playerStyle = {};
 
             // Para partidas de 2 jugadores
             if (game.numJugadores === 2) {
                 if (posicionJugador === 0) {
-                    // Si el jugador actual está en la posición 0, el contrario va a la derecha
                     if (index % 2 !== posicionJugador % 2) {
                         playerStyle = {
                             position: 'absolute',
@@ -134,7 +182,6 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                         };
                     }
                 } else if (posicionJugador === 1) {
-                    // Si el jugador actual está en la posición 1, el contrario va a la izquierda
                     if (index % 2 !== posicionJugador % 2) {
                         playerStyle = {
                             position: 'absolute',
@@ -148,9 +195,8 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
             }
 
             // Para partidas de 4 jugadores
-            else if (game.numJugadores === 4) {
+            if (game.numJugadores === 4) {
                 if (index % 2 === posicionJugador % 2) {
-                    // Si el jugador es de tu equipo, se coloca arriba
                     playerStyle = {
                         position: 'absolute',
                         top: '7%', // Jugador de tu equipo, arriba
@@ -163,7 +209,7 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                     playerStyle = {
                         position: 'absolute',
                         top: '45%',
-                        left: '10%',  // A la izquierda
+                        left: '5%',  // A la izquierda
                         transform: 'translateY(-50%)',
                         zIndex: 1000
                     };
@@ -171,10 +217,58 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                     playerStyle = {
                         position: 'absolute',
                         top: '42%',
-                        right: '15%',  // A la derecha
+                        right: '10%',  // A la derecha
                         transform: 'translateY(-50%)',
                         zIndex: 1000
                     };
+                }
+            }
+
+            // Para partidas de 6 jugadores
+            if (game.numJugadores === 6) {
+                if (posicionJug % 2 === posicionJugador % 2) {
+                    if (posicionJug === obtenerPosicionEquipo(posicionJugador, 2, 6)) {
+                        playerStyle = {
+                            position: 'absolute',
+                            top: '20%',
+                            left: '85%',
+                            zIndex: 1000
+                        };
+                    } else if (posicionJug === obtenerPosicionEquipo(posicionJugador, 4, 6)) {
+                        playerStyle = {
+                            position: 'absolute',
+                            top: '20%',
+                            left: '2%',
+                            zIndex: 1000
+                        };
+                    }
+                } else {
+                    if (!posicionUsadaInferior) {
+                        posicionUsadaInferior = true;
+                        playerStyle = {
+                            position: 'absolute',
+                            top: '-2%',
+                            left: '81%',
+                            transform: 'translate(50%, 600%)',
+                            zIndex: 1000
+                        };
+                    } else if (!posicionUsada) {
+                        posicionUsada = true;
+                        playerStyle = {
+                            position: 'absolute',
+                            top: '-70%',
+                            right: '40%',
+                            transform: 'translate(50%, 600%)',
+                            zIndex: 1000
+                        };
+                    } else {
+                        playerStyle = {
+                            position: 'absolute',
+                            top: '65%',
+                            left: '5%',
+                            zIndex: 1000
+                        };
+                    }
                 }
             }
 
@@ -187,6 +281,12 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
         return null;
     });
 };
+
+
+function obtenerPosicionEquipo(posicion, incremento, longitud) { 
+    return (posicion + incremento) % longitud; 
+}
+
 
 // Componente principal de Perfil
 const Perfil = forwardRef((props, ref) => {
@@ -294,7 +394,7 @@ const Perfil = forwardRef((props, ref) => {
 
     return (
         <>
-            {posicionJugador < 4 ? (
+            {posicionJugador < 6 ? (
                 <DistribuirJugadoresDinamicos
                     perfil={perfil}
                     game={game}

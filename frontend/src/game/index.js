@@ -8,6 +8,7 @@ import MessageList from "../components/MessageList.js";
 import InputContainer from "../components/InputContainer.js";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { IoCloseCircle } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -20,31 +21,60 @@ export default function Game() {
     const stompClientRef = useRef(null);
     const isConnectedRef = useRef(false);
     const [chatView, setChatView] = useState(false);
+    const navigate = useNavigate();
+
+    
+    const handleErrorAndRedirect = (errorMessage) => {
+        setMessage(errorMessage);
+        setVisible(true);
+        setTimeout(() => {
+            navigate("/home"); 
+        }, 3000);
+    };
 
     useEffect(() => {
         let intervalId;
 
-        function fetchGame() {
-            fetch(`/api/v1/partida/search?codigo=${codigo}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    setGame(data);
-                    if (data.estado === "FINISHED") {
-                        clearInterval(intervalId);
+        async function fetchGame() {
+            try {
+                const response = await fetch(
+                    `/api/v1/partida/search?codigo=${codigo}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${jwt}`,
+                        },
                     }
-                });
+                );
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        handleErrorAndRedirect("Partida no encontrada, redirigiendo...");
+                    } else {
+                        throw new Error("Error en la respuesta del servidor.");
+                    }
+                } else {
+                    const data = await response.json();
+                    setGame(data);
+
+                    if (data.estado === "FINISHED") {
+                        clearInterval(intervalId); 
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching partida:", error);
+                if (!visible) {
+                    setMessage("Error al obtener los datos de la partida.");
+                    setVisible(true);
+                }
+            }
         }
 
-        fetchGame();
+         fetchGame();
         intervalId = setInterval(fetchGame, 1000);
 
-        return () => clearInterval(intervalId);
-    }, [codigo]);
+        return () => clearInterval(intervalId); 
+    }, [codigo, navigate]);
 
     useEffect(() => {
         if (!isConnectedRef.current) {
@@ -188,6 +218,6 @@ export default function Game() {
                     }
                 </>
             )}
-        </div>
+                    </div>
     );
 }

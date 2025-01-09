@@ -21,10 +21,10 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.Truco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.ConverterRespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.ConverterTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.RespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.Truco;
 
 
 @Service
@@ -834,7 +834,8 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
 		Partida partida = partidaService.findPartidaByCodigo(codigo);
 		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
 		
-		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
+
+		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1 
 
         Integer puntosEquipo1 = partida.getPuntosEquipo1();
         Integer puntosEquipo2 = partida.getPuntosEquipo2();
@@ -852,7 +853,6 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
 			partida.setPuntosEquipo2(puntosEquipo2+manoActual.getPuntosTruco());
 		}
        
-
 		if (partida.haTerminadoLaPartida()) {
             manosPorPartida.remove(partida.getCodigo());
             partidaService.updatePartida(partida, partida.getId());

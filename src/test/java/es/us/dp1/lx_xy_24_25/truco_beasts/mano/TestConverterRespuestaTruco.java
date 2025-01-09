@@ -7,11 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.ConverterRespuestaTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaNoQuieroTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaQuieroTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaSubirTruco;
-import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco.RespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.ConverterRespuestaTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.RespuestaNoQuieroTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.RespuestaQuieroTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.RespuestaSubirTruco;
+import es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco.RespuestaTruco;
 
 public class TestConverterRespuestaTruco {
 

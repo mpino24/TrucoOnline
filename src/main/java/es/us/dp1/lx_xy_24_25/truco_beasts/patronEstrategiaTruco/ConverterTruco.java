@@ -1,4 +1,4 @@
-package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstadoTruco;
+package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco;
 
 import org.jpatterns.gof.CompositePattern.Component;
 
