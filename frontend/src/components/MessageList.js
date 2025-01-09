@@ -5,30 +5,18 @@ import "./Chat.css";
 
 const MessageList = ({ mensajes, userId }) => {
   const messagesEndRef = useRef(null);
-  const messagesContainerRef = useRef(null);
 
   // Desplazar automáticamente al final cuando los mensajes cambien
   const moveScroll = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = document.querySelector(".messages-container"); // Selecciona el contenedor
+    if (container) {
+      container.scrollTop = container.scrollHeight; // Ajusta el scroll manualmente
+    }
   };
+  // Ejecutar moveScroll cuando los mensajes cambien
   useEffect(() => {
     console.log("Mensajes recibidos en MessageList:", mensajes);
-  }, [mensajes]);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      moveScroll();
-    });
-
-    if (messagesContainerRef.current) {
-      observer.observe(messagesContainerRef.current, { childList: true, subtree: true });
-    }
-
-    return () => {
-      if (messagesContainerRef.current) {
-        observer.disconnect();
-      }
-    };
+    moveScroll(); // Asegura el scroll cuando los mensajes cambien
   }, [mensajes]);
 
   const formatFecha = (fecha) => {
@@ -43,7 +31,6 @@ const MessageList = ({ mensajes, userId }) => {
     <div
       className="messages-container"
       style={{ flexGrow: 1, overflowY: "auto", padding: "10px" }}
-      ref={messagesContainerRef}
     >
       {mensajes.map((msg, i) => (
         msg.remitente.id === userId ? (
@@ -61,6 +48,7 @@ const MessageList = ({ mensajes, userId }) => {
           </div>
         )
       ))}
+      {/* Referencia para el desplazamiento automático */}
       <div ref={messagesEndRef} />
     </div>
   );
