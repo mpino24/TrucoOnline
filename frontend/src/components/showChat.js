@@ -25,6 +25,7 @@ const Chat = forwardRef((props, ref) => {
       .then((data) => {
         if (data.length > 0) {
             setMensajes(data);
+           
         }
       })
       .catch((error) => {
