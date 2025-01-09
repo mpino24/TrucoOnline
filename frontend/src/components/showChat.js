@@ -33,15 +33,35 @@ const Chat = forwardRef((props, ref) => {
       });
   }
 
+  function updateChatLastConnection(){
+    fetch('api/v1/chat/' + props.idChat + '/updatetime', {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("No se pudo actualizar la conexión.");
+        }else{
+          console.log("Actualizada última fecha de conexión al chat");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Hubo un problema al actualizar la conexión.");
+      });
+  }
+
   useEffect(() => {
     fetchMensajesIniciales();
+    updateChatLastConnection();
+    const timer = setInterval(() => {
+      updateChatLastConnection();
+    }, 60000);
+    return () => clearInterval(timer);
+    
   }, []);
-
-
-
-
-
-
 
 
   // Ref para el contenedor de mensajes

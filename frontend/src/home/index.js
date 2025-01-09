@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect,useRef } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import '../static/css/home/home.css';
@@ -29,6 +29,8 @@ export default function Home() {
     const [roles, setRoles] = useState([]);
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [numMessages, setNumMessages] = useState(0);
+    const numMessagesRef = useRef(numMessages);
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
     const navigate = useNavigate();
@@ -59,24 +61,55 @@ export default function Home() {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                  },
+                },
             }
         )
-        .then((response) => {
-            if (response.status === 202) { 
-                return null; 
-            }
-            return response.json(); 
-        })
-        .then((data) => {
-            if (data !== null) { 
-                if (data.game && data.game.estado !== "FINALIZADA") {
-                    navigate("/partidas?partidaCode="+data.game.codigo);
+            .then((response) => {
+                if (response.status === 202) {
+                    return null;
                 }
-            }
-        })
+                return response.json();
+            })
+            .then((data) => {
+                if (data !== null) {
+                    if (data.game && data.game.estado !== "FINALIZADA") {
+                        navigate("/partidas?partidaCode=" + data.game.codigo);
+                    }
+                }
+            })
             .catch((message) => alert(message));
     }
+
+    function fetchNotReadMessages() {
+        fetch(
+            "/api/v1/chat/unread",
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Mensajes sin leer: ", data);
+                console.log("NumMessages antes: "+numMessages);
+                if (data > 0 && numMessagesRef.current < data) {
+                    if (!friendsView) {
+                        const audio = new Audio("/notification.mp3");
+                        audio.play().catch((error) => {
+                            console.error('Error al reproducir el sonido:', error);
+                        });
+                    } 
+                }
+                setNumMessages(data);
+            })
+            .catch((message) => alert(message));
+    }
+
+    useEffect(() => {
+        numMessagesRef.current = numMessages; // Sincronizar la referencia con el estado actual
+    }, [numMessages]);
 
     useEffect(() => {
         const backgrounds = [
@@ -95,7 +128,19 @@ export default function Home() {
         setBackgroundUrl(backgrounds[randomIndex])
 
         fetchCurrentGame();
+        fetchNotReadMessages();
+        const timer = setInterval(() => {
+            fetchNotReadMessages();
+        }, 2000);
+        return () => clearInterval(timer);
+
     }, []);
+
+    useEffect(() => {
+        if(!friendsView){
+        fetchNotReadMessages();
+        }
+    }, [friendsView, numMessages]);
 
 
 
@@ -138,7 +183,7 @@ export default function Home() {
 
     return (
         <>
-            {roles.includes('ADMIN') && !estadisticasView &&(
+            {roles.includes('ADMIN') && !estadisticasView && (
                 <div expand='md' style={{ float: 'left' }}>
                     <button className="button-admin" onClick={() => { navigate("/admin") }}>
                         FUNCIONES DE ADMINISTRADOR
@@ -197,9 +242,27 @@ export default function Home() {
                         }
                         {!friendsView &&
                             <div style={{ width: '36%' }}>
-                                <div style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={toggleFriendsModal} >
+                                <div key={numMessages} style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={toggleFriendsModal} >
                                     <FaUserFriends style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
                                     <RiArrowLeftDoubleLine style={{ width: 80, height: 80, float: 'right', color: 'white' }} />
+                                    {numMessages > 0 && (
+                                        <span style={{
+                                            color: 'white',
+                                            backgroundColor: 'orange',
+                                            borderRadius: '50%',
+                                            position: 'absolute',
+                                            top: '-10px',
+                                            right: '0px',
+                                            width: '30px',
+                                            height: '30px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '20px'
+                                        }}>
+                                            {numMessages}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         }

@@ -64,15 +64,32 @@ const JugadorView = forwardRef((props, ref) => {
                         <p style={{ marginLeft: 10, fontSize: 12, marginBottom: 0 }}>{jugador.userName}</p>
 
                         {jugador.amistad === 'AMIGOS' && jugador.id !== user.id &&
-                            <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap", fontStyle: 'italic' }}>
-                                {jugador.ultimoMensaje ? jugador.ultimoMensaje.contenido : ''}
-                            </p>
+                            <div>
+                                <p style={{ marginLeft: 10, color: 'rgb(96,96,96)', whiteSpace: "nowrap", fontStyle: 'italic' }}>
+                                    {jugador.ultimoMensaje ? jugador.ultimoMensaje.contenido : ''}
+                                </p>
+
+                            </div>
                         }
                     </div>
                     {jugador.amistad === 'DESCONOCIDOS' && jugador.id !== user.id &&
                         <button class="button" style={{ margin: 10, color: 'darkgreen', visibility: pressed ? 'hidden' : 'visible' }} onClick={() => handleSubmit()}>
                             Solicitud amistad
                         </button>
+                    }
+                    {jugador.mensajesSinLeer > 0 &&
+                        <span style={{
+                            backgroundColor: 'orange',
+                            color: 'white',
+                            borderRadius: '50%',
+                            padding: '5px 10px',
+                            display: 'inline-block',
+                            textAlign: 'center',
+                            marginLeft: 'auto',
+                            marginRight:30
+                        }}>
+                            {jugador.mensajesSinLeer}
+                        </span>
                     }
                 </div>
             </div>
