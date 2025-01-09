@@ -16,6 +16,10 @@ public class PartidaDTO {
     private String tipo;
     @NotNull
     private String visibilidad;
+    
+    private String inicio = "-";
+
+    private String fin = "-";
 
     public PartidaDTO() {
     }

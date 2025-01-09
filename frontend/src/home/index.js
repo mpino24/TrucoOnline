@@ -185,14 +185,21 @@ export default function Home() {
 
 
     return (
-        <>
-            {roles.includes('ADMIN') && !estadisticasView && (
+        <>  
+            
+                    
+            {!estadisticasView && (
                 <div expand='md' style={{ float: 'left' }}>
-                    <button className="button-admin" onClick={() => { navigate("/admin") }}>
-                        FUNCIONES DE ADMINISTRADOR
+                    <button className="button-admin" onClick={() => { navigate("/historial") }}>
+                        HISTORIAL DE PARTIDAS
                     </button>
-                </div>
+                    {roles.includes('ADMIN') && 
+                    <button className="button-admin" onClick={() => { navigate("/admin") }}>
+                        ADMINISTRACIÓN
+                    </button>}
+                    </div>
             )}
+            
             {!estadisticasView && !friendsView &&
                 <Nav className="ms-auto mb-2 mb-lg-0" navbar style={{ float: 'right', marginTop: 15, marginRight: 15 }}>
                     <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={toggleAccountMenu}>
