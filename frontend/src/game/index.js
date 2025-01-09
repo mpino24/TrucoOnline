@@ -23,6 +23,9 @@ export default function Game() {
     const [chatView, setChatView] = useState(false);
     const navigate = useNavigate();
 
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState("");
+
     
     const handleErrorAndRedirect = (errorMessage) => {
         setMessage(errorMessage);

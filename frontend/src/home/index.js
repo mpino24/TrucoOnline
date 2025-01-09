@@ -93,8 +93,6 @@ export default function Home() {
         )
             .then((response) => response.json())
             .then((data) => {
-                console.log("Mensajes sin leer: ", data);
-                console.log("NumMessages antes: "+numMessages);
                 if (data > 0 && numMessagesRef.current < data) {
                     if (!friendViewRef.current) {
                         const audio = new Audio("/notification.mp3");

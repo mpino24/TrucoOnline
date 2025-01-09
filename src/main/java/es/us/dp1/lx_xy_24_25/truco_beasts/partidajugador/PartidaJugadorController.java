@@ -67,14 +67,14 @@ public class PartidaJugadorController {
     }
 
     @GetMapping("/partidaJugadorActual")
-    public ResponseEntity<PartidaJugador> getPartidaJugadorActual(){
+    public ResponseEntity<PartidaJugadorDTO> getPartidaJugadorActual(){
         PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
         if(pj==null){
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
         pj.getPlayer().setAmigos(null);
         pj.getPlayer().setSolicitudes(null);
-        return ResponseEntity.ok(pjService.getPartidaJugadorUsuarioActual());
+        return ResponseEntity.ok(new PartidaJugadorDTO(pj));
     }
 
 
