@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+
 public interface EstadisticasRepository extends CrudRepository<PartidaJugador, Integer> {
     
     
@@ -63,6 +64,13 @@ public interface EstadisticasRepository extends CrudRepository<PartidaJugador, I
 List<Object[]> findAllDatosPorPartidaByJugadorId(Integer jugadorId);
 
 
+@Query("SELECT p.player.id, COUNT(p) " +
+       "FROM PartidaJugador p " +
+       "WHERE p.game.instanteFin IS NOT NULL " +
+       "AND ((p.posicion%2 = 0 AND p.game.puntosEquipo1 > p.game.puntosEquipo2) " +
+       "OR (p.posicion%2 = 1 AND p.game.puntosEquipo2 > p.game.puntosEquipo1)) " +
+       "GROUP BY p.player.id")
+List<Object[]> findVictoriasPorJugador();
 
 
 

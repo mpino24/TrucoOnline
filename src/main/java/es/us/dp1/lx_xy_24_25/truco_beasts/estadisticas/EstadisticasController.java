@@ -61,5 +61,9 @@ public class EstadisticasController {
         }
     }
 
+@GetMapping("/ranking")
+    public ResponseEntity<List<JugadorVictorias>> getRankingGlobal(){
+        return ResponseEntity.ok(estadisticasService.getRankingGlobal(null));
+    }
     
 }

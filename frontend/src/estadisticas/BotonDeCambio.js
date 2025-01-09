@@ -37,8 +37,8 @@ const BotonDeCambio = ({ color, textoMostrar, textoOcultar, children }) => {
                     fontSize: '16px',
                     marginTop: '10px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                    width: '50%', // Ensure uniform width
-                    textAlign: 'center', // Center the text
+                    width: '50%', 
+                    textAlign: 'center', 
                 }}
                 onMouseEnter={(e) => {
                     e.target.style.backgroundColor = hoverColor;

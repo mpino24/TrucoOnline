@@ -95,13 +95,23 @@ Como jugador quiero poder responder Flor y sus variantes para subir la apuesta d
 ![Mockup Flor](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_Flor.jpg)
  
 
- ## Historia de Usuario Aspecto social:
+ ## Historias de Usuario Módulo social:
  ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
 Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
  ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
  ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
  Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
  ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+
+ ## Historias de Usuario Módulo Estadístico:
+ ### HU-22(ISSUE#): Ver mis estadísticas :
+Como jugador, quiero poder ver mis estadísticas para poder seguir mi progreso en el juego y mejorar mi rendimiento.
+### HU-23(ISSUE#): Ver logros :
+Como jugador, quiero poder ver mis logros conseguidos y aquellos que me faltan por alcanzar, para motivarme a seguir jugando y completar todos los logros.
+### HU-24(ISSUE#): Crear, editar y eliminar logros:
+Como administrador, quiero poder crear, editar y eliminar logros para mantener la experiencia de juego dinámica y actualizada, asegurando que los jugadores tengan nuevos objetivos que cumplir.
+### HU-25(ISSUE#342): Ver ranking global ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/342]):
+Como jugador quiero poder ver el ranking global para incentivarme a algún día estar primero.
 
 
 
