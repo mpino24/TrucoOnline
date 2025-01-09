@@ -136,7 +136,7 @@ public class Mano {
         //    - puntosTruco == 1 no se cantó truco  
         //    - puntosEnvido == 0 no se ha ido mas allá del primer envido
        
-        if (getPuntosTruco() == 1 && getPuntosEnvido() == 0 && getRondaActual()==1 && partida.getConFlor()) {
+        if (getPuntosTruco() == 1 && (getPuntosEnvido() == 0 || getQueEnvidoPuedeCantar()<0) && getRondaActual()==1 && partida.getConFlor()) {
             List<Carta> cartasJugadorActual = getCartasNoBorradas().get(getJugadorTurno()); //TIENE QUE SER OTRA VARIABLE SI SE VAN A COMPROBAR SIEMPRE, YA QUE CARTAS DISPONIBLES SE VA BORRANDO
             
             if(tiene3CartasMismoPalo(cartasJugadorActual)){
