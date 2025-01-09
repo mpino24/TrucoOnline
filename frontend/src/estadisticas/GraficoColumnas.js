@@ -74,7 +74,7 @@ const GraficoColumnas = ({ estadisticasAvanzadas, estadisticas }) => {
                     const resultado = this.x === 0 ? "victoria" : "derrota";
                     return `
                         <b>${this.series.name}</b><br>
-                        Promedio de Flores en ${resultado}: ${promedioFlores.toFixed(2)} por partida
+                        Promedio de Flores cantadas en ${resultado}: ${promedioFlores.toFixed(2)} por partida
                     `;
                 } else {
                     return `
@@ -109,7 +109,7 @@ const GraficoColumnas = ({ estadisticasAvanzadas, estadisticas }) => {
                     { y: floresCantadasEnVictorias, promedioFlores: promedioFloresPorVictoria },
                     { y: floresCantadasEnDerrotas, promedioFlores: promedioFloresPorDerrota }
                 ],
-                color: '#2979ff', // Color azul claro para flores
+                color: '#2979ff', 
             },
             {
                 name: 'Partidas Jugadas con Flor',
@@ -117,7 +117,7 @@ const GraficoColumnas = ({ estadisticasAvanzadas, estadisticas }) => {
                     { y: victoriasEnPartidasConFlor, promedioFlores: promedioFloresPorVictoria },
                     { y: derrotasEnPartidasConFlor, promedioFlores: promedioFloresPorDerrota }
                 ],
-                color: '#616161', // Color gris para partidas jugadas
+                color: '#6161b1', 
             },
         ]
     };
