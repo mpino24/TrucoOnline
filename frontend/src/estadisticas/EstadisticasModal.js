@@ -49,12 +49,12 @@ const EstadisticasModal = forwardRef((props, ref) => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'stretch', // Cambiado a 'stretch' para que los contenedores de logros y estadisticas ocupen la misma altura
+            alignItems: 'stretch', 
             zIndex: 1000,
             overflowY: 'auto',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            padding: '20px', // Añadido un pequeño espacio alrededor
+            padding: '20px',
         }}>
             
             <IoCloseCircle
@@ -70,7 +70,6 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 }}
                 onClick={closeModal}
             />
-            {console.log(estadisticasAvanzadas)}  {/* Para debuggear */}
 
 
             {!mostrarRanking && !mostrarTablaEstadisticas && <>
@@ -91,7 +90,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 msOverflowStyle: 'none'
             }}>
                 <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas 📊</h2>
-                <p style={{ fontSize: "18px", color: 'white' }}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado</p>
+                <p style={{ fontSize: "18px", color: 'white' }}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado ⌛</p>
 
                 <GraficoPartidas estadisticas={estadisticas} />
                 <BotonDeCambio
@@ -186,7 +185,18 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     <RankingGlobal jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarRanking={setMostrarRanking}/>
                 </div>)}
             {mostrarTablaEstadisticas && (
-                <div style={{position:'fixed', width:"100%", height:"100%"}}> 
+                
+                <div style={{position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000,
+                    overflowY: 'auto'}}> 
                     <TablaEstadisticasCompleta jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarTablaEstadisticas={setMostrarTablaEstadisticas} estadisticas={estadisticas}/>
                 </div>)}
         </div>

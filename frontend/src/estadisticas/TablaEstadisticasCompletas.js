@@ -6,29 +6,84 @@ import { calcularTiempo } from './calcularTiempo.js';
 const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTablaEstadisticas, estadisticas }) => {
     const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible);
 
-    // Función para calcular estadísticas como promedio, máximo y mínimo
-    const calcularEstadisticas = (key) => {
-        let total = estadisticas[key];
-        let partidasJugadas = estadisticas.partidasJugadas || 1; // Evita división entre 0
-        let promedio = total / partidasJugadas;
-        let maximo = estadisticasGlobales[key] || 0; // Estadística global máxima
-        let minimo = estadisticas[key] === 0 ? 0 : estadisticasGlobales[key]; // Mínimo según global
-        if(key === "tiempoJugado"){
-            total = calcularTiempo(total)
-            promedio = calcularTiempo(promedio)
-            maximo = calcularTiempo(maximo)
-            minimo = calcularTiempo(minimo)
-        }else{
-            promedio = promedio.toFixed(2)
+    const calcularEstadisticas = (data, key, global) => {
+        let total = data[key];
+        let partidasJugadas = data.partidasJugadas; 
+        
+        let promedio = 0;
+
+        if(partidasJugadas > 0){
+            promedio= total / partidasJugadas
+            if(key=== 'partidasJugadas' && global){
+                let jugadores = data.jugadoresTotales || 1
+                promedio = total /jugadores
+            } 
         }
-        return { total, promedio, maximo, minimo };
+
+        if (key === 'tiempoJugado') {
+            let totalSinTransformar = total
+            total = calcularTiempo(total);
+            promedio = calcularTiempo(totalSinTransformar, partidasJugadas) + " por partida";
+        } else {
+            promedio = promedio.toFixed(2);
+        }
+        return { total, promedio };
     };
 
-    // Campos a mostrar
+
     const campos = [
-        "partidasJugadas", "tiempoJugado", "victorias", "derrotas", "partidasA2", "partidasA4",
-        "partidasA6", "numeroFlores", "numeroEnganos", "quieros", "noQuieros", "partidasConFlor", "atrapado"
+        { key: 'partidasJugadas', label: 'Partidas Jugadas' },
+        { key: 'tiempoJugado', label: 'Duración' },
+        { key: 'victorias', label: 'Victorias' },
+        { key: 'derrotas', label: 'Derrotas' },
+        { key: 'partidasA2', label: 'Partidas de 2 jugadores' },
+        { key: 'partidasA4', label: 'Partidas de 4 jugadores' },
+        { key: 'partidasA6', label: 'Partidas de 6 jugadores' },
+        { key: 'numeroFlores', label: 'Número de Flores' },
+        { key: 'numeroEnganos', label: 'Número de Engaños' },
+        { key: 'quieros', label: 'Quieros' },
+        { key: 'noQuieros', label: 'No Quieros' },
+        { key: 'partidasConFlor', label: 'Partidas con Flor' },
+        { key: 'atrapado', label: 'Atrápado' },
     ];
+
+    const renderTabla = (data, titulo, global) => (
+        <div style={{ marginBottom: '30px', width: '100%' }}>
+            <h2 style={{ textAlign: 'center', color: 'white' }}>{titulo}</h2>
+            <table style={{
+                borderCollapse: 'collapse',
+                width: '85%',
+                height:'70%',
+                margin: '0 auto',
+                color: 'white',
+                textAlign: 'left',
+                marginBottom: '20px',
+                backgroundColor: 'rgba(48, 158, 148, 0.2)', 
+                borderRadius: '5px',
+                overflow: 'hidden',
+            }}>
+                <thead>
+                    <tr style={{ backgroundColor: 'rgba(48, 158, 148, 0.5)' }}> 
+                        <th style={{ border: '1px solid white', padding: '10px' }}>Dato</th>
+                        <th style={{ border: '1px solid white', padding: '10px' }}>Total</th>
+                        <th style={{ border: '1px solid white', padding: '10px' }}>Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {campos.map(({ key, label }) => {
+                        const { total, promedio } = calcularEstadisticas(data, key, global);
+                        return (
+                            <tr key={key}>
+                                <td style={{ border: '1px solid white', padding: '10px', backgroundColor: 'rgba(48, 158, 148, 0.1)' }}>{label}</td>
+                                <td style={{ border: '1px solid white', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>{total}</td>
+                                <td style={{ border: '1px solid white', padding: '10px', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>{promedio}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </div>
+    );
 
     return (
         <div style={{
@@ -36,43 +91,16 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '100vh',
-            backgroundColor: 'rgb(0,0,0,0.8)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', 
             color: 'white',
-            padding: '20px',
+            height: '100%',
+            width:'93%',
+            top:'40px'
         }}>
-            <table style={{
-                borderCollapse: 'collapse',
-                width: '80%',
-                marginBottom: '20px',
-                color: 'white',
-                textAlign: 'left',
-            }}>
-                <thead>
-                    <tr>
-                        <th style={{ border: '1px solid white', padding: '10px' }}>Estadística</th>
-                        <th style={{ border: '1px solid white', padding: '10px' }}>Total</th>
-                        <th style={{ border: '1px solid white', padding: '10px' }}>Promedio</th>
-                        <th style={{ border: '1px solid white', padding: '10px' }}>Máximo</th>
-                        <th style={{ border: '1px solid white', padding: '10px' }}>Mínimo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {campos.map((campo) => {
-                        const { total, promedio, maximo, minimo } = calcularEstadisticas(campo);
-                        return (
-                            <tr key={campo}>
-                                <td style={{ border: '1px solid white', padding: '10px' }}>{campo}</td>
-                                <td style={{ border: '1px solid white', padding: '10px' }}>{total}</td>
-                                <td style={{ border: '1px solid white', padding: '10px' }}>{promedio}</td>
-                                <td style={{ border: '1px solid white', padding: '10px' }}>{maximo}</td>
-                                <td style={{ border: '1px solid white', padding: '10px' }}>{minimo}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-
+            <div style={{display:'flex', flexDirection:'row'}}>
+            {renderTabla(estadisticasGlobales, `Estadísticas Globales de ${estadisticasGlobales.jugadoresTotales} jugadores`, true)}
+            {renderTabla(estadisticas, 'Tus estadísticas')}
+            </div>
             <button
                 onClick={() => setMostrarTablaEstadisticas(false)}
                 style={{
@@ -80,7 +108,7 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
                     backgroundColor: '#309e94',
                     color: 'white',
                     border: 'none',
-                    borderRadius: '25px',
+                    borderRadius: '20px',
                     cursor: 'pointer',
                     transition: 'background-color 0.3s, transform 0.3s',
                     fontSize: '16px',
