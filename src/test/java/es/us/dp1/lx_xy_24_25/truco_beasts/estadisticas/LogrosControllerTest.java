@@ -62,13 +62,17 @@ public class LogrosControllerTest {
     private User adminUser;
     private User normalUser;
     private Logros logro;
-    private JugadorDTO jugador;
+    private Jugador jugador;
+    private JugadorDTO jugadorDTO;
     private Logros nuevoLogro;
 
     @BeforeEach
     public void setUp() {
-        jugador = new JugadorDTO();
-        jugador.setId(1);
+        jugadorDTO = new JugadorDTO();
+        jugadorDTO.setId(1);
+
+        jugador= new Jugador();
+        jugador.setId(2);
 
 
         Authorities autoridadPlayer = new Authorities();
@@ -146,15 +150,15 @@ public class LogrosControllerTest {
     @WithMockUser(username = "player", roles = {"PLAYER"})
     void getMisLogros() throws Exception {
       
-        when(userService.findCurrentUser()).thenReturn(normalUser); // Aquí devolvemos el usuario normal
-        when(jugadorService.findJugadorByUserId(normalUser.getId())).thenReturn(jugador); // Usamos normalUser en vez de adminUser
-        when(logrosService.logrosConseguidos(anyInt())).thenReturn(Arrays.asList(logro)); // Mock de logros
+        when(userService.findCurrentUser()).thenReturn(normalUser); 
+        when(jugadorService.findJugadorByUserId(normalUser.getId())).thenReturn(jugador); 
+        when(logrosService.logrosConseguidos(anyInt())).thenReturn(Arrays.asList(logro)); 
     
  
         mockMvc.perform(get(BASE_URL+"/misLogros"))
                 .andExpect(status().isOk()) 
-                .andExpect(jsonPath("$[0].name").value("Primer Logro")) // Verificamos que el nombre del logro sea correcto
-                .andExpect(jsonPath("$[0].descripcion").value("Descripción del primer logro")); // Verificamos que la descripción sea correcta
+                .andExpect(jsonPath("$[0].name").value("Primer Logro")) 
+                .andExpect(jsonPath("$[0].descripcion").value("Descripción del primer logro")); 
     }
     
 
@@ -189,7 +193,7 @@ public class LogrosControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // Test positivo para eliminar un logro
+
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deleteLogro() throws Exception {
@@ -201,7 +205,7 @@ public class LogrosControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // Test negativo para eliminar un logro (sin autorización)
+
     @Test
     void deleteLogroSinAutorizacion() throws Exception {
         when(userService.findCurrentUser()).thenReturn(normalUser);
@@ -210,7 +214,6 @@ public class LogrosControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // Test positivo para actualizar un logro
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateLogro() throws Exception {
