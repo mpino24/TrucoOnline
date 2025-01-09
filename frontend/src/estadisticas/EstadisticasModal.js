@@ -17,8 +17,11 @@ import GraficoGlobalAraña from './GraficoGlobalAraña.js';
 import GraficoPartidas from './GraficoPartidas.js';
 import { FaRankingStar } from "react-icons/fa6";
 import { FaTableList } from "react-icons/fa6";
+import { FaHistory } from "react-icons/fa";
 import RankingGlobal from './RankingGlobal.js'
 import TablaEstadisticasCompleta from './TablaEstadisticasCompletas.js'
+import { useNavigate } from 'react-router-dom';
+
 const jwt = tokenService.getLocalAccessToken();
 
 const EstadisticasModal = forwardRef((props, ref) => {
@@ -31,6 +34,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false);
     const [estadisticas, setEstadisticas] = useFetchState({}, '/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible);
     const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], '/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
+    const navigate = useNavigate();
 
     const [mostrarRanking, setMostrarRanking]=useState(false)
 
@@ -147,7 +151,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             <FaRankingStar style={{
                 position: 'fixed',
                 bottom: 0,
-                left: 0,
+                left: 5,
                 margin: '20px',
                 zIndex: 9999, scale: '3',
                 
@@ -165,7 +169,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             <FaTableList style={{
                 position: 'fixed',
                 bottom: 0,
-                left: 60,
+                left: 65,
                 margin: '20px',
                 zIndex: 9999, scale: '3',
                 
@@ -178,6 +182,26 @@ const EstadisticasModal = forwardRef((props, ref) => {
                 e.target.style.color = 'white';
                 e.target.style.transform = 'scale(1)';
             }} color='white' onClick={()=>setMostrarTablaEstadisticas(true)} />
+
+             <FaHistory style={{
+                position: 'fixed',
+                bottom: 0,
+                right: 5,
+                margin: '20px',
+                zIndex: 9999, scale: '3',
+                
+                
+            }}onMouseEnter={(e) => {
+                e.target.style.color = 'rgb(255, 255,255,0.8)';
+                e.target.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+                e.target.style.color = 'white';
+                e.target.style.transform = 'scale(1)';
+            }} color='white' onClick={()=>{
+                navigate("/historial")
+            closeModal()
+            }} />
             </>}
             
             {mostrarRanking && (
@@ -199,6 +223,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     overflowY: 'auto'}}> 
                     <TablaEstadisticasCompleta jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarTablaEstadisticas={setMostrarTablaEstadisticas} estadisticas={estadisticas}/>
                 </div>)}
+                
         </div>
         
     );

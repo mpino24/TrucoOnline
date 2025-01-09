@@ -21,6 +21,7 @@ const GraficoPartidas = ({ estadisticas }) => {
         series: [{
             name: 'Resultados',
             colorByPoint: true,
+            innerSize: '0%',
             data: [
                 { name: 'Victorias', y: estadisticas.victorias || 0, color: '#4caf50' },
                 { name: 'Derrotas', y: estadisticas.derrotas || 0, color: '#f44336' },
