@@ -232,9 +232,23 @@ export default function UserEditAdmin() {
             />
           </div>
           <div className="custom-form-input">
-            <Label for="authority" className="custom-form-input-label">
+          <Label for="authority" className="custom-form-input-label">
               Autoridad
             </Label>
+            {user.id ? (
+              <Input
+                type="select"
+                disabled
+                name="authority"
+                id="authority"
+                value={user.authority?.id || ""}
+                onChange={handleUserChange}
+                className="custom-input"
+              >
+                <option value="">None</option>
+                {authOptions}
+              </Input>
+            ) : (
               <Input
                 type="select"
                 required
@@ -247,6 +261,7 @@ export default function UserEditAdmin() {
                 <option value="">None</option>
                 {authOptions}
               </Input>
+            )}
           </div>
           <div className="custom-button-row">
             <button className="auth-button">Guardar</button>
