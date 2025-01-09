@@ -109,7 +109,7 @@ const DistribuirJugadoresFijos = ({ perfil, game }) => {
                 playerStyle = { 
                 position: 'absolute', 
                 bottom: '7%', // Abajo 
-                left: '65%', 
+                left: '39%', 
                 transform: 'translateX(-50%)', 
                 zIndex: 1000 }; 
             } else if (posicion === 1) { 
@@ -209,7 +209,7 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                     playerStyle = {
                         position: 'absolute',
                         top: '45%',
-                        left: '10%',  // A la izquierda
+                        left: '5%',  // A la izquierda
                         transform: 'translateY(-50%)',
                         zIndex: 1000
                     };
@@ -217,7 +217,7 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                     playerStyle = {
                         position: 'absolute',
                         top: '42%',
-                        right: '15%',  // A la derecha
+                        right: '10%',  // A la derecha
                         transform: 'translateY(-50%)',
                         zIndex: 1000
                     };
@@ -247,8 +247,8 @@ const DistribuirJugadoresDinamicos = ({ perfil, game, posicionJugador }) => {
                         posicionUsadaInferior = true;
                         playerStyle = {
                             position: 'absolute',
-                            top: '-15%',
-                            left: '80%',
+                            top: '-2%',
+                            left: '81%',
                             transform: 'translate(50%, 600%)',
                             zIndex: 1000
                         };
