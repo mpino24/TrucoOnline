@@ -4,15 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import lombok.Getter;
 
-@ResponseStatus(value = HttpStatus.CONFLICT)
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
 @Getter
-public class NotPartidaFoundException extends Exception {
+public class PartidaNotFoundException extends RuntimeException {
 
-    public NotPartidaFoundException() {
+    public PartidaNotFoundException() {
         super("La partida no existe!");
 
     }
-    public NotPartidaFoundException(String message) {
+    public PartidaNotFoundException(String message) {
 		super(message);
 	}
 }

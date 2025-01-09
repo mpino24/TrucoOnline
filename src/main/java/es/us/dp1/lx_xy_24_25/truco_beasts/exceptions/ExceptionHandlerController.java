@@ -35,6 +35,17 @@ public class ExceptionHandlerController {
 		return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler(PartidaNotFoundException.class)
+	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public ResponseEntity<ErrorMessage> partidaNotFoundException(PartidaNotFoundException ex, WebRequest request) {
+		ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(),
+				request.getDescription(false));
+
+		return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+	}
+
+
+
 	@ExceptionHandler(ResourceNotOwnedException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ErrorMessage> resourceNotOwnedException(ResourceNotOwnedException ex, WebRequest request) {

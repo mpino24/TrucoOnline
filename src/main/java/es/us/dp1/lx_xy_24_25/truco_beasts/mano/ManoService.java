@@ -834,7 +834,8 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
 		Partida partida = partidaService.findPartidaByCodigo(codigo);
 		List<Integer> ganadoresRondaActual = manoActual.getGanadoresRondas();
 		
-		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1
+
+		Integer equipoMano =partida.getJugadorMano() % 2; // equipo 1 = 0, equipo 2 = 1 
 
         Integer puntosEquipo1 = partida.getPuntosEquipo1();
         Integer puntosEquipo2 = partida.getPuntosEquipo2();
@@ -852,7 +853,6 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
 			partida.setPuntosEquipo2(puntosEquipo2+manoActual.getPuntosTruco());
 		}
        
-
 		if (partida.haTerminadoLaPartida()) {
             manosPorPartida.remove(partida.getCodigo());
             partidaService.updatePartida(partida, partida.getId());
