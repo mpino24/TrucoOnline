@@ -1,12 +1,10 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import useFetchState from '../util/useFetchState.js';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+
 import { IoCloseCircle } from "react-icons/io5";
-import jwt_decode from "jwt-decode";
+
 import tokenService from '../services/token.service.js';
-import HighchartsMore from 'highcharts/highcharts-more';
-import LogroComponent from './LogroComponent.js';
+
 import { calcularTiempo } from './calcularTiempo.js';
 import RenderizarLogros from './RenderizarLogros.js';
 import GraficoProgresion from './GraficoProgresion.js';
