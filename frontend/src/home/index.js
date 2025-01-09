@@ -21,6 +21,7 @@ export default function Home() {
     const [joinModalView, setJoinModalView] = useState(false);
     const [creationModalView, setCreationModalView] = useState(false);
     const [friendsView, setFriendsView] = useState(false);
+    const friendViewRef = useRef(friendsView);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
     const [backgroundUrl, setBackgroundUrl] = useState();
     const [username, setUsername] = useState("");
@@ -95,7 +96,7 @@ export default function Home() {
                 console.log("Mensajes sin leer: ", data);
                 console.log("NumMessages antes: "+numMessages);
                 if (data > 0 && numMessagesRef.current < data) {
-                    if (!friendsView) {
+                    if (!friendViewRef.current) {
                         const audio = new Audio("/notification.mp3");
                         audio.play().catch((error) => {
                             console.error('Error al reproducir el sonido:', error);
@@ -108,8 +109,12 @@ export default function Home() {
     }
 
     useEffect(() => {
-        numMessagesRef.current = numMessages; // Sincronizar la referencia con el estado actual
+        numMessagesRef.current = numMessages;
     }, [numMessages]);
+
+    useEffect(() => {
+        friendViewRef.current = friendsView;
+    }, [friendsView]);
 
     useEffect(() => {
         const backgrounds = [
