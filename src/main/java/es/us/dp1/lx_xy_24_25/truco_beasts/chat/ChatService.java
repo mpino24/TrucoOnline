@@ -107,4 +107,14 @@ public class ChatService {
         return mensajeRepository.findMessagesAfter(chatId,lastConnection,userService.findCurrentUser().getId());
     }
 
+    @Transactional(readOnly = true)
+    public Integer findNumAllNotReadMessages(){
+        List<ChatUsuario> chatsUsuario = chatUsuarioRepository.findChatUsuarioByUser(userService.findCurrentUser().getId());
+        Integer numMessages = 0;
+        for(ChatUsuario chatUsuario: chatsUsuario){
+            numMessages+=findNumNotReadMessages(chatUsuario.getChat().getId());
+        }
+        return numMessages;
+    }
+
 }

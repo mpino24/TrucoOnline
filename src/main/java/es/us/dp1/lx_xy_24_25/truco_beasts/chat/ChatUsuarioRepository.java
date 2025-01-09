@@ -3,6 +3,7 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -12,5 +13,8 @@ public interface ChatUsuarioRepository extends CrudRepository<ChatUsuario, Integ
 
     @Query("SELECT cu FROM ChatUsuario cu WHERE cu.user.id = :userId AND cu.chat.id = :chatId")
     public Optional<ChatUsuario> findChatUsuarioByUserAndChat(Integer userId, Integer chatId);
+
+    @Query("SELECT cu FROM ChatUsuario cu WHERE cu.user.id = :userId")
+    public List<ChatUsuario> findChatUsuarioByUser(Integer userId);
 
 }

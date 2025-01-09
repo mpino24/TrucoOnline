@@ -19,6 +19,7 @@ public interface MensajeRepository extends CrudRepository<Mensaje, Integer>{
 
     @Query("SELECT COUNT(m) FROM Mensaje m WHERE m.chat.id = :chatId AND m.fechaEnvio > :fecha AND m.remitente.id != :userId")
     public Integer findMessagesAfter(Integer chatId, LocalDateTime fecha, Integer userId);
+
     
 
 }
