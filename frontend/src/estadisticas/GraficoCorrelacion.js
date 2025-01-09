@@ -60,7 +60,7 @@ const GraficoCorrelacion = ({ estadisticasAvanzadas }) => {
         },
         yAxis: {
             title: {
-                text: 'Cantidad',
+                text: 'Cantidad de engaños hechos o descubiertos',
                 style: { color: '#ffffff' },
             },
             labels: {
@@ -85,9 +85,9 @@ const GraficoCorrelacion = ({ estadisticasAvanzadas }) => {
             {
                 name: 'Victorias con Engaños',
                 data: Object.keys(victoriasMap).map(fecha => ({
-                    x: parseInt(fecha), // fecha en formato timestamp
-                    y: victoriasMap[fecha], // cantidad de victorias
-                    z: victoriasMap[fecha], // tamaño del marcador según cantidad de engaños
+                    x: parseInt(fecha), 
+                    y: victoriasMap[fecha], 
+                    z: victoriasMap[fecha], 
                 })),
                 color: '#4caf50',
                 marker: {
@@ -98,9 +98,9 @@ const GraficoCorrelacion = ({ estadisticasAvanzadas }) => {
             {
                 name: 'Derrotas siendo atrapado',
                 data: Object.keys(derrotasMap).map(fecha => ({
-                    x: parseInt(fecha), // fecha en formato timestamp
-                    y: derrotasMap[fecha], // cantidad de derrotas
-                    z: derrotasMap[fecha], // tamaño del marcador según cantidad de atrapados
+                    x: parseInt(fecha), 
+                    y: derrotasMap[fecha], 
+                    z: derrotasMap[fecha],
                 })),
                 color: '#f44336',
                 marker: {
