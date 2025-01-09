@@ -15,15 +15,23 @@ import GraficoColumnas from './GraficoColumnas.js';
 import BotonDeCambio from './BotonDeCambio';
 import GraficoGlobalAraña from './GraficoGlobalAraña.js';
 import GraficoPartidas from './GraficoPartidas.js';
-
+import { FaRankingStar } from "react-icons/fa6";
+import RankingGlobal from './RankingGlobal.js'
 const jwt = tokenService.getLocalAccessToken();
 
 const EstadisticasModal = forwardRef((props, ref) => {
-    const closeModal = () => props.setModalVisible(false);
+    const closeModal = () => {
+        props.setModalVisible(false)
+        setMostrarRanking(false)
+    };
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [estadisticas, setEstadisticas] = useFetchState({}, '/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible);
     const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], '/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
+
+    const [mostrarRanking, setMostrarRanking]=useState(false)
+
+
 
     return (
         <div style={{
@@ -44,6 +52,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
             msOverflowStyle: 'none',
             padding: '20px', // Añadido un pequeño espacio alrededor
         }}>
+            
             <IoCloseCircle
                 style={{
                     position: 'absolute',
@@ -60,20 +69,20 @@ const EstadisticasModal = forwardRef((props, ref) => {
             {console.log(estadisticasAvanzadas)}  {/* Para debuggear */}
 
 
-
+            {!mostrarRanking && <>
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 flexGrow: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                flex: 1, // Ambos ocupan la misma cantidad de espacio
+                flex: 1, 
                 padding: '20px',
-                overflowY: 'auto', // Añadido para que si hay muchos gráficos, pueda desplazarse
+                overflowY: 'auto',
                 height: '100%',
-                width:'100%',
+                width: '100%',
                 backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '10px', // Un pequeño borde redondeado para los contenedores
+                borderRadius: '10px', 
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none'
             }}>
@@ -130,9 +139,32 @@ const EstadisticasModal = forwardRef((props, ref) => {
             }}>
                 <RenderizarLogros jwt={jwt} setMessage={setMessage} setVisible={setVisible} />
             </div>
+            
 
-
+            <FaRankingStar style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                margin: '20px',
+                zIndex: 9999, scale: '3',
+                
+                
+            }}onMouseEnter={(e) => {
+                e.target.style.color = 'rgb(255, 255,255,0.8)';
+                e.target.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+                e.target.style.color = 'white';
+                e.target.style.transform = 'scale(1)';
+            }} color='white' onClick={()=>setMostrarRanking(true)} />
+            </>}
+            
+            {mostrarRanking && (
+                <div style={{position:'fixed', width:"100%", height:"100%"}}> 
+                    <RankingGlobal jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarRanking={setMostrarRanking}/>
+                </div>)}
         </div>
+        
     );
 });
 
