@@ -41,6 +41,7 @@ const PlayingModal = forwardRef((props, ref) => {
     );
 
     const [nombresJugadores, setNombresJugadores] = useState([]);
+    const eresEspectador= typeof posicion === 'object'
 
     const audioRef = useRef(null);
     const dropAreaRef = useRef(null);
@@ -49,6 +50,8 @@ const PlayingModal = forwardRef((props, ref) => {
     const [positionCarta, setPositionCarta] = useState({ x: 0, y: 0 });
 
     const [isPlaying, setIsPlaying] = useState(false);
+    const [volumeVisible, setVolumeVisible] = useState(false);
+
     const [volume, setVolume] = useState(50); // Default volume at 50%
 
     function fetchMano() {
@@ -166,6 +169,7 @@ const PlayingModal = forwardRef((props, ref) => {
             audioRef.current.play()
             .then(() => {
                 setIsPlaying(true);
+                setVolumeVisible(true);
             })
             .catch((error) => {
                 console.error("Error playing audio:", error);
@@ -505,14 +509,17 @@ const PlayingModal = forwardRef((props, ref) => {
                             }}
                         >
                             <h3 className="player-heading" >
-                                {typeof posicion  === 'object' ? "Viendo la partida..." : `Jugador: ${Number(posicion)}` }
+                                {eresEspectador ? "Viendo la partida..." : `Jugador: ${Number(posicion)}` }
                                 
                             </h3>
-                            <h3 className="turno-heading">{mano?.esperandoRespuesta&& mano?.jugadorTurno=== posicion ? "Tenés que responder": (mano?.jugadorTurno===posicion? "Es tu turno" : "No es tu turno") }</h3>
+                          {!volumeVisible &&  <h3 className="turno-heading">{mano?.esperandoRespuesta&& mano?.jugadorTurno=== posicion ? "Tenés que responder": (mano?.jugadorTurno===posicion? "Es tu turno" : "No es tu turno") }</h3>}
                         </div>
+                            
+                        <h4 className={"puntos-nuestros"}>
+                            {eresEspectador ? "E1:":"Nos:"}</h4>
 
-                        <h4 className={"puntos-nuestros"}>Nos:</h4>
-                        <h4 className={"puntos-ellos"}>Ellos:</h4>
+                        <h4 className={"puntos-ellos"}>
+                            {eresEspectador ? "E2:":"Ellos:"}</h4>
 
                         {puntosTrucoActuales && (
                             <div style={{overflow:'hidden'}}> 
@@ -547,7 +554,10 @@ const PlayingModal = forwardRef((props, ref) => {
                                 <button onClick={handlePauseMusic} className="play-music-button">
                                     ⏸
                                 </button>
-                                <div className="volume-slider-container">
+                                <button style={{top:"10%" , position:"absolute"}} onClick={()=>setVolumeVisible(!volumeVisible)} className="play-music-button">
+                                    X
+                                </button>
+                                {volumeVisible&&  <div className="volume-slider-container">
                                     <label htmlFor="volume-slider">Volume:</label>
                                     <input
                                         type="range"
@@ -558,7 +568,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                         onChange={handleVolumeChange}
                                     />
                                     <span>{volume}%</span>
-                                </div>
+                                </div>}
                             </>
                         )}
 
