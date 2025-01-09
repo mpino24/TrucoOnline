@@ -46,25 +46,22 @@ public class TestJugadorService {
         assertEquals(jugador.getFirstName(), jugadorService.findAmigosByUserId(jugador2.getUser().getId()).get(0).getFirstName());
     }
 
-
-    
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
-    void testCheckIfAreFriends(){   
+    void testCheckIfAreFriends() {
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
-        assertTrue(jugadorService.checkIfAreFriends(jugador.getUser().getUsername(), jugador2.getUser().getId()));
+        assertTrue(jugadorService.checkIfAreFriends(jugador, jugador2));
     }
 
     @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testfindJugadorByUserName() {
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
-    
-
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
-    void testAddFriendAgainFallo(){
+    void testAddFriendAgainFallo() {
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
 
@@ -83,6 +80,7 @@ public class TestJugadorService {
     }
 
     @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testFindJugadorByUserName() {
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
@@ -104,43 +102,50 @@ public class TestJugadorService {
         assertEquals(0, jugadorService.findAmigosByUserId(jugador.getUser().getId()).size());
 
     }
-    @Test
-    void testComprobarExistenciaSolicitud(){
-        jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
-        assertTrue(jugadorService.comprobarExistenciaSolicitud(jugador.getUser().getUsername(), jugador2.getUser().getId()));
-    }
-    @Test
-    void testCrearSolicitud(){
-        jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
 
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testComprobarExistenciaSolicitud() {
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
-        assertEquals(1, jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).size());
-
-    }
     
+        assertTrue(jugadorService.comprobarExistenciaSolicitud(jugador2, jugador));
+    }
+
     @Test
-    void testDeleteSolicitud(){
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testCrearSolicitud() {
         jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
 
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
         assertEquals(1, jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).size());
-        
+
+    }
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testDeleteSolicitud() {
+        jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
+
+        jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
+        assertEquals(1, jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).size());
+
         jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
         assertEquals(0, jugadorService.findSolicitudesByUserId(jugador.getUser().getId()).size());
 
     }
 
     @Test
-    void testCrearSolicitudNotFoundPlayerFallo(){
-        assertThrows(ResourceNotFoundException.class,() -> jugadorService.crearSolicitud(jugador.getUser().getId(),50));
+    void testCrearSolicitudNotFoundPlayerFallo() {
+        assertThrows(ResourceNotFoundException.class, () -> jugadorService.crearSolicitud(jugador.getUser().getId(), 50));
     }
+
     @Test
-    void testFindSolicitudByUserId(){
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testFindSolicitudByUserId() {
         jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
 
         assertEquals(jugador.getFirstName(), jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).get(0).getFirstName());
     }
-
 
 }

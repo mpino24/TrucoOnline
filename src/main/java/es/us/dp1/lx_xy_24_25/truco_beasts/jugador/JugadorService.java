@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.chat.MensajeDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
@@ -28,9 +30,9 @@ public class JugadorService {
     UserService userService;
 
     @Autowired
-    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService,UserService userService ) {
+    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService, UserService userService) {
         this.jugadorRepository = jugadorRepository;
-        this.chatService= chatService;
+        this.chatService = chatService;
         this.userService = userService;
     }
 
@@ -46,15 +48,17 @@ public class JugadorService {
     }
 
     @Transactional(readOnly = true)
-    public JugadorDTO findJugadorByUserId(int userId) throws DataAccessException {
-        Optional<Jugador> j = jugadorRepository.findByUserId(userId);
-        if (j.isEmpty()) {
-            throw new ResourceNotFoundException("El jugador de ID " + userId + " no fue encontrado");
-        } else {
-            JugadorDTO res = new JugadorDTO(j.get());
-            return res;
+    public Jugador findJugadorByUserId(int userId) throws DataAccessException {
+        Optional<Jugador> jugador = jugadorRepository.findByUserId(userId); 
+        if(jugador.isEmpty()){
+            throw new ResourceNotFoundException("Jugador no encontrado");
         }
+        return jugador.get();
 
+    }
+
+    public JugadorDTO findJugadorDTOByUserId(int userId) {
+        return convertirJugadorADto(findJugadorByUserId(userId));
     }
 
     @Transactional(readOnly = true)
@@ -77,14 +81,7 @@ public class JugadorService {
             throw new ResourceNotFoundException("El jugador de ID " + user.getId() + " no fue encontrado");
         } else {
             Jugador toUpdate = j.get();
-            BeanUtils.copyProperties(jugador, toUpdate, "id", "user", "amigos");
-            if (jugador.getAmigos() != null) {
-                toUpdate.getAmigos().clear();
-                for (Jugador amigo : jugador.getAmigos()) {
-                    toUpdate.getAmigos().add(amigo);
-                    amigo.getAmigos().add(toUpdate);
-                }
-            }
+            BeanUtils.copyProperties(jugador, toUpdate, "id", "user", "amigos", "solicitudes");
             saveJugador(toUpdate);
             return toUpdate;
 
@@ -93,40 +90,47 @@ public class JugadorService {
 
     @Transactional(readOnly = true)
     public List<JugadorDTO> findAmigosByUserId(int userId) {
-        return jugadorRepository.findAmigosByUserId(userId);
+        List<Jugador> amigos= jugadorRepository.findAmigosByUserId(userId);
+        return amigos.stream()
+                 .map(j -> convertirJugadorADto(j))
+                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<JugadorDTO> findSolicitudesByUserId(int userId) {
-        return jugadorRepository.findSolicitudesByUserId(userId);
+        List<Jugador> solicitudes= jugadorRepository.findSolicitudesByUserId(userId);
+        return solicitudes.stream()
+                 .map(j -> convertirJugadorADto(j))
+                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public JugadorDTO findJugadorByUserName(String userName) {
-        Optional<JugadorDTO> res = jugadorRepository.findJugadorByUserName(userName);
+    public JugadorDTO findJugadorByUserName(String userName){
+        Optional<Jugador> res = jugadorRepository.findJugadorByUserName(userName);
         if (res.isEmpty()) {
             throw new ResourceNotFoundException("Jugador no encontrado");
         } else {
-            return res.get();
+            return convertirJugadorADto(res.get());
         }
 
     }
 
     @Transactional(readOnly = true)
-    public boolean checkIfAreFriends(String friendUserName, int userId) {
-        List<JugadorDTO> amigos = jugadorRepository.findAmigosByUserId(userId);
-        return (amigos.stream().map(a -> a.getUserName()).toList().contains(friendUserName));
+    public boolean checkIfAreFriends(Jugador jugador1, Jugador jugador2) throws DataAccessException{
+        List<Jugador> amigos = jugadorRepository.findAmigosByUserId(jugador1.getId());
+        return amigos.stream().anyMatch(a -> a.getId().equals(jugador2.getId()));
 
     }
+
     @Transactional(readOnly = true)
-    public boolean comprobarExistenciaSolicitud(String friendUserName, int userId) {
-        List<JugadorDTO> solicitudes = jugadorRepository.findSolicitudesByUserId(userId);
-        return (solicitudes.stream().map(a -> a.getUserName()).toList().contains(friendUserName));
+    public boolean comprobarExistenciaSolicitud(Jugador jugador1, Jugador jugador2) throws DataAccessException {
+        List<Jugador> solicitudes = jugadorRepository.findSolicitudesByUserId(jugador1.getId());
+        return solicitudes.stream().anyMatch(a -> a.getId().equals(jugador2.getId()));
 
     }
 
     @Transactional()
-    public void addNewFriends(int userId, int amigoPlayerId)  {
+    public void addNewFriends(int userId, int amigoPlayerId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
         Optional<Jugador> amigoOpt = jugadorRepository.findById(amigoPlayerId);
         if (!jugadorOpt.isEmpty() && !amigoOpt.isEmpty()) {
@@ -140,12 +144,12 @@ public class JugadorService {
                     jugadorRepository.save(jugador);
                     jugadorRepository.save(amigo);
                     //Crear entidad de chat entre amigos
-                    Chat chat= new Chat();
-                    List<User> usuarios= new ArrayList<>();
+                    Chat chat = new Chat();
+                    List<User> usuarios = new ArrayList<>();
                     usuarios.add(userService.findCurrentUser());
                     usuarios.add(userService.findUser(amigo.getId()));
                     chat.setUsuarios(usuarios);
-			        chatService.createChat(chat);
+                    chatService.createChat(chat);
                 } else {
                     throw new IllegalStateException("No te puedes agregar a ti mismo");
                 }
@@ -159,7 +163,7 @@ public class JugadorService {
     }
 
     @Transactional
-    public void crearSolicitud(int userId, int solicitadoId){
+    public void crearSolicitud(int userId, int solicitadoId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
         Optional<Jugador> solicitadoOpt = jugadorRepository.findById(solicitadoId);
         if (!jugadorOpt.isEmpty() && !solicitadoOpt.isEmpty()) {
@@ -203,6 +207,7 @@ public class JugadorService {
             throw new ResourceNotFoundException("Usuarios no encontrados");
         }
     }
+
     @Transactional()
     public void deleteSolicitud(int userId, int solicitadoId) {
         Optional<Jugador> jugadorOpt = jugadorRepository.findByUserId(userId);
@@ -221,9 +226,44 @@ public class JugadorService {
         }
     }
 
+    public Jugador findCurrentPlayer(){
+        User currentUser = userService.findCurrentUser();
+        return jugadorRepository.findByUserId(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
+    }
+
+    public JugadorDTO convertirJugadorADto(Jugador  j) {
+        Jugador jugadorActual = findCurrentPlayer();
+        
+        JugadorDTO res = new JugadorDTO(j);
+        res.setUltimoMensaje(null);
+        res.setAmistad(null);
+
+        if (!j.getId().equals(jugadorActual.getId())) {
+            if (checkIfAreFriends(j,jugadorActual)) {
+                res.setAmistad(Amistad.AMIGOS);
+                Chat chat = chatService.findChatWith(j.getId());
+                if (chat != null) { // Verifica si el chat no es nulo
+                    MensajeDTO mensaje = chatService.getLastMessage(chat.getId());
+                    if (mensaje != null) { // Verifica si el mensaje no es nulo
+                        res.setUltimoMensaje(mensaje);
+                    }
+                    Integer mensajesSinLeer = chatService.findNumNotReadMessages(chat.getId());
+                    res.setMensajesSinLeer(mensajesSinLeer);
+                }
+            } else if (comprobarExistenciaSolicitud(j,jugadorActual) || comprobarExistenciaSolicitud(jugadorActual,j)) {
+                res.setAmistad(Amistad.SOLICITADO);
+            } else {
+                res.setAmistad(Amistad.DESCONOCIDOS);
+            }
+        }
+
+        return res;
+
+    }
+
     @Transactional
-    public void deleteJugadorByUserId(Integer userId){
-        Jugador jugador =  jugadorRepository.findByUserId(userId).orElseThrow(()-> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
+    public void deleteJugadorByUserId(Integer userId) {
+        Jugador jugador = jugadorRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
         jugadorRepository.delete(jugador);
     }
 }

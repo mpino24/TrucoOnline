@@ -56,6 +56,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
             .then((response) => response.text())
             .then((data) => {
                 setAmigos(JSON.parse(data))
+                
 
             })
             .catch((message) => alert(message));
@@ -85,6 +86,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                     alert('Jugador ' + userName + ' no encontrado')
                 } else {
                     setPlayer(JSON.parse(data))
+                    console.log(data)
                 }
             })
             .catch((message) => alert(message + userName));
