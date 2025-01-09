@@ -73,4 +73,9 @@ public class ChatRestController {
         return new ResponseEntity<>(void.class,HttpStatus.OK);
     }
 
+    @GetMapping("/unread")
+    public Integer getUnreadMessages(){
+        return chatService.findNumAllNotReadMessages();
+    }
+
 }
