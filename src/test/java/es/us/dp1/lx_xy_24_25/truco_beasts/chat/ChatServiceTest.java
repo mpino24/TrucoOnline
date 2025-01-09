@@ -76,7 +76,7 @@ public class ChatServiceTest {
 
         MensajeDTO mensajeDTO = chatService.guardarMensaje(testMensaje);
 
-        assertNotNull(mensajeDTO, "El mensaje DTO no debe ser nulo");
+        assertNotNull(mensajeDTO);
         verify(mensajeRepository).save(any(Mensaje.class));
     }
 
@@ -97,8 +97,8 @@ public class ChatServiceTest {
 
         List<MensajeDTO> mensajes = chatService.getMensajesDe(testChat.getId());
 
-        assertNotNull(mensajes, "La lista de mensajes no debe ser nula");
-        assertEquals(1, mensajes.size(), "Debe haber un mensaje en la lista");
+        assertNotNull(mensajes);
+        assertEquals(1, mensajes.size());
         verify(mensajeRepository).findMessagesFrom(testChat.getId());
     }
 
@@ -108,7 +108,7 @@ public class ChatServiceTest {
 
         MensajeDTO mensajeDTO = chatService.getLastMessage(testChat.getId());
 
-        assertNotNull(mensajeDTO, "El último mensaje no debe ser nulo");
+        assertNotNull(mensajeDTO);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class ChatServiceTest {
         chatService.updateChatTime(testChat.getId());
 
         verify(chatUsuarioRepository).save(any(ChatUsuario.class));
-        assertNotNull(chatUsuario.getFecha(), "La fecha del chat debe actualizarse");
+        assertNotNull(chatUsuario.getFecha());
     }
 
     @Test
@@ -158,8 +158,8 @@ public class ChatServiceTest {
 
         Chat foundChat = chatService.findChatWith(2);
 
-        assertNotNull(foundChat, "El chat encontrado no debe ser nulo");
-        assertEquals(testChat, foundChat, "El chat encontrado debe coincidir con el esperado");
+        assertNotNull(foundChat);
+        assertEquals(testChat, foundChat);
         verify(chatRepository).findChatBetween(2, testUser.getId());
     }
 
@@ -170,9 +170,9 @@ public class ChatServiceTest {
 
         List<User> result = chatService.findUsersByChat(testChat.getId());
 
-        assertNotNull(result, "La lista de usuarios no debe ser nula");
-        assertEquals(1, result.size(), "Debe haber un usuario en la lista");
-        assertEquals(testUser, result.get(0), "El usuario debe coincidir con el esperado");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(testUser, result.get(0));
         verify(chatRepository).findUsersByChat(testChat.getId());
     }
 
@@ -207,7 +207,7 @@ public class ChatServiceTest {
 
         int numNotReadMessages = chatService.findNumNotReadMessages(testChat.getId());
 
-        assertEquals(5, numNotReadMessages, "El número de mensajes no leídos debe ser 5");
+        assertEquals(5, numNotReadMessages);
     }
 
     @Test
