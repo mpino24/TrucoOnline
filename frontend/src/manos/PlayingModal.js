@@ -809,7 +809,7 @@ const PlayingModal = forwardRef((props, ref) => {
                         {/* Responder Flor */}
                         {mano?.cartasDisp && Number(posicion) === mano?.jugadorTurno && mano?.esperandoRespuesta && mano?.esTrucoEnvidoFlor === 2 && (
                             
-                            <div className="envido-button-container" style={{ left:'70%', position:'fixed'}}>
+                            <div className="envido-button-container" style={{ left:'75%', position:'fixed', width:'auto'}}>
                                 {mano?.floresCantadas==2 && (
                                 <>
                                 <button onClick={() => responderFlor("QUIERO")}>Quiero</button>
@@ -818,7 +818,7 @@ const PlayingModal = forwardRef((props, ref) => {
                                 )}
                                 
                              {mano?.queFlorPuedeCantar == 2 && (
-                                        <div>
+                                        <>
                                             <button 
                                                 style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite' }}
                                                 onClick={() => responderFlor('CONTRAFLOR')}
@@ -826,18 +826,18 @@ const PlayingModal = forwardRef((props, ref) => {
                                                 <span className="swirl-glow-text">¡Contraflor!</span>
                                             </button>
                                             <button 
-                                                style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite' }}
+                                                style={{ animation:'dropShadowGlowContainer 3s ease-in-out infinite'}}
                                                 onClick={() => responderFlor('CON_FLOR_ME_ACHICO')}
                                             >
                                                 <span className="swirl-glow-text">Con flor me achico...</span>
                                             </button>
-                                        </div>
+                                            </>
                                     )}
 
                                    
                                         
                                     
-                                    </div>
+                            </div>
                         )}
                         
 
