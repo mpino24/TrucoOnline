@@ -20,7 +20,12 @@ function RenderContent({ contenido }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          setRes(<PartidaView game={data} interfaz='chat' />);
+          if(data.statusCode===404){
+            setRes(<p>Partida no encontrada</p>);
+          }else{
+            setRes(<PartidaView game={data} interfaz='chat' />);
+          }
+          
         })
         .catch((message) => {
           setRes(<p>Error al cargar la invitación a la partida {codigo}</p>);
