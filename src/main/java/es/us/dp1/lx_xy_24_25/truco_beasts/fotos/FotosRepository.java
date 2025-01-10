@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FotosRepository extends CrudRepository<FotoYTipo, Long>{
 
     @Query("SELECT f.name FROM FotoYTipo f WHERE f.categoriaFoto = :categoriaFoto")
