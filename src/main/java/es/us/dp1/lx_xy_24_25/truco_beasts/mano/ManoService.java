@@ -183,7 +183,7 @@ public class ManoService {
             if(listaCartasLanzadas.stream().allMatch(c -> c!=null)){
                 manoActual.compararCartas();
             } else{
-                manoActual.siguienteTurno();
+                manoActual.setJugadorTurno(manoActual.siguienteJugador(jugadorActual));
             }
             manoActual.comprobarSiPuedeCantarTruco();
             manoActual.comprobarSiPuedeCantarEnvido(true);

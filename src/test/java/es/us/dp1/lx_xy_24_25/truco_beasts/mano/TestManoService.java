@@ -452,7 +452,7 @@ public class TestManoService {
 
         manoService.cantosTruco(codigo,Cantos.TRUCO); 
         manoService.responderTruco(codigo,Cantos.QUIERO); 
-        mano.siguienteTurno();
+        mano.siguienteJugador(mano.getJugadorTurno());
         assertTrue(mano.comprobarSiPuedeCantarTruco()); 
 
         TrucoException exception = assertThrows(TrucoException.class, 
