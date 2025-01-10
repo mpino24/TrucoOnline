@@ -23,7 +23,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 
-public class TestManoServiceMerged {
+public class TestManoService {
 
     private Partida partida;
     private Mano mano;
@@ -496,13 +496,13 @@ public class TestManoServiceMerged {
 
         manoService.cantosTruco(codigo, Cantos.TRUCO); 
         manoService.responderTruco(codigo, Cantos.QUIERO); 
-        mano.siguienteTurno();
-        assertTrue(mano.comprobarSiPuedeCantarTruco()); 
+        mano.siguienteJugador(mano.getJugadorTurno());
+        assertFalse(mano.comprobarSiPuedeCantarTruco()); 
 
         TrucoException exception = assertThrows(TrucoException.class, 
             () -> manoService.cantosTruco(codigo, Cantos.TRUCO));
 
-        assertEquals("Ya se canto el truco", exception.getMessage());
+        assertEquals("No podes cantar truco ni ninguna de sus variantes", exception.getMessage());
     }
 
     @Test 

@@ -30,6 +30,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CodigoDuplicatedException;
@@ -273,6 +274,7 @@ public class PartidaServiceTests {
     @Test
     @Transactional
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     public void startGameCorrectamente() {
     
         setUpPartida();
@@ -303,6 +305,7 @@ public class PartidaServiceTests {
     @Test
     @Transactional
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     public void getGameCreatorCorrectamente() {
 
        setUpPartida();
