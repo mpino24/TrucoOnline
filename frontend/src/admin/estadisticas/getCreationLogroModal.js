@@ -1,6 +1,8 @@
 import { useState, forwardRef } from "react";
-import { Form, Label, Input } from "reactstrap";
+import { Form, Label, Input, Modal, ModalBody } from "reactstrap";
 import tokenService from "../../services/token.service";
+import SelectorImagenes from "../../util/SelectorImagenes";
+import useFetchState from "../../util/useFetchState";
 const jwt = tokenService.getLocalAccessToken();
 
 function handleModalVisible(setModalVisible, modalVisible) {
@@ -8,9 +10,9 @@ function handleModalVisible(setModalVisible, modalVisible) {
 }
 
 const GetCreationLogroModal = forwardRef((props, ref) => {
-  const { setCreationLogroModal, creationLogroModal } = props;
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const { setCreationLogroModal, creationLogroModal } = props;
   const [formData, setFormData] = useState({
     name: "",
     valor: 10,
@@ -33,25 +35,35 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     "QUIEROS",
     "NO_QUIEROS",
     "PARTIDAS_CON_FLOR",
-    "ATRAPADO"
+    "ATRAPADO",
   ];
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([],"/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
 
   const handleChange = (e) => {
-
     const target = e.target;
     const type = target.type;
     const checked = target.checked;
     const value = target.value;
     const name = target.name;
+
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
+  const handleImageSelect = (imageName) => {
+    setFormData({
+      ...formData,
+      imagencita: `http://localhost:8080/resources/images/trofeos/${imageName}`,
+    });
+    setImageModalOpen(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     fetch("/api/v1/logros", {
       method: "POST",
@@ -63,17 +75,17 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
       body: JSON.stringify(formData),
     })
       .then((response) => response.json())
-      .then((json) => {
+      .then(() => {
         handleModalVisible(setCreationLogroModal, creationLogroModal);
-        props.setActualizarLista(props.actualizarLista + 1);
+        props.setActualizarLista((prev) => prev + 1);
       })
       .catch((message) => alert(message));
   };
 
   const estiloLetras = {
     color: "orange",
-    textShadow: "1px 1px 2px black"
-  }
+    textShadow: "1px 1px 2px black",
+  };
 
   return (
     <>
@@ -81,7 +93,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
         backgroundColor: 'rgb(255, 255, 255, 0.3)',
         color: 'white',
         padding: '20px',
-        borderRadius: '10px'
+        borderRadius: '10px',
       }}>
         <div>
           <Label style={estiloLetras}>Nombre: </Label>
@@ -112,27 +124,25 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           />
         </div>
         <div>
-          <Label style={estiloLetras}>Metrica: </Label>
-          <div className="switch-container">
-            <Input
-              type="select"
-              name="metrica"
-              id="metrica"
-              value={formData.metrica}
-              onChange={handleChange}
-              className="custom-switch"
-              style={{ backgroundColor: "transparent" }}
-            >
-              {metricaOptions.map((metrica) => (
-                <option key={metrica} value={metrica}>
-                  {metrica.replaceAll("_", " ")}
-                </option>
-              ))}
-            </Input>
-          </div>
+          <Label style={estiloLetras}>Métrica: </Label>
+          <Input
+            type="select"
+            name="metrica"
+            id="metrica"
+            value={formData.metrica}
+            onChange={handleChange}
+            className="custom-switch"
+            style={{ backgroundColor: "transparent" }}
+          >
+            {metricaOptions.map((metrica) => (
+              <option key={metrica} value={metrica}>
+                {metrica.replaceAll("_", " ")}
+              </option>
+            ))}
+          </Input>
         </div>
         <div>
-          <Label style={estiloLetras}>Descripcion: </Label>
+          <Label style={estiloLetras}>Descripción: </Label>
           <Input
             type="text"
             required
@@ -146,34 +156,31 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
             title="La descripción debe tener al menos un carácter que no sea un espacio"
           />
         </div>
-        <div className="custom-form-input">
-          <Label for="photo" className="custom-form-input-label" style={estiloLetras}>
-            Foto
-          </Label>
+        <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+          <Label style={estiloLetras}>Foto:  </Label>
           {formData.imagencita && (
             <img
               src={formData.imagencita}
-              alt="Foto del perfil"
+              alt="Seleccionada"
               style={{
-                width: "100px",
-                height: "100px",
-                borderRadius: "50%",
+                width: "150px",
+                height: "150px",
+                borderRadius: "30%",
+                marginBottom: "10px",
+                objectFit: "cover",
               }}
-              onError={(e) => (e.target.style.display = "none")}
             />
           )}
-          <Label for="photo" className="custom-form-input-label" style={estiloLetras}>
-            Foto
-          </Label>
-          <Input
-            type="text"
-            name="photo"
-            id="photo"
-            value={formData.imagencita}
-            onChange={handleChange}
-            className="custom-input"
-            placeholder="Poné el link de la foto que quieras usar"
-          />
+          <button
+            type="button"
+            onClick={() => setImageModalOpen(true)}
+            className="auth-button"
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            Seleccionar Imagen
+          </button>
         </div>
         <div>
           <Label style={estiloLetras}>¿Oculto? </Label>
@@ -184,7 +191,6 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
             checked={formData.oculto}
             onChange={handleChange}
             className="custom-input"
-
           />
         </div>
 
@@ -195,11 +201,19 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           <button
             type="button"
             onClick={() => handleModalVisible(setCreationLogroModal, creationLogroModal)}
-            className="auth-button">
+            className="auth-button"
+          >
             Cancelar
           </button>
         </div>
       </Form>
+
+      <SelectorImagenes
+        imagenes={imagenesDisponibles}
+        isOpen={imageModalOpen}
+        toggle={() => setImageModalOpen(!imageModalOpen)}
+        onSelect={handleImageSelect}
+      />
     </>
   );
 });

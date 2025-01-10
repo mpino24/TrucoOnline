@@ -1,6 +1,8 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
+
 import java.util.List;
+
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +104,8 @@ public class LogrosController {
         }
 
     }
+
+
 
     
 }

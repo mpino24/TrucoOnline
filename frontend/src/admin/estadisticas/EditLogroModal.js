@@ -1,6 +1,8 @@
 import { useState, useEffect, forwardRef } from "react";
 import { Form, Label, Input } from "reactstrap";
 import tokenService from "../../services/token.service";
+import useFetchState from "../../util/useFetchState";
+import SelectorImagenes from "../../util/SelectorImagenes";
 const jwt = tokenService.getLocalAccessToken();
 
 
@@ -17,6 +19,17 @@ const EditLogroModal = forwardRef((props, ref) => {
     imagencita: "http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
+
+  const handleImageSelect = (imageName) => {
+    setFormData({
+      ...formData,
+      imagencita: `http://localhost:8080/resources/images/trofeos/${imageName}`,
+    });
+    setImageModalOpen(false);
+  };
 
   function handleModalVisible(setModalVisible, modalVisible) {
     setLogroSeleccionado(null)
@@ -161,34 +174,31 @@ const EditLogroModal = forwardRef((props, ref) => {
             title="La descripción debe tener al menos un carácter que no sea un espacio"
           />
         </div>
-        <div className="custom-form-input">
-          <Label for="photo" className="custom-form-input-label" style={estiloLetras}>
-            Foto
-          </Label>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Label style={estiloLetras}>Foto:  </Label>
           {formData.imagencita && (
             <img
               src={formData.imagencita}
-              alt="Foto del perfil"
+              alt="Seleccionada"
               style={{
-                width: "100px",
-                height: "100px",
-                borderRadius: "50%",
+                width: "150px",
+                height: "150px",
+                borderRadius: "30%",
+                marginBottom: "10px",
+                objectFit: "cover",
               }}
-              onError={(e) => (e.target.style.display = "none")}
             />
           )}
-          <Label for="photo" className="custom-form-input-label" style={estiloLetras}>
-            Foto
-          </Label>
-          <Input
-            type="text"
-            name="photo"
-            id="photo"
-            value={formData.imagencita}
-            onChange={handleChange}
-            className="custom-input"
-            placeholder="Poné el link de la foto que quieras usar"
-          />
+          <button
+            type="button"
+            onClick={() => setImageModalOpen(true)}
+            className="auth-button"
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            Seleccionar Imagen
+          </button>
         </div>
         <div>
           <Label style={estiloLetras}>¿Oculto? </Label>
@@ -215,6 +225,12 @@ const EditLogroModal = forwardRef((props, ref) => {
           </button>
         </div>
       </Form>
+      <SelectorImagenes
+        imagenes={imagenesDisponibles}
+        isOpen={imageModalOpen}
+        toggle={() => setImageModalOpen(!imageModalOpen)}
+        onSelect={handleImageSelect}
+      />
     </>
   );
 });

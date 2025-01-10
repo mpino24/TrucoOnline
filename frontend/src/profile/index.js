@@ -4,7 +4,7 @@ import getErrorModal from "./../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
 import { Form, Input, Label } from "reactstrap";
 import { useNavigate, Link } from "react-router-dom";
-
+import SelectorImagenes from "../util/SelectorImagenes";
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Profile() {
@@ -17,7 +17,17 @@ export default function Profile() {
     {}, "/api/v1/profile", jwt, setMessage, setVisible
   );
 
+const [imageModalOpen, setImageModalOpen] = useState(false);
 
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "/api/v1/fotos/perfiles", jwt, setMessage, setVisible);
+
+  const handleImageSelect = (imageName) => {
+    setPerfil({
+      ...perfil,
+      photo: `http://localhost:8080/resources/images/perfiles/${imageName}`,
+    });
+    setImageModalOpen(false);
+  };
   
   const modal = getErrorModal(setVisible, visible, message);
   const navigate = useNavigate();
@@ -173,29 +183,33 @@ export default function Profile() {
                   className="custom-input"
                 />
               </div>
-              {/* Mostrar la foto actual */}
-              <div className="custom-form-input">
-                <Label for="photo" className="custom-form-input-label">Foto</Label>
-                {perfil.photo && (
-                  <img
-                    src={perfil.photo }
-                    alt="Foto del perfil"
-                    style={{ width: '100px', height: '100px', borderRadius: '50%' }}
-                    onError={(e) => (e.target.style.display = 'none')}
-                  />
-                )}
-                <Label for="photo" className="custom-form-input-label">Foto</Label>
-                <Input
-                  type="text"
-                  name="photo"
-                  id="photo"
-                  value={perfil.photo }
-                  onChange={handleChange}
-                  className="custom-input"
-                  placeholder="Poné el link de la foto que quieras usar"
-                />
               
-              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Label className="custom-form-input-label">Foto:  </Label>
+          {perfil.photo && (
+            <img
+              src={perfil.photo}
+              alt="Seleccionada"
+              style={{
+                width: "150px",
+                height: "150px",
+                borderRadius: "30%",
+                marginBottom: "10px",
+                objectFit: "cover",
+              }}
+            />
+          )}
+          <button
+            type="button"
+            onClick={() => setImageModalOpen(true)}
+            className="auth-button"
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            Seleccionar Imagen
+          </button>
+        </div>
               
               <div className="custom-button-row">
                 <button className="auth-button">Guardar</button>
@@ -204,7 +218,12 @@ export default function Profile() {
                 </Link>
               </div>
             </Form>
-          
+            <SelectorImagenes
+        imagenes={imagenesDisponibles}
+        isOpen={imageModalOpen}
+        toggle={() => setImageModalOpen(!imageModalOpen)}
+        onSelect={handleImageSelect}
+      />
           </div>
         </div>}
         {/* Cuadro de confirmación de borrar mi cuenta */}
@@ -264,7 +283,7 @@ export default function Profile() {
 
         
       
-        
+
 
          
         </div>
