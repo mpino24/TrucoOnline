@@ -1,7 +1,9 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.partidaJugador;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -400,6 +403,80 @@ public class PartidaJugadorControllerTest {
             verify(partidaJugadorService).getAllJugadoresPartida(partida1.getCodigo());
     }
 
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void eliminarJugadorPartida() throws Exception {
+        PartidaJugador partidaJugador = new PartidaJugador();
+        partidaJugador.setId(1); 
+        when(partidaJugadorService.getPartidaJugadorUsuarioActual()).thenReturn(partidaJugador);
+        
+        doNothing().when(partidaJugadorService).eliminateJugadorPartida(partidaJugador.getId());
+
+        mockMvc.perform(delete(BASE_URL +"/salir")
+                .with(csrf())) 
+                .andExpect(status().isOk())
+                .andExpect(content().string("Se elimino correctamente"));
+
+        verify(partidaJugadorService).getPartidaJugadorUsuarioActual();
+        verify(partidaJugadorService).eliminateJugadorPartida(partidaJugador.getId());
+    }
+
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void eliminarJugadorPartidaExcepcionNotAuthorized() throws Exception {
+        when(partidaJugadorService.getPartidaJugadorUsuarioActual()).thenThrow(new NotAuthorizedException("No tienes permiso"));
+
+        mockMvc.perform(delete(BASE_URL +"/salir")
+                .with(csrf()))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string("No tienes permiso"));
+
+        verify(partidaJugadorService).getPartidaJugadorUsuarioActual();
+        verify(partidaJugadorService, never()).eliminateJugadorPartida(any());
+    }
 
 
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void obtenerPartidaJugadorActual() throws Exception {
+        PartidaJugador partidaJugador = new PartidaJugador();
+        Jugador jugador =  new Jugador();
+        
+        
+        jugador = new Jugador();
+        jugador.setId(99);
+        jugador.setFirstName("Pruebo");
+        jugador.setLastName("Pruebin");
+        jugador.setEmail("mail@mail.com");
+        jugador.setPhoto("http://example.com/photo.jpg");
+        jugador.setUser(mock(User.class));
+        
+        partidaJugador.setPlayer(jugador);
+        partidaJugador.setPosicion(0);
+        partidaJugador.setIsCreator(false);
+        partidaJugador.setGame(mock(Partida.class));
+
+        when(partidaJugadorService.getPartidaJugadorUsuarioActual()).thenReturn(partidaJugador);
+    
+        mockMvc.perform(get(BASE_URL + "/partidaJugadorActual")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.player.id").value(99)); 
+    
+        verify(partidaJugadorService).getPartidaJugadorUsuarioActual();
+    }
+    
+    @Test
+    @WithMockUser(username = "player", roles = {"PLAYER"})
+    void obtenerPartidaJugadorActualNoEncontrado() throws Exception {
+        when(partidaJugadorService.getPartidaJugadorUsuarioActual()).thenReturn(null);
+    
+        mockMvc.perform(get(BASE_URL + "/partidaJugadorActual")
+                .with(csrf()))
+                .andExpect(status().isAccepted()) 
+                .andExpect(content().string(""));
+    
+        verify(partidaJugadorService).getPartidaJugadorUsuarioActual();
+    }
+    
 }
