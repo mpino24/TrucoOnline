@@ -168,7 +168,7 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
                     
                     onChange={() => setModoAcumulado(!modoAcumulado)} 
                 />
-                 <h7 style={{color:'white'}}>Datos acumulados?</h7> 
+                 <h7 style={{color:'white'}}> ¿Datos acumulados?</h7> 
                   </div>
 
             <HighchartsReact
