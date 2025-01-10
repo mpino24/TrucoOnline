@@ -1,6 +1,5 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserRepository;
 
 import jakarta.validation.Valid;
 

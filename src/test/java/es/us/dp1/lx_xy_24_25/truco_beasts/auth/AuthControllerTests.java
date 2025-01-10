@@ -33,8 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.auth.AuthController;
-import es.us.dp1.lx_xy_24_25.truco_beasts.auth.AuthService;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.request.SignupRequest;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 

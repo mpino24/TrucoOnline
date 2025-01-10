@@ -3,23 +3,14 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import org.apache.maven.model.Resource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataAccessException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.LogrosService;
-import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Logros;
-import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Metrica;
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
-import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.LogroRepository;
-import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.EstadisticasService;
-import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
-import jakarta.validation.ConstraintViolationException;
+
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -32,7 +23,7 @@ public class LogrosServiceTest {
     private LogroRepository logroRepository;
 
     @Autowired
-    private EstadisticasService estadisticasService;
+    private EstadisticasService estadisticasService; 
 
  
 
