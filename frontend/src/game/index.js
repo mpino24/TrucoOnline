@@ -147,7 +147,7 @@ export default function Game() {
                         username: tokenService.getUser().username,
                         lastConnection: new Date(),
                     },
-                    username: { username: tokenService.getUser().username },
+                    fechaEnvio:new Date(),
                 }),
                 headers: {
                     Authorization: `Bearer ${jwt}`,
@@ -172,7 +172,7 @@ export default function Game() {
                             position: 'fixed',
                             bottom: '20px',
                             right: '20px',
-                            zIndex: 999,
+                            zIndex: 998,
                             color: 'yellow',
                             cursor: 'pointer',
                             fontSize: '48px',
@@ -192,10 +192,9 @@ export default function Game() {
                             backgroundSize: 'cover',
                             backgroundRepeat: 'no-repeat',
                             boxShadow: '-2px 0 5px rgba(0,0,0,0.5)',
-                            zIndex: 1000,
+                            zIndex: 999,
                             display: 'flex',
                             flexDirection: 'column',
-                            zIndez: 1000
                         }}>
                             <IoCloseCircle
                                 style={{

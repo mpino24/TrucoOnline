@@ -55,8 +55,8 @@ const Chat = forwardRef((props, ref) => {
   }
 
   useEffect(() => {
-    fetchMensajesIniciales();
     updateChatLastConnection();
+    fetchMensajesIniciales();
     const timer = setInterval(() => {
       updateChatLastConnection();
     }, 60000);
@@ -87,6 +87,7 @@ const Chat = forwardRef((props, ref) => {
       console.log("Conectado exitosamente a " + props.idChat);
       cliente.subscribe(`/topic/chat/${props.idChat}`, (mensaje) => {
         console.log("Mensaje recibido: ", mensaje.body);
+        updateChatLastConnection();
         const nuevoMensaje = JSON.parse(mensaje.body);
         setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
       });
