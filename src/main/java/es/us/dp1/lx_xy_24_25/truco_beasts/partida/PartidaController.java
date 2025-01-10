@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-//apa
+
 @RestController
 @RequestMapping("/api/v1/partida")
 @Tag(name = "Partida", description = "The Partidas gestion API")
@@ -115,5 +116,10 @@ public class PartidaController {
 	public ResponseEntity<String> startGame(@PathVariable("codigo") String codigo){
 		partidaService.startGame(codigo);
 		return new ResponseEntity<>("Partida comenzada con éxito", HttpStatus.OK);
+	}
+
+	@ExceptionHandler(AlreadyInGameException.class)
+	public ResponseEntity<String> handleAlreadyInGameException(AlreadyInGameException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
 	}
 }
