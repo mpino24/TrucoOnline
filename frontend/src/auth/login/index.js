@@ -3,6 +3,8 @@ import { Alert } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import "../../static/css/auth/authButton.css";
+import "../../static/css/index/index.css";
+
 import { loginFormInputs } from "./form/loginFormInputs";
 import logo from '../../static/images/Logo_juego.png'
 import { Link } from 'react-router-dom';
@@ -51,7 +53,7 @@ export default function Login() {
         )}
         <img src={logo} alt='Logo del juego' style={{ height: '130%' }} />
         <div className="auth-form-container">
-          <h1 style={{fontSize:49}}>Login</h1>
+          <h1 className="loginText">Login</h1>
           <FormGenerator
             ref={loginFormRef}
             inputs={loginFormInputs}
@@ -62,12 +64,12 @@ export default function Login() {
             buttonClassName="auth-button"
           />
           <div style={{ marginLeft: '35%' }}>
-            <p style={{ marginTop: 60, color: '#212529' }}> ¿No tienes cuenta?</p>
+            <p className="noCuentaText" style={{ marginTop: 60}}> ¿No tienes cuenta?</p>
             <Link
               to={`/register`}
               style={{ textDecoration: "none" }}
             >
-              <button onClick={handleSubmit} className={'auth-button'}>
+              <button style={{marginTop: 10}} onClick={handleSubmit} className={'auth-button'}>
                 Sign up
               </button>
             </Link>

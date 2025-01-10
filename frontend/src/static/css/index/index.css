@@ -1,0 +1,47 @@
+@keyframes dropShadowGlowLogin {
+        0%, 100% {
+            text-shadow: 
+            -0.5px -0.5px 0 rgba(255, 111, 49, 0.415), 
+            0.5px -0.5px 0 rgba(255, 111, 49, 0.415), 
+            -0.5px 0.5px 0 rgba(255, 111, 49, 0.415), 
+            0.5px 0.5px 0 rgba(255, 111, 49, 0.415), 
+                0 0 10px rgb(254, 138, 29);
+        }
+        50% {
+            text-shadow: 
+            -0.5px -0.5px 0 rgba(255, 111, 49, 0.415), 
+            0.5px -0.5px 0 rgba(255, 111, 49, 0.415), 
+            -0.5px 0.5px 0 rgba(255, 111, 49, 0.415), 
+            0.5px 0.5px 0 rgba(255, 111, 49, 0.415), 
+                0 0 20px rgb(254, 138, 29);
+        }
+    }
+    
+    
+
+.loginText {
+    display: inline-block;
+    animation: 
+        dropShadowGlowLogin 3s ease-in-out infinite;
+    width: 100%;
+    margin: 0;
+    color: rgb(255, 211, 0);
+    text-shadow: 
+    -1px -1px 0 rgb(255, 121, 49), 
+    1px -1px 0 rgb(255, 121, 49), 
+    -1px 1px 0 rgb(255, 121, 49), 
+    1px 1px 0 rgb(255, 121, 49);
+}
+.noCuentaText {
+    display: inline-block;
+    animation: 
+        dropShadowGlowLogin 3s ease-in-out infinite;
+    width: 100%;
+    margin: 0;
+    color: rgb(255, 211, 0);
+    text-shadow: 
+    -1px -1px 0 rgb(255, 121, 49), 
+    1px -1px 0 rgb(255, 121, 49), 
+    -1px 1px 0 rgb(255, 121, 49), 
+    1px 1px 0 rgb(255, 121, 49);
+}
