@@ -26,23 +26,20 @@ public class TestManoServiceFlor {
     String codigo;
     ManoService manoService;
 
-    // Mocks
+
     CartaRepository cartaRepository;
     PartidaService partidaService;
     PartidaJugadorService partidaJugadorService;
     
-    /**
-     * Se ejecuta antes de cada test. 
-     * Creamos la Partida, la Mano y el ManoService "mokeado".
-     */
+ 
     @BeforeEach
     public void setupBase() {
         partida = new Partida();
         mano = new Mano();
 
-        partida.setNumJugadores(2);    // Por defecto, 2 jugadores
-        partida.setJugadorMano(0);     // El jugador mano es el 0
-        partida.setCodigo("TESTFLOR"); // Código de ejemplo
+        partida.setNumJugadores(2);    
+        partida.setJugadorMano(0);     
+        partida.setCodigo("TESTFLOR"); 
         partida.setConFlor(true);
         partida.setPuntosEquipo1(0);
         partida.setPuntosEquipo2(0);
@@ -50,34 +47,23 @@ public class TestManoServiceFlor {
         mano.setJugadorTurno(partida.getJugadorMano());
         mano.setGanadoresRondas(new ArrayList<>(List.of(0, 0)));
 
-        // Inicializamos la lista envidosCantados con 3 ceros
         List<Integer> envidos = new ArrayList<>(List.of(0, 0, 0));
         mano.setEnvidosCantados(envidos);
 
-        // Inicializamos los mocks
         cartaRepository = mock(CartaRepository.class);
         partidaService = mock(PartidaService.class);
         partidaJugadorService = mock(PartidaJugadorService.class);
 
-        // Configuramos la partida en el mock
         when(partidaService.findPartidaByCodigo(partida.getCodigo()))
             .thenReturn(partida);
 
         manoService = new ManoService(cartaRepository, partidaService, partidaJugadorService);
 
-        // Actualizamos la mano en el map interno de manoService
         codigo = partida.getCodigo();
         manoService.actualizarMano(mano, codigo);
     }
 
-    // ------------------------------------------------
-    // MÉTODOS AUXILIARES PARA ASIGNAR CARTAS
-    // ------------------------------------------------
 
-    /**
-     * Asigna 3 cartas del mismo palo al 'jugador' indicado,
-     * de modo que tenga Flor.
-     */
     private void setupCartasDisponiblesConFlor(Integer jugador) {
         Carta c1 = new Carta(); 
         c1.setId(1); 
@@ -99,7 +85,6 @@ public class TestManoServiceFlor {
 
         List<Carta> cartasTotales = new ArrayList<>();
         
-        // Solo añadimos las 3 cartas al 'jugador' con Flor
         cartasTotales.add(c1);
         cartasTotales.add(c2);
         cartasTotales.add(c3);
@@ -112,10 +97,8 @@ public class TestManoServiceFlor {
         mano.setCartasDisp(cartasDisponibles);
         mano.setCartasNoBorradas(cartasDisponibles);
 
-        // Ronda = 1
         mano.setRondaActual(1);
 
-        // Cartas lanzadas Ronda (nulos)
         List<Carta> lanzadas = new ArrayList<>();
         for (int i = 0; i < partida.getNumJugadores(); i++) {
             lanzadas.add(null);
@@ -124,9 +107,7 @@ public class TestManoServiceFlor {
         mano.setJugadorTurno(jugador);
     }
 
-    /**
-     * Asigna 3 cartas de palos distintos para que NO tenga Flor.
-     */
+
     private void setupCartasDisponiblesSinFlor(Integer jugador) {
         Carta c1 = new Carta(); 
         c1.setId(1); 
@@ -177,41 +158,35 @@ public class TestManoServiceFlor {
 
     @Test
     public void testCantarFlorExitoso() {
-        // Jugador 0 tiene Flor
         setupCartasDisponiblesSinFlor(0);
         setupCartasDisponiblesConFlor(1);
 
         mano.setFloresCantadas(0);
         mano.setEsperandoRespuesta(false);
         mano.crearListaTantosCadaJugadorFlor();
-        // Canta Flor
+
         manoService.cantosFlor(codigo, Cantos.FLOR);
 
-        // Debe haberse incrementado las floresCantadas
         assertEquals(1, mano.getFloresCantadas());
 
-        // El turno pasa al que responde
-        // JugadorIniciador = 0 => quienResponde se calcula => 
-        // en 2 jugadores, quienResponde = 1
+
         assertEquals(1, mano.getJugadorTurno());
 
         // No debe estar esperando respuesta ya que el otro no tiene flor
         assertFalse(mano.getEsperandoRespuesta());
 
-        // Último mensaje
         assertEquals(Cantos.FLOR, mano.getUltimoMensaje());
     }
 
     @Test
     public void testCantarFlorSinTenerFlor() {
-        // Jugador 0 NO tiene 3 cartas del mismo palo
         setupCartasDisponiblesSinFlor(0);
 
         mano.setFloresCantadas(0);
         mano.setEsperandoRespuesta(false);
 
         // Al cantar FLOR, esperamos que lance excepción si el código
-        // checa que no se puede cantar (pues no hay Flor).
+        // chequea que no se puede cantar (pues no hay Flor).
         Exception ex = assertThrows(FlorException.class, 
             () -> manoService.cantosFlor(codigo, Cantos.FLOR));
         
@@ -308,9 +283,7 @@ public class TestManoServiceFlor {
         // CON_FLOR_ME_ACHICO => se llama a gestionarPuntosFlor(false, codigo, 4)
         manoService.responderFlor(codigo, Cantos.CON_FLOR_ME_ACHICO);
 
-        // Revisa en tu código si sumas 4 puntos al "respondedor" o al "cantor".
-        // Tu método hace: if(equipoRespondedor==0) => eq2, else => eq1
-        // Aquí equipoRespondedor=1 => se suman al eq1
+
         assertEquals(4, partida.getPuntosEquipo1());
         assertEquals(0, partida.getPuntosEquipo2());
 

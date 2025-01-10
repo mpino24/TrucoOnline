@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import es.us.dp1.lx_xy_24_25.truco_beasts.model.Person;
+
 
 /**
  * @author Michael Isvy Simple test to make sure that Bean Validation is working (useful

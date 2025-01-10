@@ -190,9 +190,6 @@ export default function Home() {
                     
             {!estadisticasView && (
                 <div expand='md' style={{ float: 'left' }}>
-                    <button className="button-admin" onClick={() => { navigate("/historial") }}>
-                        HISTORIAL DE PARTIDAS
-                    </button>
                     {roles.includes('ADMIN') && 
                     <button className="button-admin" onClick={() => { navigate("/admin") }}>
                         ADMINISTRACIÓN

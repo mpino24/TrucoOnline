@@ -1,26 +1,52 @@
-import { useState, forwardRef } from "react";
-import { Form, Label, Input, Modal, ModalBody } from "reactstrap";
+import { useState, useEffect, forwardRef } from "react";
+import { Form, Label, Input } from "reactstrap";
 import tokenService from "../../services/token.service";
-import SelectorImagenes from "../../util/SelectorImagenes";
 import useFetchState from "../../util/useFetchState";
+import SelectorImagenes from "../../util/SelectorImagenes";
 const jwt = tokenService.getLocalAccessToken();
 
-function handleModalVisible(setModalVisible, modalVisible) {
-  setModalVisible(!modalVisible);
-}
 
-const GetCreationLogroModal = forwardRef((props, ref) => {
+
+const EditLogroModal = forwardRef((props, ref) => {
+  const { setEditLogroModal, editLogroModal, logro, setActualizarLista, actualizarLista, setLogroSeleccionado } = props;
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
-  const { setCreationLogroModal, creationLogroModal } = props;
   const [formData, setFormData] = useState({
     name: "",
     valor: 10,
-    metrica: "VICTORIAS",
+    metrica: "PARTIDAS_A_2",
     descripcion: "",
     imagencita: "http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
+
+  const handleImageSelect = (imageName) => {
+    setFormData({
+      ...formData,
+      imagencita: `http://localhost:8080/resources/images/trofeos/${imageName}`,
+    });
+    setImageModalOpen(false);
+  };
+
+  function handleModalVisible(setModalVisible, modalVisible) {
+    setLogroSeleccionado(null)
+    setModalVisible(!modalVisible);
+  }
+  useEffect(() => {
+    if (logro) {
+      setFormData({
+        name: logro.name,
+        valor: logro.valor,
+        metrica: logro.metrica,
+        descripcion: logro.descripcion,
+        imagencita: logro.imagencita,
+        oculto: logro.oculto,
+      });
+    }
+  }, [logro]);
 
   const metricaOptions = [
     "PARTIDAS_JUGADAS",
@@ -35,11 +61,8 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     "QUIEROS",
     "NO_QUIEROS",
     "PARTIDAS_CON_FLOR",
-    "ATRAPADO",
+    "ATRAPADO"
   ];
-  const [imageModalOpen, setImageModalOpen] = useState(false);
-
-  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([],"/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
 
   const handleChange = (e) => {
     const target = e.target;
@@ -47,26 +70,17 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     const checked = target.checked;
     const value = target.value;
     const name = target.name;
-
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  const handleImageSelect = (imageName) => {
-    setFormData({
-      ...formData,
-      imagencita: `http://localhost:8080/resources/images/trofeos/${imageName}`,
-    });
-    setImageModalOpen(false);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch("/api/v1/logros", {
-      method: "POST",
+    fetch(`/api/v1/logros/${logro.id}`, {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
@@ -75,17 +89,18 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
       body: JSON.stringify(formData),
     })
       .then((response) => response.json())
-      .then(() => {
-        handleModalVisible(setCreationLogroModal, creationLogroModal);
-        props.setActualizarLista((prev) => prev + 1);
+      .then((json) => {
+        console.log("devuelvo algo")
+        handleModalVisible(setEditLogroModal, editLogroModal);
+        setActualizarLista(actualizarLista + 1);
       })
       .catch((message) => alert(message));
   };
 
   const estiloLetras = {
     color: "orange",
-    textShadow: "1px 1px 2px black",
-  };
+    textShadow: "1px 1px 2px black"
+  }
 
   return (
     <>
@@ -93,21 +108,22 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
         backgroundColor: 'rgb(255, 255, 255, 0.3)',
         color: 'white',
         padding: '20px',
-        borderRadius: '10px',
+        borderRadius: '10px'
       }}>
-        <div>
+        <div >
           <Label style={estiloLetras}>Nombre: </Label>
           <Input
             type="text"
             required
             name="name"
-            placeholder="Ponele un nombre a tu nuevo logro"
             id="name"
             value={formData.name}
             onChange={handleChange}
             className="custom-input"
             minLength="3"
             maxLength="50"
+            placeholder="Ponele un nombre nuevo a tu logro"
+
           />
         </div>
         <div>
@@ -124,30 +140,32 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           />
         </div>
         <div>
-          <Label style={estiloLetras}>Métrica: </Label>
-          <Input
-            type="select"
-            name="metrica"
-            id="metrica"
-            value={formData.metrica}
-            onChange={handleChange}
-            className="custom-switch"
-            style={{ backgroundColor: "transparent" }}
-          >
-            {metricaOptions.map((metrica) => (
-              <option key={metrica} value={metrica}>
-                {metrica.replaceAll("_", " ")}
-              </option>
-            ))}
-          </Input>
+          <Label style={estiloLetras}>Metrica: </Label>
+          <div className="switch-container" >
+            <Input
+              type="select"
+              name="metrica"
+              id="metrica"
+              value={formData.metrica}
+              onChange={handleChange}
+              className="custom-switch"
+              style={{ backgroundColor: "transparent" }}
+            >
+              {metricaOptions.map((metrica) => (
+                <option key={metrica} value={metrica}>
+                  {metrica.replaceAll("_", " ")}
+                </option>
+              ))}
+            </Input>
+          </div>
         </div>
         <div>
-          <Label style={estiloLetras}>Descripción: </Label>
+          <Label style={estiloLetras}>Descripcion: </Label>
           <Input
             type="text"
             required
-            placeholder="Describí brevemente el logro nuevo"
             name="descripcion"
+            placeholder="Describi brevemente el nuevo logro"
             id="descripcion"
             value={formData.descripcion}
             onChange={handleChange}
@@ -156,7 +174,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
             title="La descripción debe tener al menos un carácter que no sea un espacio"
           />
         </div>
-        <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label style={estiloLetras}>Foto:  </Label>
           {formData.imagencita && (
             <img
@@ -200,14 +218,13 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           </button>
           <button
             type="button"
-            onClick={() => handleModalVisible(setCreationLogroModal, creationLogroModal)}
+            onClick={() => handleModalVisible(setEditLogroModal, editLogroModal)}
             className="auth-button"
           >
             Cancelar
           </button>
         </div>
       </Form>
-
       <SelectorImagenes
         imagenes={imagenesDisponibles}
         isOpen={imageModalOpen}
@@ -219,4 +236,4 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   );
 });
 
-export default GetCreationLogroModal;
+export default EditLogroModal;

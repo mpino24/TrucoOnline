@@ -10,7 +10,8 @@ export default function AdminHome() {
     const [visible, setVisible] = useState(false);
     const [alerts, setAlerts] = useState([]);
     const jwt = tokenService.getLocalAccessToken();
-    const [games, setGames] = useFetchState([], "/api/v1/partida/partidas/participantes/activas", jwt, setMessage, setVisible);
+    // Crep que de aca a
+    const [games, setGames] = useFetchState([], "/api/v1/partida/partidas/participantes/activas", jwt, setMessage, setVisible); // No existe esa url xd
     const gameList = games.map((game) => {
         return (
           <tr key={game.id}>
@@ -20,12 +21,15 @@ export default function AdminHome() {
           </tr>
         );
       });
-    const modal = getErrorModal(setVisible, visible, message);
-    const navigate = useNavigate();
     const handleRedirect = (path) => {
-        navigate(path);
-    };
+      navigate(path);
+  };
 
+  // aca, se puede borrar, pero no lo voy a hacer porque me da miedo romper algo 
+  const modal = getErrorModal(setVisible, visible, message);
+
+    const navigate = useNavigate();
+  
     return (
       <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
         <div className="admin-page-container">

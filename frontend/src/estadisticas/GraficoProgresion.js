@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 
@@ -8,7 +8,6 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
         'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
     ];
 
-
     const formatearFecha = (fecha) => {
         const date = new Date(fecha);
         const dia = date.getDate();
@@ -17,7 +16,6 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
         return `${dia} de ${mes} del ${anio}`;
     };
 
- 
     const generarRangoDeFechas = (inicio, fin) => {
         const rango = [];
         let fechaActual = new Date(inicio);
@@ -30,13 +28,12 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
         return rango;
     };
 
-    
     const parsearDatosDeProgresion = (data) => {
         const datosAgrupados = {};
 
         data.forEach((item) => {
             const fecha = new Date(item.fecha);
-            const fechaString = fecha.toISOString().split('T')[0]; // Solo la fecha (sin hora)
+            const fechaString = fecha.toISOString().split('T')[0]; 
 
             if (!datosAgrupados[fechaString]) {
                 datosAgrupados[fechaString] = { victorias: 0, derrotas: 0 };
@@ -54,18 +51,28 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
 
     const datosAgrupados = parsearDatosDeProgresion(estadisticasAvanzadas);
 
-    
     const fechas = Object.keys(datosAgrupados).map(fecha => new Date(fecha));
     const fechaInicio = new Date(Math.min(...fechas));
     const fechaFin = new Date(Math.max(...fechas));
 
     const rangoFechas = generarRangoDeFechas(fechaInicio, fechaFin);
 
-    
+
+    const datosProgresionEspecificos = rangoFechas.map(fecha => {
+        const fechaString = fecha.toISOString().split('T')[0];
+        const datosDia = datosAgrupados[fechaString] || { victorias: 0, derrotas: 0 };
+
+        return {
+            fecha,
+            victorias: datosDia.victorias,
+            derrotas: datosDia.derrotas,
+        };
+    });
+
+
     let acumuladoVictorias = 0;
     let acumuladoDerrotas = 0;
-
-    const datosProgresion = rangoFechas.map(fecha => {
+    const datosProgresionAcumulados = rangoFechas.map(fecha => {
         const fechaString = fecha.toISOString().split('T')[0];
         const datosDia = datosAgrupados[fechaString] || { victorias: 0, derrotas: 0 };
 
@@ -79,12 +86,10 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
         };
     });
 
-    
-    const datosResumidos = datosProgresion.filter((item, index, array) => {
-        if (index === 0) return true; 
-        const anterior = array[index - 1];
-        return item.victorias !== anterior.victorias || item.derrotas !== anterior.derrotas;
-    });
+    const [modoAcumulado, setModoAcumulado] = useState(true);  
+
+
+    const datosProgresion = modoAcumulado ? datosProgresionAcumulados : datosProgresionEspecificos;
 
     const graficoProgresion = {
         chart: {
@@ -111,7 +116,7 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
         },
         yAxis: {
             title: {
-                text: 'Cantidad Acumulada',
+                text: 'Cantidad',
                 style: { color: '#ffffff' }
             },
             labels: {
@@ -142,22 +147,35 @@ const GraficoProgresion = ({ estadisticasAvanzadas }) => {
         series: [
             {
                 name: 'Victorias',
-                data: datosResumidos.map(item => [item.fecha.getTime(), item.victorias]),
+                data: datosProgresion.map(item => [item.fecha.getTime(), item.victorias]),
                 color: '#4caf50'
             },
             {
                 name: 'Derrotas',
-                data: datosResumidos.map(item => [item.fecha.getTime(), item.derrotas]),
+                data: datosProgresion.map(item => [item.fecha.getTime(), item.derrotas]),
                 color: '#f44336'
             }
         ]
     };
 
     return (
-        <HighchartsReact
-            highcharts={Highcharts}
-            options={graficoProgresion}
-        />
+        <div style={{width:'700px'}}>
+            
+            <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignContent:'center'}}>
+                <input 
+                    type="checkbox" 
+                    checked={modoAcumulado} 
+                    
+                    onChange={() => setModoAcumulado(!modoAcumulado)} 
+                />
+                 <h7 style={{color:'white'}}> ¿Datos acumulados?</h7> 
+                  </div>
+
+            <HighchartsReact
+                highcharts={Highcharts}
+                options={graficoProgresion}
+            />
+        </div>
     );
 };
 

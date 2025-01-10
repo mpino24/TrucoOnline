@@ -1,7 +1,11 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
+import java.util.Collection;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.TransactionSystemException;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -107,7 +112,7 @@ public class TestJugadorService {
     @WithMockUser(username = "player1", roles = {"PLAYER"})
     void testComprobarExistenciaSolicitud() {
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
-    
+
         assertTrue(jugadorService.comprobarExistenciaSolicitud(jugador2, jugador));
     }
 
@@ -146,6 +151,52 @@ public class TestJugadorService {
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
 
         assertEquals(jugador.getFirstName(), jugadorService.findSolicitudesByUserId(jugador2.getUser().getId()).get(0).getFirstName());
+    }
+
+    /* -------*/
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testFindAll() {
+        Collection<Jugador> jugadores = jugadorService.findAll();
+        assertNotNull(jugadores);
+        assertTrue(jugadores.size() > 0);
+    }
+        
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testFindJugadorByUserId() {
+        Jugador foundJugador = jugadorService.findJugadorByUserId(jugador.getUser().getId());
+        assertNotNull(foundJugador);
+        assertEquals(jugador.getId(), foundJugador.getId());
+    }
+    
+    @Test
+    void testFindJugadorByUserIdNotFound() {
+        assertThrows(ResourceNotFoundException.class, () -> jugadorService.findJugadorByUserId(999));
+    }
+
+    @Test
+    void testExistsJugador() {
+        assertTrue(jugadorService.existsJugador(jugador.getId()));
+        assertFalse(jugadorService.existsJugador(999));
+    }
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void testUpdateJugador() {
+        jugador.setFirstName("Actualizado");
+        jugadorService.updateJugador(jugador, jugador.getUser());
+        Jugador updatedJugador = jugadorService.findJugadorById(jugador.getId());
+        assertEquals("Actualizado", updatedJugador.getFirstName());
+    }
+
+    @Test
+    void testUpdateJugadorNotFound() {
+        Jugador jugadorNoExistente = new Jugador();
+        jugadorNoExistente.setId(999);
+        assertThrows(TransactionSystemException.class, () -> jugadorService.updateJugador(jugadorNoExistente, jugador.getUser()));
     }
 
 }

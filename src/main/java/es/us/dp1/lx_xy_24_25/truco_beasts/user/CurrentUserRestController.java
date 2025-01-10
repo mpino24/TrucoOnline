@@ -19,8 +19,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.PerfilJugadorUsuario;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
-import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
+
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -29,15 +29,15 @@ public class CurrentUserRestController {
     
     private final UserService userService;
     private final JugadorService jugadorService;
-    private final PartidaJugadorService partidaJugadorService;
+
     private final static String relog = "RELOG";
     private final static String home = "HOME";
 
 	@Autowired
-	public CurrentUserRestController(UserService userService, JugadorService jugadorService, PartidaJugadorService partidaJugadorService) {
+	public CurrentUserRestController(UserService userService, JugadorService jugadorService) {
 		this.userService = userService;
         this.jugadorService=jugadorService;
-        this.partidaJugadorService=partidaJugadorService;
+  
 	}
 
     @GetMapping

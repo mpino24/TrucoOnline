@@ -37,7 +37,6 @@ public class SecurityConfiguration {
 	DataSource dataSource;
 
 	private static final String ADMIN = "ADMIN";
-	private static final String PLAYER = "PLAYER";
 	
 
 	@Bean
@@ -56,6 +55,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/static/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/resources/images/trofeos/**")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/resources/images/perfiles/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/swagger-resources/**")).permitAll()						
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/oups")).permitAll()
@@ -73,6 +73,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).authenticated() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).authenticated() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/manos/**")).authenticated()
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/fotos/**")).authenticated()
 			.requestMatchers("/api/v1/profile/edit").authenticated()
 			.requestMatchers("/ws").permitAll()
 			.requestMatchers("/app/mensaje").permitAll()

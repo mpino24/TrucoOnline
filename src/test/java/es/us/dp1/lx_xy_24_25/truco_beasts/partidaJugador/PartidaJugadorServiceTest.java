@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +46,7 @@ public class PartidaJugadorServiceTest {
     public void setUp() {
         partida = partidaService.findPartidaById(0);
         List<PartidaJugadorDTO> jugadoresConectados = pjService.getPlayersConnectedTo(partida.getCodigo());
-        jugadoresConectados.stream().filter(pj -> pj.getIsCreator() == false).forEach(pj -> pjService.eliminateJugadorPartida(pj.getPlayer().getId()));
+        jugadoresConectados.stream().filter(pj -> pj.getIsCreator() == false).forEach(pj -> pjService.eliminateJugadorPartida(pj.getPlayer().getId())); //Por que?
 
     }
 
@@ -74,6 +72,7 @@ public class PartidaJugadorServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "admin1", authorities = "ADMIN")
     public void getMiPosicion() {
         Integer res = pjService.getMiPosicion(9, 0);
         assertTrue(res.equals(0));
