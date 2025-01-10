@@ -74,7 +74,7 @@ public class PartidaJugadorRepositoryTest {
     public void allJugadoresPartida(){
         List<PartidaJugadorView> res= pjRepo.findAllJugadoresPartida("ABCDE");
         assertEquals(2, res.size());
-        assertEquals("http://localhost:8080/resources/images/jorge.jpg", res.get(0).getFoto());
+        assertEquals("http://localhost:8080/resources/images/perfiles/jorge.jpg", res.get(0).getFoto());
     }
     
     @Test
