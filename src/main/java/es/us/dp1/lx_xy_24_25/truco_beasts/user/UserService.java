@@ -77,15 +77,6 @@ public class UserService {
 		
 	}
 
-	
-
-	@Transactional(readOnly = true)
-	public Page<User> findUsuariosPaginacion(Pageable pageable) throws DataAccessException {
-		return userRepository.findUsuariosPags(pageable);
-	}
-   
-
-
 	@Transactional(readOnly =true)
 	public Boolean existsUser(String username) {
 		return userRepository.existsByUsername(username);
@@ -133,7 +124,8 @@ public class UserService {
             if(!(user.getPassword()==null)) {
                 currentUser.setPassword(encoder.encode(user.getPassword()));
             }
-            saveUser(currentUser);
+			currentUser.setLastConnection(LocalDateTime.now());
+			saveUser(currentUser);
             return currentUser;
         }else{
             throw new NameDuplicatedException("Ese nombre está en uso");
@@ -153,6 +145,11 @@ public class UserService {
 		User usuarioActual = findCurrentUser();
 		usuarioActual.setLastConnection(LocalDateTime.now());
 		userRepository.save(usuarioActual);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<User> findUsuariosPaginacion(Pageable pageable) throws DataAccessException {
+		return userRepository.findUsuariosPags(pageable);
 	}
 	
 

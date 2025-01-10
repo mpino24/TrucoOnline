@@ -35,6 +35,9 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.SecurityConfiguration;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
 /**
  * Test class for the {@link VetController}
  */
@@ -237,6 +240,17 @@ class UserControllerTests {
 
 		mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_ID).with(csrf())).andExpect(status().isForbidden())
 				.andExpect(result -> assertTrue(result.getResolvedException() instanceof AccessDeniedException));
+	}
+
+	@Test
+	@WithMockUser("admin")
+	void shouldFindUsuariosPaginados() throws Exception { //Hecho por David
+		Page<User> pagina = new PageImpl<>(List.of(user, user, user));
+
+		when(this.userService.findUsuariosPaginacion(any())).thenReturn(pagina);
+		mockMvc.perform(get(BASE_URL + "/paginados")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.content.size()").value(3))
+				.andExpect(jsonPath("$.content[0].id").value(1));
 	}
 
 }
