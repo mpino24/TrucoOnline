@@ -55,6 +55,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/webjars/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/static/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/resources/images/trofeos/**")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/resources/images/perfiles/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/swagger-resources/**")).permitAll()						
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/oups")).permitAll()

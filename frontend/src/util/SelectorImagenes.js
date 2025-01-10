@@ -1,7 +1,19 @@
 import React from "react";
 import { Modal, ModalBody } from "reactstrap";
 
-const SelectorImagenes = ({ imagenes, isOpen, toggle, onSelect }) => {
+const SelectorImagenes = ({ imagenes, isOpen, toggle, onSelect , tipo}) => {
+
+  
+  function completarURL(nombre) {
+    let url = "http://localhost:8080/resources/images/"
+    if(tipo==="trofeo"){
+      url += "trofeos/"
+    }else{
+      url += "perfiles/"
+    }
+    return url +nombre
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -19,7 +31,7 @@ const SelectorImagenes = ({ imagenes, isOpen, toggle, onSelect }) => {
         {imagenes.map((nombre) => (
           <img
             key={nombre}
-            src={`http://localhost:8080/resources/images/trofeos/${nombre}`}
+            src={completarURL(nombre)}
             alt={nombre}
             onClick={() => onSelect(nombre)}
             style={{

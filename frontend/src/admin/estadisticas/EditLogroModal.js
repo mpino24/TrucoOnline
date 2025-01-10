@@ -230,6 +230,7 @@ const EditLogroModal = forwardRef((props, ref) => {
         isOpen={imageModalOpen}
         toggle={() => setImageModalOpen(!imageModalOpen)}
         onSelect={handleImageSelect}
+        tipo={"trofeo"}
       />
     </>
   );
