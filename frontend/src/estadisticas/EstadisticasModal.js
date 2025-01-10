@@ -108,7 +108,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     color="#b22222"
                     textoMostrar="Mostrar Progresión"
                     textoOcultar="Ocultar Progresión"
-                >
+                 >
                     <GraficoProgresion estadisticasAvanzadas={estadisticasAvanzadas} />
                 </BotonDeCambio>
 
