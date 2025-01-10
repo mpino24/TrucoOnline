@@ -6,6 +6,8 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TeamIsFullException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorDTO;
@@ -229,5 +233,33 @@ public class PartidaJugadorServiceTest {
     public void getAllJugadoresPartidaBadCodigo(){
         assertThrows(ResourceNotFoundException.class , () -> pjService.getAllJugadoresPartida("GCHDT"));
     }
+
+
+ 
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void eliminateJugadorPartidaNotAuthorized() {
+        assertThrows(NotAuthorizedException.class, () -> {
+            partida.setInstanteFin(null);
+            partida.setInstanteInicio(null);
+            partidaService.savePartida(partida);
+
+            pjService.addJugadorPartida(partida, 10, false);
+            pjService.eliminateJugadorPartida(10);
+        });
+    }
+
+
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void eliminateJugadorPartidaResourceNotFound() {
+        assertThrows(ResourceNotFoundException.class, () -> {
+            pjService.eliminateJugadorPartida(999);
+        });
+    }
+
+
 
 }
