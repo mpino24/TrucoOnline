@@ -21,11 +21,21 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 •	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
 
 ![Diagrama de dominio Truco Beasts fondo claro](https://github.com/user-attachments/assets/3dcc08e2-9f77-4617-9080-48ae819a206d)
+
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
-_En esta sección debe proporcionar un diagrama UML de clases que describa el conjunto de controladores, servicios, y repositorios implementados, incluya la división en capas del sistema como paquetes horizontales tal y como se muestra en el siguiente ejemplo:_
+Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo en el siguiente archivo: docs/diagrams/LayersUMLPackageDiagram.iuml
 
+#### Diagrama completo
+![diagrama_completo](https://github.com/user-attachments/assets/7b215724-8c2b-46ee-a4b3-eed52ec35492)
 
-![hLPHKjmm3FttAJpzWXzEq64WoyzsA33G7i3hYA2fOsSiXsccmwau0XThDb6eDwi4FhfVIEyzMNvoR2uecPZQsYdrX2LeYz4wK4ernluo5UWlUcCQetkeYK3Wax7uzkhxl25znwc4mUi_IlU_eKeDzGuY3Gdh396-RDFJ9lWKWtCGC-0Adi65fcUByBUsCc](https://github.com/user-attachments/assets/db11d049-7089-45a4-bb0f-844d428dca68)
+#### Relaciones entre la capa de Presentación y la capa de Lógica de Negocio (incluidas relaciones internas en la capa de Lógica de Negocio)
+![diagrama_de_capas_capas_P_BL](https://github.com/user-attachments/assets/cb8ea330-d52a-40e8-bcdc-d40065eca035)
+
+#### Relaciones entre la capa de Lógica de Negocio y la capa de Recursos
+![diagrama_de_capas_BL_R](https://github.com/user-attachments/assets/11fb2c2f-fa87-45a5-93ff-05fa39f70cd7)
+
+#### Repositorios de la capa de Recursos y sus consultas personalizadas
+![diagrama_de_capas_R](https://github.com/user-attachments/assets/9d548e75-6946-4600-a1e0-c00738c61f6b)
 
 _El diagrama debe especificar además las relaciones de uso entre controladores y servicios, entre servicios y servicios, y entre servicios y repositorios._
 _Tal y como se muestra en el diagrama de ejemplo, para el caso de los repositorios se deben especificar las consultas personalizadas creadas (usando la signatura de su método asociado)._
