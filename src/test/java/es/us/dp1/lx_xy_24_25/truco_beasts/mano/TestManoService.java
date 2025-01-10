@@ -23,7 +23,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 
-public class TestManoServiceMerged {
+public class TestManoService {
 
     private Partida partida;
     private Mano mano;
@@ -496,7 +496,7 @@ public class TestManoServiceMerged {
 
         manoService.cantosTruco(codigo, Cantos.TRUCO); 
         manoService.responderTruco(codigo, Cantos.QUIERO); 
-        mano.siguienteTurno();
+        mano.siguienteJugador(mano.getJugadorTurno());
         assertTrue(mano.comprobarSiPuedeCantarTruco()); 
 
         TrucoException exception = assertThrows(TrucoException.class, 
