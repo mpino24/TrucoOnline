@@ -97,7 +97,9 @@ public class PartidaService {
 
 	@Transactional(readOnly = true)
 	public Partida findPartidaById(int id) throws DataAccessException{
-		return partidaRepository.findById(id).get();
+		Optional<Partida> partida= partidaRepository.findById(id);
+		
+		return partida.isEmpty()?null:partida.get();
 	}
 
 	@Transactional

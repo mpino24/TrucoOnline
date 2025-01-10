@@ -45,6 +45,7 @@ public class Partida extends BaseEntity{
     private Integer puntosEquipo1;
 
     @Column(name = "PUNTOSEQUIPO2")
+    @NotNull
     private Integer puntosEquipo2;
 
     @Enumerated(EnumType.STRING)
