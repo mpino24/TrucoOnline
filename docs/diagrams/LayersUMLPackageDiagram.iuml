@@ -6,10 +6,17 @@ hide circle
 package " Capa de presentación " as Presentation {
     hide members
     class AuthController
-    class DevelopersController
+    class CartaController
+    class ChatRestController
+    class ChatWebSocketController
+    class EstadisticasController
+    class LogrosController
+    class FotosController
     class JugadorController
+    class ManoController
     class PartidaController
     class PartidaJugadorController
+    class PartidaJugadorWebSocketController
     class UserRestController
     class CurrentUserRestController
 }
@@ -17,9 +24,14 @@ package " Capa de presentación " as Presentation {
 package " Capa de lógica de negocio " as BusinessLogic {
     hide members
     class AuthService
+    class CartaService
+    class ChatService
     class UserDetailsImplService
-    class ManoService
+    class EstadisticasService
+    class LogrosService
+    class FotosService
     class JugadorService
+    class ManoService
     class PartidaService
     class PartidaJugadorService
     class AuthoritiesService
@@ -33,16 +45,29 @@ package " Capa de recursos " as Resources {
         Optional<Jugador> findByUserId(Integer userId)
         List<Jugador> findAll()
         Optional<Jugador> findById(Integer id)
-        List<JugadorDTO> findAmigosByUserId(Integer id)
-        JugadorDTO findJugadorByUserName(String userName)
+        List<Jugador> findAmigosByUserId(Integer id)
+        Optional<Jugador> findJugadorByUserName(String userName)
+        List<Jugador> findSolicitudesByUserId(Integer id)
+        String findUsernameByJugadorId(Integer id)
     }
     interface PartidaRepository {
-        List<Partida> findAllPartidasActivas()
+        Page<Partida> findAllPartidasActivas(Pageable pageable)
+        List<Partida> findAllPartidas()
         Optional<Partida> findPartidaByCodigo(String codigo)
     }
     interface PartidaJugadorRepository {
         PartidaJugador findPartidaJugadorbyId(Integer id)
+        PartidaJugador findByPlayerIdAndGameNotFinish(Integer playerId)
         Integer findNumJugadoresPartida(Integer partidaId)
+        Integer numberOfGamesConnected(Integer id)
+        void deleteByPlayerId(Integer userId)
+        List<Integer> lastPosition(Integer partidaId)
+        List<PartidaJugador> findPlayersConnectedTo(String partidaCode)
+        Optional<Partida> findPartidaByUserId(Integer userId)
+        Optional<PartidaJugador> findCreator(Integer partidaId)
+        Optional<Partida> findPartidaByCodigoPartida(String codigo)
+        List<PartidaJugadorView> findAllJugadoresPartida(String codigo)
+        PartidaJugador findPartidaJugadorByCodigoPartidaAndPosicionJugador(String codigo, Integer posicion)
     }
     interface AuthoritiesRepository {
         Optional<Authorities> findByName(String authority)
@@ -52,16 +77,80 @@ package " Capa de recursos " as Resources {
         Boolean existsByUsername(String username)
         Optional<User> findById(Integer id)
         Iterable<User> findAllByAuthority(String auth)
+        Page<User> findUsuariosPags(Pageable pageable)
+    }
+    interface CartaRepository {}
+    interface ChatRepository {
+        Chat findChatBetween(Integer amigoId,Integer userId)
+        List<User> findUsersByChat(Integer chatId)
+    }
+    interface ChatUsuarioRepository {
+        Optional<ChatUsuario> findChatUsuarioByUserAndChat(Integer userId, Integer chatId)
+        List<ChatUsuario> findChatUsuarioByUser(Integer userId)
+    }
+    interface MensajeRepository {
+        Optional<Mensaje> findLastMessage(Integer chatId)
+        List<Mensaje> findMessagesFrom(Integer chatId)
+        Integer findMessagesAfter(Integer chatId, LocalDateTime fecha, Integer userId)
+    }
+    interface EstadisticasRepository {
+        Integer findAllPartidasJugadas(Integer jugadorId)
+        Integer findTiempoJugado(Integer jugadorId)
+        Integer findVictorias(Integer jugadorId)
+        Integer findPartidasA2(Integer jugadorId)
+        Integer findPartidasA4(Integer jugadorId)
+        Integer findPartidasA6 (Integer jugadorId)
+        Integer findNumeroFlores(Integer jugadorId)
+        Integer findNumeroEnganos(Integer jugadorId)
+        Integer findNumeroAtrapado(Integer jugadorId)
+        Integer findQuieros (Integer jugadorId)
+        Integer findNoQuieros(Integer jugadorId)
+        Integer findPartidasConFlor(Integer jugadorId)
+        List<Object[]> findAllDatosPorPartidaByJugadorId(Integer jugadorId)
+        List<Object[]> findVictoriasPorJugador()
+        Integer findAllPartidasJugadasGlobal()
+        Integer findTiempoJugadoGlobal()
+        Integer findVictoriasGlobal()
+        Integer findPartidasA2Global()
+        Integer findPartidasA4Global()
+        Integer findPartidasA6Global()
+        Integer findNumeroFloresGlobal()
+        Integer findNumeroEnganosGlobal()
+        Integer findNumeroAtrapadoGlobal()
+        Integer findQuierosGlobal ()
+        Integer findNoQuierosGlobal()
+        Integer findJugadoresTotales()
+        Integer findPartidasConFlor()
+    }
+    interface LogroRepository {
+        List<Logros> findByMetrica(Metrica metrica)
+    }
+    interface FotosRepository {
+        List<String> findAllNombresByCategoria(CategoriaFoto categoriaFoto)
     }
 }
 
 AuthController ..> UserService
 AuthController ..> AuthService
+CartaController ..> CartaService
+ChatRestController ..> ChatService
+ChatRestController ..> UserService
+ChatWebSocketController ..> ChatService
+EstadisticasController ..> EstadisticasService
+EstadisticasController ..> UserService
+EstadisticasController ..> JugadorService
+LogrosController ..> LogrosService
+LogrosController ..> UserService
+LogrosController ..> JugadorService
+FotosController ..> FotosService
 JugadorController ..> JugadorService
+JugadorControler ..> UserService
+ManoController ..> ManoService
 PartidaController ..> PartidaService
 PartidaController ..> PartidaJugadorService
 PartidaJugadorController ..> PartidaJugadorService
 PartidaJugadorController ..> PartidaService
+PartidaJugadorController ..> UserService
 CurrentUserRestController ..> UserService
 CurrentUserRestController ..> JugadorService
 UserRestController ..> UserService
@@ -70,11 +159,31 @@ UserRestController ..> AuthoritiesService
 AuthService ..> AuthoritiesService
 AuthService ..> UserService
 AuthService ..> JugadorService
-PartidaService ..> ManoService
+ChatService ..> UserService
+ChatService ..> PartidaJugadorService
+LogrosService ..> EstadisticasService
+JugadorService ..> UserService
+JugadorService ..> ChatService
+ManoService ..> PartidaService
+ManoService ..> PartidaJugadorService
+PartidaService ..> UserService
+PartidaJugadorService ..> UserService
+PartidaJugadorService ..> PartidaService
 
+CartaService ..> CartaRepository
+ChatService ..> MensajeRepository
+ChatService ..> ChatRepository
+ChatService ..> ChatUsuarioRepository
 UserDetailsImplService ..> UserRepository
+EstadisticasService ..> EstadisticasRepository
+EstadisticasService ..> JugadorRepository
+LogrosService ..> LogroRepository
+FotosService ..> FotosRepository
 JugadorService ..> JugadorRepository
+ManoService ..> CartaRepository
 PartidaService ..> PartidaRepository
+PartidaService ..> ChatRepository
+PartidaService ..> PartidaJugadorRepository
 PartidaJugadorService ..> PartidaJugadorRepository
 PartidaJugadorService ..> JugadorRepository
 AuthoritiesService ..> AuthoritiesRepository
