@@ -52,18 +52,7 @@ public class JugadorController {
         Jugador res = jugadorService.updateJugador(jugador, userService.findUser(userId));
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
-
-
-    @PostMapping("/edit")
-    public ResponseEntity<Jugador> saveJugadorEdit(@RequestBody @Valid Jugador jugador, @RequestParam Integer userId) {
-        User user = userService.findUser(userId);
-        if (user == null) {
-            throw new ResourceNotFoundException("Usuario no encontrado");
-        }
-        jugador.setUser(user);
-        Jugador savedJugador = jugadorService.saveJugador(jugador);
-        return new ResponseEntity<>(savedJugador, HttpStatus.OK);
-    }
+  
 
     @GetMapping("/amigos")
     public ResponseEntity<List<JugadorDTO>> findAmigosByUserId(@RequestParam(required=true) String userId) {
@@ -91,17 +80,8 @@ public class JugadorController {
         return new ResponseEntity<>(void.class, HttpStatus.OK);
     }
     
-    @PostMapping
-    public ResponseEntity<Jugador> saveJugador(@RequestBody @Valid Jugador jugador, @Valid User user) {
-        return null;
-    }
 
-    @GetMapping("/{userId}/isFriend/{friendUserName}")
-    public ResponseEntity<Boolean> checkIfAreFriends(@PathVariable int userId, @PathVariable int friendId){
-        Jugador jugador1= jugadorService.findJugadorByUserId(userId);
-        Jugador jugador2= jugadorService.findJugadorByUserId(friendId);
-        return new ResponseEntity<>(jugadorService.checkIfAreFriends(jugador1,jugador2),HttpStatus.OK);
-    }
+
 
     @PatchMapping("/isFriend/{amigoId}")
     @ResponseStatus(HttpStatus.OK)

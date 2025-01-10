@@ -6,21 +6,18 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -164,6 +161,74 @@ public class JugadorControllerTests {
                 .andExpect(status().isOk());
     }
 
+   
+
+
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void deberiaAgregarNuevoAmigo() throws Exception {
+        doNothing().when(jugadorService).addNewFriends(1, 2);
+
+        when(userService.findCurrentUser()).thenReturn(user);
+
+        mockMvc.perform(patch(BASE_URL + "/isFriend/2").with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void deberiaEliminarAmigo() throws Exception {
+        doNothing().when(jugadorService).deleteFriends(1, 2);
+
+        when(userService.findCurrentUser()).thenReturn(user);
+
+        mockMvc.perform(delete(BASE_URL + "/isFriend/2").with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    void deberiaEliminarSolicitud() throws Exception {
+        doNothing().when(jugadorService).deleteSolicitud(1, 2);
+
+        when(userService.findCurrentUser()).thenReturn(user);
+
+        mockMvc.perform(delete(BASE_URL + "/isSolicitado/2").with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"ADMIN"})
+    void deberiaActualizarJugadorPorUserIdEdit() throws Exception {
+        when(jugadorService.updateJugador(any(Jugador.class), any(User.class))).thenReturn(jugador);
+        when(userService.findUser(1)).thenReturn(user);
+        jugador.setId(99);
+        jugador.setFirstName("Pruebo");
+        jugador.setLastName("Pruebin");
+        jugador.setEmail("mail@mail.com");
+        jugador.setPhoto("http://example.com/photo.jpg");
+        jugador.setUser(mock(User.class));
+
+        mockMvc.perform(put(BASE_URL + "/edit/1")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(jugador))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Pruebo"));
+    }
+
+    @Test
+    @WithMockUser(username = "player1", roles = {"ADMIN"})
+    void deberiaDevolverSolicitudesPorUserId() throws Exception {
+        List<JugadorDTO> solicitudes = Arrays.asList(new JugadorDTO(jugador));
+        when(jugadorService.findSolicitudesByUserId(1)).thenReturn(solicitudes);
+        when(userService.findCurrentUser()).thenReturn(user);
+
+        mockMvc.perform(get(BASE_URL + "/solicitudes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].firstName").value("jugador1"));
+    }
 
 
 }
