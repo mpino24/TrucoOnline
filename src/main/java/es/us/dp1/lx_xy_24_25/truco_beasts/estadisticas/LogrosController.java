@@ -1,11 +1,12 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
+
 import java.util.List;
+
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,16 +94,18 @@ public class LogrosController {
 
     }
 
-    @PutMapping
-    public ResponseEntity<Logros> updateLogro(@RequestBody @Valid Logros logro){
+    @PutMapping("/{logroId}")
+    public ResponseEntity<Logros> updateLogro(@RequestBody @Valid Logros logro, @PathVariable("logroId") Integer logroId){
         User currentUser = userService.findCurrentUser();
         if(currentUser.hasAuthority("ADMIN")){
-            return new ResponseEntity<>(logrosService.updateLogro(logro), HttpStatus.CREATED);
+            return new ResponseEntity<>(logrosService.updateLogro(logro, logroId), HttpStatus.CREATED);
         }else{
             throw new NotAuthorizedException();
         }
 
     }
+
+
 
     
 }

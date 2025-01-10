@@ -4,7 +4,7 @@ import getErrorModal from "./../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
 import { Form, Input, Label } from "reactstrap";
 import { useNavigate, Link } from "react-router-dom";
-
+import SelectorImagenes from "../util/SelectorImagenes";
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Profile() {
@@ -17,8 +17,18 @@ export default function Profile() {
     {}, "/api/v1/profile", jwt, setMessage, setVisible
   );
 
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
-  
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "/api/v1/fotos/perfiles", jwt, setMessage, setVisible);
+
+  const handleImageSelect = (imageName) => {
+    setPerfil({
+      ...perfil,
+      photo: `http://localhost:8080/resources/images/perfiles/${imageName}`,
+    });
+    setImageModalOpen(false);
+  };
+
   const modal = getErrorModal(setVisible, visible, message);
   const navigate = useNavigate();
 
@@ -34,7 +44,7 @@ export default function Profile() {
     })
       .then(async (response) => {
         if (response.ok) {
-          const data = await response.json(); 
+          const data = await response.json();
           setMessage(data.message || "¡Tu cuenta fue borrada con éxito!");
           setVisible(true)
           tokenService.removeUser()
@@ -48,20 +58,20 @@ export default function Profile() {
       })
       .catch((error) => {
         setMessage(error.message);
-        setVisible(true); 
+        setVisible(true);
       });
   }
-  
+
 
   function handleSubmit(event) {
     event.preventDefault();
     const updatedPerfil = {
-        ...perfil,
-        
-        password: newPassword ? newPassword : undefined // Solo incluir si hay una nueva contraseña
-        
+      ...perfil,
+
+      password: newPassword ? newPassword : undefined // Solo incluir si hay una nueva contraseña
+
     };
-    
+
     fetch("/api/v1/profile/edit", {
       method: "PUT",
       headers: {
@@ -71,26 +81,26 @@ export default function Profile() {
       },
       body: JSON.stringify(updatedPerfil),
     })
-    .then((response) => response.text())
-    .then((data) => {
-      if (data === "RELOG") {
-        tokenService.removeUser()
-        navigate("/login");
-      } else if (data === "HOME") {
-        console.log(data)
-        navigate("/home");
-      } else {
-        let json = JSON.parse(data);
-        if (json.message) {
-          let mensaje = "Status Code: " + json.statusCode + " -> " + json.message;
-          setMessage(mensaje);
-          setVisible(true);
-        } else {
+      .then((response) => response.text())
+      .then((data) => {
+        if (data === "RELOG") {
+          tokenService.removeUser()
+          navigate("/login");
+        } else if (data === "HOME") {
+          console.log(data)
           navigate("/home");
+        } else {
+          let json = JSON.parse(data);
+          if (json.message) {
+            let mensaje = "Status Code: " + json.statusCode + " -> " + json.message;
+            setMessage(mensaje);
+            setVisible(true);
+          } else {
+            navigate("/home");
+          }
         }
-      }
-    })
-    .catch((error) => alert(error.message));
+      })
+      .catch((error) => alert(error.message));
   }
 
   function handleChange(event) {
@@ -108,12 +118,12 @@ export default function Profile() {
   return (
     <div style={{ backgroundImage: 'url(/fondos/fondologin.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
       <div className="auth-page-container">
-      {modal}
-      {!mostrarConfirmarBorrado && <div className="hero-div">
+        {modal}
+        {!mostrarConfirmarBorrado && <div className="hero-div">
           <h1 className="text-center">Editar perfil</h1>
           <div className="auth-form-container">
-            
-             <Form onSubmit={handleSubmit}>
+
+            <Form onSubmit={handleSubmit}>
               {/* Datos del Usuario */}
               <div className="custom-form-input">
                 <Label for="username" className="custom-form-input-label">Nombre de usuario</Label>
@@ -173,30 +183,34 @@ export default function Profile() {
                   className="custom-input"
                 />
               </div>
-              {/* Mostrar la foto actual */}
-              <div className="custom-form-input">
-                <Label for="photo" className="custom-form-input-label">Foto</Label>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Label className="custom-form-input-label">Foto:  </Label>
                 {perfil.photo && (
                   <img
-                    src={perfil.photo }
-                    alt="Foto del perfil"
-                    style={{ width: '100px', height: '100px', borderRadius: '50%' }}
-                    onError={(e) => (e.target.style.display = 'none')}
+                    src={perfil.photo}
+                    alt="Seleccionada"
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      borderRadius: "30%",
+                      marginBottom: "10px",
+                      objectFit: "cover",
+                    }}
                   />
                 )}
-                <Label for="photo" className="custom-form-input-label">Foto</Label>
-                <Input
-                  type="text"
-                  name="photo"
-                  id="photo"
-                  value={perfil.photo }
-                  onChange={handleChange}
-                  className="custom-input"
-                  placeholder="Poné el link de la foto que quieras usar"
-                />
-              
+                <button
+                  type="button"
+                  onClick={() => setImageModalOpen(true)}
+                  className="auth-button"
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
+                  Seleccionar Imagen
+                </button>
               </div>
-              
+
               <div className="custom-button-row">
                 <button className="auth-button">Guardar</button>
                 <Link to={`/home`} className="auth-button" style={{ textDecoration: "none" }}>
@@ -204,90 +218,96 @@ export default function Profile() {
                 </Link>
               </div>
             </Form>
-          
+            <SelectorImagenes
+              imagenes={imagenesDisponibles}
+              isOpen={imageModalOpen}
+              toggle={() => setImageModalOpen(!imageModalOpen)}
+              onSelect={handleImageSelect}
+              tipo={"perfil"}
+            />
           </div>
         </div>}
         {/* Cuadro de confirmación de borrar mi cuenta */}
         {mostrarConfirmarBorrado && (
-                <div 
-                  className="confirmation-dialog"
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    padding: "20px",
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
-                    maxWidth: "1200px",
-                    margin: "0 auto",
-                    textAlign: "center"
-                  }}
-                >
-                  <h3 style={{ color: "black" }}>¿Estás seguro de que querés borrar tu cuenta?</h3>
-                  <img 
-                    src="https://c.tenor.com/gix3ZjueBnMAAAAd/tenor.gif" 
-                    alt="Triste" 
-                    style={{ 
-                      width: "600px", 
-                      height: "auto", 
-                      marginBottom: "20px" 
-                    }} 
-                  />
-                  <h4>No se puede revertir del juego ni de nuestros corazones...</h4>
-                  <button
-                    onClick={borrarMiCuenta}
-                    style={{
-                      backgroundColor: "red",
-                      color: "white",
-                      padding: "10px",
-                      marginRight: "10px",
-                      border: "black",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Borrar, no quiero seguir disfrutando mi vida al máximo
-                  </button>
-                  <button
-                    onClick={() => setMostrarConfirmarBorrado(false)}
-                    style={{
-                      backgroundColor: "green",
-                      color: "white",
-                      padding: "10px",
-                      border: "none",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Quedarme, jamás dejaría Truco Beasts: Bardo en la Jungla, perdón 
-                  </button>
-                </div>
-              )}
-
-        
-      
-        
-
-         
-        </div>
-        {/* Borrar mi cuenta */}
-        
-            {!mostrarConfirmarBorrado &&<button
-              className="danger-button"
-              onClick={() => setMostrarConfirmarBorrado(true)}
+          <div
+            className="confirmation-dialog"
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              padding: "20px",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+              maxWidth: "1200px",
+              margin: "0 auto",
+              textAlign: "center"
+            }}
+          >
+            <h3 style={{ color: "black" }}>¿Estás seguro de que querés borrar tu cuenta?</h3>
+            <img
+              src="https://c.tenor.com/gix3ZjueBnMAAAAd/tenor.gif"
+              alt="Triste"
               style={{
-                position: "absolute",
-                bottom: "10px",
-                left: "10px",
+                width: "600px",
+                height: "auto",
+                marginBottom: "20px"
+              }}
+            />
+            <h4>No se puede revertir del juego ni de nuestros corazones...</h4>
+            <button
+              onClick={borrarMiCuenta}
+              style={{
                 backgroundColor: "red",
                 color: "white",
                 padding: "10px",
-                borderRadius: "5px",
+                marginRight: "10px",
+                border: "black",
+                borderRadius: "10px",
+                cursor: "pointer",
               }}
             >
-              Borrar mi cuenta
-            </button>}
-          
+              Borrar, no quiero seguir disfrutando mi vida al máximo
+            </button>
+            <button
+              onClick={() => setMostrarConfirmarBorrado(false)}
+              style={{
+                backgroundColor: "green",
+                color: "white",
+                padding: "10px",
+                border: "none",
+                borderRadius: "10px",
+                cursor: "pointer",
+              }}
+            >
+              Quedarme, jamás dejaría Truco Beasts: Bardo en la Jungla, perdón
+            </button>
+          </div>
+        )}
+
+
+
+
+
+
+      </div>
+      {/* Borrar mi cuenta */}
+
+      {!mostrarConfirmarBorrado && <button
+        className="danger-button"
+        onClick={() => setMostrarConfirmarBorrado(true)}
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          left: "10px",
+          backgroundColor: "red",
+          color: "white",
+          padding: "10px",
+          borderRadius: "5px",
+        }}
+      >
+        Borrar mi cuenta
+      </button>}
+
     </div>
-    
-    
+
+
   );
 }

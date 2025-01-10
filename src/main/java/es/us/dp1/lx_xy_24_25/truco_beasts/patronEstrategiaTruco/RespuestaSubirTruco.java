@@ -2,7 +2,7 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.patronEstrategiaTruco;
 
 import java.util.Objects;
 
-import org.jpatterns.gof.StatePattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;

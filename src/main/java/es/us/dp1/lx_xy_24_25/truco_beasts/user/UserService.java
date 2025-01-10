@@ -17,7 +17,6 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;

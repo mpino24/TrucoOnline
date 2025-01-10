@@ -2,7 +2,6 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.jugador;
 
 import java.io.IOException;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
