@@ -59,18 +59,18 @@ public class ChatRestController {
         return chatService.guardarMensaje(mensaje);
     }
 
-    @DeleteMapping("/chatId")
+    @DeleteMapping("/{chatId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity eliminarChat(@PathVariable Integer chatId){
         chatService.eliminarChat(chatId);
-        return new ResponseEntity<>(void.class,HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 
     @PatchMapping("/{chatId}/updatetime")
     public ResponseEntity updateChatTime(@PathVariable Integer chatId){
         chatService.updateChatTime(chatId);
-        return new ResponseEntity<>(void.class,HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/unread")

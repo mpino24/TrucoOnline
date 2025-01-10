@@ -1,5 +1,7 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.chat;
 
+import java.time.LocalDateTime;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -32,6 +34,7 @@ public class ChatWebSocketController {
 
     @MessageMapping("/mensajepartida")
     public void enviarMensajePartida(@Payload Mensaje mensaje) {
+        mensaje.setFechaEnvio(LocalDateTime.now());
         MensajeDTO mensajeDto = new MensajeDTO(mensaje);
         messagingTemplate.convertAndSend("/topic/gamechat/" + mensaje.getChat().getPartida().getCodigo(),mensajeDto);
     }

@@ -210,4 +210,33 @@ public class TestManoController {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void jugadorDeberiaPoderCantarFlor() throws Exception {
+        Cantos cantoFlor = Cantos.FLOR;
+        String codigoPartida = partida.getCodigo();
+        Mano mano = new Mano();
+        when(manoService.cantosTruco(codigoPartida, cantoFlor)).thenReturn(mano);
+        
+        mockMvc.perform(patch(BASE_URL + "/cantarFlor/{cantoFlor}", codigoPartida, cantoFlor)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "player", authorities = {"PLAYER"})
+    void jugadorDeberiaPoderResponderFlor() throws Exception {
+        Cantos cantoFlor = Cantos.QUIERO;
+        String codigoPartida = partida.getCodigo();
+        doNothing().when(manoService).responderTruco(codigoPartida, cantoFlor);
+        Mano mano = new Mano();
+        when(manoService.getMano(codigoPartida)).thenReturn(mano);
+
+        mockMvc.perform(patch(BASE_URL + "/responderFlor/{cantoFlor}", codigoPartida, cantoFlor)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
