@@ -660,7 +660,7 @@ public class ManoService {
 		
 		
 	}
-    private void sumar3PuntosSiSoloUnJugadorTieneFlor(Mano manoActual) {
+    void sumar3PuntosSiSoloUnJugadorTieneFlor(Mano manoActual) {
         // 1) Obtenemos la lista de tantos de Flor de cada jugador
         Integer jugadorIniciador=manoActual.getJugadorIniciadorDelCanto();
         Integer jugadorActual=manoActual.getJugadorTurno();
@@ -708,8 +708,9 @@ public class ManoService {
 
 
 // TODA LA FUNCIONALIDAD DEL MANO SERVICE TERMINA ACÁ -----------------------------------------------------------
-// FUNCIONES AUXILIARES PARA SOLAMENTE REPARTIR FLORES Y PODER TESTEARLA SIN DEPENDER DE LA SUERTE: 
-public List<List<Carta>> repartirCartasSoloFlor(Partida partida) {
+// FUNCIONES AUXILIARES PARA SOLAMENTE REPARTIR FLORES Y PODER TESTEARLA SIN DEPENDER DE LA SUERTE: COMENTADAS PARA JACOCO
+
+/* public List<List<Carta>> repartirCartasSoloFlor(Partida partida) {
     Integer numJugadores = partida.getNumJugadores();
     Integer cartasEnLaBaraja = 40;
     Integer cartasPorJugador = 3;
@@ -879,6 +880,6 @@ public List<List<Carta>> repartirCartasSoloUnaFlor(Partida partida) {
     }
 
     return resultado;
-}
+} */
 
 }
