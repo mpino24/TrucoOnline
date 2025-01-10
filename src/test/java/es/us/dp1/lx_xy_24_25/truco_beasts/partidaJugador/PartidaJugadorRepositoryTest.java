@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class PartidaJugadorRepositoryTest {
     @Test 
     public void findPlayersConnectedTo(){
         List<PartidaJugador> res= pjRepo.findPlayersConnectedTo("WWWWW");
-        assertTrue(res.size()==1);
+        assertEquals(1,res.size());
         assertTrue(res.get(0).getPlayer().getId()==9);
     }
 

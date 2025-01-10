@@ -18,14 +18,12 @@ INSERT INTO appusers(id,username,password,authority,last_connection) VALUES (12,
 
 -- Insertar partidas
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (0,2,'WWWWW',FALSE,15,0,0,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
-INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (1,2,'ABCDE',FALSE,15,1,2,'PUBLICA','2024-11-08 21:28', '2025-11-07 23:45');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (1,2,'ABCDE',FALSE,15,1,2,'PUBLICA','2024-11-08 21:28', '2025-01-07 23:45');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (2,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2020-11-08 20:28:02','2024-11-08 20:37');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (3,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (4,2,'QWERT',TRUE,15,1,2,'PUBLICA','2023-11-08 10:12','2023-12-01 05:37');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (5,6,'YHGDT',TRUE,15,1,2,'PRIVADA','2025-01-01 17:06','2025-01-01 17:45:02');
---INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (5,2,'APCDE',FALSE,15,1,2,'PRIVADA','2024-10-05 15:07','2024-10-05 15:34');
---INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (6,4,'PCDEF',TRUE,30,1,2,'PUBLICA',null,null);
---INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (7,2,'PWERT',FALSE,15,1,2,'PUBLICA',null,null);
+
 
 -- Inserts de players
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1,'jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/jorge.jpg',1);
@@ -41,20 +39,46 @@ INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (11,'Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/jaguar.jpg',11);
 INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (12,'bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/robot.jpg',12);
 
--- faltan algunos que no tienen jugador asociado
+
 
 
 -- INSERT INTO amigo(jugador_id,amigo_id) VALUES (3,1),(1,3),(7,1),(1,7),(2,7),(7,2);
 -- INSERT INTO amigo(jugador_id,amigo_id) VALUES (10,8),(8,10);
 -- INSERT INTO solicitud(solicitado_id,solicitante_id) VALUES (4,3);
-INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (0,0,9,0,TRUE);
-INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (1,1,1,0,TRUE);
-INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (2,1,2,1,FALSE); --No borrar estos 4 casos ya que se usan en los tests
-INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator) VALUES (3,2,1,1,TRUE);
+
+-- Inserts de partida jugador
+
+-- Partida 0 (2 jugadores) SUENA A JODA PERO IMPORTANTISIMO QUE ESTA PARTIDA TENGA UN SOLO PARTIDA JUGADOR, PORQUE SE USA EN LOS TESTS *calavera*
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (0,0,9,0,TRUE, 2, 3, 1, 0, 1);
+
+-- Partida 1 (2 jugadores)
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (1,1,1,0,TRUE, 1, 2, 0, 1, 0);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (2,1,2,1,FALSE, 3, 1, 2, 0, 1);
+
+-- Partida 2 (4 jugadores)
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (8,2,3,2,FALSE, 2, 1, 3, 1, 0);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (9,2,4,3,FALSE, 1, 3, 2, 0, 1);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (3,2,1,1,TRUE, 2, 3, 1, 1, 0);
+
+-- Partida 3 (4 jugadores)
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (10,3,2,0,FALSE, 3, 2, 1, 1, 0);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (11,3,3,2,FALSE, 2, 1, 3, 0, 1);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (12,3,4,3,FALSE, 1, 3, 2, 1, 0);
 INSERT INTO Partida_Jugador(id, posicion, player_id, game_id, is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (4, 1, 1, 3, TRUE, 3, 2, 5, 4, 2);
+
+-- Partida 4 (2 jugadores)
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (13,4,2,0,FALSE, 2, 1, 3, 0, 1);
 INSERT INTO Partida_Jugador(id, posicion, player_id, game_id, is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (5, 2, 1, 4, FALSE, 1, 1, 5, 1, 1);
+
+-- Partida 5 (6 jugadores)
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (14,5,2,0,FALSE, 1, 2, 1, 1, 0);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (15,5,3,1,FALSE, 2, 1, 3, 0, 1);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (16,5,4,2,FALSE, 3, 2, 1, 1, 0);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (17,5,5,3,FALSE, 1, 3, 2, 0, 1);
+INSERT INTO Partida_Jugador(id,game_id,player_id,posicion,is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (18,5,6,4,FALSE, 2, 1, 3, 1, 0);
 INSERT INTO Partida_Jugador(id, posicion, player_id, game_id, is_creator, flores_cantadas, quieros_cantados, no_quieros_cantados, enganos, atrapado) VALUES (6, 3, 1, 5, TRUE, 2, 3, 12, 2, 1);
--- Insertar las cartas
+
+-- Inserts de cartas
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (1, 'ESPADAS', 1, 14, 'http://localhost:8080/resources/images/cartas/1espadas.jpg');
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (2, 'BASTOS', 1, 13, 'http://localhost:8080/resources/images/cartas/1bastos.jpg');
 INSERT INTO Cartas(id, palo, valor, poder, foto) VALUES (3, 'ESPADAS', 7, 12, 'http://localhost:8080/resources/images/cartas/7espadas.jpg');
@@ -101,7 +125,7 @@ INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (43, 'NADA', 0, 0, 'http://l
 INSERT INTO Cartas(id,palo,valor,poder,foto) VALUES (44, 'NADA', 0, 0, 'http://localhost:8080/resources/images/cartas/mazo.png');
 
 
--- Logros
+-- Inserts de Logros
 
 INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (0,'Sos la bestia del truco', 'Obtene mas de 5 victorias en el Truco', 5, 'VICTORIAS','http://localhost:8080/resources/images/trofeos/trofeo1.jpg', TRUE);
 INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES (1,'Empezando', 'Juga 1 partida', 1, 'PARTIDAS_JUGADAS','http://localhost:8080/resources/images/trofeos/trofeo2.jpg', FALSE);
