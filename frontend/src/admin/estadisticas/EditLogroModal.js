@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { Form, Label, Input } from "reactstrap";
 import tokenService from "../../services/token.service";
 const jwt = tokenService.getLocalAccessToken();
@@ -7,18 +7,31 @@ function handleModalVisible(setModalVisible, modalVisible) {
   setModalVisible(!modalVisible);
 }
 
-const GetCreationLogroModal = forwardRef((props, ref) => {
-  const { setCreationLogroModal, creationLogroModal } = props;
+const EditLogroModal = forwardRef((props, ref) => {
+  const { setEditLogroModal, editLogroModal, logro } = props;
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     valor: 10,
-    metrica: "PARTIDAS_A_2", // Default value
+    metrica: "PARTIDAS_A_2", 
     descripcion: "",
-    imagencita:"http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
+    imagencita: "http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
+
+  useEffect(() => {
+    if (logro) {
+      setFormData({
+        name: logro.name,
+        valor: logro.valor,
+        metrica: logro.metrica,
+        descripcion: logro.descripcion,
+        imagencita: logro.imagencita,
+        oculto: logro.oculto,
+      });
+    }
+  }, [logro]);
 
   const metricaOptions = [
     "PARTIDAS_JUGADAS",
@@ -37,24 +50,23 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   ];
 
   const handleChange = (e) => {
-    
     const target = e.target;
     const type = target.type;
     const checked = target.checked;
     const value = target.value;
     const name = target.name;
     setFormData({
-        ...formData,
-        [name]: type === "checkbox" ? checked : value,
-      });
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
 
-    fetch("/api/v1/logros", {
-      method: "POST",
+    fetch(`/api/v1/logros`, {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
@@ -64,8 +76,8 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     })
       .then((response) => response.json())
       .then((json) => {
-          handleModalVisible(setCreationLogroModal, creationLogroModal);
-          props.setActualizarLista(props.actualizarLista +1);
+        handleModalVisible(setEditLogroModal, editLogroModal);
+        props.setActualizarLista(props.actualizarLista + 1);
       })
       .catch((message) => alert(message));
   };
@@ -175,8 +187,9 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           </button>
           <button
             type="button"
-            onClick={() => handleModalVisible(setCreationLogroModal, creationLogroModal)}
-            className="auth-button">
+            onClick={() => handleModalVisible(setEditLogroModal, editLogroModal)}
+            className="auth-button"
+          >
             Cancelar
           </button>
         </div>
@@ -185,4 +198,4 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   );
 });
 
-export default GetCreationLogroModal;
+export default EditLogroModal;
