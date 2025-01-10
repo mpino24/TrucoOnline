@@ -497,12 +497,12 @@ public class TestManoService {
         manoService.cantosTruco(codigo, Cantos.TRUCO); 
         manoService.responderTruco(codigo, Cantos.QUIERO); 
         mano.siguienteJugador(mano.getJugadorTurno());
-        assertTrue(mano.comprobarSiPuedeCantarTruco()); 
+        assertFalse(mano.comprobarSiPuedeCantarTruco()); 
 
         TrucoException exception = assertThrows(TrucoException.class, 
             () -> manoService.cantosTruco(codigo, Cantos.TRUCO));
 
-        assertEquals("Ya se canto el truco", exception.getMessage());
+        assertEquals("No podes cantar truco ni ninguna de sus variantes", exception.getMessage());
     }
 
     @Test 
