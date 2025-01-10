@@ -92,11 +92,11 @@ public class LogrosController {
 
     }
 
-    @PutMapping
-    public ResponseEntity<Logros> updateLogro(@RequestBody @Valid Logros logro){
+    @PutMapping("/{logroId}")
+    public ResponseEntity<Logros> updateLogro(@RequestBody @Valid Logros logro, @PathVariable("logroId") Integer logroId){
         User currentUser = userService.findCurrentUser();
         if(currentUser.hasAuthority("ADMIN")){
-            return new ResponseEntity<>(logrosService.updateLogro(logro), HttpStatus.CREATED);
+            return new ResponseEntity<>(logrosService.updateLogro(logro, logroId), HttpStatus.CREATED);
         }else{
             throw new NotAuthorizedException();
         }

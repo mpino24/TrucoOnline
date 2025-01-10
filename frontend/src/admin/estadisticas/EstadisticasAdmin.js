@@ -16,20 +16,21 @@ export default function EstadisticasAdmin() {
     const [visible, setVisible] = useState(false);
     const [alerts, setAlerts] = useState([]);
     const [creationLogroModal, setCreationLogroModal] = useState(false);
-    const [editLogroModal, setEditLogroModal] = useState(false); // Nuevo estado para modal de edición
-    const [logroSeleccionado, setLogroSeleccionado] = useState(null); // Estado para el logro seleccionado
+    const [editLogroModal, setEditLogroModal] = useState(false);
+    const [logroSeleccionado, setLogroSeleccionado] = useState(null);
     const [actualizarLista, setActualizarLista] = useState(0);
     const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], "/api/v1/logros", jwt, setMessage, setVisible);
     const toggleCreationLogroModal = useCallback(() => {
-            setCreationLogroModal((current) => !current);
-        }, []);
+        setCreationLogroModal((current) => !current);
+    }, []);
 
     const toggleEditLogroModal = useCallback(() => {
-            setEditLogroModal((current) => !current);
-        }, []);
+        setEditLogroModal((current) => !current);
+    }, []);
+
 
     function handleDelete(id) {
-        fetch("/api/v1/logros/"+ id, {
+        fetch("/api/v1/logros/" + id, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -43,8 +44,8 @@ export default function EstadisticasAdmin() {
     };
 
     const handleEdit = (logro) => {
-        setLogroSeleccionado(logro);  // Guardamos el logro que se va a editar
-        toggleEditLogroModal();  // Mostramos el modal de edición
+        setLogroSeleccionado(logro);
+        toggleEditLogroModal();
     };
 
     useEffect(() => {
@@ -54,47 +55,68 @@ export default function EstadisticasAdmin() {
                 "Authorization": `Bearer ${jwt}`,
             },
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data) {
-                setListaLogrosGlobales(data);
-            }
-        })
-        .catch((message) => alert("Error: " + message));
+            .then((response) => response.json())
+            .then((data) => {
+                if (data) {
+                    setListaLogrosGlobales(data);
+                }
+            })
+            .catch((message) => alert("Error: " + message));
     }, [actualizarLista]);
 
     return (
         <div style={{ backgroundImage: 'url(/fondos/fondo_admin.png)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
             <div className="admin-page-container">
-                <h1 className="text-center" style={{marginBottom:'30px', marginTop:'50px'}}>Logros creados</h1>
+                <h1 className="text-center" style={{ marginBottom: '30px', marginTop: '50px', color: 'white', backgroundColor: 'rgb(0,0,0,0.2)' }}>Logros creados</h1>
 
                 <div style={logrosGridStyle}>
                     {listaLogrosGlobales.map((logro, index) => (
                         <div key={index} style={logroCardStyle}>
-                            <LogroComponent logro={logro} />
-                            <FaTrashAlt onClick={() => handleDelete(logro.id)} />
-                            <FaPencilAlt onClick={() => handleEdit(logro)} /> 
+                            {logro?.id !== logroSeleccionado?.id && (<>
+                                <LogroComponent logro={logro} />
+                                <FaTrashAlt style={{marginRight:'20px'}} onMouseEnter={(e) => {
+                                    e.target.style.color = 'darkred';
+                                    e.target.style.transform = 'scale(1.05)';
+                                }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.color = 'red';
+                                        e.target.style.transform = 'scale(1)';
+                                    }} color='red' onClick={() => handleDelete(logro.id)} />
+                                <FaPencilAlt onMouseEnter={(e) => {
+                                    e.target.style.color = 'rgb(255, 255,255,0.8)';
+                                    e.target.style.transform = 'scale(1.05)';
+                                }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.color = 'white';
+                                        e.target.style.transform = 'scale(1)';
+                                    }} color='white' onClick={() => handleEdit(logro)} />
+                            </>)}
+                            {editLogroModal && logroSeleccionado?.id === logro?.id && (
+                                <>{console.log("soy este logro: " + logro.id)}
+                                    <EditLogroModal
+                                        setEditLogroModal={setEditLogroModal}
+                                        editLogroModal={editLogroModal}
+                                        logro={logroSeleccionado}
+                                        setActualizarLista={setActualizarLista}
+
+                                        actualizarLista={actualizarLista}
+                                        setLogroSeleccionado={setLogroSeleccionado}
+                                    />
+                                </>
+                            )}
                         </div>
                     ))}
 
                     <div style={gridBoton}>
                         {!creationLogroModal && <button style={botonEstilo} onClick={toggleCreationLogroModal}>Crear nuevo logro</button>}
-                        {creationLogroModal && 
+                        {creationLogroModal &&
                             <CreationLogroModal setCreationLogroModal={setCreationLogroModal} creationLogroModal={creationLogroModal} setActualizarLista={setActualizarLista} actualizarLista={actualizarLista} />
                         }
                     </div>
                 </div>
-            
 
-            {/* Modal de edición */}
-            {editLogroModal && logroSeleccionado && (
-                <EditLogroModal 
-                    logro={logroSeleccionado} 
-                    setEditLogroModal={setEditLogroModal} 
-                    actualizarLista={actualizarLista}
-                    setActualizarLista={setActualizarLista}
-                />
-            )}
+
+
             </div>
         </div>
     );
@@ -117,7 +139,7 @@ const gridBoton = {
 
 const logrosGridStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, 2fr)', 
+    gridTemplateColumns: 'repeat(4, 2fr)',
     gap: '20px',
     maxHeight: '700px',
     overflowY: 'auto',

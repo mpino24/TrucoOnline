@@ -231,9 +231,9 @@ public class LogrosControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateLogro() throws Exception {
         when(userService.findCurrentUser()).thenReturn(adminUser);
-        when(logrosService.updateLogro(logro)).thenReturn(nuevoLogro);
+        when(logrosService.updateLogro(logro, logro.getId())).thenReturn(nuevoLogro);
 
-        mockMvc.perform(put(BASE_URL)
+        mockMvc.perform(put(BASE_URL+"/{logroId}", logro.getId())
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(nuevoLogro)))
@@ -243,7 +243,7 @@ public class LogrosControllerTest {
     @Test
     void updateLogroSinAutorizacion() throws Exception {
         when(userService.findCurrentUser()).thenReturn(normalUser);
-        mockMvc.perform(put("/api/v1/logros")
+        mockMvc.perform(put("/api/v1/logros/1")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(nuevoLogro)))

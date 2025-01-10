@@ -55,10 +55,15 @@ public class LogrosServiceTest {
         logro.setDescripcion("Descripción actualizada");
         logro.setValor(200);
 
-        Logros updatedLogro = logrosService.updateLogro(logro);
+        Integer totalLogrosAntes =logrosService.findTotalLogros();
+
+        Logros updatedLogro = logrosService.updateLogro(logro, logro.getId());
+
+        Integer totalLogrosDespues =logrosService.findTotalLogros();
 
         assertEquals("Descripción actualizada", updatedLogro.getDescripcion());
         assertEquals(200, updatedLogro.getValor());
+        assertEquals(totalLogrosAntes, totalLogrosDespues);
     }
 
     @Test

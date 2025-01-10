@@ -31,17 +31,20 @@ public class LogrosService {
 
     @Transactional
     public Logros save(Logros logro) throws DataAccessException{
-        logroRepository.save(logro);
-        return logro;
+        return logroRepository.save(logro);
+        
     }
 
     @Transactional
-    public Logros updateLogro(@Valid Logros logro){
-        Optional<Logros> logroToUpdate = logroRepository.findById(logro.getId());
+    public Logros updateLogro(@Valid Logros logro, Integer logroId){
+        Logros logroToUpdate = logroRepository.findById(logroId).get();
         if(logroToUpdate != null){
             BeanUtils.copyProperties(logro, logroToUpdate, "id");
+            return save(logroToUpdate);
+        }else{
+            throw new ResourceNotFoundException("El logro que querés actualizar con ID " + logroId + " no existe");
         }
-        return save(logro);
+        
     }
 
     @Transactional(readOnly=true)

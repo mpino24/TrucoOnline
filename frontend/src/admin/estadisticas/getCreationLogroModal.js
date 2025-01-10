@@ -14,9 +14,9 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   const [formData, setFormData] = useState({
     name: "",
     valor: 10,
-    metrica: "PARTIDAS_A_2", // Default value
+    metrica: "VICTORIAS",
     descripcion: "",
-    imagencita:"http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
+    imagencita: "http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
 
@@ -37,16 +37,16 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   ];
 
   const handleChange = (e) => {
-    
+
     const target = e.target;
     const type = target.type;
     const checked = target.checked;
     const value = target.value;
     const name = target.name;
     setFormData({
-        ...formData,
-        [name]: type === "checkbox" ? checked : value,
-      });
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleSubmit = (e) => {
@@ -64,29 +64,42 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     })
       .then((response) => response.json())
       .then((json) => {
-          handleModalVisible(setCreationLogroModal, creationLogroModal);
-          props.setActualizarLista(props.actualizarLista +1);
+        handleModalVisible(setCreationLogroModal, creationLogroModal);
+        props.setActualizarLista(props.actualizarLista + 1);
       })
       .catch((message) => alert(message));
   };
 
+  const estiloLetras = {
+    color: "orange",
+    textShadow: "1px 1px 2px black"
+  }
+
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} style={{
+        backgroundColor: 'rgb(255, 255, 255, 0.3)',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '10px'
+      }}>
         <div>
-          <Label style={{ color: "orange" }}>Nombre: </Label>
+          <Label style={estiloLetras}>Nombre: </Label>
           <Input
             type="text"
             required
             name="name"
+            placeholder="Ponele un nombre a tu nuevo logro"
             id="name"
             value={formData.name}
             onChange={handleChange}
             className="custom-input"
+            minLength="3"
+            maxLength="50"
           />
         </div>
         <div>
-          <Label style={{ color: "orange" }}>Valor: </Label>
+          <Label style={estiloLetras}>Valor: </Label>
           <Input
             type="number"
             required
@@ -95,10 +108,11 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
             value={formData.valor}
             onChange={handleChange}
             className="custom-input"
+            min="0"
           />
         </div>
         <div>
-          <Label style={{ color: "orange" }}>Metrica: </Label>
+          <Label style={estiloLetras}>Metrica: </Label>
           <div className="switch-container">
             <Input
               type="select"
@@ -107,6 +121,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
               value={formData.metrica}
               onChange={handleChange}
               className="custom-switch"
+              style={{ backgroundColor: "transparent" }}
             >
               {metricaOptions.map((metrica) => (
                 <option key={metrica} value={metrica}>
@@ -117,19 +132,22 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           </div>
         </div>
         <div>
-          <Label style={{ color: "orange" }}>Descripcion: </Label>
+          <Label style={estiloLetras}>Descripcion: </Label>
           <Input
             type="text"
             required
+            placeholder="Describí brevemente el logro nuevo"
             name="descripcion"
             id="descripcion"
             value={formData.descripcion}
             onChange={handleChange}
             className="custom-input"
+            pattern=".*\S.*"
+            title="La descripción debe tener al menos un carácter que no sea un espacio"
           />
         </div>
         <div className="custom-form-input">
-          <Label for="photo" className="custom-form-input-label" style={{ color: "orange" }}>
+          <Label for="photo" className="custom-form-input-label" style={estiloLetras}>
             Foto
           </Label>
           {formData.imagencita && (
@@ -144,7 +162,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
               onError={(e) => (e.target.style.display = "none")}
             />
           )}
-          <Label for="photo" className="custom-form-input-label" style={{ color: "orange" }}>
+          <Label for="photo" className="custom-form-input-label" style={estiloLetras}>
             Foto
           </Label>
           <Input
@@ -158,7 +176,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
           />
         </div>
         <div>
-          <Label style={{ color: "orange" }}>Oculto: </Label>
+          <Label style={estiloLetras}>¿Oculto? </Label>
           <Input
             type="checkbox"
             name="oculto"
@@ -166,6 +184,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
             checked={formData.oculto}
             onChange={handleChange}
             className="custom-input"
+
           />
         </div>
 
