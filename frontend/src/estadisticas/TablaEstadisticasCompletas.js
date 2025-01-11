@@ -52,12 +52,12 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
             <h2 style={{ textAlign: 'center', color: 'white' }}>{titulo}</h2>
             <table style={{
                 borderCollapse: 'collapse',
-                width: '85%',
+                width: '95%',
                 height:'70%',
                 margin: '0 auto',
                 color: 'white',
                 textAlign: 'left',
-                marginBottom: '20px',
+                marginBottom: '10px',
                 backgroundColor: 'rgba(48, 158, 148, 0.2)', 
                 borderRadius: '5px',
                 overflow: 'hidden',
@@ -112,7 +112,6 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
                     cursor: 'pointer',
                     transition: 'background-color 0.3s, transform 0.3s',
                     fontSize: '16px',
-                    marginTop: '10px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                     width: '10%',
                     textAlign: 'center',
