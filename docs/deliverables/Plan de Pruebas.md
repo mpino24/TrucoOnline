@@ -49,87 +49,86 @@ El informe de cobertura de pruebas es el siguiente:
 | Historia de Usuario | Prueba | Descripción | Estado |Tipo |
 |---------------------|--------|-------------|--------|--------|
 | HU-1(NOISSUE): Poder loggearme | [UTB-1:AuthControllerTests](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/auth/AuthControllerTests.java) | Verifica que un usuario puede iniciar sesión con credenciales válidas. | Implementada | Unitaria en backend |
-| HU-2(NOISSUE): Poder borrar la cuenta |  | Verifica que un usuario puede borrar su cuenta. | No implementada | Unitaria en backend |
-| HU-3(NOISSUE): Poder cerrar sesion |  | Verifica que un usuario puede cerrar su sesión | No implementada | Unitaria en frontend |
-| HU-4(ISSUE#59): Crear partidas | [UTB-2:PartidaServiceTests](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/partida/PartidaServiceTests.java) | Asegura que un usuario puede crear una partida. | Implementada | Unitaria en backend |
-| HU-5(ISSUE#60): Editar los puntos de la partida |  | Verifica que un usuario puede decidir los puntos de la partida antes de crearla. | No implementada | Unitaria en frontend |
-| HU-6(ISSUE#61): Editar la flor en la partida |  | Verifica que un usuario puede decidir jugar o no con flor en la partida antes de crearla. | No implementada | Unitaria en frontend |
-| HU-7(ISSUE#62): Editar numero de jugadores de la partida |  | Verifica que un usuario puede decidir el número de jugadores de la partida antes de crearla. | No implementada | Unitaria en frontend |
-| HU-8(ISSUE#63): Poder unirse a las partidas |  | Verifica que un usuario puede unirse a una partida. | No implementada | Unitaria en backend |
-| HU-9(ISSUE#143): Poder ver cartas |  | Verifica que un usuario puede ver las cartas que tiene durante la partida. | No implementada | Unitaria en frontend |
+| HU-2(NOISSUE): Poder borrar la cuenta |  | Verifica que un usuario puede borrar su cuenta. | Implementada | Unitaria en backend |
+| HU-3(NOISSUE): Poder cerrar sesion |  | Verifica que un usuario puede cerrar su sesión | Implementada | Unitaria en frontend |
+| HU-4(ISSUE#59): Crear partidas | [UTB-2:PartidaControllerTests](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partida\PartidaControllerTests.java) | Asegura que un usuario puede crear una partida. | Implementada | Unitaria en backend |
+| HU-5(ISSUE#60): Editar los puntos de la partida | [UTB-5:PartidaServiceTests](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partida\PartidaServiceTests.java) | Verifica que un usuario puede decidir los puntos de la partida antes de crearla. | Implementada | Unitaria en backend |
+| HU-6(ISSUE#61): Editar la flor en la partida | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un usuario puede decidir jugar o no con flor en la partida antes de crearla. | Implementada | Unitaria en backend |
+| HU-7(ISSUE#62): Editar numero de jugadores de la partida | [UTB-5:PartidaServiceTests](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partida\PartidaServiceTests.java) | Verifica que un usuario puede decidir el número de jugadores de la partida antes de crearla. | Implementada | Unitaria en backend |
+| HU-8(ISSUE#63): Poder unirse a las partidas | [UTB-9:PartidaJugadorServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partidaJugador\PartidaJugadorServiceTest.java) | Verifica que un usuario puede unirse a una partida. | Implementada | Unitaria en backend |
+| HU-9(ISSUE#143): Poder ver cartas | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un usuario puede ver las cartas que tiene durante la partida. | Implementada | Unitaria en backend |
 | HU-10(ISSUE#145): Poder cantar Truco | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede cantar truco durante la partida. | Implementada | Unitaria en backend |
-| HU-11(ISSUE#146): Poder cantar Envido |  | Verifica que un jugador puede cantar envido durante la partida. | No implementada | Unitaria en backend |
-| HU-12(ISSUE#153): Poder cantar Flor |  | Verifica que un jugador puede cantar flor durante la partida. | No implementada | Unitaria en backend |
+| HU-11(ISSUE#146): Poder cantar Envido | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede cantar envido durante la partida. | Implementada | Unitaria en backend |
+| HU-12(ISSUE#153): Poder cantar Flor | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede cantar flor durante la partida. | Implementada | Unitaria en backend |
 | HU-13(ISSUE#144): Poder tirar carta | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede tirar una carta. | Implementada | Unitaria en backend |
-| HU-14(ISSUE#147): Poder ver la puntuación en la partida |  | Verifica que un jugador puede ver la puntuación durante la partida. | No implementada | Unitaria en frontend |
-| HU-15(ISSUE#148): Poder ver cómo cambia la puntuación |  | Verifica que un jugador puede ver los cambios en la puntuación durante la partida. | No implementada | Unitaria en frontend |
-| HU-16(ISSUE#149): Poder decir Quiero y No Quiero | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede aceptar o rechazar un canto. | Implementada (sólo para el truco) | Unitaria en backend |
-| HU-17(ISSUE#150): Poder responder Envido y sus variantes |  | Verifica que un jugador puede responder a un envido con una de sus variantes. | No implementada | Unitaria en backend |
+| HU-14(ISSUE#147): Poder ver la puntuación en la partida | [UTB-6:TestManoController](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\mano\TestManoController.java)  | Verifica que un jugador puede ver la puntuación durante la partida. | Implementada | Unitaria en backend |
+| HU-15(ISSUE#148): Poder ver cómo cambia la puntuación | [UTB-6:TestManoController](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\mano\TestManoController.java)  | Verifica que un jugador puede ver los cambios en la puntuación durante la partida. | Implementada | Unitaria en backend |
+| HU-16(ISSUE#149): Poder decir Quiero y No Quiero | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede aceptar o rechazar un canto. | Implementada | Unitaria en backend |
+| HU-17(ISSUE#150): Poder responder Envido y sus variantes | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede responder a un envido con una de sus variantes. | Implementada | Unitaria en backend |
 | HU-18(ISSUE#151): Poder responder Truco y sus variantes | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede responder a otro que ha cantado truco durante la partida. | Implementada | Unitaria en backend |
-| HU-19(ISSUE#152): Poder responder Flor y sus variantes |  | Verifica que un jugador puede responder a una flor con una de sus variantes. | No implementada | Unitaria en backend |
-| HU-20(ISSUE#130): Poder buscar usuarios | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Implementada | Unitaria en backend |
+| HU-19(ISSUE#152): Poder responder Flor y sus variantes | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un jugador puede responder a una flor con una de sus variantes. | Implementada | Unitaria en backend |
+| HU-20(ISSUE#130): Poder buscar usuarios | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Verifica que un usuario puede buscar a otros usuarios |Implementada | Unitaria en backend |
 | HU-21(ISSUE#131): Poder ver mis amigos |  | Verifica que un usuario puede ver los amigos que tiene. | No implementada | Unitaria en frontend |
-| HU-22(ISSUE#387): Ver mis estadísticas |  | Verifica que un usuario puede ver sus estadísticas. | No implementada | Unitaria en backend |
-| HU-23(ISSUE#388): Ver logros |  | Verifica que un usuario puede ver los logros que tiene. | No implementada | Unitaria en backend |
-| HU-24(ISSUE#389): Crear, editar y eliminar logros |  | Verifica que un usuario administrador puede crear, editar y eliminar logros. | No implementada | Unitaria en backend |
-| HU-25(ISSUE#342): Ver ranking global |  | Verifica que un usuario puede ver el ranking global. | No implementada | Unitaria en backend |
-| HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador |  | Verifica que un usuario administrador puede ver la lista de partidas que se juegan. | No implementada | Unitaria en backend |
-| HU-27(ISSUE#183): Poder ver listado de usuarios como administrador |  | Verifica que un usuario administrador puede ver los usuarios registrados. | No implementada | Unitaria en backend |
-| HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador |  | Verifica que un usuario administrador puede crear, ver, editar y eliminar usuarios. | No implementada | Unitaria en backend |
-| HU-21(ISSUE#131): Poder ver mis amigos |  | Verifica que un usuario puede ver los amigos que tiene. | No implementada | Unitaria en frontend |
-| HU-29 (ISSUE#376) : Poder ver perfiles de Usuario en partida |  | Verifica que un usuario puede ver los participantes de las partidas que va a jugar. | No implementada | Unitaria en backend |
-| HU-30(ISSUE#377): Poder añadir y eliminar amigos |  | Verifica que un usuario puede añadir o eliminar a sus amigos. | No implementada | Unitaria en backend |
-| HU-31(ISSUE#378): Gestionar solicitudes de amistad |  | Verifica que un usuario puede aceptar o rechazar las solicitudes de amistad. | No implementada | Unitaria en backend |
-| HU-32(ISSUE#379): Poder chatear con amigos durante la partida |  | Verifica que un usuario puede chatear con sus amigos durante una partida. | No implementada | Unitaria en backend |
-| HU-33(ISSUE#380): Poder chatear con amigos fuera de una partida |  | Verifica que un usuario puede chatear con sus amigos fuera de una partida. | No implementada | Unitaria en backend |
-| HU-34(ISSUE#381): Poder invitar amigos conectados a una partida |  | Verifica que un usuario puede invitar a sus amigos conectados a una partida. | No implementada | Unitaria en backend |
-| HU-35(ISSUE#382): Poder ver amigos conectados |  | Verifica que un usuario puede ver a sus amigos que estén conectados. | No implementada | Unitaria en backend |
-| HU-36(ISSUE#383): Poder recibir notificación de nuevo mensaje |  | Verifica que un usuario puede recibir notificaciones de mensajes. | No implementada | Unitaria en backend |
-| HU-37(ISSUE#384): Poder cambiar de equipo antes de iniciar la partida |  | Verifica que un usuario puede cambiarse de equipo antes de que inicie la partida. | No implementada | Unitaria en backend |
-| HU-38(ISSUE#385): Expulsar jugador de una partida |  | Verifica que un creador puede eliminar a un jugador. | No implementada | Unitaria en backend |
+| HU-22(ISSUE#387): Ver mis estadísticas | [UTB-7:EstadisticasServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\estadisticas\EstadisticasServiceTest.java)  | Verifica que un usuario puede ver sus estadísticas. | Implementada | Unitaria en backend |
+| HU-23(ISSUE#388): Ver logros | [UTB-8:LogrosServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\estadisticas\LogrosServiceTest.java) | Verifica que un usuario puede ver los logros que tiene. | Implementada | Unitaria en backend |
+| HU-24(ISSUE#389): Crear, editar y eliminar logros | [UTB-8:LogrosServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\estadisticas\LogrosServiceTest.java) | Verifica que un usuario administrador puede crear, editar y eliminar logros. | Implementada | Unitaria en backend |
+| HU-25(ISSUE#342): Ver ranking global | [UTB-7:EstadisticasServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\estadisticas\EstadisticasServiceTest.java) | Verifica que un usuario puede ver el ranking global. | Implementada | Unitaria en backend |
+| HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador |  | Verifica que un usuario administrador puede ver la lista de partidas que se juegan. | Implementada | Unitaria en backend |
+| HU-27(ISSUE#183): Poder ver listado de usuarios como administrador |  | Verifica que un usuario administrador puede ver los usuarios registrados. | Implementada | Unitaria en backend |
+| HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador |  | Verifica que un usuario administrador puede crear, ver, editar y eliminar usuarios. | Implementada | Unitaria en backend |
+| HU-29 (ISSUE#376) : Poder ver perfiles de Usuario en partida | [UTB-9:PartidaJugadorServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partidaJugador\PartidaJugadorServiceTest.java) | Verifica que un usuario puede ver los participantes de las partidas que va a jugar. | Implementada | Unitaria en backend |
+| HU-30(ISSUE#377): Poder añadir y eliminar amigos | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Verifica que un usuario puede añadir o eliminar a sus amigos. | Implementada | Unitaria en backend |
+| HU-31(ISSUE#378): Gestionar solicitudes de amistad | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Verifica que un usuario puede aceptar o rechazar las solicitudes de amistad. | Implementada | Unitaria en backend |
+| HU-32(ISSUE#379): Poder chatear con amigos durante la partida | [UTB-10:ChatServiceTest](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/chat/ChatServiceTest.java) | Verifica que un usuario puede chatear con sus amigos durante una partida. | Implementada | Unitaria en backend |
+| HU-33(ISSUE#380): Poder chatear con amigos fuera de una partida | [UTB-10:ChatServiceTest](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/chat/ChatServiceTest.java) | Verifica que un usuario puede chatear con sus amigos fuera de una partida. | Implementada | Unitaria en backend |
+| HU-34(ISSUE#381): Poder invitar amigos conectados a una partida | [UTB-10:ChatServiceTest](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/chat/ChatServiceTest.java) | Verifica que un usuario puede invitar a sus amigos conectados a una partida. | Implementada | Unitaria en backend |
+| HU-35(ISSUE#382): Poder ver amigos conectados | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Verifica que un usuario puede ver a sus amigos que estén conectados. | Implementada | Unitaria en backend |
+| HU-36(ISSUE#383): Poder recibir notificación de nuevo mensaje | [UTB-10:ChatServiceTest](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/chat/ChatServiceTest.java) | Verifica que un usuario puede recibir notificaciones de mensajes. | Implementada | Unitaria en backend |
+| HU-37(ISSUE#384): Poder cambiar de equipo antes de iniciar la partida | [UTB-9:PartidaJugadorServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partidaJugador\PartidaJugadorServiceTest.java) | Verifica que un usuario puede cambiarse de equipo antes de que inicie la partida. | Implementada | Unitaria en backend |
+| HU-38(ISSUE#385): Expulsar jugador de una partida | [UTB-9:PartidaJugadorServiceTest](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partidaJugador\PartidaJugadorServiceTest.java) | Verifica que un creador puede eliminar a un jugador. | Implementada | Unitaria en backend |
 
 ### 5.3 Matriz de Trazabilidad entre Pruebas e Historias de Usuario
 
-| Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 |
-|--------------------|-------|-------|-------|-------|
-| HU-1                |   X   |       |       |       |
-| HU-2                |       |      |       |       |
-| HU-3                |       |       |      |       |
-| HU-4                |       |   X   |       |      |
-| HU-5                |      |       |       |       |
-| HU-6                |       |      |       |       |
-| HU-7                |       |       |      |       |
-| HU-8                |       |       |       |      |
-| HU-9                |      |       |       |       |
-| HU-10                |       |      |   X    |       |
-| HU-11                |       |       |      |       |
-| HU-12                |       |       |       |      |
-| HU-13                |      |       |   X   |       |
-| HU-14                |       |      |       |       |
-| HU-15                |       |       |      |       |
-| HU-16                |       |       |   X   |      |
-| HU-17                |      |       |       |       |
-| HU-18                |       |      |   X   |       |
-| HU-19                |       |       |      |       |
-| HU-20                |       |       |       |   X   |
-| HU-21                |       |       |       |      |
-| HU-22                |       |       |       |      |
-| HU-23                |       |       |       |      |
-| HU-24                |       |       |       |      |
-| HU-25                |       |       |       |      |
-| HU-26                |       |       |       |      |
-| HU-27                |       |       |       |      |
-| HU-28                |       |       |       |      |
-| HU-29                |       |       |       |      |
-| HU-30                |       |       |       |      |
-| HU-31                |       |       |       |      |
-| HU-32                |       |       |       |      |
-| HU-33                |       |       |       |      |
-| HU-34                |       |       |       |      |
-| HU-35                |       |       |       |      |
-| HU-36                |       |       |       |      |
-| HU-37                |       |       |       |      |
-| HU-38                |       |       |       |      |
+| Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 | UTB-5 | UTB-6 | UTB-7 | UTB-8 |UTB-9 | 
+|--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| HU-1                |   X   |       |       |       |       |       |       |      |        |
+| HU-2                |       |      |       |       |        |       |       |      |        |
+| HU-3                |       |       |      |       |        |       |       |      |        |
+| HU-4                |       |   X   |       |      |        |       |       |      |        |
+| HU-5                |      |       |       |       |        |       |       |      |        |
+| HU-6                |       |      |    X   |       |        |       |       |      |        |
+| HU-7                |       |       |      |       |        |       |       |      |        |
+| HU-8                |       |       |       |      |        |       |       |      |        |
+| HU-9                |      |       |    X   |       |        |       |       |      |        |    
+| HU-10                |       |      |   X    |       |       |       |       |      |        | 
+| HU-11                |       |       |   X  |       |        |       |       |      |        |
+| HU-12                |       |       |    X   |      |        |       |       |      |        |
+| HU-13                |      |       |   X   |       |        |       |       |      |        |
+| HU-14                |       |      |       |       |        |   X    |       |      |        |
+| HU-15                |       |       |      |       |        |   X    |       |      |        |
+| HU-16                |       |       |   X   |      |        |       |       |      |        |
+| HU-17                |      |       |    X   |       |        |       |       |      |        |
+| HU-18                |       |      |   X   |       |        |       |       |      |        |
+| HU-19                |       |       |  X    |       |        |       |       |      |        |
+| HU-20                |       |       |       |   X   |        |       |       |      |        |
+| HU-21                |       |       |       |      |        |       |       |      |        |
+| HU-22                |       |       |       |      |        |       |   X    |      |        |
+| HU-23                |       |       |       |      |        |       |       |   X   |        |
+| HU-24                |       |       |       |      |        |       |       |   X   |        |
+| HU-25                |       |       |       |      |        |       |   X    |      |        |
+| HU-26                |       |       |       |      |        |       |       |      |        |
+| HU-27                |       |       |       |      |        |       |       |      |        |
+| HU-28                |       |       |       |      |        |       |       |      |        |
+| HU-29                |       |       |       |      |        |       |       |      |    X    |
+| HU-30                |       |       |       |      |        |       |       |      |        |
+| HU-31                |       |       |       |      |        |       |       |      |        |
+| HU-32                |       |       |       |      |        |       |       |      |        |
+| HU-33                |       |       |       |      |        |       |       |      |        |
+| HU-34                |       |       |       |      |        |       |       |      |        |
+| HU-35                |       |       |       |      |        |       |       |      |        |
+| HU-36                |       |       |       |      |        |       |       |      |        |
+| HU-37                |       |       |       |      |         |       |       |      |        |
+| HU-38                |       |       |       |      |        |       |       |      |        |
 
 ## 6. Criterios de Aceptación
 

@@ -108,10 +108,10 @@ Como jugador quiero poder responder Flor y sus variantes para subir la apuesta d
  ## Historias de Usuario Módulo social:
  ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130])
 Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
- ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
+ ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
  ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131])
  Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
- ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+  ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
  ### HU-30(ISSUE#377): Poder añadir y eliminar amigos ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/377])
  Como usuario quiero poder añadir y eliminar amigos para poder gestionar mis amistades.
  ### HU-31(ISSUE#378): Gestionar solicitudes de amistad ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/378])
@@ -159,4 +159,15 @@ En caso de no estar logado, solo serán visibles las partidas públicas (especta
 Al meterte en una partida como espectador no podrás interactuar con la partida 
 ### R6-Partidas concurrentes
 Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
-
+### R7-Conexión a la partida
+Para comenzar una partida, todos los jugadores deben estar conectados al juego.
+### R8-Gestionar una partida
+El usuario creador de la partida será el único con capacidad para comenzar la partida y eliminar a usuarios de esta.
+### R9-Invitación a la partida
+Para poder invitar a un jugador a ver o jugar una partida, dicho jugador debe ser tu amigo y estar conectado.
+### R10-Relevo del creador
+Si el creador abandona la partida, deberá ser otro usuario conectado a la partida quien asuma dicho rol.
+### R11-Chat de la partida
+Los mensajes enviados durante la partida sólo deben estar disponible durante la partida.
+### R12-Abandonar una partida
+Si un jugador abandona una partida a la que estaba jugando, será el equipo contrario quien instantáneamente gane la partida.

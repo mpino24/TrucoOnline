@@ -10,15 +10,11 @@ _En esta sección debes describir de manera general cual es la funcionalidad del
 
 ### Diagrama de Dominio/Diseño
 
-_En esta sección debe proporcionar un diagrama UML de clases que describa el modelo de dominio, recuerda que debe estar basado en el diagrama conceptual del documento de análisis de requisitos del sistema pero que debe:_
-•	_Especificar la direccionalidad de las relaciones (a no ser que sean bidireccionales)_
-•	_Especificar la cardinalidad de las relaciones_
-•	_Especificar el tipo de los atributos_
-•	_Especificar las restricciones simples aplicadas a cada atributo de cada clase de domino_
-•	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
-•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
+El diagramaes de una gran magnitud, pero al estar exportado en SVG se puede abrir en el navegador y ver en detalle sin problema. Se ha decidido utilizar esta disposición ya que era la que mejor mostraba las relaciones directas de cada Entidad/componente (separarlo por paquetes de clases lo dejaba casi ilegible)
 
-![Diagrama de dominio Truco Beasts fondo claro](https://github.com/user-attachments/assets/3dcc08e2-9f77-4617-9080-48ae819a206d)
+![Diagrama de dominio final](/docs/diagrams/Diagrama%20de%20dominio%20final%20final.drawio.svg)
+
+Además, en la carpeta "Diagrams" tambien se incluye el PNG por si se prefiriese ver en ese formato.
 
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo [aquí](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/diagrams/LayersUMLPackageDiagram.iuml).
@@ -51,6 +47,34 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
     - $\color{purple}{\textsf{GamesEvolutionChart – Muestra la tendencia de evolución en ellos últimos 4 meses en cuanto a partida jugadas, ganadas, perdidas y abandonadas.}}$
     - $\color{yellow}{\textsf{PopularCardsChart – Muestra la proporción de las N (parámetro de configuración) cartas más jugadas en el juego por el jugador.}}$
     - $\color{red}{\textsf{FrequentCoPlayersTable – Muestra los jugadores  con los que más se  ha jugado (de M en M donde M es un parámetro definido por la configuración del componente). Concretamente, se mostrarán la el nombre, la fecha de la última partida, la localización del jugador el porcentaje de partidas jugadas por ambos en las que el usuario ha ganado y si el jugador es amigo o no del usuario.}}$
+
+![tablero_dividido_en_componentes](https://github.com/user-attachments/assets/6c02c8fd-d7d7-4631-8f22-a7288d415705)
+
+  - PlayingModal – Componente principal del tablero
+    - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{Logo – Muestra el logotipo y permite salir de la partida.}}$$
+    - $$\textcolor[rgb]{1,0,0}{\textsf{Perfil – Muestra la foto y el nombre de un jugador.}}$$
+      - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{TextFoto – Muestra el nombre del jugador.}}$$
+      - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Foto – Muestra la foto del jugador.}}$$
+    - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Quedan – Muestra una imagen con las cartas restantes (boca abajo) de un jugador.}}$$
+    - $$\textcolor[rgb]{0.6019,0.851,0.917}{\textsf{Mazo – Muestra el mazo de cartas para esclarecer quién es el jugador mano.}}$$
+    - $$\textcolor[rgb]{1,0.949,0}{\textsf{DropArea – Proporciona el espacio donde los jugadores sueltan las cartas.}}$$
+      - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{CardContainer – Contiene las cartas que se han tirado durante la ronda.}}$$
+        - $$\textcolor[rgb]{1,0,0}{\textsf{CartaRonda – Muestra la carta tirada por uno de los jugadores.}}$$
+    - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{CartasJugadorContainer – Muestra el conjunto de cartas que tiene el jugador.}}$$
+      - $$\textcolor[rgb]{1,0,0}{\textsf{CartaJugador – Muestra una de las cartas que tiene el jugador.}}$$
+    - $$\textcolor[rgb]{1,0.7882,0.0549}{\textsf{Truco – Botón que permite cantar truco.}}$$
+    - $$\textcolor[rgb]{1,0.498,0.1529}{\textsf{EnvidoButtonContainer – Contiene las cartas que se han tirado durante la ronda.}}$$
+      - $$\textcolor[rgb]{1,0.949,0}{\textsf{Envido – Botón que permite cantar envido.}}$$
+      - $$\textcolor[rgb]{1,0,0}{\textsf{Real Envido – Botón que permite cantar real envido.}}$$
+      - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{Falta Envido – Botón que permite cantar falta envido.}}$$
+    - $$\textcolor[rgb]{1,0.6824,0.7882}{\textsf{NosEllos – Texto que permite saber si los puntos mostrados son de un equipo u otro.}}$$
+    - $$\textcolor[rgb]{0.6392,0.2863,0.6431}{\textsf{Puntos – Permite conocer el número de puntos de un equipo.}}$$
+    - $$\textcolor[rgb]{0.2471,0.2824,0.8}{\textsf{Jugador – Texto que indica la posición en la que se encuentra el jugador dentro de la mano actual.}}$$
+    - $$\textcolor[rgb]{0.9725,0,1}{\textsf{TurnoHeading – Texto que aparece en la pantalla de un jugador cuando es su turno.}}$$
+    - $$\textcolor[rgb]{0.9373,0.8941,0.6902}{\textsf{Musica – Botón que permite desplegar el reproductor de música de fondo.}}$$
+    - $$\textcolor[rgb]{0.7255,0.4784,0.3412}{\textsf{Chat – Botón que permite desplegar el chat de la partida.}}$$
+    - $$\textcolor[rgb]{0.4392,0.5725,0.7451}{\textsf{Gestos – Botón que permite desplegar el menú de gestos.}}$$
+    
 
 ## Documentación de las APIs
 Se considerará parte del documento de diseño del sistema la documentación generada para las APIs, que debe incluir como mínimo, una descripción general de las distintas APIs/tags  proporcionadas. Una descripción de los distintos endpoints y operaciones soportadas. Y la especificación de las políticas de seguridad especificadas para cada endpoint y operación. Por ejemplo: “la operación POST sobre el endpoint /api/v1/game, debe realizarse por parte de un usuario autenticado como Player”.

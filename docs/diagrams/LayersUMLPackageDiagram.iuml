@@ -144,7 +144,7 @@ LogrosController ..> UserService
 LogrosController ..> JugadorService
 FotosController ..> FotosService
 JugadorController ..> JugadorService
-JugadorControler ..> UserService
+JugadorController ..> UserService
 ManoController ..> ManoService
 PartidaController ..> PartidaService
 PartidaController ..> PartidaJugadorService
