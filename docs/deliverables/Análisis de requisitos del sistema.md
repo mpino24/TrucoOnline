@@ -40,7 +40,7 @@ Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pe
 
 A continuación se definen  todas las historias de usuario a implementar:
  ## Historia de Usuario Aspectos especificos del usuario:
-### HU-1(NOISSUE): Poder loggearme
+### HU-1(NOISSUE): Poder loggearme ()
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
 ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-2(NOISSUE): Poder editar y borrar tu cuenta ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/70]) ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/159]) 
@@ -50,9 +50,9 @@ Como jugador quiero poder cerrar sesion para que la web no se quede con mis dato
 ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ### HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador ([])
 Como administador quiero poder ver un listado de partidas en curso y de partidas jugadas para tener constancia de todas las partidas que se juegan.
- ### HU-27(ISSUE#183): Poder ver listado de usuarios como administrador ([])
+ ### HU-27(ISSUE#183): Poder ver listado de usuarios como administrador ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/183])
 Como administrador quiero poder ver un listado de usuarios para saber en todo momento qué usuarios hay registrados.
- ### HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador ([])
+ ### HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/293])
 Como administrador quiero poder crear un usuario, ver los datos de un usuario, editar los datos de un usuario y borrar un usuario para tener control total sobre todos los usuarios que hay registrados.
  ## Historias de Usuario Creación y configuración partidas:
  ### HU-4(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
@@ -128,11 +128,11 @@ Como jugador quiero que el sistema me permita buscar usuarios poder agregar amig
  Como usuario quiero poder recibir notificaciones de mensajes para ver si tengo mensajes sin leer.
 
  ## Historias de Usuario Módulo Estadístico:
- ### HU-22(ISSUE#): Ver mis estadísticas:
+ ### HU-22(ISSUE#387): Ver mis estadísticas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/387])
 Como jugador, quiero poder ver mis estadísticas para poder seguir mi progreso en el juego y mejorar mi rendimiento.
-### HU-23(ISSUE#): Ver logros:
+### HU-23(ISSUE#388): Ver logros ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/388])
 Como jugador, quiero poder ver mis logros conseguidos y aquellos que me faltan por alcanzar, para motivarme a seguir jugando y completar todos los logros.
-### HU-24(ISSUE#): Crear, editar y eliminar logros:
+### HU-24(ISSUE#389): Crear, editar y eliminar logros ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/389])
 Como administrador, quiero poder crear, editar y eliminar logros para mantener la experiencia de juego dinámica y actualizada, asegurando que los jugadores tengan nuevos objetivos que cumplir.
 ### HU-25(ISSUE#342): Ver ranking global ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/342]):
 Como jugador quiero poder ver el ranking global para incentivarme a algún día estar primero.
