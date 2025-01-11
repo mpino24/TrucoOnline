@@ -5,6 +5,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.model.BaseEntity;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

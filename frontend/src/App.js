@@ -55,9 +55,7 @@ function App() {
           Authorization: `Bearer ${jwt}`,
         },
       }).then((response) => {
-        if (!response.ok) {
-          alert(response.statusText);
-        }else{
+        if (response.ok) {
           console.log("Tiempo de conexión actualizado");
         }
       }

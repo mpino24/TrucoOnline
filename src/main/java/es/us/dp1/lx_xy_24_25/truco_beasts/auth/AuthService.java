@@ -57,6 +57,7 @@ public class AuthService {
 		}
 		
 		Jugador jugador = new Jugador();
+		jugador.setId(user.getId());
 		jugador.setFirstName(request.getFirstName());
 		jugador.setLastName(request.getLastName());
 		if(request.getEmail()!=null) jugador.setEmail(request.getEmail());
