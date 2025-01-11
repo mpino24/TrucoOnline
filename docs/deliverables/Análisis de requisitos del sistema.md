@@ -120,7 +120,6 @@ Como jugador quiero que el sistema me permita buscar usuarios poder agregar amig
  Como usuario quiero poder chatear con mis amigos mientras juego una partida para poder conversar con ellos.
  ### HU-33(ISSUE#380): Poder chatear con amigos fuera de una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/380])
  Como usuario quiero poder chatear con mis amigos fuera de una partida para poder entablar conversación.
-  ![Mockup_chat](https://github.com/user-attachments/assets/3de188f6-3c98-47bf-9536-3b98b9c35dbd)
  ### HU-34(ISSUE#381): Poder invitar amigos conectados a una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/381])
  Como usuario quiero poder invitar a mis amigos conectados a una partida para poder jugar con ellos.
  ### HU-35(ISSUE#382): Poder ver amigos conectados ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/382])
