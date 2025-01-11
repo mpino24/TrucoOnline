@@ -69,7 +69,15 @@ El informe de cobertura de pruebas es el siguiente:
 | HU-19(ISSUE#152): Poder responder Flor y sus variantes |  | Verifica que un jugador puede responder a una flor con una de sus variantes. | No implementada | Unitaria en backend |
 | HU-20(ISSUE#130): Poder buscar usuarios | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Implementada | Unitaria en backend |
 | HU-21(ISSUE#131): Poder ver mis amigos |  | Verifica que un usuario puede ver los amigos que tiene. | No implementada | Unitaria en frontend |
-
+| HU-22(ISSUE#): Ver mis estadísticas |  | Verifica que un usuario puede ver sus estadísticas. | No implementada | Unitaria en backend |
+| HU-23(ISSUE#): Ver logros |  | Verifica que un usuario puede ver los logros que tiene. | No implementada | Unitaria en backend |
+| HU-24(ISSUE#): Crear, editar y eliminar logros |  | Verifica que un usuario administrador puede crear, editar y eliminar logros. | No implementada | Unitaria en backend |
+| HU-25(ISSUE#342): Ver ranking global |  | Verifica que un usuario puede ver el ranking global. | No implementada | Unitaria en backend |
+| HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador |  | Verifica que un usuario administrador puede ver la lista de partidas que se juegan. | No implementada | Unitaria en backend |
+| HU-27(ISSUE#183): Poder ver listado de usuarios como administrador |  | Verifica que un usuario administrador puede ver los usuarios registrados. | No implementada | Unitaria en backend |
+| HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador |  | Verifica que un usuario administrador puede crear, ver, editar y eliminar usuarios. | No implementada | Unitaria en backend |
+| HU-21(ISSUE#131): Poder ver mis amigos |  | Verifica que un usuario puede ver los amigos que tiene. | No implementada | Unitaria en frontend |
+| HU-29 (ISSUE#376) : Poder ver perfiles de Usuario en partida |  | Verifica que un usuario puede ver los participantes de las partidas que va a jugar. | No implementada | Unitaria en backend |
 ### 5.3 Matriz de Trazabilidad entre Pruebas e Historias de Usuario
 
 | Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 |
