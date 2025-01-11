@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -77,6 +79,15 @@ public class TestJugadorService {
 
         assertThrows(IllegalStateException.class, () -> jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId()));
     }
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
+    void testFindJugadorByUserName() {
+        JugadorDTO player = jugadorService.findJugadorByUserName(jugador.getUser().getUsername());
+        assertEquals(jugador.getFirstName(), player.getFirstName());
+        
+    }
+
 
     @Test
     void testAddYourselfFallo() {
@@ -89,14 +100,7 @@ public class TestJugadorService {
         assertThrows(ResourceNotFoundException.class, () -> jugadorService.addNewFriends(jugador.getUser().getId(), 50));
     }
 
-    @Test
-    @WithMockUser(username = "player1", roles = {"PLAYER"})
-    @DirtiesContext
-    void testFindJugadorByUserName() {
-        JugadorDTO player = jugadorService.findJugadorByUserName(jugador.getUser().getUsername());
-        assertEquals(jugador.getFirstName(), player.getFirstName());
-        
-    }
+
 
     @Test
     void testFindNotFoundJugadorByUserNameFallo() {
@@ -212,9 +216,11 @@ public class TestJugadorService {
     }
 
     @Test
+    @DirtiesContext //sin esto, como los tests se ejecutan aleatoriamente, el de findUser no funciona (porque se borro aca)
     void testDeleteJugador() { //Hecho por David
         jugadorService.deleteJugadorByUserId(jugador.getId());
         assertFalse(jugadorService.existsJugador(jugador.getId()));
+        
     }
 
 
