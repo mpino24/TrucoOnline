@@ -55,12 +55,12 @@ public class AuthService {
 			user.setAuthority(role);
 			userService.saveUser(user);
 		}
-		
+		String foto = request.getPhoto();
 		Jugador jugador = new Jugador();
 		jugador.setFirstName(request.getFirstName());
 		jugador.setLastName(request.getLastName());
-		if(request.getEmail()!=null) jugador.setEmail(request.getEmail());
-		if (request.getPhoto()!= null) jugador.setPhoto(request.getPhoto());
+		if(request.getEmail()!=null && !request.getEmail().trim().isEmpty()) jugador.setEmail(request.getEmail());
+		if (foto!= null && !foto.trim().isEmpty()) jugador.setPhoto(foto);
 		else jugador.setPhoto(fotoDefault);
 		jugador.setUser(user);
 

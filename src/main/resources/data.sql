@@ -161,6 +161,7 @@ INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES 
 
 
 -- Inserts de fotos
+--trofeos
 INSERT INTO fotos(id,name,categoria_foto) VALUES(1,'trofeo1.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(2,'trofeo2.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(3,'trofeo3.jpg','TROFEO');
@@ -171,8 +172,9 @@ INSERT INTO fotos(id,name,categoria_foto) VALUES(7,'trofeo7.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(8,'trofeo8.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(9,'trofeo9.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(10,'trofeo10.jpg','TROFEO');
-INSERT INTO fotos(id,name,categoria_foto) VALUES(11,'amistad.jpg', 'PERFIL');
-INSERT INTO fotos(id,name,categoria_foto) VALUES(12,'monogif.gif', 'PERFIL');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(11,'trofeo11.jpg','TROFEO');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(12,'trofeo12.jpg','TROFEO');
+--perfiles
 INSERT INTO fotos (id, name, categoria_foto) VALUES (13, 'tomandoalgo.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (14, 'ballena.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (15, 'canguro.jpg', 'PERFIL');
@@ -188,5 +190,8 @@ INSERT INTO fotos (id, name, categoria_foto) VALUES (24, 'paula.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (25, 'pets.png', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (26, 'quebuenascartas.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (27, 'robot.jpg', 'PERFIL');
-
-
+INSERT INTO fotos (id, name, categoria_foto) VALUES (28, 'zorro.jpg', 'PERFIL');
+INSERT INTO fotos (id, name, categoria_foto) VALUES (29, 'goat.jpg', 'PERFIL');
+INSERT INTO fotos (id, name, categoria_foto) VALUES (30, 'carpincho.jpg', 'PERFIL');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(31,'amistad.jpg', 'PERFIL');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(32,'monogif.gif', 'PERFIL');
