@@ -29,13 +29,11 @@ Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a q
 
 ## Tipos de Usuarios / Roles
 
-< Nombre Rol >: < Breve descripción del rol >
+Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento.
 
-Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
+Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros.
 
-Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
-
-Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
+Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan.
 
 
 ## Historias de Usuario
@@ -110,9 +108,9 @@ Como jugador quiero que el sistema me permita buscar usuarios poder agregar amig
  ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
 
  ## Historias de Usuario Módulo Estadístico:
- ### HU-22(ISSUE#): Ver mis estadísticas :
+ ### HU-22(ISSUE#): Ver mis estadísticas:
 Como jugador, quiero poder ver mis estadísticas para poder seguir mi progreso en el juego y mejorar mi rendimiento.
-### HU-23(ISSUE#): Ver logros :
+### HU-23(ISSUE#): Ver logros:
 Como jugador, quiero poder ver mis logros conseguidos y aquellos que me faltan por alcanzar, para motivarme a seguir jugando y completar todos los logros.
 ### HU-24(ISSUE#): Crear, editar y eliminar logros:
 Como administrador, quiero poder crear, editar y eliminar logros para mantener la experiencia de juego dinámica y actualizada, asegurando que los jugadores tengan nuevos objetivos que cumplir.
@@ -141,5 +139,4 @@ En caso de no estar logado, solo serán visibles las partidas públicas (especta
 Al meterte en una partida como espectador no podrás interactuar con la partida 
 ### R6-Partidas concurrentes
 Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
-### R7-Cuenta atrás en un turno
-Cuando es el turno de un jugador en la ronda, este tiene un tiempo límite para actuar, pasado este tiempo comienza una cuenta atrás en pantalla que termina dando la victoria al equipo contrario si el jugador no reacciona a tiempo.
+
