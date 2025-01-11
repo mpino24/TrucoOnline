@@ -72,6 +72,8 @@ Como jugador quiero que el sistema me permita poder unirme a partidas para jugar
  ## Historias de Usuario Jugar al Truco:
  ### HU-9(ISSUE#143): Poder ver cartas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/143])
 Como jugador quiero poder ver mis cartas para poder crear una estrategia de juego.
+ ### HU-29 (ISSUE#376) : Poder ver perfiles de Usuario en partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/376])
+Como jugador quiero poder ver la foto y nombre de usuario de las personas que participan en la partida para poder ver con quién juego.
  ### HU-10(ISSUE#145): Poder cantar Truco ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/145])
 Como jugador quiero poder cantar Truco para aumentar la puntuación de la mano.
  ### HU-11(ISSUE#146): Poder cantar Envido ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/146])
