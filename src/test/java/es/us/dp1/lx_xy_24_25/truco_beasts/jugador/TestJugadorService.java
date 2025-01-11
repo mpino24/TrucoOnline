@@ -209,4 +209,11 @@ public class TestJugadorService {
         assertThrows(TransactionSystemException.class, () -> jugadorService.updateJugador(jugadorNoExistente, jugador.getUser()));
     }
 
+    @Test
+    void testDeleteJugador() { //Hecho por David
+        jugadorService.deleteJugadorByUserId(jugador.getId());
+        assertFalse(jugadorService.existsJugador(jugador.getId()));
+    }
+
+
 }
