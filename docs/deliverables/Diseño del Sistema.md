@@ -10,15 +10,9 @@ _En esta sección debes describir de manera general cual es la funcionalidad del
 
 ### Diagrama de Dominio/Diseño
 
-_En esta sección debe proporcionar un diagrama UML de clases que describa el modelo de dominio, recuerda que debe estar basado en el diagrama conceptual del documento de análisis de requisitos del sistema pero que debe:_
-•	_Especificar la direccionalidad de las relaciones (a no ser que sean bidireccionales)_
-•	_Especificar la cardinalidad de las relaciones_
-•	_Especificar el tipo de los atributos_
-•	_Especificar las restricciones simples aplicadas a cada atributo de cada clase de domino_
-•	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
-•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
+El diagramaes de una gran magnitud, pero al estar exportado en SVG se puede abrir y ver en detalle sin problema. Se ha decidido utilizar esta disposición ya que era la que mejor mostraba las relaciones directas de cada Entidad/componente (separarlo por paquetes de clases lo dejaba casi ilegible)
 
-![Diagrama de dominio Truco Beasts fondo claro](https://github.com/user-attachments/assets/3dcc08e2-9f77-4617-9080-48ae819a206d)
+![Diagrama de dominio final](https://github.com/user-attachments/assets/b6103d59-50a4-4a69-8ccd-aaafa5573471)
 
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
 Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo [aquí](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/diagrams/LayersUMLPackageDiagram.iuml).
