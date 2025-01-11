@@ -52,6 +52,34 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
     - $\color{yellow}{\textsf{PopularCardsChart – Muestra la proporción de las N (parámetro de configuración) cartas más jugadas en el juego por el jugador.}}$
     - $\color{red}{\textsf{FrequentCoPlayersTable – Muestra los jugadores  con los que más se  ha jugado (de M en M donde M es un parámetro definido por la configuración del componente). Concretamente, se mostrarán la el nombre, la fecha de la última partida, la localización del jugador el porcentaje de partidas jugadas por ambos en las que el usuario ha ganado y si el jugador es amigo o no del usuario.}}$
 
+![tablero_dividido_en_componentes](https://github.com/user-attachments/assets/6c02c8fd-d7d7-4631-8f22-a7288d415705)
+
+  - PlayingModal – Componente principal del tablero
+    - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{Logo – Muestra el logotipo y permite salir de la partida.}}$$
+    - $$\textcolor[rgb]{1,0,0}{\textsf{Perfil – Muestra la foto y el nombre de un jugador.}}$$
+      - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{TextFoto – Muestra el nombre del jugador.}}$$
+      - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Foto – Muestra la foto del jugador.}}$$
+    - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Quedan – Muestra una imagen con las cartas restantes (boca abajo) de un jugador.}}$$
+    - $$\textcolor[rgb]{0.6019,0.851,0.917}{\textsf{Mazo – Muestra el mazo de cartas para esclarecer quién es el jugador mano.}}$$
+    - $$\textcolor[rgb]{1,0.949,0}{\textsf{DropArea – Proporciona el espacio donde los jugadores sueltan las cartas.}}$$
+      - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{CardContainer – Contiene las cartas que se han tirado durante la ronda.}}$$
+        - $$\textcolor[rgb]{1,0,0}{\textsf{CartaRonda – Muestra la carta tirada por uno de los jugadores.}}$$
+    - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{CartasJugadorContainer – Muestra el conjunto de cartas que tiene el jugador.}}$$
+      - $$\textcolor[rgb]{1,0,0}{\textsf{CartaJugador – Muestra una de las cartas que tiene el jugador.}}$$
+    - $$\textcolor[rgb]{1,0.7882,0.0549}{\textsf{Truco – Botón que permite cantar truco.}}$$
+    - $$\textcolor[rgb]{1,0.498,0.1529}{\textsf{EnvidoButtonContainer – Contiene las cartas que se han tirado durante la ronda.}}$$
+      - $$\textcolor[rgb]{1,0.949,0}{\textsf{Envido – Botón que permite cantar envido.}}$$
+      - $$\textcolor[rgb]{1,0,0}{\textsf{Real Envido – Botón que permite cantar real envido.}}$$
+      - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{Falta Envido – Botón que permite cantar falta envido.}}$$
+    - $$\textcolor[rgb]{1,0.6824,0.7882}{\textsf{NosEllos – Texto que permite saber si los puntos mostrados son de un equipo u otro.}}$$
+    - $$\textcolor[rgb]{0.6392,0.2863,0.6431}{\textsf{Puntos – Permite conocer el número de puntos de un equipo.}}$$
+    - $$\textcolor[rgb]{0.2471,0.2824,0.8}{\textsf{Jugador – Texto que indica la posición en la que se encuentra el jugador dentro de la mano actual.}}$$
+    - $$\textcolor[rgb]{0.9725,0,1}{\textsf{TurnoHeading – Texto que aparece en la pantalla de un jugador cuando es su turno.}}$$
+    - $$\textcolor[rgb]{0.9373,0.8941,0.6902}{\textsf{Musica – Botón que permite desplegar el reproductor de música de fondo.}}$$
+    - $$\textcolor[rgb]{0.7255,0.4784,0.3412}{\textsf{Chat – Botón que permite desplegar el chat de la partida.}}$$
+    - $$\textcolor[rgb]{0.4392,0.5725,0.7451}{\textsf{Gestos – Botón que permite desplegar el menú de gestos.}}$$
+    
+
 ## Documentación de las APIs
 Se considerará parte del documento de diseño del sistema la documentación generada para las APIs, que debe incluir como mínimo, una descripción general de las distintas APIs/tags  proporcionadas. Una descripción de los distintos endpoints y operaciones soportadas. Y la especificación de las políticas de seguridad especificadas para cada endpoint y operación. Por ejemplo: “la operación POST sobre el endpoint /api/v1/game, debe realizarse por parte de un usuario autenticado como Player”.
 
