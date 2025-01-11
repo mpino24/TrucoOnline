@@ -1,12 +1,10 @@
 # Documento de diseño del sistema
 
-_Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
-
 ## Introducción
 
 _En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
 
-[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](http://youtube.com)
+[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](https://www.youtube.com/watch?v=IAKDghOqNaM&t=1s)
 
 ## Diagrama(s) UML:
 
@@ -37,11 +35,6 @@ Debido a la magnitud del diagrama completo no hemos podido incluir una imagen le
 #### Repositorios de la capa de Recursos y sus consultas personalizadas
 ![diagrama_de_capas_R](https://github.com/user-attachments/assets/9d548e75-6946-4600-a1e0-c00738c61f6b)
 
-_El diagrama debe especificar además las relaciones de uso entre controladores y servicios, entre servicios y servicios, y entre servicios y repositorios._
-_Tal y como se muestra en el diagrama de ejemplo, para el caso de los repositorios se deben especificar las consultas personalizadas creadas (usando la signatura de su método asociado)._
-
-_En este caso, como mermaid no soporta la definición de paquetes, hemos usado una [herramienta muy similar llamada plantUML}(https://www.plantuml.com/). Esta otra herramienta tiene un formulario para visualizar los diagramas previamente disponible en [https://www.plantuml.com/plantuml/uml/}(https://www.plantuml.com/plantuml/uml/). Lo que hemos hecho es preparar el diagrama en ese formulario, y una vez teníamos el diagrama lista, grabarlo en un fichero aparte dentro del propio repositorio, y enlazarlo con el formulario para que éste nos genera la imagen del diagrama usando una funcionalizad que nos permite especificar el código del diagrama a partir de una url. Por ejemplo, si accedes a esta url verás el editor con el código cargado a partir del fichero del repositorio original: [http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/gii-is-DP1/group-project-seed/main/docs/diagrams/LayersUMLPackageDiagram.iuml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/gii-is-DP1/group-project-seed/main/docs/diagrams/LayersUMLPackageDiagram.iuml)._
-
 ## Descomposición del mockups del tablero de juego en componentes
 
 En esta sección procesaremos el mockup del tablero de juego (o los mockups si el tablero cambia en las distintas fases del juego). Etiquetaremos las zonas de cada una de las pantallas para identificar componentes a implementar. Para cada mockup se especificará el árbol de jerarquía de componentes, así como, para cada componente el estado que necesita mantener, las llamadas a la API que debe realizar y los parámetros de configuración global que consideramos que necesita usar cada componente concreto. 
@@ -65,22 +58,7 @@ Se considerará parte del documento de diseño del sistema la documentación gen
 Si lo desea puede aplicar la aproximación descrita en https://vmaks.github.io/2020/02/09/how-to-export-swagger-specification-as-html-or-word-document/ para generar una versión en formato Word de la especificación de la API generada por OpenAPI, colgarla en el propio repositorio y enlazarla en esta sección del documento.  En caso contrario debe asegurarse de que la interfaz de la documentación open-api de su aplicación está accesible, funciona correctamente, y está especificada conforme a las directrices descritas arriba.
 
 ## Patrones de diseño y arquitectónicos aplicados
-En esta sección de especificar el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto. Para especificar la aplicación de cada patrón puede usar la siguiente plantilla:
-
-### Patrón: < Nombre del patrón >
-*Tipo*: Arquitectónico | de Diseño
-
-*Contexto de Aplicación*
-
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
-
-*Clases o paquetes creados*
-
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
-*Ventajas alcanzadas al aplicar el patrón*
-
-Describir porqué era interesante aplicar el patrón.
+En esta sección especificamos el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto:
 
 ### Patrón: Strategy
 *Tipo*: Arquitectónico | de Comportamiento
@@ -227,7 +205,7 @@ En resumen, el patrón Repository es clave para estructurar la capa de acceso a 
 
 
 ## Decisiones de diseño
-_En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
+En esta sección describimos las decisiones de diseño que hemos tomado a lo largo del desarrollo de la aplicación:
 
 ### Decisión 1: Creacion de la clase PartidaJugador
 #### Descripción del problema:
@@ -371,7 +349,7 @@ Nos decantamos por la alternativa 1 ya que nos pareció lo más óptimo porque n
 #### Descripción del problema:
 Para almacenar quien es el jugador que ha creado la partida y otorgarle así el derecho a expulsar gente o comenzarla cuando crea oportuno, necesitamos guardar para cada partida un atributo creador que haga referencia al jugador que creó la partida.
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: : Añadir un atributo creador a la clase Partida.
+*Alternativa 1*: Añadir un atributo creador a la clase Partida.
 
 *Ventajas:*
 • Te permite obtener el creador de la partida directamente con una llamada a la base de datos que obtenga los datos de la partida.
