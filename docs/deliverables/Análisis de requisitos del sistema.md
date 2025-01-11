@@ -99,15 +99,33 @@ Como jugador quiero poder responder Truco y sus variantes para subir la apuesta 
  ### HU-19(ISSUE#152): Poder responder Flor y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/152])
 Como jugador quiero poder responder Flor y sus variantes para subir la apuesta del Flor.
 ![Mockup Flor](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_Flor.jpg)
+ ### HU-37(ISSUE#384): Poder cambiar de equipo antes de iniciar la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/384])
+ Como jugador quiero poder cambiarme de equipo antes de que empiece la partida para mejorar mi experiencia de juego.
+ ### HU-38(ISSUE#385): Expulsar jugador de una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/385])
+ Como creador de una partida quiero poder expulsar a un jugador para mejorar la experiencia de juego.
  
 
  ## Historias de Usuario Módulo social:
- ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
+ ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130])
 Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
  ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
- ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
+ ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131])
  Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
  ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+ ### HU-30(ISSUE#377): Poder añadir y eliminar amigos ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/377])
+ Como usuario quiero poder añadir y eliminar amigos para poder gestionar mis amistades.
+ ### HU-31(ISSUE#378): Gestionar solicitudes de amistad ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/378])
+ Como usuario quiero poder aceptar o rechazar las solicitudes de amistad para poder gestionar mis amistades.
+ ### HU-32(ISSUE#379): Poder chatear con amigos durante la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/379])
+ Como usuario quiero poder chatear con mis amigos mientras juego una partida para poder conversar con ellos.
+ ### HU-33(ISSUE#380): Poder chatear con amigos fuera de una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/380])
+ Como usuario quiero poder chatear con mis amigos fuera de una partida para poder entablar conversación.
+ ### HU-34(ISSUE#381): Poder invitar amigos conectados a una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/381])
+ Como usuario quiero poder invitar a mis amigos conectados a una partida para poder jugar con ellos.
+ ### HU-35(ISSUE#382): Poder ver amigos conectados ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/382])
+ Como usuario quiero poder ver los amigos que estén conectados para poder ver quién está en línea.
+ ### HU-36(ISSUE#383): Poder recibir notificación de nuevo mensaje ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/383])
+ Como usuario quiero poder recibir notificaciones de mensajes para ver si tengo mensajes sin leer.
 
  ## Historias de Usuario Módulo Estadístico:
  ### HU-22(ISSUE#): Ver mis estadísticas:
