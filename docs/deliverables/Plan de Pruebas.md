@@ -78,6 +78,16 @@ El informe de cobertura de pruebas es el siguiente:
 | HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador |  | Verifica que un usuario administrador puede crear, ver, editar y eliminar usuarios. | No implementada | Unitaria en backend |
 | HU-21(ISSUE#131): Poder ver mis amigos |  | Verifica que un usuario puede ver los amigos que tiene. | No implementada | Unitaria en frontend |
 | HU-29 (ISSUE#376) : Poder ver perfiles de Usuario en partida |  | Verifica que un usuario puede ver los participantes de las partidas que va a jugar. | No implementada | Unitaria en backend |
+| HU-30(ISSUE#377): Poder añadir y eliminar amigos |  | Verifica que un usuario puede añadir o eliminar a sus amigos. | No implementada | Unitaria en backend |
+| HU-31(ISSUE#378): Gestionar solicitudes de amistad |  | Verifica que un usuario puede aceptar o rechazar las solicitudes de amistad. | No implementada | Unitaria en backend |
+| HU-32(ISSUE#379): Poder chatear con amigos durante la partida |  | Verifica que un usuario puede chatear con sus amigos durante una partida. | No implementada | Unitaria en backend |
+| HU-33(ISSUE#380): Poder chatear con amigos fuera de una partida |  | Verifica que un usuario puede chatear con sus amigos fuera de una partida. | No implementada | Unitaria en backend |
+| HU-34(ISSUE#381): Poder invitar amigos conectados a una partida |  | Verifica que un usuario puede invitar a sus amigos conectados a una partida. | No implementada | Unitaria en backend |
+| HU-35(ISSUE#382): Poder ver amigos conectados |  | Verifica que un usuario puede ver a sus amigos que estén conectados. | No implementada | Unitaria en backend |
+| HU-36(ISSUE#383): Poder recibir notificación de nuevo mensaje |  | Verifica que un usuario puede recibir notificaciones de mensajes. | No implementada | Unitaria en backend |
+| HU-37(ISSUE#384): Poder cambiar de equipo antes de iniciar la partida |  | Verifica que un usuario puede cambiarse de equipo antes de que inicie la partida. | No implementada | Unitaria en backend |
+| HU-38(ISSUE#385): Expulsar jugador de una partida |  | Verifica que un creador puede eliminar a un jugador. | No implementada | Unitaria en backend |
+
 ### 5.3 Matriz de Trazabilidad entre Pruebas e Historias de Usuario
 
 | Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 |
