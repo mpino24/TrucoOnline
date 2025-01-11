@@ -159,4 +159,15 @@ En caso de no estar logado, solo serán visibles las partidas públicas (especta
 Al meterte en una partida como espectador no podrás interactuar con la partida 
 ### R6-Partidas concurrentes
 Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
-
+### R7-Conexión a la partida
+Para comenzar una partida, todos los jugadores deben estar conectados al juego.
+### R8-Gestionar una partida
+El usuario creador de la partida será el único con capacidad para comenzar la partida y eliminar a usuarios de esta.
+### R9-Invitación a la partida
+Para poder invitar a un jugador a ver o jugar una partida, dicho jugador debe ser tu amigo y estar conectado.
+### R10-Relevo del creador
+Si el creador abandona la partida, deberá ser otro usuario conectado a la partida quien asuma dicho rol.
+### R11-Chat de la partida
+Los mensajes enviados durante la partida sólo deben estar disponible durante la partida.
+### R12-Abandonar una partida
+Si un jugador abandona una partida a la que estaba jugando, será el equipo contrario quien instantáneamente gane la partida.
