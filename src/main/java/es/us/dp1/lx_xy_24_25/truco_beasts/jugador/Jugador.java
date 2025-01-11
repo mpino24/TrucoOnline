@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PreRemove;
@@ -24,9 +25,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "Jugadores")
 public class Jugador extends Person {
-
-    @Id
-    Integer id;
 
     @ManyToMany
     @JoinTable(
@@ -45,6 +43,7 @@ public class Jugador extends Person {
     protected List<Jugador> solicitudes = new ArrayList<>();
 
     @OneToOne(cascade = {CascadeType.ALL}, optional = false, orphanRemoval = true)
+    @MapsId
     private User user;
 
 

@@ -93,7 +93,9 @@ public class TestJugadorService {
     @WithMockUser(username = "player1", roles = {"PLAYER"})
     @DirtiesContext
     void testFindJugadorByUserName() {
-        assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
+        JugadorDTO player = jugadorService.findJugadorByUserName(jugador.getUser().getUsername());
+        assertEquals(jugador.getFirstName(), player.getFirstName());
+        
     }
 
     @Test

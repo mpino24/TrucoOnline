@@ -26,18 +26,18 @@ INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,P
 
 
 -- Inserts de players
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1,'jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/perfiles/jorge.jpg',1);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (2,'Paula', 'Rosa', 'paula@alum.us.es','http://localhost:8080/resources/images/perfiles/paula.jpg',2);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (3,'Maria', 'del', 'pino@alum.us.es','http://localhost:8080/resources/images/perfiles/canguro.jpg',3);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (4,'Eloy', 'Eloy', 'eloy@alum.us.es','http://localhost:8080/resources/images/perfiles/quebuenascartas.jpg',4);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (5,'Ivan', 'FerLinandez', 'ivan@alum.us.es','http://localhost:8080/resources/images/perfiles/mosca.jpg',5);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (6,'David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/perfiles/cervecita.jpg',6);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (7,'Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/gorila.jpg',7);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (8,'otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/ballena.jpg',8);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (9,'lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/perfiles/lampi.jpg',9);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (10,'mono', 'bananas', 'monin@alum.us.es','http://localhost:8080/resources/images/perfiles/monogif.gif',10);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (11,'Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/perfiles/jaguar.jpg',11);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (12,'bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/perfiles/robot.jpg',12);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/perfiles/jorge.jpg',1);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Paula', 'Rosa', 'paula@alum.us.es','http://localhost:8080/resources/images/perfiles/paula.jpg',2);
+INSERT INTO Jugadores(first_name,last_name, email, photo ,user_id) VALUES ('Maria', 'del', 'pino@alum.us.es','http://localhost:8080/resources/images/perfiles/canguro.jpg',3);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Eloy', 'Eloy', 'eloy@alum.us.es','http://localhost:8080/resources/images/perfiles/quebuenascartas.jpg',4);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Ivan', 'FerLinandez', 'ivan@alum.us.es','http://localhost:8080/resources/images/perfiles/mosca.jpg',5);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/perfiles/cervecita.jpg',6);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/gorila.jpg',7);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/ballena.jpg',8);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/perfiles/lampi.jpg',9);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('mono', 'bananas', 'monin@alum.us.es','http://localhost:8080/resources/images/perfiles/monogif.gif',10);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/perfiles/jaguar.jpg',11);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/perfiles/robot.jpg',12);
 
 
 
