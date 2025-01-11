@@ -23,7 +23,7 @@ _En esta sección debe proporcionar un diagrama UML de clases que describa el mo
 ![Diagrama de dominio Truco Beasts fondo claro](https://github.com/user-attachments/assets/3dcc08e2-9f77-4617-9080-48ae819a206d)
 
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
-Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo en el siguiente archivo: docs/diagrams/LayersUMLPackageDiagram.iuml
+Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo [aquí](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/diagrams/LayersUMLPackageDiagram.iuml).
 
 #### Diagrama completo
 ![diagrama_completo](https://github.com/user-attachments/assets/7b215724-8c2b-46ee-a4b3-eed52ec35492)

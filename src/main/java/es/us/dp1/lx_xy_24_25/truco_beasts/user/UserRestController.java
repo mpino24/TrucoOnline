@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -71,7 +71,7 @@ class UserRestController {
 		return new ResponseEntity<>(userService.findUsuariosPaginacion(pageable), HttpStatus.OK);
 	}
 
-	@GetMapping("authorities")
+	@GetMapping("/authorities")
 	public ResponseEntity<List<Authorities>> findAllAuths() {
 		List<Authorities> res = (List<Authorities>) authService.findAll();
 		return new ResponseEntity<>(res, HttpStatus.OK);
@@ -91,7 +91,7 @@ class UserRestController {
 
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody @Valid User user) {
+	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody User user) {
 		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
 		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
 	}

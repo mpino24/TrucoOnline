@@ -94,7 +94,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User updateUser(@Valid User user, Integer idToUpdate) {
+	public User updateUser( User user, Integer idToUpdate) {
 		User toUpdate = findUser(idToUpdate);
 		if(toUpdate == null) {
             throw new AccessDeniedException("Tu usuario no ha sido encontrado");
@@ -105,6 +105,9 @@ public class UserService {
             if(!(user.getPassword()==null)) {
                 toUpdate.setPassword(encoder.encode(user.getPassword()));
             }
+			if(user.getAuthority() != null){
+				toUpdate.setAuthority(user.getAuthority());
+			}
             saveUser(toUpdate);
             return toUpdate;
         }else{
