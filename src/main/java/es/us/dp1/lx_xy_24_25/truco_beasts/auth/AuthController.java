@@ -24,9 +24,13 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
 import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.jwt.JwtUtils;
 import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.services.UserDetailsImpl;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -47,6 +51,11 @@ public class AuthController {
 		this.authService = authService;
 	}
 
+	@Operation(summary = "Iniciar sesión", description = "Autentica al usuario y devuelve un token JWT")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Autenticación exitosa", content = @Content(schema = @Schema(implementation = JwtResponse.class))),
+		@ApiResponse(responseCode = "400", description = "Credenciales incorrectas", content = @Content(schema = @Schema(implementation = String.class)))
+	})
 	@PostMapping("/signin")
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try{
@@ -65,13 +74,22 @@ public class AuthController {
 		}
 	}
 
+	@Operation(summary = "Validar token", description = "Valida un token JWT")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Token válido", content = @Content(schema = @Schema(implementation = Boolean.class))),
+		@ApiResponse(responseCode = "400", description = "Token inválido", content = @Content(schema = @Schema(implementation = Boolean.class)))
+	})
 	@GetMapping("/validate")
 	public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
 		Boolean isValid = jwtUtils.validateJwtToken(token);
 		return ResponseEntity.ok(isValid);
 	}
 
-	
+	@Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Usuario registrado exitosamente", content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+		@ApiResponse(responseCode = "400", description = "Nombre de usuario ya existe", content = @Content(schema = @Schema(implementation = MessageResponse.class)))
+	})
 	@PostMapping("/signup")	
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (userService.existsUser(signUpRequest.getUsername()).equals(true)) {

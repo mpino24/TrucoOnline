@@ -19,8 +19,11 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.PerfilJugadorUsuario;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
@@ -35,13 +38,17 @@ public class CurrentUserRestController {
     private final static String relog = "RELOG";
     private final static String home = "HOME";
 
-	@Autowired
-	public CurrentUserRestController(UserService userService, JugadorService jugadorService) {
-		this.userService = userService;
-        this.jugadorService=jugadorService;
-  
-	}
+    @Autowired
+    public CurrentUserRestController(UserService userService, JugadorService jugadorService) {
+        this.userService = userService;
+        this.jugadorService = jugadorService;
+    }
 
+    @Operation(summary = "Obtener el perfil del usuario actual")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Perfil obtenido con éxito"),
+        @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @GetMapping
     public ResponseEntity<PerfilJugadorUsuario> getProfile(Principal principal) {
         User user = userService.findCurrentUser();
@@ -54,7 +61,12 @@ public class CurrentUserRestController {
         return ResponseEntity.ok(perfil);
     }
 
-    
+    @Operation(summary = "Actualizar el perfil del usuario actual")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Perfil actualizado con éxito"),
+        @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
+        @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @PutMapping("/edit")
     public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
         User user = perfil.getUser();
@@ -63,32 +75,39 @@ public class CurrentUserRestController {
         User currentUser = userService.findCurrentUser();
     
         Boolean mismoUsername = user.getUsername().equals(currentUser.getUsername());
-        Boolean mismaContraseña = (user.getPassword()==null || user.getPassword().isEmpty());
+        Boolean mismaContraseña = (user.getPassword() == null || user.getPassword().isEmpty());
     
         jugadorService.updateJugador(jugador, currentUser);
         userService.updateCurrentUser(user);
 
-        if(!mismoUsername || !mismaContraseña) {    
+        if (!mismoUsername || !mismaContraseña) {    
             return ResponseEntity.ok(relog);
         } else {
             return ResponseEntity.ok(home);
         }
     }
 
+    @Operation(summary = "Borrar la cuenta del usuario actual")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cuenta borrada con éxito"),
+        @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @DeleteMapping("/borrarMiCuenta")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> borrarMiCuenta() {
-		Integer userId = userService.findCurrentUser().getId();
-		jugadorService.deleteJugadorByUserId(userId);
-		return ResponseEntity.ok(new MessageResponse("¡Tu cuenta fue borrada con éxito!"));
-		
-	}
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<MessageResponse> borrarMiCuenta() {
+        Integer userId = userService.findCurrentUser().getId();
+        jugadorService.deleteJugadorByUserId(userId);
+        return ResponseEntity.ok(new MessageResponse("¡Tu cuenta fue borrada con éxito!"));
+    }
 
-
+    @Operation(summary = "Actualizar la conexión del usuario actual")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Conexión actualizada con éxito"),
+        @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @PatchMapping("/updateConnection")
     public ResponseEntity<MessageResponse> updateConnection() {
         userService.updateConnection();
         return ResponseEntity.ok(new MessageResponse("¡Conexión actualizada!"));
     }
-
 }

@@ -1,18 +1,3 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package es.us.dp1.lx_xy_24_25.truco_beasts.user;
 
 import java.util.List;
@@ -40,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -58,6 +44,7 @@ class UserRestController {
 		this.authService = authService;
 	}
 
+	@Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista de todos los usuarios. Se puede filtrar por autoridad.")
 	@GetMapping
 	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
 		List<User> res;
@@ -68,22 +55,26 @@ class UserRestController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Obtener usuarios paginados", description = "Devuelve una lista paginada de usuarios.")
 	@GetMapping("/paginados")
 	public ResponseEntity<Page<User>> findUsuariosPaginados(Pageable pageable) {
 		return new ResponseEntity<>(userService.findUsuariosPaginacion(pageable), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Obtener todas las autoridades", description = "Devuelve una lista de todas las autoridades.")
 	@GetMapping("/authorities")
 	public ResponseEntity<List<Authorities>> findAllAuths() {
 		List<Authorities> res = (List<Authorities>) authService.findAll();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Obtener usuario por ID", description = "Devuelve un usuario por su ID.")
 	@GetMapping(value = "{id}")
 	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Crear un nuevo usuario", description = "Crea un nuevo usuario.")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<User> create(@RequestBody @Valid User user) {
@@ -91,6 +82,7 @@ class UserRestController {
 		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	}
 
+	@Operation(summary = "Actualizar un usuario", description = "Actualiza un usuario existente por su ID.")
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody User user) {
@@ -98,6 +90,7 @@ class UserRestController {
 		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Eliminar un usuario", description = "Elimina un usuario por su ID.")
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {

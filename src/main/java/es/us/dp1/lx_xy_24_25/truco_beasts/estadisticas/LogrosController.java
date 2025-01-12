@@ -1,8 +1,6 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas;
 
-
 import java.util.List;
-
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +19,12 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("/api/v1/logros")
@@ -45,7 +43,7 @@ public class LogrosController {
         this.jugadorService=jugadorService;
     }
 
-
+    @Operation(summary = "Obtener todos los logros")
     @GetMapping
     public ResponseEntity<List<Logros>> getTodosLosLogros(){
         Boolean esAdmin = false;
@@ -57,13 +55,13 @@ public class LogrosController {
         return new ResponseEntity<>(logrosService.findAllLogros(esAdmin,jugadorId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener el total de logros")
     @GetMapping("/total")
     public ResponseEntity<Integer> getTotalLogros(){
-     
         return new ResponseEntity<>(logrosService.findTotalLogros(), HttpStatus.OK);
     }
 
-
+    @Operation(summary = "Obtener mis logros")
     @GetMapping("/misLogros")
     public ResponseEntity<List<Logros>> getMisLogros(){
         User currentUser= userService.findCurrentUser();
@@ -71,6 +69,7 @@ public class LogrosController {
         return new ResponseEntity<>(logrosService.logrosConseguidos(jugadorId), HttpStatus.OK);
     }
 
+    @Operation(summary = "Crear un nuevo logro")
     @PostMapping
     public ResponseEntity<Logros> createLogro(@RequestBody @Valid Logros logro){
         User currentUser = userService.findCurrentUser();
@@ -81,9 +80,9 @@ public class LogrosController {
         }else{
             throw new NotAuthorizedException();
         }
-
     }
 
+    @Operation(summary = "Eliminar un logro")
     @DeleteMapping("/{logroId}")
     public ResponseEntity<Void> deleteLogro(@PathVariable("logroId") Integer logroId){
         User currentUser = userService.findCurrentUser();
@@ -96,9 +95,9 @@ public class LogrosController {
         }else{
             throw new NotAuthorizedException();
         }
-
     }
 
+    @Operation(summary = "Actualizar un logro")
     @PutMapping("/{logroId}")
     public ResponseEntity<Logros> updateLogro(@RequestBody @Valid Logros logro, @PathVariable("logroId") Integer logroId){
         User currentUser = userService.findCurrentUser();
@@ -107,10 +106,5 @@ public class LogrosController {
         }else{
             throw new NotAuthorizedException();
         }
-
     }
-
-
-
-    
 }

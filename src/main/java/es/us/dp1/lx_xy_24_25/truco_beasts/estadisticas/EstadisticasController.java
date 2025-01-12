@@ -14,6 +14,7 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -23,11 +24,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @SecurityRequirement(name = "bearerAuth")
 public class EstadisticasController {
 
-
     private final EstadisticasService estadisticasService;
-
     private final UserService userService;
-
     private final JugadorService jugadorService;
 
     @Autowired
@@ -37,12 +35,15 @@ public class EstadisticasController {
         this.jugadorService = jugadorService;
     }
 
+    @Operation(summary = "Obtener mis estadísticas")
     @GetMapping("/misEstadisticas")
     public ResponseEntity<EstadisticaJugador> getMisEstadisticas(){
         User currentUser= userService.findCurrentUser();
         Integer jugadorId = jugadorService.findJugadorByUserId(currentUser.getId()).getId();
         return ResponseEntity.ok(estadisticasService.getEstadisticasJugador(jugadorId));
     }
+
+    @Operation(summary = "Obtener mis estadísticas avanzadas por partida")
     @GetMapping("/misEstadisticas/datosPorPartida")
     public ResponseEntity<List<DatosPorPartida>> getMisEstadisticasAvanzado(){
         User currentUser= userService.findCurrentUser();
@@ -50,11 +51,13 @@ public class EstadisticasController {
         return ResponseEntity.ok(estadisticasService.getEstadisticasJugadorAvanzadas(jugadorId));
     }
 
+    @Operation(summary = "Obtener estadísticas globales")
     @GetMapping("/estadisticasGlobales")
     public ResponseEntity<EstadisticaGlobal> getEstadisticasGlobales(){
         return ResponseEntity.ok(estadisticasService.getEstadisticasGlobales());
     }
 
+    @Operation(summary = "Obtener estadísticas de un jugador por ID")
     @GetMapping("/estadisticasJugador/{jugadorId}")
     public ResponseEntity<EstadisticaJugador> getEstadisticasJugador(@PathVariable("jugadorId") Integer jugadorId) {
         try {
@@ -65,9 +68,9 @@ public class EstadisticasController {
         }
     }
 
-@GetMapping("/ranking")
+    @Operation(summary = "Obtener ranking global de jugadores")
+    @GetMapping("/ranking")
     public ResponseEntity<List<JugadorVictorias>> getRankingGlobal(){
         return ResponseEntity.ok(estadisticasService.getRankingGlobal(null));
     }
-    
 }
