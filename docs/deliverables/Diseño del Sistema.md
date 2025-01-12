@@ -1625,5 +1625,101 @@ No estabamos aplicando completamente el patrón y por lo tanto no aprovechabamos
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora tanto cantosTruco como respuestasTruco quedó mucho más limpio y fácil de comprender.
 
+### Refactorización 14: Creación de MessageList
+En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de ShowChat.js y hemos creado un componente a parte que es MessageList.js que se encarga de rendirizar los mensajes. Además tambien hemos creado el InpotConteiner que es donde se escribe el mensaje y se envía.
+#### Estado inicial del código
+```Java 
+   return (
+    <>
+    <div className="messages-container">
+    {mensajes.map((msg, i) =>
+    msg.remitente.id === user.id ? (
+      <div key={i} className="own-message">
+        {msg.contenido}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "stretch",
+        height: "85vh",
+      }}
+    >
+      <div
+        className="messages-container"
+        style={{
+          flexGrow: 1,
+          overflowY: "auto",
+          padding: "10px",
+        }}
+      >
+        {mensajes.map((msg, i) =>
+          msg.remitente.id === user.id ? (
+            <div key={i} className="own-message">
+              {msg.contenido}
+            </div>
+          ) : (
+            <>
+              <div key={i}>{msg.remitente.username}</div>
+              <div key={i} className="other-message">
+                {msg.contenido}
+              </div>
+            </>
+          )
+        )}
+        
+        <div ref={messagesEndRef} />
+      </div>
+    ) : (
+      <>
+      <div key={i} >{msg.remitente.username}</div>
+      <div key={i} className="other-message">
+        {msg.contenido}
+      <div className="input-container">
+        <input
+          type="text"
+          value={mensaje}
+          onChange={(e) => setMensaje(e.target.value)}
+          placeholder="Escribe un mensaje..."
+          className="input-text"
+        />
+        <button onClick={handleEnviar} className="btn-send">
+          Enviar
+        </button>
+      </div>
+      </>
+    )
+    )}
+  </div>
+    <div className="input-container">
+      <input
+        type="text"
+        value={mensaje}
+        onChange={(e) => setMensaje(e.target.value)} 
+        placeholder="Escribe un mensaje..."
+        className="input-text"
+      />
+      <button onClick={handleEnviar} className="btn-send" >Enviar</button>
+    </div>
+    </>
+    
+  );
+
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    return(
+        <MessageList mensajes={mensajes} userId={user.id} />
+        <InputContainer mensaje={mensaje} setMensaje={setMensaje} evtEnviarMensaje={evtEnviarMensaje} />
+    )
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Al tener el chat integrado tanto en la página principal como en la partida, se iba a tener una duplicación del código innecesaria.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Con este componente ahora cada vez que queremos mostrar mensajes solo tenemos que pasar los mensajes a MessageList para que los muestre con el estilo que creamos. Con esto el código queda más legible además de que es muy reutilizable.
  
 
