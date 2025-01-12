@@ -12,10 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Pageable;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
 
 //@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @SpringBootTest
@@ -31,6 +34,7 @@ class UserServiceTests {
 
 	@Test
 	@WithMockUser(username = "player1", password = "0wn3r")
+	@DirtiesContext
 	void shouldFindCurrentUser() {
 		User user = this.userService.findCurrentUser();
 		assertEquals("player1", user.getUsername());
@@ -88,6 +92,7 @@ class UserServiceTests {
 	}
 
 	@Test
+	@DirtiesContext
 	void shouldExistUser() {
 		assertEquals(true, this.userService.existsUser("player1"));
 	}
@@ -125,62 +130,43 @@ class UserServiceTests {
 		assertNotNull(user.getId());
 
 
-		//Esta linea todavia da error
 		int finalCount = ((Collection<User>) this.userService.findAll()).size();
 		assertEquals(count + 1, finalCount);
 	}
-		
 
-//	@Test
-//	@Transactional
-//	void shouldDeleteUserWithOwner() {
-//		Integer firstCount = ((Collection<User>) userService.findAll()).size();
-//		User user = new User();
-//		user.setUsername("Sam");
-//		user.setPassword("password");
-//		Authorities auth = authService.findByAuthority("OWNER");
-//		user.setAuthority(auth);
-//		Owner owner = new Owner();
-//		owner.setAddress("Test");
-//		owner.setFirstName("Test");
-//		owner.setLastName("Test");
-//		owner.setPlan(PricingPlan.BASIC);
-//		owner.setTelephone("999999999");
-//		owner.setUser(user);
-//		owner.setCity("Test");
-//		this.ownerService.saveOwner(owner);
-//
-//		Integer secondCount = ((Collection<User>) userService.findAll()).size();
-//		assertEquals(firstCount + 1, secondCount);
-//		userService.deleteUser(user.getId());
-//		Integer lastCount = ((Collection<User>) userService.findAll()).size();
-//		assertEquals(firstCount, lastCount);
-//	}
+	@Test
+	@WithMockUser(username = "player1", password = "0wn3r")
+	void shouldUpdateCurrentUser(){ //Hecho por David
+		User currentUser = this.userService.findCurrentUser();
+		currentUser.setUsername("David");
+		currentUser.setPassword("password");
+		userService.updateCurrentUser(currentUser);
+		currentUser = this.userService.findUser("David");
+		assertEquals("David", currentUser.getUsername());
+	}
 
-	
+	@Test
+	@WithMockUser(username = "player2", password = "0wn3r")
+	@DirtiesContext
+	void shouldUpdateConnection(){ //Hecho por David
+		LocalDateTime lastConnection = this.userService.findCurrentUser().getLastConnection();
+		userService.updateConnection();
+		User currentUser = this.userService.findCurrentUser();
+		assertNotEquals(lastConnection, currentUser.getLastConnection());
+	}
 
-//	@Test
-//	@Transactional
-//	void shouldDeleteUserWithVet() {
-//		Integer firstCount = ((Collection<User>) userService.findAll()).size();
-//		User user = new User();
-//		user.setUsername("Sam");
-//		user.setPassword("password");
-//		Authorities auth = authService.findByAuthority("VET");
-//		user.setAuthority(auth);
-//		userService.saveUser(user);
-//		Vet vet = new Vet();
-//		vet.setFirstName("Test");
-//		vet.setLastName("Test");
-//		vet.setUser(user);
-//		vet.setCity("Test");
-//		this.vetService.saveVet(vet);
-//
-//		Integer secondCount = ((Collection<User>) userService.findAll()).size();
-//		assertEquals(firstCount + 1, secondCount);
-//		userService.deleteUser(user.getId());
-//		Integer lastCount = ((Collection<User>) userService.findAll()).size();
-//		assertEquals(firstCount, lastCount);
-//	}
+	@Test
+	@WithMockUser(username = "player1", password = "0wn3r")
+	void shouldFindUsuariosPaginacion(){ //Hecho por David
+		Pageable pagina = PageRequest.of(0, 5);
+		Page<User> users = this.userService.findUsuariosPaginacion(pagina);
+		assertEquals(5, users.getSize());
+		assertEquals(3, users.getTotalPages());
+		assertEquals(12, users.getTotalElements());
+		assertEquals(0, users.getNumber());
+		assertEquals(5, users.getNumberOfElements());
+	}
+
+
 
 }

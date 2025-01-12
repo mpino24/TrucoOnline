@@ -8,6 +8,16 @@ export const registerFormInputs = [
     defaultValue: "",
     isRequired: true,
     validators: [formValidators.notEmptyValidator],
+    labelStyle: {
+      display: "inline-block",
+      color: "rgb(255, 211, 0)",
+      textShadow: `
+        -1px -1px 0 rgb(169, 59, 0),
+         1px -1px 0 rgb(169, 59, 0),
+        -1px  1px 0 rgb(169, 59, 0),
+         1px  1px 0 rgb(255, 121, 49)
+      `
+    },
   },
   {
     tag: "Password",
@@ -16,6 +26,16 @@ export const registerFormInputs = [
     defaultValue: "",
     isRequired: true,
     validators: [formValidators.notEmptyValidator],
+    labelStyle: {
+      display: "inline-block",
+      color: "rgb(255, 211, 0)",
+      textShadow: `
+        -1px -1px 0 rgb(169, 59, 0),
+         1px -1px 0 rgb(169, 59, 0),
+        -1px  1px 0 rgb(169, 59, 0),
+         1px  1px 0 rgb(255, 121, 49)
+      `
+    },
   },
   {
     tag: "First Name",
@@ -24,6 +44,16 @@ export const registerFormInputs = [
     defaultValue: "",
     isRequired: true,
     validators: [formValidators.notEmptyValidator],
+    labelStyle: {
+      display: "inline-block",
+      color: "rgb(255, 211, 0)",
+      textShadow: `
+        -1px -1px 0 rgb(169, 59, 0),
+         1px -1px 0 rgb(169, 59, 0),
+        -1px  1px 0 rgb(169, 59, 0),
+         1px  1px 0 rgb(255, 121, 49)
+      `
+    },
   },
   {
     tag: "Last Name",
@@ -32,6 +62,16 @@ export const registerFormInputs = [
     defaultValue: "",
     isRequired: true,
     validators: [formValidators.notEmptyValidator],
+    labelStyle: {
+      display: "inline-block",
+      color: "rgb(255, 211, 0)",
+      textShadow: `
+        -1px -1px 0 rgb(169, 59, 0),
+         1px -1px 0 rgb(169, 59, 0),
+        -1px  1px 0 rgb(169, 59, 0),
+         1px  1px 0 rgb(255, 121, 49)
+      `
+    },
   },
   {
     tag: "Email",
@@ -40,6 +80,16 @@ export const registerFormInputs = [
     defaultValue: null,
     isRequired: false,
     validators:[],
+    labelStyle: {
+      display: "inline-block",
+      color: "rgb(255, 211, 0)",
+      textShadow: `
+        -1px -1px 0 rgb(169, 59, 0),
+         1px -1px 0 rgb(169, 59, 0),
+        -1px  1px 0 rgb(169, 59, 0),
+         1px  1px 0 rgb(255, 121, 49)
+      `
+    },
   },
   {
     tag: "Foto",
@@ -48,5 +98,15 @@ export const registerFormInputs = [
     defaultValue: null,
     isRequired: false,
     validators: [],
+    labelStyle: {
+      display: "inline-block",
+      color: "rgb(255, 211, 0)",
+      textShadow: `
+        -1px -1px 0 rgb(169, 59, 0),
+         1px -1px 0 rgb(169, 59, 0),
+        -1px  1px 0 rgb(169, 59, 0),
+         1px  1px 0 rgb(255, 121, 49)
+      `
+    },
   },
 ];

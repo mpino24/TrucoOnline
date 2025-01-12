@@ -1,14 +1,90 @@
 .cuadro-union{
     display: flex;
-    width:100%;
-    border: 2px solid darkgreen; 
-    background-color: rgba(235, 255, 226, 0.678);
-    border-radius: 10px;
-    color: rgb(73, 65, 65);
-    height: 60vh;
+    width:93%;
+    border: 2px solid rgb(255, 170, 66); 
+    background-color: rgba(255, 214, 187, 0.678);
+    border-radius: 30px;
+    color: rgb(255, 229, 100);
+    text-shadow: 
+    -1px -1px 0 rgb(93, 33, 0), 
+    1px -1px 0 rgb(73, 26, 0), 
+    -1px 1px 0 rgb(116, 40, 0), 
+    1px 1px 0 rgb(59, 21, 0);
+    height: auto;
     flex-direction: column;
     padding: 20px;
 }
+
+
+@keyframes dropShadowGlowE2 {
+  0%, 100% {
+      text-shadow: 
+      -0.5px -0.5px 0 rgba(255, 238, 49, 0.415), 
+      0.5px -0.5px 0 rgba(255, 238, 49, 0.415), 
+      -0.5px 0.5px 0 rgba(255, 238, 49, 0.415), 
+      0.5px 0.5px 0 rgba(255, 238, 49, 0.415), 
+          0 0 10px rgb(254, 138, 29);
+  }
+  50% {
+      text-shadow: 
+      -0.5px -0.5px 0 rgba(255, 238, 49, 0.415), 
+      0.5px -0.5px 0 rgba(255, 238, 49, 0.415), 
+      -0.5px 0.5px 0 rgba(255, 238, 49, 0.415), 
+      0.5px 0.5px 0 rgba(255, 238, 49, 0.415), 
+          0 0 20px rgb(254, 138, 29);
+  }
+}
+.equipo2Text {
+  display: inline-block;
+  animation: 
+    dropShadowGlowE2 3s ease-in-out infinite;
+  width: 100%;
+  margin: 0;
+  color: rgb(255, 157, 65);
+
+}
+.cuadro-unionEquipos{
+  display: flex;
+  width:60%;
+  margin-top: 7%;
+  margin-left: 15%;
+  border: 2px solid rgb(255, 170, 66); 
+  background-color: rgba(255, 214, 187, 0.678);
+  border-radius: 30px;
+  color: rgb(255, 229, 100);
+  text-shadow: 
+  -1px -1px 0 rgb(93, 33, 0), 
+  1px -1px 0 rgb(73, 26, 0), 
+  -1px 1px 0 rgb(116, 40, 0), 
+  1px 1px 0 rgb(59, 21, 0);
+  height: 60vh;
+  flex-direction: column;
+  padding: 20px;
+  z-index: 327848927;
+  height: auto;
+ }
+
+ 
+.waiting-modal-background {
+  position: fixed;              /* covers the entire window */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  /* The background image you want to show. Adjust path if necessary. */
+  background: url('../../static/images/home_background.jpg') center center no-repeat;
+  background-size: cover;
+
+  /* If you want some overlay tint, you can do:
+     background-color: rgba(0, 0, 0, 0.3);
+     background-blend-mode: darken; 
+  */
+
+  z-index: -87345734985; /* behind the modal content but above the page */
+}
+
+
 
 .recuadro{
     border: 2px solid white;
@@ -44,9 +120,9 @@
     padding: 8px 20px;
     font-size: 16px;
     color: 'rgb(193, 163, 98);';
-    border: 2px solid darkgreen;
+    border: 2px solid #f6ac00;
     border-radius: 34px;
-    background-color: transparent;
+    background-color: #ffc14fb9;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
     overflow: hidden;
@@ -63,7 +139,7 @@
     border-radius: inherit;
     scale: 0;
     z-index: -1;
-    background-color: rgb(154, 211, 118);
+    background-color: rgb(250, 255, 117);
     transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
   }
   
@@ -73,7 +149,6 @@
   
   .button:hover {
     color: #212121;
-    scale: 1.1;
     box-shadow: 0 0px 20px rgba(193, 163, 98,0.4);
   }
   

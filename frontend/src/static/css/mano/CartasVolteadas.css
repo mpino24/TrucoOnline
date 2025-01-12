@@ -14,6 +14,13 @@
   100% { transform: rotate(0deg); }
 }
 
+
+/* Apply the animation to your element */
+.element {
+  animation: backflip 30s linear infinite;
+}
+
+
 @keyframes dropShadowGlow2 {
   0%, 100% {
     filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));

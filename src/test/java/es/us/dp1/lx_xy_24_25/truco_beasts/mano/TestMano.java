@@ -2,12 +2,15 @@ package es.us.dp1.lx_xy_24_25.truco_beasts.mano;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -152,7 +155,7 @@ public class TestMano {
     
    
     
-
+    //Crear lista de tantos envido
     @Test
     public void envidosGanaEquipo2(){
         setup(0, 4);
@@ -251,9 +254,76 @@ public class TestMano {
         assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
         
     }
+    @Test
+    public void envidosEquipoManoMasBajo() {
+        setup(2, 4);
+        setUpTantos(1, 2, 3, 4);  
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(null);
+        listaResultante.add(null);
+        listaResultante.add(3);
+        listaResultante.add(4);
+  
+        mano.crearListaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(1, mano.getEquipoGanadorEnvido()); 
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+    }
+    @Test
+    public void envidosEquipoContrarioMasAlto() {
+        setup(1, 4);
+        setUpTantos(5, 21, 26, 33);  // Puntajes diferentes SIEMPRE MENORES QUE 7 o ENTRE 20 y 33.
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(null);
+        listaResultante.add(21);
+        listaResultante.add(26);
+        listaResultante.add(33);
+        
+        mano.crearListaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(1, mano.getEquipoGanadorEnvido());  // El equipo contrario (equipo 1) gana.
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+    }
+    @Test
+    public void envidosEmpateGanaEquipoMano() {
+        setup(0, 4);
+        setUpTantos(30, 30, 20, 20);  
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(30);
+        listaResultante.add(null);
+        listaResultante.add(null);
+        listaResultante.add(null);
+        
+
+        mano.crearListaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(0, mano.getEquipoGanadorEnvido());  
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+    }
+    @Test
+    public void envidosEquipoManoMasAlto() {
+        setup(1, 4);
+        setUpTantos(25, 20, 21, 22);  
+        
+        List<Integer> listaResultante = new ArrayList<>();
+        listaResultante.add(25);
+        listaResultante.add(20);
+        listaResultante.add(21);
+        listaResultante.add(22);
+        
+        mano.crearListaTantosCadaJugador();
+        List<Integer> listaTantosCadaJugadorRegistrados = mano.getEnvidosCadaJugador();
+        assertEquals(0, mano.getEquipoGanadorEnvido());  
+        assertEquals(listaResultante, listaTantosCadaJugadorRegistrados);
+    }
+            
 
     
-
+    
+    //Agrupa cartas
     @Test
     public void agrupaCartasPorPalo(){
 
@@ -269,7 +339,9 @@ public class TestMano {
         assertEquals(paloCartas, mano.agrupaCartasPalo(cartasDeJugador1));
 
     }
+
    
+    // get max puntuacion
     @Test
     public void puntuacionDeJugadorCorrecta3Iguales(){
         Map<Palo, List<Carta>> listaPaloValoresJug3= setUpCartasPaloValorTresIguales();
@@ -282,11 +354,42 @@ public class TestMano {
         Map<Palo, List<Carta>> listaPaloValoresJug2= setUpCartasPaloValorTresDiferentes();
         assertEquals(3, mano.getMaxPuntuacion(listaPaloValoresJug2));
     }
+    @Test
+    public void maxPuntuacionTresCartasMismoPaloValoresBajos() {
+        Map<Palo, List<Carta>> cartasMismoPalo = setUpCartasPaloValorTresIguales(); 
+        assertEquals(32, mano.getMaxPuntuacion(cartasMismoPalo)); 
+    }
+    @Test
+    public void maxPuntuacionTresCartasDiferentes() {
+        Map<Palo, List<Carta>> cartasDiferentesPalos = setUpCartasPaloValorTresDiferentes();
+        assertEquals(3, mano.getMaxPuntuacion(cartasDiferentesPalos)); 
+    }
+
+    @Test
+    public void maxPuntuacionDosCartasMismoPalo() {
+        List<Carta> cartasJugador = List.of(
+            setUpCarta(Palo.ESPADAS, 7),
+            setUpCarta(Palo.ESPADAS, 5),
+            setUpCarta(Palo.COPAS, 3)
+        );
+        Map<Palo, List<Carta>> agrupacion = mano.agrupaCartasPalo(cartasJugador);
+        assertEquals(32, mano.getMaxPuntuacion(agrupacion)); // 20 + 7 + 5.
+    }
+    @Test
+    public void maxPuntuacionUnaCarta() {
+        List<Carta> cartasJugador = List.of(setUpCarta(Palo.ESPADAS, 6));
+        Map<Palo, List<Carta>> agrupacion = mano.agrupaCartasPalo(cartasJugador);
+        assertEquals(6, mano.getMaxPuntuacion(agrupacion)); 
+    }
+
+
+    
 
     public void setup(Integer jugMano, Integer numJugadores) {
         partida.setNumJugadores(numJugadores);
         partida.setJugadorMano(jugMano);
         partida.setCodigo("TESTS");
+        mano.setJugadorTurno(jugMano);
         mano.setPartida(partida);
         List<Integer> ganadoresRonda = new ArrayList<>();
         
@@ -327,17 +430,21 @@ public class TestMano {
     public void turnoHaciaAdelanteDe2() {
         setup(0,2);
         mano.setJugadorTurno(0);
-        mano.siguienteTurno();
+        Integer actual = mano.getJugadorTurno();
+        mano.setJugadorTurno(mano.siguienteJugador(actual));
         assertEquals(1, mano.getJugadorTurno());
-        mano.siguienteTurno();
-        assertEquals(0, mano.getJugadorTurno());
+         actual = mano.getJugadorTurno();
+
+         mano.setJugadorTurno(mano.siguienteJugador(actual));
+         assertEquals(0, mano.getJugadorTurno());
     }
 
     @Test
     public void turnoHaciaAdelanteDe4() {
         setup(0,4);
         mano.setJugadorTurno(2);
-        mano.siguienteTurno();
+        Integer actual = mano.getJugadorTurno();
+        mano.setJugadorTurno(mano.siguienteJugador(actual));
         assertEquals(3, mano.getJugadorTurno());
     }
 
@@ -346,7 +453,8 @@ public class TestMano {
         setup(0,4);
 
         mano.setJugadorTurno(3);
-        mano.siguienteTurno();
+        Integer actual = mano.getJugadorTurno();
+        mano.setJugadorTurno(mano.siguienteJugador(actual));
         assertEquals(0, mano.getJugadorTurno());
     }
 
@@ -354,9 +462,14 @@ public class TestMano {
     public void turnoHaciaAtrasDe2() {
         setup(0,2);
         mano.setJugadorTurno(0);
-        mano.anteriorTurno();
+        Integer actual = mano.getJugadorTurno();
+
+        mano.setJugadorTurno(mano.obtenerJugadorAnterior(actual));
+
         assertEquals(1, mano.getJugadorTurno());
-        mano.anteriorTurno();
+        actual = mano.getJugadorTurno();
+
+        mano.setJugadorTurno(mano.obtenerJugadorAnterior(actual));        
         assertEquals(0, mano.getJugadorTurno());
     }
 
@@ -364,7 +477,9 @@ public class TestMano {
     public void turnoHaciaAtrasDe4() {
         setup(0,4);
         mano.setJugadorTurno(3);
-        mano.anteriorTurno();
+        Integer actual = mano.getJugadorTurno();
+
+        mano.setJugadorTurno(mano.obtenerJugadorAnterior(actual));
         assertEquals(2, mano.getJugadorTurno());
     }
 
@@ -373,7 +488,9 @@ public class TestMano {
         setup(0,4);
 
         mano.setJugadorTurno(0);
-        mano.anteriorTurno();
+        Integer actual = mano.getJugadorTurno();
+
+        mano.setJugadorTurno(mano.obtenerJugadorAnterior(actual));        
         assertEquals(3, mano.getJugadorTurno());
     }
 
@@ -405,14 +522,15 @@ public class TestMano {
         Integer pie = mano.obtenerJugadorPie();
         assertEquals(2, pie);
     }
-
+    //COMPROBAR SI PUEDE CANTAR ENVIDO
     @Test
     public void sePuedeCantarEnvidoDeDos(){
         setup(0, 1);
         setUpCartas(setUpListaCartasDispo(3));
         mano.setJugadorTurno(0);
         assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
-        mano.siguienteTurno();
+        Integer actual = mano.getJugadorTurno();
+        mano.setJugadorTurno(mano.siguienteJugador(actual));
         assertTrue(mano.comprobarSiPuedeCantarEnvido(true));
     }
     @Test
@@ -470,7 +588,37 @@ public class TestMano {
         mano.setPuntosEnvido(2);
         assertFalse(mano.comprobarSiPuedeCantarEnvido(true));
     }
+    @Test
+    public void noSePuedeCantarFaltaEnvidoPorMaximo() {
+        setup(0, 4);
+        setUpCartas(setUpListaCartasDispo(3));
+        mano.setJugadorTurno(0);
+        mano.setEnvidosCantados(Arrays.asList(1, 1, mano.getMaximosFaltaEnvido())); // falta envido maximo alcanzado
+        assertFalse(mano.comprobarSiPuedeCantarEnvido(false));
+    }
+
+    @Test
+    public void soloSePuedeCantarRealEnvidoPorMaximo() {
+        setup(0, 4);
+        setUpCartas(setUpListaCartasDispo(3));
+        mano.setJugadorTurno(0);
+        mano.setEnvidosCantados(Arrays.asList(1, mano.getMaximosRealEnvido(), 0)); // real envido maximo alcanzado
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(false));
+        assertEquals(1, mano.getQueEnvidoPuedeCantar()); 
+    }
+
+    @Test
+    public void soloSePuedeCantarEnvidoPorMaximo() {
+        setup(0, 4);
+        setUpCartas(setUpListaCartasDispo(3));
+        mano.setJugadorTurno(0);
+        mano.setEnvidosCantados(Arrays.asList(mano.getMaximosEnvido(), 0, 0)); // envido maximo alcanzado
+        assertTrue(mano.comprobarSiPuedeCantarEnvido(false));
+        assertEquals(2, mano.getQueEnvidoPuedeCantar()); 
+    }
+
     
+    //Cercano a mano
     @Test
     public void cercanoAManoConMano() {
         setup(0,4);
@@ -520,6 +668,72 @@ public class TestMano {
         Integer preferido = mano.cercanoAMano(jugadores);
         assertEquals(5, preferido);
     }
+ 
+    @Test
+    public void cercanoAManoUnSoloJugadorEsMano() {
+        setup(0, 4);
+
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(0); 
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(0, preferido);
+    }
+    @Test
+    public void cercanoAManoUnSoloJugadorNoEsMano() {
+        setup(0, 4);
+    
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(2); 
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(2, preferido);
+    }
+    @Test
+    public void cercanoAManoTodosMismoEquipo() {
+        setup(0, 4);
+
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(0); jugadores.add(2); jugadores.add(4);
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(0, preferido); 
+    }
+    @Test
+    public void cercanoAManoTodosDistintoEquipo() {
+        setup(0, 4);
+    
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(1); jugadores.add(3);
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(1, preferido); 
+    }
+    @Test
+    public void cercanoAManoMixtoEquipos() {
+        setup(0, 4);
+
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(1); jugadores.add(2); jugadores.add(3);
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(2, preferido); 
+    }
+    @Test
+    public void cercanoAManoManoNoCero() {
+        setup(3, 4);
+    
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(0); jugadores.add(2); jugadores.add(3);
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(3, preferido);
+    }
+    @Test
+    public void cercanoAManoCircular() {
+        setup(3, 4);
+
+        List<Integer> jugadores = new ArrayList<>();
+        jugadores.add(0); jugadores.add(1);
+        Integer preferido = mano.cercanoAMano(jugadores);
+        assertEquals(1, preferido); 
+    }
+
+
 
     public void setupCartasLanzadas(Integer poder0, Integer poder1, Integer poder2, Integer poder3) {
         Carta c0 = new Carta();
@@ -533,6 +747,7 @@ public class TestMano {
         mano.setCartasLanzadasRonda(List.of(c0, c1, c2, c3));
     }
 
+    //Comparar cartas
     @Test
     public void compararCartasCartaAlta() {
         setup(0,4);
@@ -586,7 +801,53 @@ public class TestMano {
         Integer empezador = mano.compararCartas();
         assertEquals(1, empezador);
     }
+
+    @Test
+    public void compararCartasTodasIguales() {
+        setup(0, 4);
+        setupCartasLanzadas(10, 10, 10, 10);
+
+        Integer empezador = mano.compararCartas();
+        assertEquals(0, empezador); // Gana la mano por ser el jugador más cercano.
+    }
+
+    @Test
+    public void compararCartasOrdenDescendente() {
+        setup(0, 4);
+        setupCartasLanzadas(14, 10, 6, 2);
     
+        Integer empezador = mano.compararCartas();
+        assertEquals(0, empezador); 
+    }
+    @Test
+    public void compararCartasEmpateUltimosJugadores() {
+        setup(0, 4);
+        setupCartasLanzadas(6, 7, 14, 14);
+
+        Integer empezador = mano.compararCartas();
+        assertEquals(2, empezador); // El jugador 2 gana por ser mano
+    }
+    @Test
+    public void compararCartasEmpateConsecutivos() {
+        setup(0, 4);
+        setupCartasLanzadas(6, 10, 10, 4);
+    
+        Integer empezador = mano.compararCartas();
+        assertEquals(2, empezador); // Gana el jugador 2 por mano.
+    }
+    
+    @Test
+    public void compararCartasEmpateMultipleCercania() {
+        setup(1, 4);
+        setupCartasLanzadas(10, 10, 10, 10);
+    
+        Integer empezador = mano.compararCartas();
+        assertEquals(1, empezador); // Gana el jugador 1 por ser el mano.
+    }
+    
+
+
+    //
     public void setupCartasDisponibles(Integer jugadorTurno, Integer ronda) {
         Carta c0 = new Carta();
         Carta c1 = new Carta();
@@ -624,6 +885,8 @@ public class TestMano {
         if(truco!=null) mano.setPuntosTruco(truco);
     }
 
+
+    //COMPROBAR SI PUEDE CANTAR TRUCO
     @Test 
     public void puedeCantarTrucoNoSeCanto(){
         setup(0, 4);
@@ -663,5 +926,347 @@ public class TestMano {
         mano.setJugadorTurno(0);
         assertFalse(mano.comprobarSiPuedeCantarTruco());
     }
-   
+    @Test
+    public void noPuedeCantarTrucoPorPuntosMaximos() {
+        setup(0, 4); 
+        setupTruco(null, null); 
+        mano.setPuntosTruco(mano.getPuntosMaximosDelTruco()); 
+        mano.setJugadorTurno(1);
+        assertFalse(mano.comprobarSiPuedeCantarTruco());
+    }
+
+   // 3 cartas mismo palo
+   @Test
+    public void tresCartasDelMismoPalo() {
+        List<Carta> cartasMismoPalo = setUpListaCartasDispo(3).get(2); 
+        assertTrue(mano.tiene3CartasMismoPalo(cartasMismoPalo));
+    }
+    @Test
+    public void tresCartasDeDiferentesPalos() {
+        List<Carta> cartasDiferentesPalos = setUpListaCartasDispo(3).get(1); 
+        assertFalse(mano.tiene3CartasMismoPalo(cartasDiferentesPalos));
+    }
+    @Test
+    public void unaSolaCarta() {
+        List<Carta> unaCarta = List.of(setUpListaCartasDispo(1).get(0).get(0)); 
+        assertFalse(mano.tiene3CartasMismoPalo(unaCarta));
+    }
+    @Test
+    public void listaVacia() {
+        List<Carta> listaVacia = new ArrayList<>();
+        assertFalse(mano.tiene3CartasMismoPalo(listaVacia)); 
+    }
+
+    //Gestionar ganadores ronda:
+    @Test
+    public void gestionarGanadoresRondaGanaEquipo1() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0)); 
+        mano.gestionarGanadoresRonda(Collections.emptyList(), 0); 
+    
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(1, 0), ganadoresRonda); 
+    }
+    @Test
+    public void gestionarGanadoresRondaGanaEquipo2() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0)); 
+        mano.gestionarGanadoresRonda(Collections.emptyList(), 1); 
+
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(0, 1), ganadoresRonda); 
+    }
+    @Test
+    public void gestionarGanadoresRondaEmpateAmbosEquipos() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0)); 
+        mano.gestionarGanadoresRonda(Arrays.asList(0, 1), null); 
+    
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(1, 1), ganadoresRonda); 
+    }
+    @Test
+    public void gestionarGanadoresRondaEmpateEquipo1() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0));
+        mano.gestionarGanadoresRonda(Arrays.asList(0, 2), null); 
+
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(1, 0), ganadoresRonda); 
+    }
+    @Test
+    public void gestionarGanadoresRondaEmpateEquipo2() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0)); 
+        mano.gestionarGanadoresRonda(Arrays.asList(1, 3), null); 
+
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(0, 1), ganadoresRonda); 
+    }
+
+    @Test
+    public void gestionarGanadoresRondaSinJugadores() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0)); 
+        mano.gestionarGanadoresRonda(Collections.emptyList(), null); 
+    
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(0, 1), ganadoresRonda); // por defecto como hay un else se le suma al equipo 2, se podria agregar otra condicion 
+                                                                //pero no tiene mucho sentido 7a que en el juego no puede "no ganar" ningun equipo
+    }
+    @Test
+    public void gestionarGanadoresRondaEmpateYGanador() {
+        setup(0, 4);
+        mano.setGanadoresRondas(Arrays.asList(0, 0)); 
+        mano.gestionarGanadoresRonda(Arrays.asList(0, 1), 0); 
+
+        List<Integer> ganadoresRonda = mano.getGanadoresRondas();
+        assertEquals(Arrays.asList(1, 0), ganadoresRonda); 
+    }
+
+    //Quien responde y quien responde flor:
+    @Test
+    public void quienRespondeJugadorActualEsIniciador() {
+        setup(0, 4); 
+        mano.setJugadorIniciadorDelCanto(1);
+        mano.setJugadorTurno(1); 
+
+        Integer jugadorQueResponde = mano.quienResponde();
+        assertEquals(2, jugadorQueResponde); 
+    }
+    @Test
+    public void quienRespondeJugadorActualNoEsIniciador() {
+        setup(0, 4); 
+        mano.setJugadorIniciadorDelCanto(1);
+        mano.setJugadorTurno(2); // El jugador actual no es el iniciador.
+
+        Integer jugadorQueResponde = mano.quienResponde();
+        assertEquals(1, jugadorQueResponde); // El iniciador debe responder.
+    }
+    @Test
+    public void quienRespondeCircularidad() {
+        setup(0, 4); 
+        mano.setJugadorIniciadorDelCanto(3); // Iniciador es el último jugador.
+        mano.setJugadorTurno(3); // El jugador actual es el iniciador.
+    
+        Integer jugadorQueResponde = mano.quienResponde();
+        assertEquals(0, jugadorQueResponde); // El siguiente jugador (el 0) responde.
+    }
+    @Test
+    public void quienRespondeFlorJugadorActualNoEsIniciador() {
+        setup(0, 4);
+        mano.setJugadorIniciadorDelCanto(1);
+        mano.setJugadorTurno(2); // Jugador actual no es el iniciador.
+        mano.setListaTienenFlores(List.of(true, true, false, false)); 
+
+        Integer jugadorQueResponde = mano.quienRespondeFlor();
+        assertEquals(1, jugadorQueResponde); // El iniciador debe responder.
+    }
+    @Test
+    public void quienRespondeFlorEquipoContrarioTieneFlor() {
+        setup(0, 4);
+        mano.setJugadorIniciadorDelCanto(1);
+        mano.setJugadorTurno(1); 
+        mano.setListaTienenFlores(List.of(false, true, true, false)); 
+    
+        Integer jugadorQueResponde = mano.quienRespondeFlor();
+        assertEquals(2, jugadorQueResponde); 
+    }
+    @Test
+    public void quienRespondeFlorCircularidad() {
+        setup(3, 6); 
+        mano.setJugadorIniciadorDelCanto(3);
+        mano.setJugadorTurno(3); 
+        mano.setListaTienenFlores(List.of(false, true, true, true, false, false)); //Tiene flor el otro el que esta dando TOODA la vuelta
+                                                            //resp,    canta
+        Integer jugadorQueResponde = mano.quienRespondeFlor();
+        assertEquals(2, jugadorQueResponde); 
+    }
+    
+    @Test
+    public void quienRespondeFlorNadieTieneFlor() {
+        setup(0, 4);
+        mano.setJugadorIniciadorDelCanto(1);
+        mano.setJugadorTurno(2);
+        mano.setListaTienenFlores(List.of(false, false, false, false)); // Nadie tiene flor.
+    
+        Integer jugadorQueResponde = mano.quienRespondeFlor();
+        assertEquals(1, jugadorQueResponde); 
+    }
+    @Test
+    public void quienRespondeFlorTodosTienenFlor() {
+        setup(0, 4);
+        mano.setJugadorIniciadorDelCanto(0);
+        mano.setJugadorTurno(0); 
+        mano.setListaTienenFlores(List.of(true, true, true, true)); 
+    
+        Integer jugadorQueResponde = mano.quienRespondeFlor();
+        assertEquals(1, jugadorQueResponde); 
+    }
+                
+
+    //TESTS de copia parcial del truco
+    @Test
+    public void copiaParcialTrucoTest() {
+        Mano manoOrigen = new Mano();
+        manoOrigen.setEquipoCantor(1);
+        manoOrigen.setEsperandoRespuesta(true);
+        manoOrigen.setJugadorTurno(2);
+        manoOrigen.setPuntosTruco(15);
+        manoOrigen.setQueEnvidoPuedeCantar(2);
+        manoOrigen.setPuedeCantarEnvido(true);
+        manoOrigen.setTerminada(false);
+        manoOrigen.setUltimoMensaje(Cantos.TRUCO);
+
+        Mano manoDestino = new Mano();
+
+        manoDestino.copiaParcialTruco(manoOrigen);
+
+        assertEquals(1, manoDestino.getEquipoCantor());
+        assertTrue(manoDestino.getEsperandoRespuesta());
+        assertEquals(2, manoDestino.getJugadorTurno());
+        assertEquals(15, manoDestino.getPuntosTruco());
+        assertEquals(2, manoDestino.getQueEnvidoPuedeCantar());
+        assertTrue(manoDestino.getPuedeCantarEnvido());
+        assertFalse(manoDestino.getTerminada());
+        assertEquals(Cantos.TRUCO, manoDestino.getUltimoMensaje());
+    }
+    @Test
+    public void copiaParcialTrucoConValoresPorDefecto() {
+        Mano manoOrigen = new Mano();
+        
+        manoOrigen.setEquipoCantor(0);
+        manoOrigen.setEsperandoRespuesta(false);
+        manoOrigen.setJugadorTurno(0);
+        manoOrigen.setPuntosTruco(0);
+        manoOrigen.setQueEnvidoPuedeCantar(0);
+        manoOrigen.setPuedeCantarEnvido(false);
+        manoOrigen.setTerminada(false);
+        manoOrigen.setUltimoMensaje(null);
+
+        Mano manoDestino = new Mano();
+
+        manoDestino.copiaParcialTruco(manoOrigen);
+
+        assertEquals(0, manoDestino.getEquipoCantor());
+        assertFalse(manoDestino.getEsperandoRespuesta());
+        assertEquals(0, manoDestino.getJugadorTurno());
+        assertEquals(0, manoDestino.getPuntosTruco());
+        assertEquals(0, manoDestino.getQueEnvidoPuedeCantar());
+        assertFalse(manoDestino.getPuedeCantarEnvido());
+        assertFalse(manoDestino.getTerminada());
+        assertEquals(null, manoDestino.getUltimoMensaje());
+    }
+    @Test
+    public void copiaParcialTrucoSinRefenciasCompartidas() {
+        Mano manoOrigen = new Mano();
+        manoOrigen.setEquipoCantor(1);
+        manoOrigen.setEsperandoRespuesta(true);
+        manoOrigen.setJugadorTurno(2);
+        manoOrigen.setPuntosTruco(15);
+        manoOrigen.setQueEnvidoPuedeCantar(2);
+        manoOrigen.setPuedeCantarEnvido(true);
+        manoOrigen.setTerminada(false);
+        manoOrigen.setUltimoMensaje(Cantos.TRUCO);
+
+        Mano manoDestino = new Mano();
+        
+        manoDestino.copiaParcialTruco(manoOrigen);
+
+        manoOrigen.setEquipoCantor(99);
+        manoOrigen.setUltimoMensaje(Cantos.CONTRAFLOR);
+
+        // Verificar que los valores en la mano destino no se modificaron
+        assertNotEquals(99, manoDestino.getEquipoCantor());
+        assertNotEquals(Cantos.CONTRAFLOR, manoDestino.getUltimoMensaje());
+        assertEquals(1, manoDestino.getEquipoCantor());  // El valor original
+        assertEquals(Cantos.TRUCO, manoDestino.getUltimoMensaje());  // El valor original
+    }
+    @Test
+    public void copiaParcialTrucoConValoresNulos() {
+        Mano manoOrigen = new Mano();
+        manoOrigen.setEquipoCantor(1);
+        manoOrigen.setEsperandoRespuesta(null);  
+        manoOrigen.setJugadorTurno(null);  
+        manoOrigen.setPuntosTruco(null);  
+        manoOrigen.setQueEnvidoPuedeCantar(null);  
+        manoOrigen.setPuedeCantarEnvido(null);  
+        manoOrigen.setTerminada(null);  
+        manoOrigen.setUltimoMensaje(null);  
+
+        Mano manoDestino = new Mano();
+
+        manoDestino.copiaParcialTruco(manoOrigen);
+
+        assertEquals(1, manoDestino.getEquipoCantor());
+        assertNull(manoDestino.getEsperandoRespuesta());
+        assertNull(manoDestino.getJugadorTurno());
+        assertNull(manoDestino.getPuntosTruco());
+        assertNull(manoDestino.getQueEnvidoPuedeCantar());
+        assertNull(manoDestino.getPuedeCantarEnvido());
+        assertNull(manoDestino.getTerminada());
+        assertNull(manoDestino.getUltimoMensaje());
+    }
+    @Test
+    public void copiaParcialTrucoConValoresLimite() {
+        Mano manoOrigen = new Mano();
+        manoOrigen.setEquipoCantor(Integer.MAX_VALUE);  // Valor máximo
+        manoOrigen.setEsperandoRespuesta(true);
+        manoOrigen.setJugadorTurno(Integer.MIN_VALUE);  // Valor mínimo
+        manoOrigen.setPuntosTruco(Integer.MAX_VALUE);  // Valor máximo
+        manoOrigen.setQueEnvidoPuedeCantar(0);
+        manoOrigen.setPuedeCantarEnvido(true);
+        manoOrigen.setTerminada(false);
+        manoOrigen.setUltimoMensaje(Cantos.TRUCO);
+    
+        Mano manoDestino = new Mano();
+    
+        manoDestino.copiaParcialTruco(manoOrigen);
+    
+        assertEquals(Integer.MAX_VALUE, manoDestino.getEquipoCantor());
+        assertTrue(manoDestino.getEsperandoRespuesta());
+        assertEquals(Integer.MIN_VALUE, manoDestino.getJugadorTurno());
+        assertEquals(Integer.MAX_VALUE, manoDestino.getPuntosTruco());
+        assertEquals(0, manoDestino.getQueEnvidoPuedeCantar());
+        assertTrue(manoDestino.getPuedeCantarEnvido());
+        assertFalse(manoDestino.getTerminada());
+        assertEquals(Cantos.TRUCO, manoDestino.getUltimoMensaje());
+    }
+    @Test
+    public void copiaParcialTrucoConValoresPreestablecidos() {
+        Mano manoOrigen = new Mano();
+        manoOrigen.setEquipoCantor(1);
+        manoOrigen.setEsperandoRespuesta(true);
+        manoOrigen.setJugadorTurno(2);
+        manoOrigen.setPuntosTruco(15);
+        manoOrigen.setQueEnvidoPuedeCantar(2);
+        manoOrigen.setPuedeCantarEnvido(true);
+        manoOrigen.setTerminada(false);
+        manoOrigen.setUltimoMensaje(Cantos.TRUCO);
+    
+        Mano manoDestino = new Mano();
+        manoDestino.setEquipoCantor(99);  
+        manoDestino.setEsperandoRespuesta(false);  
+        manoDestino.setJugadorTurno(99);  
+        manoDestino.setPuntosTruco(99);  
+        manoDestino.setQueEnvidoPuedeCantar(99);  
+        manoDestino.setPuedeCantarEnvido(false);  
+        manoDestino.setTerminada(true);  
+        manoDestino.setUltimoMensaje(Cantos.QUIERO); 
+    
+        manoDestino.copiaParcialTruco(manoOrigen);
+    
+        // Verificar que los valores de la mano destino se hayan sobrescrito correctamente
+        assertEquals(1, manoDestino.getEquipoCantor());
+        assertTrue(manoDestino.getEsperandoRespuesta());
+        assertEquals(2, manoDestino.getJugadorTurno());
+        assertEquals(15, manoDestino.getPuntosTruco());
+        assertEquals(2, manoDestino.getQueEnvidoPuedeCantar());
+        assertTrue(manoDestino.getPuedeCantarEnvido());
+        assertFalse(manoDestino.getTerminada());
+        assertEquals(Cantos.TRUCO, manoDestino.getUltimoMensaje());
+    }
+    
+        
+
 }

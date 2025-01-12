@@ -8,11 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.TransactionSystemException;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
@@ -38,6 +41,7 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testFindAmigosByUserId() {
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
@@ -53,6 +57,7 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testCheckIfAreFriends() {
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
         assertTrue(jugadorService.checkIfAreFriends(jugador, jugador2));
@@ -60,18 +65,29 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testfindJugadorByUserName() {
         assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
     }
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testAddFriendAgainFallo() {
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
         jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId());
 
         assertThrows(IllegalStateException.class, () -> jugadorService.addNewFriends(jugador.getUser().getId(), jugador2.getId()));
     }
+    @Test
+    @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
+    void testFindJugadorByUserName() {
+        JugadorDTO player = jugadorService.findJugadorByUserName(jugador.getUser().getUsername());
+        assertEquals(jugador.getFirstName(), player.getFirstName());
+        
+    }
+
 
     @Test
     void testAddYourselfFallo() {
@@ -84,11 +100,7 @@ public class TestJugadorService {
         assertThrows(ResourceNotFoundException.class, () -> jugadorService.addNewFriends(jugador.getUser().getId(), 50));
     }
 
-    @Test
-    @WithMockUser(username = "player1", roles = {"PLAYER"})
-    void testFindJugadorByUserName() {
-        assertEquals(jugador.getFirstName(), jugadorService.findJugadorByUserName(jugador.getUser().getUsername()).getFirstName());
-    }
+
 
     @Test
     void testFindNotFoundJugadorByUserNameFallo() {
@@ -97,6 +109,7 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testDeleteFriend() {
         jugadorService.deleteFriends(jugador.getUser().getId(), jugador2.getId());
 
@@ -118,6 +131,7 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testCrearSolicitud() {
         jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
 
@@ -128,6 +142,7 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testDeleteSolicitud() {
         jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
 
@@ -146,6 +161,7 @@ public class TestJugadorService {
 
     @Test
     @WithMockUser(username = "player1", roles = {"PLAYER"})
+    @DirtiesContext
     void testFindSolicitudByUserId() {
         jugadorService.deleteSolicitud(jugador2.getUser().getId(), jugador.getId());
         jugadorService.crearSolicitud(jugador.getUser().getId(), jugador2.getId());
@@ -198,5 +214,14 @@ public class TestJugadorService {
         jugadorNoExistente.setId(999);
         assertThrows(TransactionSystemException.class, () -> jugadorService.updateJugador(jugadorNoExistente, jugador.getUser()));
     }
+
+    @Test
+    @DirtiesContext //sin esto, como los tests se ejecutan aleatoriamente, el de findUser no funciona (porque se borro aca)
+    void testDeleteJugador() { //Hecho por David
+        jugadorService.deleteJugadorByUserId(jugador.getId());
+        assertFalse(jugadorService.existsJugador(jugador.getId()));
+        
+    }
+
 
 }

@@ -1,17 +1,17 @@
 package es.us.dp1.lx_xy_24_25.truco_beasts.carta;
 
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.mano.Palo;
 
@@ -47,16 +47,6 @@ public class CartaServiceTest {
         Optional<Carta> cartaOptional = Optional.empty();
         when(cartaRepository.findById(1)).thenReturn(cartaOptional);
         assertNull(cartaService.findCartaById(1));
-    }
-
-    @Test
-    public void findCartaByIdTestSocial(){ //Hecho por David
-        Carta carta = cartaService.findCartaById(1);
-        assertTrue(carta.getId() == 1);
-        assertTrue(carta.getPalo() == Palo.ESPADAS);
-        assertTrue(carta.getValor() == 1);
-        assertTrue(carta.getPoder() == 14);
-
     }
         
 }

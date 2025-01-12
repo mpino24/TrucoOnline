@@ -4,6 +4,7 @@ import JugadorView from './JugadorView';
 
 
 const JugadorList = forwardRef((props, ref)  => {
+    let jugadoresList = [];
     function playerKey(player) {
         let res=player.id;
         if(player.isConnected){
@@ -14,17 +15,19 @@ const JugadorList = forwardRef((props, ref)  => {
         }
         return res;
     }
+    if(props.jugadores.length > 0) {
+         jugadoresList = props.jugadores.map((player) => {
+            return (
+                <div key={playerKey(player)} onClick={()=> props.mostrarChat(player)}>
+                <JugadorView
+                jugador={player}
+                
+                />
+                </div>
+            )
+        });
+    }
 
-    const jugadoresList = props.jugadores.map((player) => {
-        return (
-            <div key={playerKey(player)} onClick={()=> props.mostrarChat(player)}>
-            <JugadorView
-            jugador={player}
-            
-            />
-            </div>
-        )
-    });
     return (
 
             <div style={{height: '100vh'}}>

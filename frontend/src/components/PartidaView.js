@@ -66,12 +66,12 @@ const PartidaView = forwardRef((props, ref) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px', marginTop: props.interfaz === 'chat' ? '10px' : '0' }}>
                 {game && connectedUsers < game.numJugadores && game.estado === 'WAITING' &&
-                    <button className="button" style={{ color: 'brown' }} onClick={() => handleSubmit()}>
+                    <button className="button" style={{ color: 'black', marginBottom:"10px" }} onClick={() => handleSubmit()}>
                         Unirse
                     </button>
                 }
                 {game && game.estado !== 'FINISHED' &&
-                    <button className="button" style={{ color: 'darkgreen' }} onClick={() => navigate(`/partidas?partidaCode=${game.codigo}`)}>
+                    <button className="button" style={{ color: 'black'  ,marginBottom:"10px"}} onClick={() => navigate(`/partidas?partidaCode=${game.codigo}`)}>
                         Ver
                     </button>
                 }

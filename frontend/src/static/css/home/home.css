@@ -1,3 +1,43 @@
+@keyframes backflip {
+  /* At the start (0%) the element is unrotated */
+  0% {
+    transform: rotateX(0deg);
+  }
+  /* By 6.67% (~2 seconds into a 30s cycle) the element completes a full 360° backflip */
+  6.67% {
+    transform: rotateX(360deg);
+  }
+  /* From 6.67% until the end of the cycle, keep the element at 360° 
+     (which looks the same as 0°, ensuring a smooth restart) */
+  100% {
+    transform: rotateX(360deg);
+  }
+}
+@keyframes sideFlip {
+  /* At the start (0%) the element is unrotated */
+  0% {
+    transform: rotateX(0deg);
+  }
+  /* By 6.67% (~2 seconds into a 30s cycle) the element completes a full 360° backflip */
+  6.67% {
+    transform: rotate(360deg);
+  }
+  /* From 6.67% until the end of the cycle, keep the element at 360° 
+     (which looks the same as 0°, ensuring a smooth restart) */
+  100% {
+    transform: rotateX(360deg);
+  }
+}
+
+@keyframes slightSwirl {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
 .home-page-container{
     position: absolute;
     top: 0;
@@ -12,18 +52,50 @@
     align-items: center;
 
 }
+.ImageStyle2 {
+  
+  animation: dropShadowGlow2 3s ease-in-out infinite, slightSwirl 5s ease-in-out infinite;
+}
+
+.sideflip-container {
+  display: inline-block;
+  animation: sideFlip 15s infinite;
+  /* Enable 3D transforms for a realistic effect */
+  transform-style: preserve-3d;
+  perspective: 800px; /* Adjust for depth */
+}
+.ImageStyle3 {
+  /* Make the element inline-block so transforms apply nicely */
+  display: inline-block;
+  animation: backflip 15s infinite;
+  transform-style: preserve-3d;
+  perspective: 800px;
+
+}
+
+/* Keyframes for the backflip animation */
 
 .hero-div{
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 196, 129, 0.3);
+    
     padding: 2rem;
     border-radius: 25px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(6px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-
+.hero-div2{
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 2rem;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .hero-div h1{
     font-size: 3rem;
     font-weight: 700;
@@ -44,26 +116,50 @@
 
 .cuadro-creacion{
     display: flex;
-    width:60vb;
-    border: 2px solid darkgreen; 
-    background-color: rgba(235, 255, 226, 0.678);
-    border-radius: 10px;
-    color: rgb(73, 65, 65);
-    height: 60vh;
+    width:auto;
+    border: 2px solid rgb(255, 170, 66); 
+    background-color: rgba(255, 214, 187, 0.678);
+    border-radius: 30px;
+    color: rgb(255, 229, 100);
+    text-shadow: 
+    -1px -1px 0 rgb(93, 33, 0), 
+    1px -1px 0 rgb(181, 63, 0), 
+    -1px 1px 0 rgb(116, 40, 0), 
+    1px 1px 0 rgb(198, 69, 0);
+    height: auto;
     flex-direction: column;
     padding: 20px;
+    
 }
 
-.recuadro{
-    border: 2px solid white;
-    padding: 10px 20px;
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-color: darkgreen;
-    border-radius: 50px;
+.botonCrear{
+  padding: 1.3em 3em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #000;
+  background-color: rgba(255, 200, 0, 0.747);
+  border: solid 2px var(--main-green-color);
+  border-color: #ffa600;;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
 }
+
+.botonCrear:hover {
+  background-color:  rgb(255, 211, 0);
+  box-shadow: 0px 15px 20px rgba(255, 136, 0, 0.4);
+  color: #000;
+  
+}
+
+.botonCrear:active {
+  transform: translateY(-1px);
+}
+
 .botones{
   display: flex;
   flex-direction: row;
@@ -140,7 +236,7 @@
 }
 
 .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle:before {
-  background: #00ff77ae;
+  background: #ff7b00ae;
 }
 
 .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span {
@@ -159,20 +255,25 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.button {
-  background-color: #4CAF50;
-  color: #212121;
+.button2 {
+  color: rgb(255, 229, 100);
   padding: 3px 11px;
-  font-size: 10px;
+  font-size: 18px;
   font-weight: bold;
   border: 1px solid transparent;
   border-radius: 15px;
   cursor: pointer;
   position: relative;
   left: 87px;
+  background-color:lightyellow;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  
   
 }
-
+.button2:hover{
+  background-color: #ffc767;
+}
 .dropdown-content {
   display: none;
   font-size: 13px;
@@ -181,13 +282,13 @@
   z-index: 1;
   min-width: 50px;
   background-color: #212121;
-  border: 2px solid #4CAF50;
+  border: 2px solid #f6ac00;
   border-radius: 0px 15px 15px 15px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .dropdown-content a {
-  color: #4CAF50;
+  color: #eda304;
   padding: 8px 10px;
   text-decoration: none;
   display: block;
@@ -195,13 +296,13 @@
 }
 
 .dropdown-content a:hover {
-  background-color: #4CAF50;
+  background-color: #e1a432;
   color: #212121;
 }
 
 .dropdown-content a:focus {
   background-color: #212121;
-  color: #4CAF50;
+  color: #af4e4c;
 }
 
 .dropdown-content #top:hover {
@@ -212,13 +313,59 @@
   border-radius: 0px 0px 13px 13px;
 }
 
-.paste-button:hover button {
-  border-radius: 15px 15px 0px 0px;
-}
+
+
 
 .paste-button:hover .dropdown-content {
   display: block;
 }
 
 
+/*------------------------------------------
+   CREATION MODAL TRANSITION
+-------------------------------------------*/
+/* Step 1: CreationModal enters (start invisible & smaller) */
+.creation-modal-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+/* Step 2: CreationModal enters active (transition to visible) */
+.creation-modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+/* Step 3: CreationModal exits (currently visible) */
+.creation-modal-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+/* Step 4: CreationModal exits active (transition to invisible) */
+.creation-modal-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+/*------------------------------------------
+   JOIN MODAL TRANSITION
+-------------------------------------------*/
+.join-modal-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.join-modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+.join-modal-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.join-modal-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
 

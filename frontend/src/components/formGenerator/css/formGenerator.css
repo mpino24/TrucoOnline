@@ -1,9 +1,9 @@
 :root{
-  --color-input: #000000;
+  --color-input: #572000;
   --color-label:#000000;
   --color-btn-disabled: #5757577e;
-  --color-error: #cc0033;
-  --color-error-background: #fce4e4;
+  --color-error: #ffc977;
+  --color-error-background: #aa4a0076;
   --color-border-disabled: #706c6c;
   --main-button-hover-dark-color: #000000;
   --main-button-hover-light-color: #23c483;
@@ -62,7 +62,7 @@ select.class-form-input {
   border-radius: 15%;
   outline: none;
   border-bottom: 1px solid var(--main-button-hover-dark-color);
-  background-color:rgba(169, 169, 169, 0.647) ;
+  background-color:rgba(255, 183, 0, 0.403) ;
   
 }
 
@@ -95,6 +95,7 @@ textarea.class-form-input {
   transform: translateY(-15px) scale(0.7);
   transform-origin: top left;
   color: var(--main-button-hover-dark-color);
+  
   cursor: pointer;
 }
 
@@ -165,7 +166,13 @@ select.class-form-input {
   position: relative;
   font-size: 0.7em;
   color: var(--color-error);
+  text-shadow:
+  -1px -1px 0 rgb(196, 0, 0),
+   1px -1px 0 rgb(196, 0, 0),
+  -1px 1px 0 rgb(196, 0, 0),
+   1px 1px 0 rgb(255, 121, 49);
   padding-left: 3px;
+  
 }
 
 .class-link:disabled,

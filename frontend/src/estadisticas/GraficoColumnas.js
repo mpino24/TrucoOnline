@@ -74,14 +74,14 @@ const GraficoColumnas = ({ estadisticasAvanzadas, estadisticas }) => {
                     const resultado = this.x === 0 ? "victoria" : "derrota";
                     return `
                         <b>${this.series.name}</b><br>
-                        Promedio de Flores cantadas en ${resultado}: ${promedioFlores.toFixed(2)} por partida
+                        Promedio de ${promedioFlores.toFixed(2)} Flores cantadas por partida en ${resultado}
                     `;
                 } else {
                     return `
                         <b>${this.series.name}</b><br>
                         Promedio de ${this.x === 0 
-                            ? `${promedioGanadas.toFixed(2)} victorias en partidas con flor de ${partidasConFlor.length} partidas con flor` 
-                            : `${promedioPerdidas.toFixed(2)} derrotas en partidas con flor de ${partidasConFlor.length} partidas con flor`
+                            ? `${promedioGanadas.toFixed(2)} victorias en partidas con flor de ${partidasConFlor.length} partidas con flor totales` 
+                            : `${promedioPerdidas.toFixed(2)} derrotas en partidas con flor de ${partidasConFlor.length} partidas con flor totales`
                         }
                     `;
                 }

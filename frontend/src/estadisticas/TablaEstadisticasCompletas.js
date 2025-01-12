@@ -48,19 +48,21 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
     ];
 
     const renderTabla = (data, titulo, global) => (
-        <div style={{ marginBottom: '30px', width: '100%' }}>
+        <div style={{ marginBottom: '30px', width: '100%', marginTop:'46px'}}>
             <h2 style={{ textAlign: 'center', color: 'white' }}>{titulo}</h2>
             <table style={{
                 borderCollapse: 'collapse',
-                width: '85%',
+                width: '95%',
                 height:'70%',
                 margin: '0 auto',
                 color: 'white',
                 textAlign: 'left',
-                marginBottom: '20px',
+            
                 backgroundColor: 'rgba(48, 158, 148, 0.2)', 
                 borderRadius: '5px',
                 overflow: 'hidden',
+                top:'80px',
+                
             }}>
                 <thead>
                     <tr style={{ backgroundColor: 'rgba(48, 158, 148, 0.5)' }}> 
@@ -87,15 +89,21 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
 
     return (
         <div style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', 
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
+            flex: 1,
             alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-            color: 'white',
-            height: '100%',
-            width:'93%',
-            top:'40px'
+            justifyContent: 'flex-start',
+            padding: '18px',
+            overflowY: 'auto',
+            maxHeight: '100%',
+           
+            borderRadius: '10px',
+            width: '100%',
+          
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
         }}>
             <div style={{display:'flex', flexDirection:'row'}}>
             {renderTabla(estadisticasGlobales, `Estadísticas Globales de ${estadisticasGlobales.jugadoresTotales} jugadores`, true)}
@@ -112,7 +120,6 @@ const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTabl
                     cursor: 'pointer',
                     transition: 'background-color 0.3s, transform 0.3s',
                     fontSize: '16px',
-                    marginTop: '10px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                     width: '10%',
                     textAlign: 'center',

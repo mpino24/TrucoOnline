@@ -86,6 +86,7 @@ public class Mano {
         
         return res;
     }
+
     final Integer maximosEnvido = 2;
     final Integer maximosRealEnvido =1;
     final Integer maximosFaltaEnvido = 1; 
@@ -281,10 +282,17 @@ public class Mano {
         return nuevaLista;
     }
     
-    private boolean tiene3CartasMismoPalo(List<Carta> cartasJugador) {
-        Palo paloInicial = cartasJugador.get(0).getPalo();
-        return cartasJugador.stream()
+    public boolean tiene3CartasMismoPalo(List<Carta> cartasJugador) {
+        boolean res = false;
+        if(cartasJugador.size()==3){
+
+            Palo paloInicial = cartasJugador.get(0).getPalo();
+
+        res =cartasJugador.stream()
                             .allMatch(c -> c.getPalo().equals(paloInicial));
+        }
+
+        return res;
     }
     
 
@@ -332,18 +340,8 @@ public class Mano {
         return siguiente;
     }
             
-    public  void siguienteTurno() {      
-        Integer jugadorActual = getJugadorTurno();
-        Integer siguiente = (jugadorActual + 1) % getPartida().getNumJugadores();
-        setJugadorTurno(siguiente);
-    }
-                            
-    public  void anteriorTurno() {
-        Integer jugadorActual = getJugadorTurno();
-        Integer anterior = obtenerJugadorAnterior(jugadorActual);
-        setJugadorTurno(anterior);
-    }
-                            
+
+                                                 
     public  Integer compararCartas() {
 
         Integer poderMayor = 0;
@@ -351,7 +349,9 @@ public class Mano {
         List<Carta> cartasLanzadas = getCartasLanzadasRonda();
         List<Integer> empate = new ArrayList<>();
 
+     
         for (int i = 0; i < cartasLanzadas.size(); i++) {
+
             Integer poder = cartasLanzadas.get(i).getPoder();
             if (poderMayor < poder) {
                 poderMayor = poder;

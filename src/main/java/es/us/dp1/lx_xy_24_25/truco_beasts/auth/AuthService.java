@@ -43,7 +43,7 @@ public class AuthService {
 		user.setPassword(encoder.encode(request.getPassword()));
 		String strRoles = request.getAuthority();
 		Authorities role;
-
+		String fotoDefault = "http://localhost:8080/resources/images/perfiles/robot.jpg";
 		switch (strRoles.toLowerCase()) {
 		case "admin":
 			role = authoritiesService.findByAuthority("ADMIN");
@@ -55,12 +55,13 @@ public class AuthService {
 			user.setAuthority(role);
 			userService.saveUser(user);
 		}
-		
+		String foto = request.getPhoto();
 		Jugador jugador = new Jugador();
 		jugador.setFirstName(request.getFirstName());
 		jugador.setLastName(request.getLastName());
-		if(request.getEmail()!=null) jugador.setEmail(request.getEmail());
-		if (request.getPhoto()!= null) jugador.setPhoto(request.getPhoto());
+		if(request.getEmail()!=null && !request.getEmail().trim().isEmpty()) jugador.setEmail(request.getEmail());
+		if (foto!= null && !foto.trim().isEmpty()) jugador.setPhoto(foto);
+		else jugador.setPhoto(fotoDefault);
 		jugador.setUser(user);
 
 		jugadorService.saveJugador(jugador);

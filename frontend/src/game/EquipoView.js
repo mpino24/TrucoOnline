@@ -8,6 +8,7 @@ import { FaCrown } from "react-icons/fa";
 const EquipoView = forwardRef((props, ref) => {
     const usuario = tokenService.getUser();
     const jwt = tokenService.getLocalAccessToken();
+    let jugadoresList = [];
 
     function changeTeam() {
         fetch(
@@ -56,17 +57,18 @@ const EquipoView = forwardRef((props, ref) => {
     }
 
     function getJugadoresList() {
-        const jugadoresList = props.jugadores.map(j => j.player).map((player) => {
+        if(props.jugadores.length > 0){
+         jugadoresList = props.jugadores.map(j => j.player).map((player) => {
             return (
-                <div key={getPlayerKey(player)} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+                <div key={getPlayerKey(player)} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center', }}>
                     {props.gameCreator && props.gameCreator.id === usuario.id && player.id !== usuario.id &&
                         <AiOutlineUserDelete style={{ width: 40, height: 40, cursor: "pointer" }} onClick={()=> handleExpelPlayer(player.id)} />
                     }
                     {props.gameCreator && props.gameCreator.id === player.id && player.id !== usuario.id &&
-                        <FaCrown style={{ width: 40, height: 40,color:'grey' }} />
+                        <FaCrown style={{ width: 40, height: 40,color:'black' }} />
                     }
                     {player.id === usuario.id &&
-                        <FaRegHandPointRight style={{ width: 40, height: 40 }} />
+                        <FaRegHandPointRight style={{ width: 40, height: 40, color:"black" }} />
                     }
                     <JugadorView
                         key={getPlayerKey(player)}
@@ -76,6 +78,7 @@ const EquipoView = forwardRef((props, ref) => {
                 </div>
             )
         });
+    }
 
         const jugRestantes = Math.max(0, props.partida.numJugadores / 2 - props.jugadores.length);
         const botones = [];

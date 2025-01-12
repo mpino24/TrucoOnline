@@ -29,20 +29,18 @@ Para que los jugadores del mismo equipo se comuniquen existen señas (puesto a q
 
 ## Tipos de Usuarios / Roles
 
-< Nombre Rol >: < Breve descripción del rol >
+Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento.
 
-Administrador: Usuario con potestad para gestionar a otros usuarios y las partidas que juegan. Puede eliminar a otros usuarios en caso de mal comportamiento._
+Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros.
 
-Jugador: Usuario estándar del sistema, puede jugar partidas, agregar a amigos o consultar sus logros._
-
-Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan. _
+Espectador: Usuario registrado, o no, con capacidad para visualizar partidas, pero no puede jugarlas ni interactuar con los usuarios que juegan.
 
 
 ## Historias de Usuario
 
 A continuación se definen  todas las historias de usuario a implementar:
  ## Historia de Usuario Aspectos especificos del usuario:
-### HU-1(NOISSUE): Poder loggearme
+### HU-1(NOISSUE): Poder loggearme ()
 Como jugador quiero poder iniciar sesion o registrarme si no lo estoy
 ![Mockup_login](https://github.com/user-attachments/assets/1574d025-ee65-4937-b503-1d9ed27fd810) 
  ### HU-2(NOISSUE): Poder editar y borrar tu cuenta ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/70]) ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/159]) 
@@ -52,9 +50,9 @@ Como jugador quiero poder cerrar sesion para que la web no se quede con mis dato
 ![Mockup_menuuser](https://github.com/user-attachments/assets/0c4db4e8-672e-47cf-b314-d5f005d3cb8d)
  ### HU-26(NOISSUE): Poder ver listado de partidas en curso y terminadas como administrador ([])
 Como administador quiero poder ver un listado de partidas en curso y de partidas jugadas para tener constancia de todas las partidas que se juegan.
- ### HU-27(ISSUE#183): Poder ver listado de usuarios como administrador ([])
+ ### HU-27(ISSUE#183): Poder ver listado de usuarios como administrador ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/183])
 Como administrador quiero poder ver un listado de usuarios para saber en todo momento qué usuarios hay registrados.
- ### HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador ([])
+ ### HU-28(ISSUE#293): Poder crear, ver, editar y borrar usuarios como administrador ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/293])
 Como administrador quiero poder crear un usuario, ver los datos de un usuario, editar los datos de un usuario y borrar un usuario para tener control total sobre todos los usuarios que hay registrados.
  ## Historias de Usuario Creación y configuración partidas:
  ### HU-4(ISSUE#59): Crear partidas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/59])
@@ -74,6 +72,8 @@ Como jugador quiero que el sistema me permita poder unirme a partidas para jugar
  ## Historias de Usuario Jugar al Truco:
  ### HU-9(ISSUE#143): Poder ver cartas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/143])
 Como jugador quiero poder ver mis cartas para poder crear una estrategia de juego.
+ ### HU-29 (ISSUE#376) : Poder ver perfiles de Usuario en partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/376])
+Como jugador quiero poder ver la foto y nombre de usuario de las personas que participan en la partida para poder ver con quién juego.
  ### HU-10(ISSUE#145): Poder cantar Truco ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/145])
 Como jugador quiero poder cantar Truco para aumentar la puntuación de la mano.
  ### HU-11(ISSUE#146): Poder cantar Envido ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/146])
@@ -99,22 +99,40 @@ Como jugador quiero poder responder Truco y sus variantes para subir la apuesta 
  ### HU-19(ISSUE#152): Poder responder Flor y sus variantes ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/152])
 Como jugador quiero poder responder Flor y sus variantes para subir la apuesta del Flor.
 ![Mockup Flor](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/mockups/Mockup_Flor.jpg)
+ ### HU-37(ISSUE#384): Poder cambiar de equipo antes de iniciar la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/384])
+ Como jugador quiero poder cambiarme de equipo antes de que empiece la partida para mejorar mi experiencia de juego.
+ ### HU-38(ISSUE#385): Expulsar jugador de una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/385])
+ Como creador de una partida quiero poder expulsar a un jugador para mejorar la experiencia de juego.
  
 
  ## Historias de Usuario Módulo social:
- ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130]):
+ ### HU-20(ISSUE#130): Poder buscar usuarios([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/130])
 Como jugador quiero que el sistema me permita buscar usuarios poder agregar amigos.
- ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
- ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131]):
- Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
  ![Mockup_buscar_usuario](https://github.com/user-attachments/assets/215631c4-ae2b-4f37-a4e5-53d0482a232d)
+ ### HU-21(ISSUE#131): Poder ver mis amigos([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/131])
+ Como jugador quiero poder ver los amigos que tengo agregados para chatear con ellos e invitarles a partidas.
+  ![Mockup_ver_amigos](https://github.com/user-attachments/assets/9930c482-7b12-4484-9bc3-a376d4b37bde)
+ ### HU-30(ISSUE#377): Poder añadir y eliminar amigos ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/377])
+ Como usuario quiero poder añadir y eliminar amigos para poder gestionar mis amistades.
+ ### HU-31(ISSUE#378): Gestionar solicitudes de amistad ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/378])
+ Como usuario quiero poder aceptar o rechazar las solicitudes de amistad para poder gestionar mis amistades.
+ ### HU-32(ISSUE#379): Poder chatear con amigos durante la partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/379])
+ Como usuario quiero poder chatear con mis amigos mientras juego una partida para poder conversar con ellos.
+ ### HU-33(ISSUE#380): Poder chatear con amigos fuera de una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/380])
+ Como usuario quiero poder chatear con mis amigos fuera de una partida para poder entablar conversación.
+ ### HU-34(ISSUE#381): Poder invitar amigos conectados a una partida ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/381])
+ Como usuario quiero poder invitar a mis amigos conectados a una partida para poder jugar con ellos.
+ ### HU-35(ISSUE#382): Poder ver amigos conectados ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/382])
+ Como usuario quiero poder ver los amigos que estén conectados para poder ver quién está en línea.
+ ### HU-36(ISSUE#383): Poder recibir notificación de nuevo mensaje ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/383])
+ Como usuario quiero poder recibir notificaciones de mensajes para ver si tengo mensajes sin leer.
 
  ## Historias de Usuario Módulo Estadístico:
- ### HU-22(ISSUE#): Ver mis estadísticas :
+ ### HU-22(ISSUE#387): Ver mis estadísticas ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/387])
 Como jugador, quiero poder ver mis estadísticas para poder seguir mi progreso en el juego y mejorar mi rendimiento.
-### HU-23(ISSUE#): Ver logros :
+### HU-23(ISSUE#388): Ver logros ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/388])
 Como jugador, quiero poder ver mis logros conseguidos y aquellos que me faltan por alcanzar, para motivarme a seguir jugando y completar todos los logros.
-### HU-24(ISSUE#): Crear, editar y eliminar logros:
+### HU-24(ISSUE#389): Crear, editar y eliminar logros ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/389])
 Como administrador, quiero poder crear, editar y eliminar logros para mantener la experiencia de juego dinámica y actualizada, asegurando que los jugadores tengan nuevos objetivos que cumplir.
 ### HU-25(ISSUE#342): Ver ranking global ([https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/issues/342]):
 Como jugador quiero poder ver el ranking global para incentivarme a algún día estar primero.
@@ -141,5 +159,15 @@ En caso de no estar logado, solo serán visibles las partidas públicas (especta
 Al meterte en una partida como espectador no podrás interactuar con la partida 
 ### R6-Partidas concurrentes
 Si un jugador está jugando una partida, no podrá unirse a otra partida o crear una nueva.
-### R7-Cuenta atrás en un turno
-Cuando es el turno de un jugador en la ronda, este tiene un tiempo límite para actuar, pasado este tiempo comienza una cuenta atrás en pantalla que termina dando la victoria al equipo contrario si el jugador no reacciona a tiempo.
+### R7-Conexión a la partida
+Para comenzar una partida, todos los jugadores deben estar conectados al juego.
+### R8-Gestionar una partida
+El usuario creador de la partida será el único con capacidad para comenzar la partida y eliminar a usuarios de esta.
+### R9-Invitación a la partida
+Para poder invitar a un jugador a ver o jugar una partida, dicho jugador debe ser tu amigo y estar conectado.
+### R10-Relevo del creador
+Si el creador abandona la partida, deberá ser otro usuario conectado a la partida quien asuma dicho rol.
+### R11-Chat de la partida
+Los mensajes enviados durante la partida sólo deben estar disponible durante la partida.
+### R12-Abandonar una partida
+Si un jugador abandona una partida a la que estaba jugando, será el equipo contrario quien instantáneamente gane la partida.

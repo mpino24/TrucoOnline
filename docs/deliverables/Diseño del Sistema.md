@@ -1,29 +1,23 @@
 # Documento de diseño del sistema
 
-_Esta es una plantilla que sirve como guía para realizar este entregable. Por favor, mantén las mismas secciones y los contenidos que se indican para poder hacer su revisión más ágil._ 
-
 ## Introducción
 
 _En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuantos puntos gana cada jugador o cual es el criterio para elegir al vencedor?_
 
-[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](http://youtube.com)
+[Enlace al vídeo de explicación de las reglas del juego / partida jugada por el grupo](https://www.youtube.com/watch?v=IAKDghOqNaM&t=1s)
 
 ## Diagrama(s) UML:
 
 ### Diagrama de Dominio/Diseño
 
-_En esta sección debe proporcionar un diagrama UML de clases que describa el modelo de dominio, recuerda que debe estar basado en el diagrama conceptual del documento de análisis de requisitos del sistema pero que debe:_
-•	_Especificar la direccionalidad de las relaciones (a no ser que sean bidireccionales)_
-•	_Especificar la cardinalidad de las relaciones_
-•	_Especificar el tipo de los atributos_
-•	_Especificar las restricciones simples aplicadas a cada atributo de cada clase de domino_
-•	_Incluir las clases específicas de la tecnología usada, como por ejemplo BaseEntity, NamedEntity, etc._
-•	_Incluir los validadores específicos creados para las distintas clases de dominio (indicando en su caso una relación de uso con el estereotipo <<validates>>)._
+El diagramaes de una gran magnitud, pero al estar exportado en SVG se puede abrir en el navegador y ver en detalle sin problema. Se ha decidido utilizar esta disposición ya que era la que mejor mostraba las relaciones directas de cada Entidad/componente (separarlo por paquetes de clases lo dejaba casi ilegible)
 
-![Diagrama de dominio Truco Beasts fondo claro](https://github.com/user-attachments/assets/3dcc08e2-9f77-4617-9080-48ae819a206d)
+![Diagrama de dominio final](/docs/diagrams/Diagrama%20de%20dominio%20final%20final.drawio.svg)
+
+Además, en la carpeta "Diagrams" tambien se incluye el PNG por si se prefiriese ver en ese formato.
 
 ### Diagrama de Capas (incluyendo Controladores, Servicios y Repositorios)
-Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo en el siguiente archivo: docs/diagrams/LayersUMLPackageDiagram.iuml
+Debido a la magnitud del diagrama completo no hemos podido incluir una imagen legible con el diagrama completo. Por ello, además de la imagen que contiene el diagrama completo, hemos incluido 3 imágenes que muestran por separado todo lo que contiene el diagrama. Una muestra las relaciones entre la capa de Presentación y la capa de Lógica de Negocio, otra las relaciones entre la capa de Lógica de Negocio y la capa de Recursos y otra los repositorios de la capa de Recursos y sus consultas personalizadas. Además, hemos dejado el código UML que construye el diagrama completo [aquí](https://github.com/gii-is-DP1/DP1-2024-2025--l6-5/blob/main/docs/diagrams/LayersUMLPackageDiagram.iuml).
 
 #### Diagrama completo
 ![diagrama_completo](https://github.com/user-attachments/assets/7b215724-8c2b-46ee-a4b3-eed52ec35492)
@@ -36,11 +30,6 @@ Debido a la magnitud del diagrama completo no hemos podido incluir una imagen le
 
 #### Repositorios de la capa de Recursos y sus consultas personalizadas
 ![diagrama_de_capas_R](https://github.com/user-attachments/assets/9d548e75-6946-4600-a1e0-c00738c61f6b)
-
-_El diagrama debe especificar además las relaciones de uso entre controladores y servicios, entre servicios y servicios, y entre servicios y repositorios._
-_Tal y como se muestra en el diagrama de ejemplo, para el caso de los repositorios se deben especificar las consultas personalizadas creadas (usando la signatura de su método asociado)._
-
-_En este caso, como mermaid no soporta la definición de paquetes, hemos usado una [herramienta muy similar llamada plantUML}(https://www.plantuml.com/). Esta otra herramienta tiene un formulario para visualizar los diagramas previamente disponible en [https://www.plantuml.com/plantuml/uml/}(https://www.plantuml.com/plantuml/uml/). Lo que hemos hecho es preparar el diagrama en ese formulario, y una vez teníamos el diagrama lista, grabarlo en un fichero aparte dentro del propio repositorio, y enlazarlo con el formulario para que éste nos genera la imagen del diagrama usando una funcionalizad que nos permite especificar el código del diagrama a partir de una url. Por ejemplo, si accedes a esta url verás el editor con el código cargado a partir del fichero del repositorio original: [http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/gii-is-DP1/group-project-seed/main/docs/diagrams/LayersUMLPackageDiagram.iuml](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/gii-is-DP1/group-project-seed/main/docs/diagrams/LayersUMLPackageDiagram.iuml)._
 
 ## Descomposición del mockups del tablero de juego en componentes
 
@@ -59,28 +48,41 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
     - $\color{yellow}{\textsf{PopularCardsChart – Muestra la proporción de las N (parámetro de configuración) cartas más jugadas en el juego por el jugador.}}$
     - $\color{red}{\textsf{FrequentCoPlayersTable – Muestra los jugadores  con los que más se  ha jugado (de M en M donde M es un parámetro definido por la configuración del componente). Concretamente, se mostrarán la el nombre, la fecha de la última partida, la localización del jugador el porcentaje de partidas jugadas por ambos en las que el usuario ha ganado y si el jugador es amigo o no del usuario.}}$
 
+![tablero_dividido_en_componentes](https://github.com/user-attachments/assets/6c02c8fd-d7d7-4631-8f22-a7288d415705)
+
+  - PlayingModal – Componente principal del tablero
+    - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{Logo – Botón que muestra el logotipo y permite salir de la partida.}}$$
+    - $$\textcolor[rgb]{1,0,0}{\textsf{Perfil – Muestra la foto y el nombre de un jugador.}}$$
+      - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{TextFoto – Muestra el nombre del jugador.}}$$
+      - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Foto – Muestra la foto del jugador.}}$$
+    - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Quedan – Muestra una imagen con las cartas restantes (boca abajo) de un jugador.}}$$
+    - $$\textcolor[rgb]{0.6019,0.851,0.917}{\textsf{Mazo – Muestra el mazo de cartas para esclarecer quién es el jugador mano.}}$$
+    - $$\textcolor[rgb]{1,0.949,0}{\textsf{DropArea – Proporciona el espacio donde los jugadores sueltan las cartas.}}$$
+      - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{CardContainer – Contiene las cartas que se han tirado durante la ronda.}}$$
+        - $$\textcolor[rgb]{1,0,0}{\textsf{CartaRonda – Muestra la carta tirada por uno de los jugadores.}}$$
+    - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{CartasJugadorContainer – Muestra el conjunto de cartas que tiene el jugador.}}$$
+      - $$\textcolor[rgb]{1,0,0}{\textsf{CartaJugador – Muestra una de las cartas que tiene el jugador.}}$$
+    - $$\textcolor[rgb]{1,0.7882,0.0549}{\textsf{Truco – Botón que permite cantar truco.}}$$
+    - $$\textcolor[rgb]{1,0.498,0.1529}{\textsf{EnvidoButtonContainer – Contiene las cartas que se han tirado durante la ronda.}}$$
+      - $$\textcolor[rgb]{1,0.949,0}{\textsf{Envido – Botón que permite cantar envido.}}$$
+      - $$\textcolor[rgb]{1,0,0}{\textsf{Real Envido – Botón que permite cantar real envido.}}$$
+      - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{Falta Envido – Botón que permite cantar falta envido.}}$$
+    - $$\textcolor[rgb]{1,0.6824,0.7882}{\textsf{NosEllos – Texto que permite saber si los puntos mostrados son de un equipo u otro.}}$$
+    - $$\textcolor[rgb]{0.6392,0.2863,0.6431}{\textsf{Puntos – Permite conocer el número de puntos de un equipo.}}$$
+    - $$\textcolor[rgb]{0.2471,0.2824,0.8}{\textsf{Jugador – Texto que indica la posición en la que se encuentra el jugador dentro de la mano actual.}}$$
+    - $$\textcolor[rgb]{0.9725,0,1}{\textsf{TurnoHeading – Texto que aparece en la pantalla de un jugador cuando es su turno.}}$$
+    - $$\textcolor[rgb]{0.9373,0.8941,0.6902}{\textsf{Musica – Botón que permite desplegar el reproductor de música de fondo.}}$$
+    - $$\textcolor[rgb]{0.7255,0.4784,0.3412}{\textsf{Chat – Botón que permite desplegar el chat de la partida.}}$$
+    - $$\textcolor[rgb]{0.4392,0.5725,0.7451}{\textsf{Gestos – Botón que permite desplegar el menú de gestos.}}$$
+    
+
 ## Documentación de las APIs
 Se considerará parte del documento de diseño del sistema la documentación generada para las APIs, que debe incluir como mínimo, una descripción general de las distintas APIs/tags  proporcionadas. Una descripción de los distintos endpoints y operaciones soportadas. Y la especificación de las políticas de seguridad especificadas para cada endpoint y operación. Por ejemplo: “la operación POST sobre el endpoint /api/v1/game, debe realizarse por parte de un usuario autenticado como Player”.
 
 Si lo desea puede aplicar la aproximación descrita en https://vmaks.github.io/2020/02/09/how-to-export-swagger-specification-as-html-or-word-document/ para generar una versión en formato Word de la especificación de la API generada por OpenAPI, colgarla en el propio repositorio y enlazarla en esta sección del documento.  En caso contrario debe asegurarse de que la interfaz de la documentación open-api de su aplicación está accesible, funciona correctamente, y está especificada conforme a las directrices descritas arriba.
 
 ## Patrones de diseño y arquitectónicos aplicados
-En esta sección de especificar el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto. Para especificar la aplicación de cada patrón puede usar la siguiente plantilla:
-
-### Patrón: < Nombre del patrón >
-*Tipo*: Arquitectónico | de Diseño
-
-*Contexto de Aplicación*
-
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
-
-*Clases o paquetes creados*
-
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
-*Ventajas alcanzadas al aplicar el patrón*
-
-Describir porqué era interesante aplicar el patrón.
+En esta sección especificamos el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto:
 
 ### Patrón: Strategy
 *Tipo*: Arquitectónico | de Comportamiento
@@ -130,7 +132,6 @@ Este patrón es uno de los más importantes.
 Este patrón es otro de los pilares de esta aplicación, pues define los aspectos generales de la arquitectura de esta. El Modelo está integrado por los servicios, los repositorios y las clases de dominio, la Vista está compuesta por la totalidad del frontend y el Controlador está representado por los controladores en el backend de la aplicación.
 
 Ejemplos de clases clasificadas según su pertenencia al Modelo, la Vista o el Controlador:
-
 #### Modelo
 - User
 - Mano
@@ -150,39 +151,35 @@ El patrón MVC nos ha proporcionado una separación clara de responsabilidades e
 ### Patrón: Domain Model
 *Tipo*: Arquitectónico
 
-*Contexto de Aplicación*
-Se aplica en multiples entidades de la aplicación y sirve como separador de funcionalidades en las clases, para que todo lo relacionado a la lógica de negeocio quede asociado a esta capa de servicio. El patron nos permite tener una alta cohesion con un bajo acoplamiento
-*Clases o paquetes creados*
+Se aplica en casi todas las entidades de la aplicación, permitiendo que estas, además de servir como modelo para los datos, sirven para describir el comportamiento de las diferentes entidades que hay en la base de datos, especialmente en cuanto a cómo se relacionan distintas entidades.
+
+Como se ha mencionado antes, este patrón se aplica en casi todas las entidades. Aquí hay algunos ejemplos:
 - Carta
 - Jugador
 - Partida
 - PartidaJugador
 - User
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-Todos los services
-*Ventajas alcanzadas al aplicar el patrón*
-Hay varias ventajas, pero las mas prominentes son la claridad al saber que tipo de lógica se encuentra en las capas de servicio asi como que, por ejemplo nos permite cambiar componentes sin miedo a afectar a otros que dependan de él
-Describir porqué era interesante aplicar el patrón.
-Tenemos muchas entidades, con logicas distintas pero categorizables, por ello hemos decidido agrupar todas las de la logica de negocio en esta capa 
-### Patrón: Service layer
+
+El uso de domain model nos ha permitido tener un control total sobre todos los objetos, sobre todo en cuanto a relaciones y herencias, algo que nos ha permitido implementar una lógica de negocio más compleja (y poder así aplicar el patrón Service Layer) que lo que nos permitiría otro patrón como lo es Table Module.
+
+### Patrón: Service Layer
 *Tipo*: Arquitectónico | de Diseño
 
-*Contexto de Aplicación*
+Este patrón es fundamental en esta aplicación, pues la interacción entre la presentación y el dominio recae en la capa de servicios.
 
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+Todos los servicios creados pertenecen a esta capa y cada uno de ellos se encarga de gestionar la lógica de negocio que le corresponde. Aquí algunos ejemplos:
+- UserService
+- JugadorService
+- PartidaService
+- ManoService
+- EstadisticasService
 
-*Clases o paquetes creados*
-
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
-*Ventajas alcanzadas al aplicar el patrón*
-
-Describir porqué era interesante aplicar el patrón.
+Gracias a este patrón hemos podido dividir la lógica de negocio en lógica de dominio y lógica de la aplicación, gestionando mucho mejor la totalidad de la lógica de negocio. Nos ha proporcionado eficiencia en interacciones bien coordinadas entre entidades de la base de datos, seguridad en las transacciones y en otras interacciones del usuario con la aplicación, entre otras ventajas.
 
 ### Patrón: (Meta) Data Mapper 
 *Tipo*: Arquitectónico | de Diseño
 
-*Contexto de Aplicación*: el (Meta) Data Mapper es aplicado en la capa de persistencia de la aplicacion, la encargada de trasladar los datos entre los objetos del dominio y la base de datos. Este patron nos permite mantener el modelo de dominio independiente del modelo de datos, facilitando la separacion de responsabilidades.
+El (Meta) Data Mapper es aplicado en la capa de persistencia de la aplicacion, la encargada de trasladar los datos entre los objetos del dominio y la base de datos. Este patron nos permite mantener el modelo de dominio independiente del modelo de datos, facilitando la separacion de responsabilidades.
 
 Este patron lo aplica Spring utilizando JPA en todas nuestras clases del dominio, como:
 - Carta
@@ -191,9 +188,7 @@ Este patron lo aplica Spring utilizando JPA en todas nuestras clases del dominio
 - PartidaJugador
 - User
 
-Las ventajas más claras son la independencia del modelo de dominio y la persistencia de los datos, simplificando su lógica.
-
-La aplicación del patrón (Meta) Data Mapper fue esencial para lograr una arquitectura limpia y desacoplada, donde la lógica de negocio y la lógica de persistencia están claramente separadas
+Las ventajas más claras son la independencia del modelo de dominio y la persistencia de los datos, simplificando su lógica. La aplicación del patrón (Meta) Data Mapper fue esencial para lograr una arquitectura limpia y desacoplada, donde la lógica de negocio y la lógica de persistencia están claramente separadas
 
 ### Patrón: Identity Field
 *Tipo*: Arquitectónico | de Diseño
@@ -221,13 +216,11 @@ Lo hemos aplicado para las entidades:
 - User
 En sus respectivos paquetes: es.us.dp1.lx_xy_24_25.truco_beasts.{nombre de la entidad}Repository
 
-Entre sus ventajas destaca la separacion de responsabilidades facilitando el mantenimiento y claridad del código y su integracion directa con el framework que estamos utilizando, pudiendo hacer de una manera simple consultas avanzadas.
-
-En resumen, el patrón Repository es clave para estructurar la capa de acceso a datos de forma modular y desacoplada. 
+Entre sus ventajas destaca la separacion de responsabilidades facilitando el mantenimiento y claridad del código y su integracion directa con el framework que estamos utilizando, pudiendo hacer de una manera simple consultas avanzadas. En resumen, el patrón Repository es clave para estructurar la capa de acceso a datos de forma modular y desacoplada. 
 
 
 ## Decisiones de diseño
-_En esta sección describiremos las decisiones de diseño que se han tomado a lo largo del desarrollo de la aplicación que vayan más allá de la mera aplicación de patrones de diseño o arquitectónicos._
+En esta sección describimos las decisiones de diseño que hemos tomado a lo largo del desarrollo de la aplicación:
 
 ### Decisión 1: Creacion de la clase PartidaJugador
 #### Descripción del problema:
@@ -371,7 +364,7 @@ Nos decantamos por la alternativa 1 ya que nos pareció lo más óptimo porque n
 #### Descripción del problema:
 Para almacenar quien es el jugador que ha creado la partida y otorgarle así el derecho a expulsar gente o comenzarla cuando crea oportuno, necesitamos guardar para cada partida un atributo creador que haga referencia al jugador que creó la partida.
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: : Añadir un atributo creador a la clase Partida.
+*Alternativa 1*: Añadir un atributo creador a la clase Partida.
 
 *Ventajas:*
 • Te permite obtener el creador de la partida directamente con una llamada a la base de datos que obtenga los datos de la partida.
@@ -391,6 +384,33 @@ Para almacenar quien es el jugador que ha creado la partida y otorgarle así el 
 
 #### Justificación de la solución adoptada
 Nos decantamos por la alternativa 2 ya que hemos primado la unificación de toda la información del jugador respecto a una partida en una misma entidad PartidaJugador sobre separar esa información en distintas clases. Además, dado el código ya implementado era la solución que generaba menos retrabajo.
+
+### Decisión 7: Permitir invitar a tus amigos aunque no sean amigos de otros
+#### Descripción del problema:
+Antes de empezar una partida se tiene la opción de invitar a tus amigos para que se unan a ella.  
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Poder invitar a un amigo solo si es amigo de todos los demás.
+
+*Ventajas:*
+• Permite que la partida sea más privada y haya relación de amistad entre todos los jugadores.
+• Reduce la posibilidad de conflictos o incomodidades entre los jugadores.
+
+*Inconvenientes:*
+• Limita considerablemente las opciones de jugadores disponibles para cada partida.
+• Puede generar frustración en los usuarios que quieran jugar con amigos que no conocen al resto del grupo.
+
+*Alternativa 2*: Poder invitar a un amigo aunque no sean amigos de todos los demás.
+
+*Ventajas:*
+• Fomenta la flexibilidad en la creación de partidas y facilita que más personas puedan participar.
+• Aumenta las posibilidades de socialización y creación de nuevas amistades dentro del juego.
+• Promueve la diversidad en las partidas, ya que no se requiere una red de amistades cerrada.
+*Inconvenientes:*
+• Existe la posibilidad de conflictos o incomodidades si algunos jugadores no se llevan bien.
+
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 2 ya que preferimos que haya más rango posible de diferentes partidas sin tantas limitaciones.
 
 
 ## Refactorizaciones aplicadas
@@ -1623,5 +1643,101 @@ No estabamos aplicando completamente el patrón y por lo tanto no aprovechabamos
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Ahora tanto cantosTruco como respuestasTruco quedó mucho más limpio y fácil de comprender.
 
+### Refactorización 14: Creación de MessageList
+En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de ShowChat.js y hemos creado un componente a parte que es MessageList.js que se encarga de rendirizar los mensajes. Además tambien hemos creado el InpotConteiner que es donde se escribe el mensaje y se envía.
+#### Estado inicial del código
+```Java 
+   return (
+    <>
+    <div className="messages-container">
+    {mensajes.map((msg, i) =>
+    msg.remitente.id === user.id ? (
+      <div key={i} className="own-message">
+        {msg.contenido}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "stretch",
+        height: "85vh",
+      }}
+    >
+      <div
+        className="messages-container"
+        style={{
+          flexGrow: 1,
+          overflowY: "auto",
+          padding: "10px",
+        }}
+      >
+        {mensajes.map((msg, i) =>
+          msg.remitente.id === user.id ? (
+            <div key={i} className="own-message">
+              {msg.contenido}
+            </div>
+          ) : (
+            <>
+              <div key={i}>{msg.remitente.username}</div>
+              <div key={i} className="other-message">
+                {msg.contenido}
+              </div>
+            </>
+          )
+        )}
+        
+        <div ref={messagesEndRef} />
+      </div>
+    ) : (
+      <>
+      <div key={i} >{msg.remitente.username}</div>
+      <div key={i} className="other-message">
+        {msg.contenido}
+      <div className="input-container">
+        <input
+          type="text"
+          value={mensaje}
+          onChange={(e) => setMensaje(e.target.value)}
+          placeholder="Escribe un mensaje..."
+          className="input-text"
+        />
+        <button onClick={handleEnviar} className="btn-send">
+          Enviar
+        </button>
+      </div>
+      </>
+    )
+    )}
+  </div>
+    <div className="input-container">
+      <input
+        type="text"
+        value={mensaje}
+        onChange={(e) => setMensaje(e.target.value)} 
+        placeholder="Escribe un mensaje..."
+        className="input-text"
+      />
+      <button onClick={handleEnviar} className="btn-send" >Enviar</button>
+    </div>
+    </>
+    
+  );
+
+
+``` 
+
+#### Estado del código refactorizado
+
+```Java
+    return(
+        <MessageList mensajes={mensajes} userId={user.id} />
+        <InputContainer mensaje={mensaje} setMensaje={setMensaje} evtEnviarMensaje={evtEnviarMensaje} />
+    )
+    
+```
+#### Problema que nos hizo realizar la refactorización
+Al tener el chat integrado tanto en la página principal como en la partida, se iba a tener una duplicación del código innecesaria.
+#### Ventajas que presenta la nueva versión del código respecto de la versión original
+Con este componente ahora cada vez que queremos mostrar mensajes solo tenemos que pasar los mensajes a MessageList para que los muestre con el estilo que creamos. Con esto el código queda más legible además de que es muy reutilizable.
  
 

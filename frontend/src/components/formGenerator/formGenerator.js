@@ -140,6 +140,7 @@ const FormGenerator = forwardRef((props, ref) => {
                   props.children}
                 <FormInput
                   key={index}
+                  labelStyle={input.labelStyle}  
                   tag={input.tag}
                   name={input.name}
                   type={input.type}
