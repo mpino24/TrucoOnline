@@ -18,26 +18,26 @@ INSERT INTO appusers(id,username,password,authority,last_connection) VALUES (12,
 
 -- Insertar partidas
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (0,2,'WWWWW',FALSE,15,0,0,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
-INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (1,2,'ABCDE',FALSE,15,1,2,'PUBLICA','2024-11-08 21:28', '2025-01-07 23:45');
-INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (2,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2020-11-08 20:28:02','2024-11-08 20:37');
-INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (3,4,'BCDEG',TRUE,30,1,2,'PUBLICA','2024-11-08 20:28','2024-11-08 20:37');
-INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (4,2,'QWERT',TRUE,15,1,2,'PUBLICA','2023-11-08 10:12','2023-12-01 05:37');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (1,2,'ABCDE',FALSE,15,1,2,'PUBLICA','2024-11-08 21:28', '2024-11-09 00:15');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (2,4,'BCDEF',TRUE,30,1,2,'PUBLICA','2024-10-25 10:01:02','2024-10-25 10:37:21');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (3,4,'BCDEG',TRUE,30,1,2,'PUBLICA','2024-12-01 18:52','2024-12-01 20:00');
+INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (4,2,'QWERT',TRUE,15,1,2,'PUBLICA','2023-12-12 04:12','2023-12-12 05:37');
 INSERT INTO Partida(id,NumJugadores,Codigo,ConFlor,PuntosMaximos,PuntosEquipo1,PuntosEquipo2,Visibilidad,inicio,fin) VALUES (5,6,'YHGDT',TRUE,15,1,2,'PRIVADA','2025-01-01 17:06','2025-01-01 17:45:02');
 
 
 -- Inserts de players
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (1,'jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/perfiles/jorge.jpg',1);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (2,'Paula', 'Rosa', 'paula@alum.us.es','http://localhost:8080/resources/images/perfiles/paula.jpg',2);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (3,'Maria', 'del', 'pino@alum.us.es','http://localhost:8080/resources/images/perfiles/canguro.jpg',3);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (4,'Eloy', 'Eloy', 'eloy@alum.us.es','http://localhost:8080/resources/images/perfiles/quebuenascartas.jpg',4);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (5,'Ivan', 'FerLinandez', 'ivan@alum.us.es','http://localhost:8080/resources/images/perfiles/mosca.jpg',5);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (6,'David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/perfiles/cervecita.jpg',6);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (7,'Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/gorila.jpg',7);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (8,'otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/ballena.jpg',8);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (9,'lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/perfiles/lampi.jpg',9);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (10,'mono', 'bananas', 'monin@alum.us.es','http://localhost:8080/resources/images/perfiles/monogif.gif',10);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (11,'Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/perfiles/jaguar.jpg',11);
-INSERT INTO Jugadores(id, first_name,last_name, email, photo ,user_id) VALUES (12,'bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/perfiles/robot.jpg',12);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('jorge', 'el admin', 'admin@alum.us.es','http://localhost:8080/resources/images/perfiles/jorge.jpg',1);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Paula', 'Rosa', 'paula@alum.us.es','http://localhost:8080/resources/images/perfiles/paula.jpg',2);
+INSERT INTO Jugadores(first_name,last_name, email, photo ,user_id) VALUES ('Maria', 'del', 'pino@alum.us.es','http://localhost:8080/resources/images/perfiles/canguro.jpg',3);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Eloy', 'Eloy', 'eloy@alum.us.es','http://localhost:8080/resources/images/perfiles/quebuenascartas.jpg',4);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Ivan', 'FerLinandez', 'ivan@alum.us.es','http://localhost:8080/resources/images/perfiles/mosca.jpg',5);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('David', 'Fotografias', 'david@alum.us.es','http://localhost:8080/resources/images/perfiles/cervecita.jpg',6);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Mi nombre', 'Mi apellido', 'micorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/gorila.jpg',7);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('otro nombre', 'otro apellido', 'otrocorreo@correo.de.verdad','http://localhost:8080/resources/images/perfiles/ballena.jpg',8);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('lampi', 'la lampara', 'luz@alum.us.es','http://localhost:8080/resources/images/perfiles/lampi.jpg',9);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('mono', 'bananas', 'monin@alum.us.es','http://localhost:8080/resources/images/perfiles/monogif.gif',10);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('Ivo', 'Raimondi', 'ivorai@alum.us.es','http://localhost:8080/resources/images/perfiles/jaguar.jpg',11);
+INSERT INTO Jugadores( first_name,last_name, email, photo ,user_id) VALUES ('bip', 'bop', '10101@alum.us.es','http://localhost:8080/resources/images/perfiles/robot.jpg',12);
 
 
 
@@ -161,6 +161,7 @@ INSERT INTO Logros(id,name,descripcion,valor,metrica,imagencita, oculto) VALUES 
 
 
 -- Inserts de fotos
+--trofeos
 INSERT INTO fotos(id,name,categoria_foto) VALUES(1,'trofeo1.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(2,'trofeo2.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(3,'trofeo3.jpg','TROFEO');
@@ -171,8 +172,9 @@ INSERT INTO fotos(id,name,categoria_foto) VALUES(7,'trofeo7.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(8,'trofeo8.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(9,'trofeo9.jpg','TROFEO');
 INSERT INTO fotos(id,name,categoria_foto) VALUES(10,'trofeo10.jpg','TROFEO');
-INSERT INTO fotos(id,name,categoria_foto) VALUES(11,'amistad.jpg', 'PERFIL');
-INSERT INTO fotos(id,name,categoria_foto) VALUES(12,'monogif.gif', 'PERFIL');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(11,'trofeo11.jpg','TROFEO');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(12,'trofeo12.jpg','TROFEO');
+--perfiles
 INSERT INTO fotos (id, name, categoria_foto) VALUES (13, 'tomandoalgo.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (14, 'ballena.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (15, 'canguro.jpg', 'PERFIL');
@@ -188,5 +190,8 @@ INSERT INTO fotos (id, name, categoria_foto) VALUES (24, 'paula.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (25, 'pets.png', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (26, 'quebuenascartas.jpg', 'PERFIL');
 INSERT INTO fotos (id, name, categoria_foto) VALUES (27, 'robot.jpg', 'PERFIL');
-
-
+INSERT INTO fotos (id, name, categoria_foto) VALUES (28, 'zorro.jpg', 'PERFIL');
+INSERT INTO fotos (id, name, categoria_foto) VALUES (29, 'goat.jpg', 'PERFIL');
+INSERT INTO fotos (id, name, categoria_foto) VALUES (30, 'carpincho.jpg', 'PERFIL');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(31,'amistad.jpg', 'PERFIL');
+INSERT INTO fotos(id,name,categoria_foto) VALUES(32,'monogif.gif', 'PERFIL');

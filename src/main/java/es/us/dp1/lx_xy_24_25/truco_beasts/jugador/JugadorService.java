@@ -73,9 +73,9 @@ public class JugadorService {
     @Transactional
     public Jugador saveJugador(Jugador jugador) throws DataAccessException {
 
-        Jugador savedJugador = jugadorRepository.save(jugador);
+        jugadorRepository.save(jugador);
 
-        return savedJugador;
+        return jugador;
     }
 
     @Transactional(rollbackFor = {EntityNotFoundException.class, DataAccessException.class})
