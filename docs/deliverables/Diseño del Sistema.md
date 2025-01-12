@@ -51,7 +51,7 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
 ![tablero_dividido_en_componentes](https://github.com/user-attachments/assets/6c02c8fd-d7d7-4631-8f22-a7288d415705)
 
   - PlayingModal – Componente principal del tablero
-    - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{Logo – Muestra el logotipo y permite salir de la partida.}}$$
+    - $$\textcolor[rgb]{0.1333,0.6941,0.2980}{\textsf{Logo – Botón que muestra el logotipo y permite salir de la partida.}}$$
     - $$\textcolor[rgb]{1,0,0}{\textsf{Perfil – Muestra la foto y el nombre de un jugador.}}$$
       - $$\textcolor[rgb]{0.7098,0.9019,0.1137}{\textsf{TextFoto – Muestra el nombre del jugador.}}$$
       - $$\textcolor[rgb]{0,0.6353,0.9098}{\textsf{Foto – Muestra la foto del jugador.}}$$
@@ -132,7 +132,6 @@ Este patrón es uno de los más importantes.
 Este patrón es otro de los pilares de esta aplicación, pues define los aspectos generales de la arquitectura de esta. El Modelo está integrado por los servicios, los repositorios y las clases de dominio, la Vista está compuesta por la totalidad del frontend y el Controlador está representado por los controladores en el backend de la aplicación.
 
 Ejemplos de clases clasificadas según su pertenencia al Modelo, la Vista o el Controlador:
-
 #### Modelo
 - User
 - Mano
@@ -152,39 +151,35 @@ El patrón MVC nos ha proporcionado una separación clara de responsabilidades e
 ### Patrón: Domain Model
 *Tipo*: Arquitectónico
 
-*Contexto de Aplicación*
-Se aplica en multiples entidades de la aplicación y sirve como separador de funcionalidades en las clases, para que todo lo relacionado a la lógica de negeocio quede asociado a esta capa de servicio. El patron nos permite tener una alta cohesion con un bajo acoplamiento
-*Clases o paquetes creados*
+Se aplica en casi todas las entidades de la aplicación, permitiendo que estas, además de servir como modelo para los datos, sirven para describir el comportamiento de las diferentes entidades que hay en la base de datos, especialmente en cuanto a cómo se relacionan distintas entidades.
+
+Como se ha mencionado antes, este patrón se aplica en casi todas las entidades. Aquí hay algunos ejemplos:
 - Carta
 - Jugador
 - Partida
 - PartidaJugador
 - User
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-Todos los services
-*Ventajas alcanzadas al aplicar el patrón*
-Hay varias ventajas, pero las mas prominentes son la claridad al saber que tipo de lógica se encuentra en las capas de servicio asi como que, por ejemplo nos permite cambiar componentes sin miedo a afectar a otros que dependan de él
-Describir porqué era interesante aplicar el patrón.
-Tenemos muchas entidades, con logicas distintas pero categorizables, por ello hemos decidido agrupar todas las de la logica de negocio en esta capa 
-### Patrón: Service layer
+
+El uso de domain model nos ha permitido tener un control total sobre todos los objetos, sobre todo en cuanto a relaciones y herencias, algo que nos ha permitido implementar una lógica de negocio más compleja (y poder así aplicar el patrón Service Layer) que lo que nos permitiría otro patrón como lo es Table Module.
+
+### Patrón: Service Layer
 *Tipo*: Arquitectónico | de Diseño
 
-*Contexto de Aplicación*
+Este patrón es fundamental en esta aplicación, pues la interacción entre la presentación y el dominio recae en la capa de servicios.
 
-Describir las partes de la aplicación donde se ha aplicado el patrón. Si se considera oportuno especificar el paquete donde se han incluido los elementos asociados a la aplicación del patrón.
+Todos los servicios creados pertenecen a esta capa y cada uno de ellos se encarga de gestionar la lógica de negocio que le corresponde. Aquí algunos ejemplos:
+- UserService
+- JugadorService
+- PartidaService
+- ManoService
+- EstadisticasService
 
-*Clases o paquetes creados*
-
-Indicar las clases o paquetes creados como resultado de la aplicación del patrón.
-
-*Ventajas alcanzadas al aplicar el patrón*
-
-Describir porqué era interesante aplicar el patrón.
+Gracias a este patrón hemos podido dividir la lógica de negocio en lógica de dominio y lógica de la aplicación, gestionando mucho mejor la totalidad de la lógica de negocio. Nos ha proporcionado eficiencia en interacciones bien coordinadas entre entidades de la base de datos, seguridad en las transacciones y en otras interacciones del usuario con la aplicación, entre otras ventajas.
 
 ### Patrón: (Meta) Data Mapper 
 *Tipo*: Arquitectónico | de Diseño
 
-*Contexto de Aplicación*: el (Meta) Data Mapper es aplicado en la capa de persistencia de la aplicacion, la encargada de trasladar los datos entre los objetos del dominio y la base de datos. Este patron nos permite mantener el modelo de dominio independiente del modelo de datos, facilitando la separacion de responsabilidades.
+El (Meta) Data Mapper es aplicado en la capa de persistencia de la aplicacion, la encargada de trasladar los datos entre los objetos del dominio y la base de datos. Este patron nos permite mantener el modelo de dominio independiente del modelo de datos, facilitando la separacion de responsabilidades.
 
 Este patron lo aplica Spring utilizando JPA en todas nuestras clases del dominio, como:
 - Carta
@@ -193,9 +188,7 @@ Este patron lo aplica Spring utilizando JPA en todas nuestras clases del dominio
 - PartidaJugador
 - User
 
-Las ventajas más claras son la independencia del modelo de dominio y la persistencia de los datos, simplificando su lógica.
-
-La aplicación del patrón (Meta) Data Mapper fue esencial para lograr una arquitectura limpia y desacoplada, donde la lógica de negocio y la lógica de persistencia están claramente separadas
+Las ventajas más claras son la independencia del modelo de dominio y la persistencia de los datos, simplificando su lógica. La aplicación del patrón (Meta) Data Mapper fue esencial para lograr una arquitectura limpia y desacoplada, donde la lógica de negocio y la lógica de persistencia están claramente separadas
 
 ### Patrón: Identity Field
 *Tipo*: Arquitectónico | de Diseño
@@ -223,9 +216,7 @@ Lo hemos aplicado para las entidades:
 - User
 En sus respectivos paquetes: es.us.dp1.lx_xy_24_25.truco_beasts.{nombre de la entidad}Repository
 
-Entre sus ventajas destaca la separacion de responsabilidades facilitando el mantenimiento y claridad del código y su integracion directa con el framework que estamos utilizando, pudiendo hacer de una manera simple consultas avanzadas.
-
-En resumen, el patrón Repository es clave para estructurar la capa de acceso a datos de forma modular y desacoplada. 
+Entre sus ventajas destaca la separacion de responsabilidades facilitando el mantenimiento y claridad del código y su integracion directa con el framework que estamos utilizando, pudiendo hacer de una manera simple consultas avanzadas. En resumen, el patrón Repository es clave para estructurar la capa de acceso a datos de forma modular y desacoplada. 
 
 
 ## Decisiones de diseño
