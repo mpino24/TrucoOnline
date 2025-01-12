@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/manos/{codigo}")
-@Tag(name = "Mano", description = "La API de gestión de la Manos de las partidas con las acciones posibles de los jugadores")
+@Tag(name = "Mano", description = "La API de gestión de la Manos de las partidas con las acciones posibles de los jugadores. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class ManoController {
 

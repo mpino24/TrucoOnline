@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/profile")
-@Tag(name = "CurrentUser", description = "La API de gestión del Usuario Actual")
+@Tag(name = "CurrentUser", description = "La API de gestión del Usuario Actual. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class CurrentUserRestController {
     

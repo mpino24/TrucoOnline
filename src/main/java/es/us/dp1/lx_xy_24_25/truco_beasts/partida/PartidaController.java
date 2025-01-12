@@ -33,7 +33,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/partida")
-@Tag(name = "Partida", description = "La API de gestión de las partidas")
+@Tag(name = "Partida", description = "La API de gestión de las partidas. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class PartidaController {
 

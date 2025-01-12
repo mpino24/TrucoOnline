@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/estadisticas")
-@Tag(name = "Estadisticas", description = "La API de gestión de todas las Estadisticas")
+@Tag(name = "Estadisticas", description = "La API de gestión de todas las Estadisticas. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class EstadisticasController {
 

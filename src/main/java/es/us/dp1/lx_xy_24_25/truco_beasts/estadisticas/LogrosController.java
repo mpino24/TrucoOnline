@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/logros")
-@Tag(name = "Logros", description = "La API de gestión de los Logros")
+@Tag(name = "Logros", description = "La API de gestión de los Logros. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class LogrosController {
 

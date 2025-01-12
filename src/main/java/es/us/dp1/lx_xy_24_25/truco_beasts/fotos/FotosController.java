@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/fotos")
-@Tag(name = "Fotos", description = "La pequeña API de gestión de las fotos de trofeos y perfiles")
+@Tag(name = "Fotos", description = "La pequeña API de gestión de las fotos de trofeos y perfiles. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class FotosController {
 

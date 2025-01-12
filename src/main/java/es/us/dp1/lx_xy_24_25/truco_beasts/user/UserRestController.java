@@ -45,7 +45,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/users")
-@Tag(name = "UserRestController", description = "La API de gestión de los Usuarios")
+@Tag(name = "UserRestController", description = "La API de gestión de los Usuarios. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 class UserRestController {
 

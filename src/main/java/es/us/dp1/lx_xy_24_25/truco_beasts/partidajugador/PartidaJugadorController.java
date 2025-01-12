@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/partidajugador")
-@Tag(name = "PartidaJugador", description = "La API de gestión de los PartidaJugador")
+@Tag(name = "PartidaJugador", description = "La API de gestión de los PartidaJugador. Se debe estar autenticado para utilizarla.")
 @SecurityRequirement(name = "bearerAuth")
 public class PartidaJugadorController {
     
