@@ -24,7 +24,7 @@ const PrivateRoute = ({ children }) => {
     } else return <Login message={message} navigation={false} />;
 
     if (isLoading === true) {
-        return <div>Loading...</div>;
+        return <div className="loginText" style={{top:"50%", left:"50%", fontSize:"50", }}>Loading...</div>;
     } else return isValid === true ? children : <Login message={message} navigation={true} />
 };
 

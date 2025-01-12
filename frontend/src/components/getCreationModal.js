@@ -111,7 +111,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
     return (
 
         <div >
-            <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: "absolute" }} onClick={() => handleModalVisible(props.setCreationModalView, props.creationModalView)} />
+            <IoCloseCircle style={{ top:"4%", right:"5%", width: 30, height: 30, cursor: "pointer", position: "absolute", color: "rgb(123, 27, 0)"}} onClick={() => handleModalVisible(props.setCreationModalView, props.creationModalView)} />
             {modal}
             <div className= 'cuadro-creacion'>
                 <div style={{marginTop:"20px"}}>
@@ -119,9 +119,8 @@ const GetCreationModal=forwardRef((props,ref) =>{
                         <h3> Ajuste de la partida: </h3>
                          <div className='contenedor'>
                             <Label> Numero de jugadores: </Label>
-                                <div class="paste-button"> 
-                                                   
-                                    <a class="button">
+                                <div class="paste-button">               
+                                    <a class="button2" style={{borderColor: "#ffa200"}}>
                                     {numJugadores ? `${numJugadores}▼` : '▼'}    
                                     </a> 
                                         <div class="dropdown-content">
@@ -209,7 +208,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
                         
                         
                         <div className="botones">
-                                <button className="recuadro" onClick={() => handleSubmit}>Crear</button>
+                                <button className="botonCrear" onClick={() => handleSubmit}>Crear</button>
                         </div>
                     </Form>
                 </div>

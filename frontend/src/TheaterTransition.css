@@ -1,0 +1,48 @@
+/* TheaterTransition.css */
+
+/* Parent container that holds both the children and the curtains */
+.theater-container {
+    position: relative;
+    /* If your Game is bigger than the window, remove or adjust. */
+    overflow: hidden;
+  }
+  
+  /* Full-screen layer for the curtains */
+  .curtains {
+    position: fixed;  /* cover entire viewport */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  
+    display: flex;    /* We'll put left curtain & right curtain side-by-side */
+    z-index: 9999;    /* on top of everything */
+    pointer-events: none; 
+  }
+  
+  /* Both curtains start closed. Each half covers the screen. */
+  .curtain {
+    width: 50%;
+    background: url('./static/images/madera.jpg') center center;
+    transition: transform 1.7s ease-in-out; /* 1s to open (adjust to taste) */
+  }
+  
+  /* Left curtain starts covering the left half */
+  .curtain-left {
+    transform: translateX(0);
+  }
+  
+  /* Right curtain starts covering the right half from the center */
+  .curtain-right {
+    transform: translateX(0);
+  }
+  
+  /* When the 'open' class is applied, curtains slide off screen */
+  .open .curtain-left {
+    transform: translateX(-100%);
+  }
+  
+  .open .curtain-right {
+    transform: translateX(100%);
+  }
+  

@@ -74,7 +74,7 @@ const GetJoinModal = forwardRef((props, ref) => {
     return (
         <>
             <div className='cuadro-union' style={{ display: 'flex', flexDirection: 'column' }}>
-                <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute' }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
+                <IoCloseCircle style={{top:"3%", right:"9%", width: 30, height: 30, cursor: "pointer", position: 'absolute', color: "rgb(123, 27, 0)" }} onClick={() => handleModalVisible(props.setModalVisible, props.modalVisible)} />
 
                 <Form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -86,7 +86,7 @@ const GetJoinModal = forwardRef((props, ref) => {
 
                         <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                             <button type="submit" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
-                                <IoIosSearch style={{ width: 30, height: 30 }} />
+                                <IoIosSearch style={{ width: 30, height: 30, color:"black" }} />
                             </button>
                             {partida &&
                                 <VscChromeClose onClick={handleReset} style={{ width: 30, height: 30, cursor: "pointer", marginLeft: 8 }} />

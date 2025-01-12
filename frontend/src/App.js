@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+// App.js
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ErrorBoundary } from "react-error-boundary";
 import AppNavbar from "./AppNavbar";
@@ -17,10 +18,13 @@ import EstadisticasAdmin from "./admin/estadisticas/EstadisticasAdmin";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import GameHistory from "./gamehistory/GameHistory";
-import Game from "./game"
 import SwaggerDocs from "./public/swagger";
-import './App.css';
-import { useNavigate } from "react-router-dom";
+import Game from "./game";                          // <--- your existing or placeholder Game
+import TheaterTransition from "./TheaterTransition"; // <--- the new curtain animation
+
+import "./App.css";
+
+
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -35,38 +39,44 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 function App() {
   const TIEMPO_CONEXION_SEGUNDOS = 30000; 
   const location = useLocation();
-  const jwt = tokenService.getLocalAccessToken();
-  const [validToken, setValidToken] = React.useState(false);
-  let roles = [];
   const navigate = useNavigate();
+
+  // Local state to track if the token is valid
+  const [validToken, setValidToken] = useState(false);
+
+  const jwt = tokenService.getLocalAccessToken();
   const usuario = tokenService.getUser();
 
   function redirectToLogin() {
-    if (location.pathname !== "/login" && location.pathname !== "/register" && location.pathname !== "/") {
+    if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/register" &&
+      location.pathname !== "/"
+    ) {
       navigate("/");
     }
   }
 
   function updateConnectionTime() {
-      fetch("/api/v1/profile/updateConnection", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }).then((response) => {
-        if (!response.ok) {
-          alert(response.statusText);
-        }else{
-          console.log("Tiempo de conexión actualizado");
-        }
+    fetch("/api/v1/profile/updateConnection", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+    }).then((response) => {
+      if (!response.ok) {
+        alert(response.statusText);
+      } else {
+        console.log("Tiempo de conexión actualizado");
       }
-      );
+    });
   }
 
   useEffect(() => {
     if (jwt) {
-      fetch(`/api/v1/jugador?userId=` + usuario.id, { //Esta llamada es simplemente para comprobar si el jwt es válido
+      // Validate the token by making a quick API call
+      fetch(`/api/v1/jugador?userId=${usuario.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -81,22 +91,20 @@ function App() {
         } else {
           setValidToken(true);
           updateConnectionTime();
-          
+
+          // Periodically update connection time
           const timer = setInterval(() => {
             updateConnectionTime();
-          },TIEMPO_CONEXION_SEGUNDOS-1);
+          }, TIEMPO_CONEXION_SEGUNDOS - 1);
           return () => clearInterval(timer);
-
         }
-      }
-      )
+      });
     } else {
       redirectToLogin();
     }
   }, []);
 
-
-
+  let roles = [];
   if (jwt && validToken) {
     roles = getRolesFromJWT(jwt);
   }
@@ -105,34 +113,57 @@ function App() {
     return jwt_decode(jwt).authorities;
   }
 
+  // Admin routes
   let adminRoutes = <></>;
-  let userRoutes = <></>;
-  let publicRoutes = <></>;
-
   roles.forEach((role) => {
     if (role === "ADMIN") {
       adminRoutes = (
         <>
-          <Route path="/admin" element={<PrivateRoute><AdminHome /></PrivateRoute>} />
-          <Route path="/users" element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
-          <Route path="/users/:username" element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
-          <Route path="/admin/partidas" element={<PrivateRoute><PartidasAdmin /></PrivateRoute>} />
-          <Route path="/admin/estadisticas" element={<PrivateRoute><EstadisticasAdmin /></PrivateRoute>} />
+          <Route path="/admin" element={
+            <PrivateRoute>
+              <AdminHome />
+            </PrivateRoute>
+          } />
+          <Route path="/users" element={
+            <PrivateRoute>
+              <UserListAdmin />
+            </PrivateRoute>
+          } />
+          <Route path="/users/:username" element={
+            <PrivateRoute>
+              <UserEditAdmin />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/partidas" element={
+            <PrivateRoute>
+              <PartidasAdmin />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/estadisticas" element={
+            <PrivateRoute>
+              <EstadisticasAdmin />
+            </PrivateRoute>
+          } />
         </>
       );
     }
   });
 
+  // Public routes if token is invalid
+  let publicRoutes = <></>;
   if (!jwt || !validToken) {
     publicRoutes = (
       <>
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
-
       </>
     );
-  } else {
+  }
+
+  // Authenticated user routes if token is valid
+  let userRoutes = <></>;
+  if (jwt && validToken) {
     userRoutes = (
       <>
         <Route path="/logout" element={<Logout />} />
@@ -140,8 +171,22 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/partidas" element={<Game />} />
         <Route path="/historial" element={<GameHistory />} />
+
+        {/*
+          2) Notice how we wrap <Game /> in <TheaterTransition>.
+             This ensures the curtains cover the screen, then open to reveal the game.
+        */}
+        <Route
+          path="/partidas"
+          element={
+            <PrivateRoute>
+              <TheaterTransition>
+                <Game />
+              </TheaterTransition>
+            </PrivateRoute>
+          }
+        />
       </>
     );
   }

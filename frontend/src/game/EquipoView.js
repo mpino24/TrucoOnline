@@ -58,15 +58,15 @@ const EquipoView = forwardRef((props, ref) => {
     function getJugadoresList() {
         const jugadoresList = props.jugadores.map(j => j.player).map((player) => {
             return (
-                <div key={getPlayerKey(player)} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+                <div key={getPlayerKey(player)} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center', }}>
                     {props.gameCreator && props.gameCreator.id === usuario.id && player.id !== usuario.id &&
                         <AiOutlineUserDelete style={{ width: 40, height: 40, cursor: "pointer" }} onClick={()=> handleExpelPlayer(player.id)} />
                     }
                     {props.gameCreator && props.gameCreator.id === player.id && player.id !== usuario.id &&
-                        <FaCrown style={{ width: 40, height: 40,color:'grey' }} />
+                        <FaCrown style={{ width: 40, height: 40,color:'black' }} />
                     }
                     {player.id === usuario.id &&
-                        <FaRegHandPointRight style={{ width: 40, height: 40 }} />
+                        <FaRegHandPointRight style={{ width: 40, height: 40, color:"black" }} />
                     }
                     <JugadorView
                         key={getPlayerKey(player)}
