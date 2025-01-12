@@ -14,9 +14,13 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/estadisticas")
+@Tag(name = "Estadisticas", description = "La API de gestión de todas las Estadisticas")
+@SecurityRequirement(name = "bearerAuth")
 public class EstadisticasController {
 
 

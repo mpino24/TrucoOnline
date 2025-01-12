@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Authentication", description = "The Authentication API based on JWT")
+@Tag(name = "Autenticación", description = "La API de autenticación basada en JWT (JSON Web Token)")
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;

@@ -18,11 +18,15 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.CartaTiradaException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.EnvidoException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.FlorException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 
 @RestController
 @RequestMapping("/api/v1/manos/{codigo}")
+@Tag(name = "Mano", description = "La API de gestión de la Manos de las partidas con las acciones posibles de los jugadores")
+@SecurityRequirement(name = "bearerAuth")
 public class ManoController {
 
 

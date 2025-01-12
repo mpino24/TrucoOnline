@@ -19,12 +19,14 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.Jugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.PerfilJugadorUsuario;
-
-
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/profile")
+@Tag(name = "CurrentUser", description = "La API de gestión del Usuario Actual")
+@SecurityRequirement(name = "bearerAuth")
 public class CurrentUserRestController {
     
     private final UserService userService;

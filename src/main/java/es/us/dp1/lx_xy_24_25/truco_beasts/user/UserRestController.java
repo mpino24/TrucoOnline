@@ -41,9 +41,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@Tag(name = "UserRestController", description = "La API de gestión de los Usuarios")
 @SecurityRequirement(name = "bearerAuth")
 class UserRestController {
 

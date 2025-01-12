@@ -27,12 +27,14 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.PartidaNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/partida")
-@Tag(name = "Partida", description = "The Partidas gestion API")
+@Tag(name = "Partida", description = "La API de gestión de las partidas")
+@SecurityRequirement(name = "bearerAuth")
 public class PartidaController {
 
 

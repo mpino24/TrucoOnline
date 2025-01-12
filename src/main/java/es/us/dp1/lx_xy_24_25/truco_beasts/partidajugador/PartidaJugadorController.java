@@ -25,11 +25,13 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/partidajugador")
-@Tag(name = "PartidaJugador", description = "The PartidaJugador gestion API")
+@Tag(name = "PartidaJugador", description = "La API de gestión de los PartidaJugador")
+@SecurityRequirement(name = "bearerAuth")
 public class PartidaJugadorController {
     
     private final PartidaJugadorService pjService;

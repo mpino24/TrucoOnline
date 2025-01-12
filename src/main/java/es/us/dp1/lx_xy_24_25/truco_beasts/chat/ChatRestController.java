@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotYourChatException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/chat")
-@Tag(name = "Chat", description = "The Chats gestion API")
+@Tag(name = "Chat", description = "La API de gestión de los Chats")
 public class ChatRestController {
 
     private final ChatService chatService;

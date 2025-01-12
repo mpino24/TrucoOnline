@@ -21,12 +21,17 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 
 @RestController
 @RequestMapping("/api/v1/logros")
+@Tag(name = "Logros", description = "La API de gestión de los Logros")
+@SecurityRequirement(name = "bearerAuth")
 public class LogrosController {
 
     private final LogrosService logrosService;

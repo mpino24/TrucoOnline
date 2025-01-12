@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/v1/fotos")
+@Tag(name = "Fotos", description = "La pequeña API de gestión de las fotos de trofeos y perfiles")
+@SecurityRequirement(name = "bearerAuth")
 public class FotosController {
 
     private final FotosService fotosService;
