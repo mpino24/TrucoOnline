@@ -51,4 +51,7 @@ public interface PartidaJugadorRepository extends CrudRepository<PartidaJugador,
     @Query("SELECT pj FROM PartidaJugador pj WHERE pj.game.codigo = :codigo AND pj.posicion = :posicion")
     PartidaJugador findPartidaJugadorByCodigoPartidaAndPosicionJugador(String codigo, Integer posicion);
 
+    @Query("SELECT pj FROM PartidaJugador pj WHERE pj.player.id = :jugadorId")
+    List<PartidaJugador> findByJugadorId(Integer jugadorId);
+
 }

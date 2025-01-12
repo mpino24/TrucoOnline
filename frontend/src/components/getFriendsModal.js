@@ -206,7 +206,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
                                     <FaRegEnvelope style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
                                 </button>
                             }
-                            {!requestView && request.length !== 0 &&
+                            {!requestView && request && request.length !== 0 &&
                                 <button onClick={() => { setRequestView(true) }} style={{ background: 'transparent', border: 'transparent' }}>
                                     <BsEnvelopePaper style={{ width: 40, height: 40, cursor: 'pointer', marginLeft: 60 }} />
                                 </button>

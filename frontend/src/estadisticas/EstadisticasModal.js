@@ -34,7 +34,7 @@ const EstadisticasModal = forwardRef((props, ref) => {
     const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], '/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
     const navigate = useNavigate();
 
-    const [mostrarRanking, setMostrarRanking]=useState(false)
+    const [mostrarRanking, setMostrarRanking] = useState(false)
 
     const [mostrarTablaEstadisticas, setMostrarTablaEstadisticas] = useState(false)
 
@@ -51,14 +51,14 @@ const EstadisticasModal = forwardRef((props, ref) => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'stretch', 
+            alignItems: 'stretch',
             zIndex: 1000,
             overflowY: 'auto',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             padding: '20px',
         }}>
-            
+
             <IoCloseCircle
                 style={{
                     position: 'absolute',
@@ -75,140 +75,140 @@ const EstadisticasModal = forwardRef((props, ref) => {
 
 
             {!mostrarRanking && !mostrarTablaEstadisticas && <>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 1, 
-                padding: '20px',
-                overflowY: 'auto',
-                height: '100%',
-                width: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '10px', 
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none'
-            }}>
-                <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas 📊</h2>
-                <p style={{ fontSize: "18px", color: 'white' }}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado ⌛</p>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    padding: '20px',
+                    overflowY: 'auto',
+                    maxHeight: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderRadius: '10px',
+                    width: '100%',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none'
+                }}>
+                    <h2 style={{ color: 'white', marginBottom: '20px' }}>Estadísticas 📊</h2>
+                    <p style={{ fontSize: "18px", color: 'white' }}>{calcularTiempo(estadisticas?.tiempoJugado, 0)} de tiempo jugado ⌛</p>
 
-                <GraficoPartidas estadisticas={estadisticas} />
-                <BotonDeCambio
-                    color="#9c27b0"
-                    textoMostrar="Ver comparativa global"
-                    textoOcultar="Ocultar comparativa global"
-                >
-                    <GraficoGlobalAraña estadisticas={estadisticas} jwt={jwt} setMessage={setMessage} setVisible={setVisible} />
-                </BotonDeCambio>
+                    <GraficoPartidas estadisticas={estadisticas} />
+                    <BotonDeCambio
+                        color="#9c27b0"
+                        textoMostrar="Ver comparativa global"
+                        textoOcultar="Ocultar comparativa global"
+                    >
+                        <GraficoGlobalAraña estadisticas={estadisticas} jwt={jwt} setMessage={setMessage} setVisible={setVisible} />
+                    </BotonDeCambio>
 
 
-                <BotonDeCambio
-                    color="#b22222"
-                    textoMostrar="Mostrar Progresión"
-                    textoOcultar="Ocultar Progresión"
-                 >
-                    <GraficoProgresion estadisticasAvanzadas={estadisticasAvanzadas} />
-                </BotonDeCambio>
+                    <BotonDeCambio
+                        color="#b22222"
+                        textoMostrar="Mostrar Progresión"
+                        textoOcultar="Ocultar Progresión"
+                    >
+                        <GraficoProgresion estadisticasAvanzadas={estadisticasAvanzadas} />
+                    </BotonDeCambio>
 
-                <BotonDeCambio
-                    color="#4682b4"
-                    textoMostrar="Mostrar correlación intentos de engaño y resultado"
-                    textoOcultar="Ocultar correlación intentos de engaño y resultado"
-                >
-                    <GraficoCorrelacion estadisticasAvanzadas={estadisticasAvanzadas} />
-                </BotonDeCambio>
+                    <BotonDeCambio
+                        color="#4682b4"
+                        textoMostrar="Mostrar correlación intentos de engaño y resultado"
+                        textoOcultar="Ocultar correlación intentos de engaño y resultado"
+                    >
+                        <GraficoCorrelacion estadisticasAvanzadas={estadisticasAvanzadas} />
+                    </BotonDeCambio>
 
-                <BotonDeCambio
-                    color="#d2691e"
-                    textoMostrar="Mostrar relación de flores/victorias"
-                    textoOcultar="Ocultar relación de flores/victorias"
-                >
-                    <GraficoColumnas estadisticasAvanzadas={estadisticasAvanzadas} estadisticas={estadisticas} />
-                </BotonDeCambio>
+                    <BotonDeCambio
+                        color="#d2691e"
+                        textoMostrar="Mostrar relación de flores/victorias"
+                        textoOcultar="Ocultar relación de flores/victorias"
+                    >
+                        <GraficoColumnas estadisticasAvanzadas={estadisticasAvanzadas} estadisticas={estadisticas} />
+                    </BotonDeCambio>
 
-            </div>
+                </div>
 
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '20px',
-                overflowY: 'auto',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '10px',
-            }}>
-                <RenderizarLogros jwt={jwt} setMessage={setMessage} setVisible={setVisible} />
-            </div>
-            
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                    overflowY: 'auto',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    borderRadius: '10px',
+                }}>
+                    <RenderizarLogros jwt={jwt} setMessage={setMessage} setVisible={setVisible} />
+                </div>
 
-            <FaRankingStar style={{
-                position: 'fixed',
-                bottom: 0,
-                left: 5,
-                margin: '20px',
-                zIndex: 9999, scale: '3',
-                
-                
-            }}onMouseEnter={(e) => {
-                e.target.style.color = 'rgb(255, 255,255,0.8)';
-                e.target.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-                e.target.style.color = 'white';
-                e.target.style.transform = 'scale(1)';
-            }} color='white' onClick={()=>setMostrarRanking(true)} />
-            
 
-            <FaTableList style={{
-                position: 'fixed',
-                bottom: 0,
-                left: 65,
-                margin: '20px',
-                zIndex: 9999, scale: '3',
-                
-                
-            }}onMouseEnter={(e) => {
-                e.target.style.color = 'rgb(255, 255,255,0.8)';
-                e.target.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-                e.target.style.color = 'white';
-                e.target.style.transform = 'scale(1)';
-            }} color='white' onClick={()=>setMostrarTablaEstadisticas(true)} />
+                <FaRankingStar style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 5,
+                    margin: '20px',
+                    zIndex: 9999, scale: '3',
 
-             <FaHistory style={{
-                position: 'fixed',
-                bottom: 0,
-                right: 5,
-                margin: '20px',
-                zIndex: 9999, scale: '3',
-                
-                
-            }}onMouseEnter={(e) => {
-                e.target.style.color = 'rgb(255, 255,255,0.8)';
-                e.target.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-                e.target.style.color = 'white';
-                e.target.style.transform = 'scale(1)';
-            }} color='white' onClick={()=>{
-                navigate("/historial")
-            closeModal()
-            }} />
+
+                }} onMouseEnter={(e) => {
+                    e.target.style.color = 'rgb(255, 255,255,0.8)';
+                    e.target.style.transform = 'scale(1.05)';
+                }}
+                    onMouseLeave={(e) => {
+                        e.target.style.color = 'white';
+                        e.target.style.transform = 'scale(1)';
+                    }} color='white' onClick={() => setMostrarRanking(true)} />
+
+
+                <FaTableList style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 65,
+                    margin: '20px',
+                    zIndex: 9999, scale: '3',
+
+
+                }} onMouseEnter={(e) => {
+                    e.target.style.color = 'rgb(255, 255,255,0.8)';
+                    e.target.style.transform = 'scale(1.05)';
+                }}
+                    onMouseLeave={(e) => {
+                        e.target.style.color = 'white';
+                        e.target.style.transform = 'scale(1)';
+                    }} color='white' onClick={() => setMostrarTablaEstadisticas(true)} />
+
+                <FaHistory style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    right: 5,
+                    margin: '20px',
+                    zIndex: 9999, scale: '3',
+
+
+                }} onMouseEnter={(e) => {
+                    e.target.style.color = 'rgb(255, 255,255,0.8)';
+                    e.target.style.transform = 'scale(1.05)';
+                }}
+                    onMouseLeave={(e) => {
+                        e.target.style.color = 'white';
+                        e.target.style.transform = 'scale(1)';
+                    }} color='white' onClick={() => {
+                        navigate("/historial")
+                        closeModal()
+                    }} />
             </>}
-            
+
             {mostrarRanking && (
-                <div style={{position:'fixed', width:"100%", height:"100%"}}> 
-                    <RankingGlobal jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarRanking={setMostrarRanking}/>
+                <div style={{ position: 'fixed', width: "100%", height: "100%" }}>
+                    <RankingGlobal jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarRanking={setMostrarRanking} />
                 </div>)}
             {mostrarTablaEstadisticas && (
-                
-                <div style={{position: 'fixed',
+
+                <div style={{
+                    position: 'fixed',
                     top: 0,
                     left: 0,
                     width: '100%',
@@ -218,12 +218,13 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     zIndex: 1000,
-                    overflowY: 'auto'}}> 
-                    <TablaEstadisticasCompleta jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarTablaEstadisticas={setMostrarTablaEstadisticas} estadisticas={estadisticas}/>
+                    overflowY: 'auto'
+                }}>
+                    <TablaEstadisticasCompleta jwt={jwt} setMessage={setMessage} setVisible={setVisible} setMostrarTablaEstadisticas={setMostrarTablaEstadisticas} estadisticas={estadisticas} />
                 </div>)}
-                
+
         </div>
-        
+
     );
 });
 

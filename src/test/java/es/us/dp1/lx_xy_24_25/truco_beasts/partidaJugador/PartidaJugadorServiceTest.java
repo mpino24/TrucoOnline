@@ -4,12 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.TrucoBeastsApplication;
+import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Metrica;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AlreadyInGameException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
@@ -27,6 +26,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Equipo;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Estado;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Partida;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partida.PartidaService;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partida.Visibilidad;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView;
@@ -260,6 +261,114 @@ public class PartidaJugadorServiceTest {
         });
     }
 
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void actualizarPartidaJugador() throws AlreadyInGameException{ //Hecho por David
+        partida.setInstanteFin(null);
+        partida.setInstanteInicio(null);
+        partidaService.savePartida(partida);
 
+        pjService.addJugadorPartida(partida, 2, false);
+
+        PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
+        assertEquals(Integer.valueOf(2), pj.getPlayer().getId());
+
+        pj.setFloresCantadas(5);
+        pjService.actualizarPartidaJugador(pj.getId(),pj);
+        pj = pjService.getPartidaJugadorUsuarioActual();
+
+        assertEquals(Integer.valueOf(2), pj.getPlayer().getId());
+        assertEquals(Integer.valueOf(5), pj.getFloresCantadas());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void getPartidaJugadorUsuarioActual() throws AlreadyInGameException{ //Hecho por David
+        partida.setInstanteFin(null);
+        partida.setInstanteInicio(null);
+        partidaService.savePartida(partida);
+
+        pjService.addJugadorPartida(partida, 2, false);
+
+        PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
+        assertEquals(Integer.valueOf(2), pj.getPlayer().getId());
+
+
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void checkEndGame() throws AlreadyInGameException{ //Hecho por David
+        partida.setInstanteFin(null);
+        partida.setInstanteInicio(null);
+        partidaService.savePartida(partida);
+        pjService.addJugadorPartida(partida, 2, false);
+        PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
+
+        pjService.checkEndGame(pj);
+        Partida partidaAct=partidaService.findPartidaById(pj.getGame().getId());
+
+        if(pj.getEquipo()==Equipo.EQUIPO1){
+            assertEquals(partidaAct.getPuntosMaximos(), partidaAct.getPuntosEquipo2());
+        }else{
+            assertEquals(partidaAct.getPuntosMaximos(), partidaAct.getPuntosEquipo1());
+        }
+        assertEquals(Estado.FINISHED, partidaAct.getEstado());
+        assertNotNull(partidaAct.getInstanteFin());
+
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void sumar1Estadistica() throws AlreadyInGameException{ //Hecho por David
+        partida.setInstanteFin(null);
+        partida.setInstanteInicio(null);
+        partidaService.savePartida(partida);
+        pjService.addJugadorPartida(partida, 2, false);
+        PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
+        Metrica metrica=Metrica.NUMERO_FLORES;
+        assertEquals(Integer.valueOf(0), pj.getFloresCantadas());
+        pjService.sumar1Estadistica(partida.getCodigo(),pj.getPosicion(),metrica);
+
+        PartidaJugador pjAct = pjService.getPartidaJugadorUsuarioActual();
+        assertEquals(Integer.valueOf(1), pjAct.getFloresCantadas());    
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void obtenerPartidaJugadorSegunCodigoYPosicion() throws AlreadyInGameException{ //Hecho por David
+        partida.setInstanteFin(null);
+        partida.setInstanteInicio(null);
+        partidaService.savePartida(partida);
+        pjService.addJugadorPartida(partida, 2, false);
+        PartidaJugador pj = pjService.getPartidaJugadorUsuarioActual();
+
+        PartidaJugador pj2=pjService.obtenerPartidaJugadorSegunCodigoYPosicion(partida.getCodigo(),pj.getPosicion());
+        assertEquals(pj.getId(), pj2.getId());
+        assertEquals(pj.getIsCreator(), false);
+        assertEquals(pj.getPosicion(), pj2.getPosicion());
+    }
+
+    @Test
+    @WithMockUser(username = "player1", authorities = "PLAYER")
+    public void getJugadoresInPartida() throws AlreadyInGameException{    //Hecho por David
+        Partida partida2= new Partida();
+        partida2.setCodigo("DAVID");
+        partida2.setConFlor(true);
+        partida2.setPuntosMaximos(30);
+        partida2.setPuntosEquipo1(0);
+        partida2.setPuntosEquipo2(0);
+        partida2.setVisibilidad(Visibilidad.PUBLICA);
+        partida2.setInstanteFin(null);
+        partida2.setInstanteInicio(null);
+        partida2.setNumJugadores(2);
+        partidaService.savePartida(partida2);
+        pjService.addJugadorPartida(partida2, 2, false);
+        
+        List<Integer> jugadores=pjService.getJugadoresInPartida(partida2.getCodigo());
+        assertEquals(1, jugadores.size());
+        assertEquals(Integer.valueOf(2), jugadores.get(0));
+
+    }
 
 }

@@ -16,6 +16,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.chat.Chat;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.ChatService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.chat.MensajeDTO;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -28,12 +30,14 @@ public class JugadorService {
     JugadorRepository jugadorRepository;
     ChatService chatService;
     UserService userService;
+    PartidaJugadorRepository partidaJugadorRepository;
 
     @Autowired
-    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService, UserService userService) {
+    public JugadorService(JugadorRepository jugadorRepository, ChatService chatService, UserService userService, PartidaJugadorRepository partidaJugadorRepository) {
         this.jugadorRepository = jugadorRepository;
         this.chatService = chatService;
         this.userService = userService;
+        this.partidaJugadorRepository = partidaJugadorRepository;
     }
 
     @Transactional(readOnly = true)
@@ -69,9 +73,9 @@ public class JugadorService {
     @Transactional
     public Jugador saveJugador(Jugador jugador) throws DataAccessException {
 
-        Jugador savedJugador = jugadorRepository.save(jugador);
+        jugadorRepository.save(jugador);
 
-        return savedJugador;
+        return jugador;
     }
 
     @Transactional(rollbackFor = {EntityNotFoundException.class, DataAccessException.class})
@@ -263,7 +267,36 @@ public class JugadorService {
 
     @Transactional
     public void deleteJugadorByUserId(Integer userId) {
-        Jugador jugador = jugadorRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("No se encontro al jugador asociado a esa userId"));
+        Jugador jugador = jugadorRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Jugador no encontrado"));
+    
+        List<PartidaJugador> partidasJugador = partidaJugadorRepository.findByJugadorId(userId);
+        for (PartidaJugador partidaJugador : partidasJugador) {
+            partidaJugadorRepository.delete(partidaJugador);  // Eliminar las participaciones en partidas
+        }
+    
+        List<Jugador> amigos = jugadorRepository.findAmigosByUserId(userId);
+        for (Jugador amigo : amigos) {
+            amigo.getAmigos().remove(jugador);  // Eliminar al jugador de la lista de amigos del amigo
+            jugador.getAmigos().remove(amigo);  
+            jugadorRepository.save(amigo);      
+        }
+    
+    
+        // Limpiar la lista de solicitudes enviadas del jugador a eliminar
+        List<Jugador> solicitudesEnviadas = jugadorRepository.findSolicitantes(jugador);
+        for(Jugador solicitado: solicitudesEnviadas){
+            solicitado.getSolicitudes().remove(jugador);
+            jugadorRepository.save(solicitado);
+        }
+
+    
+        // Vaciar la lista de solicitudes del jugador
+        jugador.getSolicitudes().clear();  // Limpiar la lista de solicitudes del jugador
+        jugadorRepository.save(jugador);   // Guardar los cambios del jugador
+    
+        // Finalmente, eliminar al jugador
         jugadorRepository.delete(jugador);
     }
+    
 }

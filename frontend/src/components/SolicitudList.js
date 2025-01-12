@@ -12,6 +12,7 @@ import tokenService from '../services/token.service';
 
 const SolicitudList = forwardRef((props, ref) => {
     const jwt = tokenService.getLocalAccessToken();
+    let jugadoresList = [];
 
     function handleDeleteRequest(player) {
         fetch(
@@ -64,33 +65,34 @@ const SolicitudList = forwardRef((props, ref) => {
             .catch((message) => alert(message));
     }
 
+    if (props.jugadores.length > 0) {
+        jugadoresList = props.jugadores.map((player) => {
+            return (
+                <div style={{ transition: 'background-color 0.3s ease, border 0.3s ease' }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                >
+                    <div key={player.id} style={{ display: 'flex', alignItems: 'center' }}>
+                        <JugadorView
+                            jugador={player}
 
-    const jugadoresList = props.jugadores.map((player) => {
-        return (
-            <div style={{ transition: 'background-color 0.3s ease, border 0.3s ease' }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-            >
-                <div key={player.id} style={{ display: 'flex', alignItems: 'center' }}>
-                    <JugadorView
-                        jugador={player}
-                        
-                    />
-                    <button onClick={() => { handleAddFriend(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
-                        <IoMdPersonAdd style={{ fontSize: '50px', backfaceVisibility: 'hidden' }} />
-                    </button>
-                    <button onClick={() => { handleDeleteRequest(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
-                        <MdOutlinePersonAddDisabled style={{ fontSize: '50px' }} />
-                    </button>
+                        />
+                        <button onClick={() => { handleAddFriend(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
+                            <IoMdPersonAdd style={{ fontSize: '50px', backfaceVisibility: 'hidden' }} />
+                        </button>
+                        <button onClick={() => { handleDeleteRequest(player) }} style={{ marginLeft: 40, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
+                            <MdOutlinePersonAddDisabled style={{ fontSize: '50px' }} />
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-        )
-    });
+            )
+        });
+    }
     return (
 
         <div style={{ overflowY: 'auto', maxHeight: '400px' }}>

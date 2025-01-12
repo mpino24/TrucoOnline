@@ -864,7 +864,7 @@ const PlayingModal = forwardRef((props, ref) => {
                 )}
             </div>
 
-            <div style={{ zIndex: 100000000000000 }}>
+            <div style={{ zIndex: 100 }}>
                 <Perfil game={game} posicion={posicion} />
                 
             </div>

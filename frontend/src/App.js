@@ -19,12 +19,12 @@ import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import GameHistory from "./gamehistory/GameHistory";
 import SwaggerDocs from "./public/swagger";
-import Game from "./game";                          // <--- your existing or placeholder Game
-import TheaterTransition from "./TheaterTransition"; // <--- the new curtain animation
 
 import "./App.css";
 
-
+// 1) Import your new files:
+import TheaterTransition from "./TheaterTransition"; // <--- the new curtain animation
+import Game from "./game";                          // <--- your existing or placeholder Game
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
