@@ -11,7 +11,7 @@ export default function TheaterTransition({ children }) {
     const timer = setTimeout(() => {
       // Then animate curtains open
       setCurtainsOpen(true);
-    }, 300);
+    }, 150);
 
     return () => clearTimeout(timer);
   }, []);
