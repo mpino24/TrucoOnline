@@ -1644,9 +1644,9 @@ No estabamos aplicando completamente el patrón y por lo tanto no aprovechabamos
 Ahora tanto cantosTruco como respuestasTruco quedó mucho más limpio y fácil de comprender.
 
 ### Refactorización 14: Creación de MessageList
-En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de ShowChat.js y hemos creado un componente a parte que es MessageList.js que se encarga de rendirizar los mensajes. Además tambien hemos creado el InpotConteiner que es donde se escribe el mensaje y se envía.
+En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de ShowChat.js y hemos creado un componente a parte que es MessageList.js que se encarga de renderizar los mensajes. Además tambien hemos creado el InputContainer que es donde se escribe el mensaje y se envía.
 #### Estado inicial del código
-```Java 
+```JSX 
    return (
     <>
     <div className="messages-container">
@@ -1728,7 +1728,7 @@ En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de 
 
 #### Estado del código refactorizado
 
-```Java
+```JSX
     return(
         <MessageList mensajes={mensajes} userId={user.id} />
         <InputContainer mensaje={mensaje} setMensaje={setMensaje} evtEnviarMensaje={evtEnviarMensaje} />
