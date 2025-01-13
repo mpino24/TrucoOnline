@@ -493,6 +493,33 @@ Para obtener las estadísticas de un jugador había que decidir como obtenerlas.
 #### Justificación de la solución adoptada
 Optamos por la alternativa 2 porque, aunque la implementación de las llamadas en el EstadisticasRepository incrementa la complejidad inicial, esto se justifica por las ventajas obtenidas. Una vez en funcionamiento, estas llamadas agilizan la búsqueda de datos y eliminan la necesidad de mantener una entidad adicional. Además, si en el futuro se desea añadir un dato relacionado exclusivamente con las partidas, los jugadores, o ambos, es posible hacerlo simplemente creando una nueva query. La complejidad de obtener estos datos será equivalente a la de la llamada que deseemos realizar, la cual generalmente es baja, salvo en casos particulares donde la optimización de propiedades podría dificultar las consultas
 
+### Decisión 11: Quien responde flor
+#### Descripción del problema:
+Como obtener el que responde la flor es más complejo que en los otros cantos, ya que si solo un jugador de un equipo la tiene, sigue siendo su turno. En cambio si otro tiene esta, si pertenece al otro equipo, debe tener la posibilidad de responder a esta con un canto. Nuevamente, después de que haya respondido, el turno vuelve al que la canto inicialmente. La complejidad radica en que en las partidas de 4 y 6, al depender del azar, pueden no ser los inmediatamente siguientes los que tengan flor.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Adaptar la función de Mano quienResponde para que cumpla el caso de la flor.
+*Ventajas:*
+• Se generalizaría la función para que siempre cumpla correctamente, sin importar el contexto de la partida.
+• Basta con llamar a quienResponde en cada caso que haya que responder y listo, de estar bien implementada cumpliría en cualquier caso.
+
+*Inconvenientes:*
+• La función al hacer muchas funciones (valga la redundancia) no seguiría las buenas prácticas.
+• Hace mucho más dificil mantenerla, debido a que su complejidad y longitud aumenta.
+• Al ser una función más compleja, puede tardar más y dado que quienResponde se llama en todos los cantos es importante su velocidad de ejecución. Además que en las partidas sin flor directamente nunca se usaría la parte encargada de la flor.
+
+*Alternativa 2*: Crear una nueva función exclusiva llamada quienRespondeFlor que contemple los casos particulares de las respuestas en la flor.
+
+*Ventajas:*
+• Fácil de mantener ya que está separada de la otra función.
+• Se crean tests independientes para los casos de la flor ya que está totalmente separada (bajo acoplamiento con las otras funciones).
+• La función quienResponde queda con su funcionalidad simplificada, sin agregarle coste de trabajo adicional siempre que se use.
+
+*Inconvenientes:*
+• Hay que añadir un método más en la clase Mano que ya de por si es muy grande.
+• Si por alguna rázon se quisieran cambiar las reglas del juego y el orden de respuesta habría que cambiar el quienResponde y quienRespondeFlor.
+
+#### Justificación de la solución adoptada
+Elegimos la alternativa 2, creamos el quienRespondeFlor en la clase Mano ya que la lógica que requería el cambio de turno en la flor no podía ser contemplado a la ligera y la mejor forma de atacarlo fue separandolo del caso general de los otros cantos, dejando que quienResponde y quienRespondeFlor mantengan su funcionalidad más simple y optimizada.
 
 
 ## Refactorizaciones aplicadas
@@ -1822,4 +1849,3 @@ Al tener el chat integrado tanto en la página principal como en la partida, se 
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Con este componente ahora cada vez que queremos mostrar mensajes solo tenemos que pasar los mensajes a MessageList para que los muestre con el estilo que creamos. Con esto el código queda más legible además de que es muy reutilizable.
  
-
