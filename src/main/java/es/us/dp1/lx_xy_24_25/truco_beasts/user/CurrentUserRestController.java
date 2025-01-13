@@ -63,9 +63,11 @@ public class CurrentUserRestController {
         return ResponseEntity.ok(perfil);
         }
 
-        @Operation(summary = "Actualizar el perfil del usuario actual", requestBody = @RequestBody(description = "Perfil del usuario a actualizar", required = true, content = @Content(schema = @Schema(implementation = PerfilJugadorUsuario.class))))
+        @Operation(summary = "Actualizar el perfil del usuario actual", requestBody = @RequestBody(description = "Perfil del usuario a actualizar", 
+        required = true, content = @Content(schema = @Schema(implementation = PerfilJugadorUsuario.class))))
         @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Perfil actualizado con éxito", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "200", description = "Perfil actualizado con éxito", content = @Content(schema = 
+        @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content),
         @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
         })
@@ -93,7 +95,8 @@ public class CurrentUserRestController {
 
         @Operation(summary = "Borrar la cuenta del usuario actual")
         @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cuenta borrada con éxito", content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+        @ApiResponse(responseCode = "200", description = "Cuenta borrada con éxito", content = @Content(schema = 
+        @Schema(implementation = MessageResponse.class))),
         @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
         })
         @DeleteMapping("/borrarMiCuenta")

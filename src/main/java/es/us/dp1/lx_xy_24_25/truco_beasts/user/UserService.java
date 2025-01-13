@@ -146,6 +146,9 @@ public class UserService {
 	@Transactional
 	public void updateConnection() {
 		User usuarioActual = findCurrentUser();
+		if (usuarioActual==null) {
+			return;
+		}
 		usuarioActual.setLastConnection(LocalDateTime.now());
 		userRepository.save(usuarioActual);
 	}
