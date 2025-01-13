@@ -440,9 +440,9 @@ Nos decantamos por la alternativa 2 ya que preferimos que, para el caso del chat
 
 ### Decisión 9: Integración de las invitaciones en el chat
 #### Descripción del problema:
-El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que va a jugar
+El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que va a jugar.
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: Crear nuevas entidades y representaciones en frontend para las invitaciones
+*Alternativa 1*: Crear nuevas entidades y representaciones en frontend para las invitaciones.
 *Ventajas:*
 • Mayor flexibilidad a la hora de crear invitaciones, sus restricciones, datos asociados y representación.
 
@@ -450,7 +450,7 @@ El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que
 • Supone incrementar el código del proyecto, aumentando así la complejidad del código final.
 • Necesitaríamos realizar nuevas llamadas al backend para obtener las invitaciones, lo que supone en un peor rendimiento del servidor.
 
-*Alternativa 2*: Integrar las invitaciones en el chat
+*Alternativa 2*: Integrar las invitaciones en el chat.
 
 *Ventajas:*
 • Aprovechamos la infraestructura ya creada para los mensajes, fomentando la reutilización del código sin aumentar su complejidad.
@@ -464,6 +464,35 @@ El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que
 
 #### Justificación de la solución adoptada
 Nos decantamos por la alternativa 2 ya que hemos priorizado la reutilización del código y su simplicidad siempre que la funcionalidad se cumpla. Además, la alternativa 2 nos ofrece una interfaz mucho más clara para los usuarios finales, ya que las invitaciones no suponen nuevos módulos o pantallas, reduciendo así el tiempo de aprendizaje de un nuevo jugador.
+
+### Decisión 10: Obtener estadísticas a partir de Queries
+#### Descripción del problema:
+Para obtener las estadísticas de un jugador había que decidir como obtenerlas.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Crear una entidad nueva en la base de datos con la información de cada jugador.
+*Ventajas:*
+• Una forma intuitiva de tener toda la información necesaria en todo momento.
+• Con una sola Query se obtiene toda la información de un jugador en particular.
+• Las Querys serían mucho más sencillas.
+
+*Inconvenientes:*
+• Habría muchos datos repetidos en la base de datos, lo que escalado a muchos jugadores puede resultar de peso.
+• Tendríamos que agregar que los datos se vayan guardando para la estadistica a la vez que en las otras entidades.
+
+*Alternativa 2*: Agregar un Component estadisticas y algunos datos en la entidad PartidaJugador, pudiendo sacar todas las estadisticas a partir de Queries.
+
+*Ventajas:*
+• Se pueden obtener todos los datos de un jugador aprovechando lo que ya se guarda en la base de datos, haciendo que no haya datos repetidos.
+• Haciendo uso de las Queries podemos obtener datos en particular sin tener que revisar toda la base de datos completa.
+
+*Inconvenientes:*
+• La complejidad de algunas llamadas como la de Victorias es bastante alta.
+• Si hay que cargar muchos datos puede llegar a tardar, pero depende de la magnitud de lo pedido y los datos que haya guardados.
+
+
+#### Justificación de la solución adoptada
+Optamos por la alternativa 2 porque, aunque la implementación de las llamadas en el EstadisticasRepository incrementa la complejidad inicial, esto se justifica por las ventajas obtenidas. Una vez en funcionamiento, estas llamadas agilizan la búsqueda de datos y eliminan la necesidad de mantener una entidad adicional. Además, si en el futuro se desea añadir un dato relacionado exclusivamente con las partidas, los jugadores, o ambos, es posible hacerlo simplemente creando una nueva query. La complejidad de obtener estos datos será equivalente a la de la llamada que deseemos realizar, la cual generalmente es baja, salvo en casos particulares donde la optimización de propiedades podría dificultar las consultas
+
 
 
 ## Refactorizaciones aplicadas
