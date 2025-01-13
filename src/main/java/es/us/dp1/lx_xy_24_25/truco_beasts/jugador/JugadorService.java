@@ -20,7 +20,6 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 
@@ -279,8 +278,15 @@ public class JugadorService {
         for (Jugador amigo : amigos) {
             amigo.getAmigos().remove(jugador);  // Eliminar al jugador de la lista de amigos del amigo
             jugador.getAmigos().remove(amigo);  
-            jugadorRepository.save(amigo);      
+            jugadorRepository.save(amigo);
+            
+            Chat chat= chatService.findChatWith(amigo.getId());
+            if(chat!=null){
+                chatService.eliminarChat(chat.getId());
+            }
         }
+
+        
     
     
         // Limpiar la lista de solicitudes enviadas del jugador a eliminar
