@@ -79,7 +79,7 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
 ## Documentación de las APIs
 Para visualizar de una manera intuitiva, dinamica e interactiva como se utiliza la API de Truco Beast: Bardo en la Jungla lo mejor es iniciar la app como se explica en el README y abrir [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html), ya que de esta forma se pueden hacer llamadas en tiempo real a la API y ver lo que responde.
 
-Por otro lado, si no se desea tener que descargar e iniciar la app completa para poder ver el funcionamiento de la API, brindamos este archivo html que permite visualizar todas las opciones y que permite: ![/docs/API/api_de_truco_beast_bardo_en_la_jungla.html](/docs/API/api_de_truco_beast_bardo_en_la_jungla.html)
+Por otro lado, si no se desea tener que descargar e iniciar la app completa para poder ver el funcionamiento de la API, brindamos este archivo html que permite visualizar todas las opciones y que permite: ![Descargar pagina de la API](/docs/API/api_de_truco_beast_bardo_en_la_jungla.html)
 
 ## Patrones de diseño y arquitectónicos aplicados
 En esta sección especificamos el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto:
