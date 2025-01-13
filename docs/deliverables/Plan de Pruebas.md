@@ -90,7 +90,7 @@ El informe de cobertura de pruebas es el siguiente:
 ### 5.3 Matriz de Trazabilidad entre Pruebas e Historias de Usuario
 
 | Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 | UTB-5 | UTB-6 | UTB-7 | UTB-8 |UTB-9 |UTB-10 |UTB-11 | 
-|--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+|--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
 | HU-1                |   X   |       |       |       |       |       |       |      |        |        |        |
 | HU-2                |       |      |       |    X   |        |       |       |      |        |        |        |
 | HU-3                |       |       |      |       |        |       |       |      |        |        |        |
