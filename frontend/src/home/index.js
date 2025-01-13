@@ -31,7 +31,7 @@ export default function Home() {
     const friendViewRef = useRef(friendsView);
 
     const [showAccountMenu, setShowAccountMenu] = useState(false);
-    const [backgroundUrl, setBackgroundUrl] = useState();
+    const [backgroundUrl, setBackgroundUrl] = useState("/fondos/fondo0.jpg");
     const [username, setUsername] = useState('');
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
     const [estadisticasView, setEstadisticasView] = useState(false);
