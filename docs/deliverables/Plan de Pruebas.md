@@ -41,7 +41,8 @@ Las pruebas se ejecutarán en el entorno de desarrollo y, eventualmente, en el e
 ### 5.1 Cobertura de Pruebas
 
 El informe de cobertura de pruebas es el siguiente:
-![jacoco](https://github.com/user-attachments/assets/8ed4b339-4ff5-412e-92fb-65336fc93ed8)
+![jacoco](https://github.com/user-attachments/assets/b8123fd6-8ac5-4203-8e7b-bc093a2832b2)
+
 
 
 ### 5.2 Matriz de Trazabilidad
