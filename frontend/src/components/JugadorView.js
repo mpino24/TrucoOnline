@@ -17,22 +17,17 @@ const JugadorView = forwardRef((props, ref) => {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
                 }
             }
         )
-            .then((response) => response.text())
-            .then((data) => {
-                if (JSON.parse(data).statusCode === 500) {
+            .then((response) => {
+                if (response.status === 500) {
                     alert("No se puede mandar esa solicitud")
                 } else {
                     setPressed(true);
                 }
-
-
             })
-            .catch((message) => alert(message));
+            .catch((error) => alert(error.message));
     }
 
     return (

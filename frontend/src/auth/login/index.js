@@ -70,7 +70,7 @@ export default function Login() {
               to={`/register`}
               style={{ textDecoration: "none" }}
             >
-              <button style={{marginTop: 10}} onClick={handleSubmit} className={'auth-button'}>
+              <button style={{marginTop: 10}} className={'auth-button'}>
                 Sign up
               </button>
             </Link>

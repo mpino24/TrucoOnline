@@ -36,7 +36,7 @@ const SolicitudList = forwardRef((props, ref) => {
 
 
             })
-            .catch((message) => alert(message));
+            .catch((message) => console.log(message));
 
     }
 
@@ -50,19 +50,16 @@ const SolicitudList = forwardRef((props, ref) => {
                 }
             }
         )
-            .then((response) => response.text())
-            .then((data) => {
-                if (JSON.parse(data).statusCode === 500) {
+            .then((response) => {
+                if(response.status === 500){
                     alert("No se puede añadir amigo")
-                } else {
-                    props.setJugadores(prevJugadores =>
-                        prevJugadores.filter(p => p.id !== player.id)
-                    );
-                }
-
-
+            }else{
+                props.setJugadores(prevJugadores =>
+                    prevJugadores.filter(p => p.id !== player.id)
+                );
+            }
             })
-            .catch((message) => alert(message));
+            .catch((message) => console.log(message));
     }
 
     if (props.jugadores.length > 0) {

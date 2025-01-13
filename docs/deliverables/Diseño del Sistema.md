@@ -77,9 +77,9 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
     
 
 ## Documentación de las APIs
-Se considerará parte del documento de diseño del sistema la documentación generada para las APIs, que debe incluir como mínimo, una descripción general de las distintas APIs/tags  proporcionadas. Una descripción de los distintos endpoints y operaciones soportadas. Y la especificación de las políticas de seguridad especificadas para cada endpoint y operación. Por ejemplo: “la operación POST sobre el endpoint /api/v1/game, debe realizarse por parte de un usuario autenticado como Player”.
+Para visualizar de una manera intuitiva, dinamica e interactiva como se utiliza la API de Truco Beast: Bardo en la Jungla lo mejor es iniciar la app como se explica en el README y abrir [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html), ya que de esta forma se pueden hacer llamadas en tiempo real a la API y ver lo que responde.
 
-Si lo desea puede aplicar la aproximación descrita en https://vmaks.github.io/2020/02/09/how-to-export-swagger-specification-as-html-or-word-document/ para generar una versión en formato Word de la especificación de la API generada por OpenAPI, colgarla en el propio repositorio y enlazarla en esta sección del documento.  En caso contrario debe asegurarse de que la interfaz de la documentación open-api de su aplicación está accesible, funciona correctamente, y está especificada conforme a las directrices descritas arriba.
+Por otro lado, si no se desea tener que descargar e iniciar la app completa para poder ver el funcionamiento de la API, brindamos este archivo html que permite visualizar todas las opciones y que permite: [Descargar documentación completa de la API](/docs/API/api_de_truco_beast_bardo_en_la_jungla.html)
 
 ## Patrones de diseño y arquitectónicos aplicados
 En esta sección especificamos el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto:
@@ -160,7 +160,7 @@ Como se ha mencionado antes, este patrón se aplica en casi todas las entidades.
 - PartidaJugador
 - User
 
-El uso de domain model nos ha permitido tener un control total sobre todos los objetos, sobre todo en cuanto a relaciones y herencias, algo que nos ha permitido implementar una lógica de negocio más compleja (y poder así aplicar el patrón Service Layer) que lo que nos permitiría otro patrón como lo es Table Module.
+El uso de domain model nos ha permitido tener un control total sobre todos los objetos, sobre todo en cuanto a relaciones y herencias, algo que nos ha permitido implementar una lógica de negocio más compleja (y poder así aplicar el patrón Service Layer) que no nos permitiría otro patrón como lo es Table Module.
 
 ### Patrón: Service Layer
 *Tipo*: Arquitectónico | de Diseño
@@ -411,6 +411,115 @@ Antes de empezar una partida se tiene la opción de invitar a tus amigos para qu
 
 #### Justificación de la solución adoptada
 Nos decantamos por la alternativa 2 ya que preferimos que haya más rango posible de diferentes partidas sin tantas limitaciones.
+
+### Decisión 8: Uso de Websocket para los mensajes y los gestos
+#### Descripción del problema:
+Tanto en el envío de mensajes como para mostrar los gestos durante una partida, necesitamos un tiempo de respuesta rápido del sistema, es decir, necesitamos que los gestos y mensajes se vean en tiempo real sin además consumir demasiados recursos al sistema.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Utilizar la técnica de Polling
+*Ventajas:*
+• Facilidad de implementación.
+• Mayor control sobre cuándo se realizan las llamadas al Backend.
+
+*Inconvenientes:*
+• Consume más recursos y pueden llegarse a realizar llamadas innecesarias.
+• La actualización de los datos en el cliente no es en tiempo real, dependerá de la frecuencia de las llamadas.
+
+*Alternativa 2*: Utilizar tecnología WebSocket
+
+*Ventajas:*
+• Permite una comunicación casi directa entre clientes, reduciendo la carga del servidor.
+• Permite la comunicación en tiempo real entre clientes, reduciendo considerablemente el tiempo de procesamiento del servidor.
+*Inconvenientes:*
+• Implementación más compleja dado que el equipo no conoce cómo implementar la tecnología.
+• Menor control sobre cuando se actualizan los datos en el cliente.
+
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 2 ya que preferimos que, para el caso del chat y los gestos, estamos más interesados en tener una comunicación en tiempo real sin forzar a una sobrecarga continua al servidor.
+
+### Decisión 9: Integración de las invitaciones en el chat
+#### Descripción del problema:
+El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que va a jugar.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Crear nuevas entidades y representaciones en frontend para las invitaciones.
+*Ventajas:*
+• Mayor flexibilidad a la hora de crear invitaciones, sus restricciones, datos asociados y representación.
+
+*Inconvenientes:*
+• Supone incrementar el código del proyecto, aumentando así la complejidad del código final.
+• Necesitaríamos realizar nuevas llamadas al backend para obtener las invitaciones, lo que supone en un peor rendimiento del servidor.
+
+*Alternativa 2*: Integrar las invitaciones en el chat.
+
+*Ventajas:*
+• Aprovechamos la infraestructura ya creada para los mensajes, fomentando la reutilización del código sin aumentar su complejidad.
+• Facilidad de implementación, al tener sólamente que renderizar una serie de mensajes "especiales".
+• Evitamos añadir nuevo código al proyecto que sería mayoritariamente igual al de los chats entre jugadores.
+
+*Inconvenientes:*
+• Limitada la forma de recibir invitaciones, ya que estas siempre aparecerían en los chats privados entre jugadores.
+• Las modificaciones sobre el chat y los mensajes pueden llevar a fallos en las invitaciones.
+
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 2 ya que hemos priorizado la reutilización del código y su simplicidad siempre que la funcionalidad se cumpla. Además, la alternativa 2 nos ofrece una interfaz mucho más clara para los usuarios finales, ya que las invitaciones no suponen nuevos módulos o pantallas, reduciendo así el tiempo de aprendizaje de un nuevo jugador.
+
+### Decisión 10: Obtener estadísticas a partir de Queries
+#### Descripción del problema:
+Para obtener las estadísticas de un jugador había que decidir como obtenerlas.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Crear una entidad nueva en la base de datos con la información de cada jugador.
+*Ventajas:*
+• Una forma intuitiva de tener toda la información necesaria en todo momento.
+• Con una sola Query se obtiene toda la información de un jugador en particular.
+• Las Querys serían mucho más sencillas.
+
+*Inconvenientes:*
+• Habría muchos datos repetidos en la base de datos, lo que escalado a muchos jugadores puede resultar de peso.
+• Tendríamos que agregar que los datos se vayan guardando para la estadistica a la vez que en las otras entidades.
+
+*Alternativa 2*: Agregar un Component estadisticas y algunos datos en la entidad PartidaJugador, pudiendo sacar todas las estadisticas a partir de Queries.
+
+*Ventajas:*
+• Se pueden obtener todos los datos de un jugador aprovechando lo que ya se guarda en la base de datos, haciendo que no haya datos repetidos.
+• Haciendo uso de las Queries podemos obtener datos en particular sin tener que revisar toda la base de datos completa.
+
+*Inconvenientes:*
+• La complejidad de algunas llamadas como la de Victorias es bastante alta.
+• Si hay que cargar muchos datos puede llegar a tardar, pero depende de la magnitud de lo pedido y los datos que haya guardados.
+
+
+#### Justificación de la solución adoptada
+Optamos por la alternativa 2 porque, aunque la implementación de las llamadas en el EstadisticasRepository incrementa la complejidad inicial, esto se justifica por las ventajas obtenidas. Una vez en funcionamiento, estas llamadas agilizan la búsqueda de datos y eliminan la necesidad de mantener una entidad adicional. Además, si en el futuro se desea añadir un dato relacionado exclusivamente con las partidas, los jugadores, o ambos, es posible hacerlo simplemente creando una nueva query. La complejidad de obtener estos datos será equivalente a la de la llamada que deseemos realizar, la cual generalmente es baja, salvo en casos particulares donde la optimización de propiedades podría dificultar las consultas
+
+### Decisión 11: Quien responde flor
+#### Descripción del problema:
+Como obtener el que responde la flor es más complejo que en los otros cantos, ya que si solo un jugador de un equipo la tiene, sigue siendo su turno. En cambio si otro tiene esta, si pertenece al otro equipo, debe tener la posibilidad de responder a esta con un canto. Nuevamente, después de que haya respondido, el turno vuelve al que la canto inicialmente. La complejidad radica en que en las partidas de 4 y 6, al depender del azar, pueden no ser los inmediatamente siguientes los que tengan flor.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Adaptar la función de Mano quienResponde para que cumpla el caso de la flor.
+*Ventajas:*
+• Se generalizaría la función para que siempre cumpla correctamente, sin importar el contexto de la partida.
+• Basta con llamar a quienResponde en cada caso que haya que responder y listo, de estar bien implementada cumpliría en cualquier caso.
+
+*Inconvenientes:*
+• La función al hacer muchas funciones (valga la redundancia) no seguiría las buenas prácticas.
+• Hace mucho más dificil mantenerla, debido a que su complejidad y longitud aumenta.
+• Al ser una función más compleja, puede tardar más y dado que quienResponde se llama en todos los cantos es importante su velocidad de ejecución. Además que en las partidas sin flor directamente nunca se usaría la parte encargada de la flor.
+
+*Alternativa 2*: Crear una nueva función exclusiva llamada quienRespondeFlor que contemple los casos particulares de las respuestas en la flor.
+
+*Ventajas:*
+• Fácil de mantener ya que está separada de la otra función.
+• Se crean tests independientes para los casos de la flor ya que está totalmente separada (bajo acoplamiento con las otras funciones).
+• La función quienResponde queda con su funcionalidad simplificada, sin agregarle coste de trabajo adicional siempre que se use.
+
+*Inconvenientes:*
+• Hay que añadir un método más en la clase Mano que ya de por si es muy grande.
+• Si por alguna rázon se quisieran cambiar las reglas del juego y el orden de respuesta habría que cambiar el quienResponde y quienRespondeFlor.
+
+#### Justificación de la solución adoptada
+Elegimos la alternativa 2, creamos el quienRespondeFlor en la clase Mano ya que la lógica que requería el cambio de turno en la flor no podía ser contemplado a la ligera y la mejor forma de atacarlo fue separandolo del caso general de los otros cantos, dejando que quienResponde y quienRespondeFlor mantengan su funcionalidad más simple y optimizada.
 
 
 ## Refactorizaciones aplicadas
@@ -1644,9 +1753,9 @@ No estabamos aplicando completamente el patrón y por lo tanto no aprovechabamos
 Ahora tanto cantosTruco como respuestasTruco quedó mucho más limpio y fácil de comprender.
 
 ### Refactorización 14: Creación de MessageList
-En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de ShowChat.js y hemos creado un componente a parte que es MessageList.js que se encarga de rendirizar los mensajes. Además tambien hemos creado el InpotConteiner que es donde se escribe el mensaje y se envía.
+En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de ShowChat.js y hemos creado un componente a parte que es MessageList.js que se encarga de renderizar los mensajes. Además tambien hemos creado el InputContainer que es donde se escribe el mensaje y se envía.
 #### Estado inicial del código
-```Java 
+```JSX 
    return (
     <>
     <div className="messages-container">
@@ -1728,7 +1837,7 @@ En esta refactorización lo que hemos hecho ha sido sacar el estilo del chat de 
 
 #### Estado del código refactorizado
 
-```Java
+```JSX
     return(
         <MessageList mensajes={mensajes} userId={user.id} />
         <InputContainer mensaje={mensaje} setMensaje={setMensaje} evtEnviarMensaje={evtEnviarMensaje} />
@@ -1740,4 +1849,3 @@ Al tener el chat integrado tanto en la página principal como en la partida, se 
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Con este componente ahora cada vez que queremos mostrar mensajes solo tenemos que pasar los mensajes a MessageList para que los muestre con el estilo que creamos. Con esto el código queda más legible además de que es muy reutilizable.
  
-

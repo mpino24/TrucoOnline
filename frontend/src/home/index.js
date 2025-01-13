@@ -36,7 +36,7 @@ export default function Home() {
     const friendViewRef = useRef(friendsView);
 
     const [showAccountMenu, setShowAccountMenu] = useState(false);
-    const [backgroundUrl, setBackgroundUrl] = useState();
+    const [backgroundUrl, setBackgroundUrl] = useState("/fondos/fondo0.jpg");
     const [username, setUsername] = useState('');
     const [photoUrl, setPhotoUrl] = useState('/fotoPerfil.jpg');
     const [estadisticasView, setEstadisticasView] = useState(false);
@@ -126,6 +126,8 @@ export default function Home() {
 
     // Fetch unread messages
     function fetchNotReadMessages() {
+        
+        
         fetch('/api/v1/chat/unread', {
             method: 'GET',
             headers: {
@@ -146,6 +148,7 @@ export default function Home() {
                 setNumMessages(data);
             })
             .catch((message) => alert(message));
+        
     }
 
     // Keep track of numMessages in a ref
@@ -178,20 +181,30 @@ export default function Home() {
         fetchCurrentGame();
         fetchNotReadMessages();
 
+        
+    }, []);
+
+    //Este useEffect es para traer los mensajes solo si los modales de creacion y union a partida estan cerrados
+    //sino sale un error cuando en el timing justo creas la partida y se ejecuta esta llamada
+    useEffect(() => {
+        
         // Poll for unread messages
         const timer = setInterval(() => {
+            if(!creationModalView && !joinModalView){
             fetchNotReadMessages();
+            console.log("Soy yo muajaja")
+            }
         }, 2000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [creationModalView, joinModalView]);
 
     // Re-fetch messages if we close the friendsView
     useEffect(() => {
-        if (!friendsView) {
+        if(!creationModalView && !joinModalView){
             fetchNotReadMessages();
         }
-    }, [friendsView, numMessages]);
+    }, [friendsView, numMessages, creationModalView, joinModalView]);
 
     // If user is available, set the username and photo
     useEffect(() => {
@@ -249,7 +262,9 @@ export default function Home() {
 
     return (
         <>
-            {/* ADMIN button, account menu, etc. */}
+
+
+            {/* If NOT showing estadisticasView, show admin button if user is ADMIN */}
             {!estadisticasView && (
                 <div>
                     {roles.includes('ADMIN') && (

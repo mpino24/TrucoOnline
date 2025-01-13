@@ -196,7 +196,7 @@ public class ManoService {
         
     }
 
-    public Boolean envidoBajoMenorAlResto(Mano mano, Integer jugadorDelTurno){ //FALTA TEST TODO
+    public Boolean envidoBajoMenorAlResto(Mano mano, Integer jugadorDelTurno){ 
         Boolean res = false;
         Integer envidoBajo =24; //segun los ojos del que juege puede pensarse que no es tan bajo, por eso una variable
         if(mano.getEquipoGanadorEnvido()%2 != jugadorDelTurno%2 && mano.getTantoDe1Jugador(jugadorDelTurno)<=envidoBajo){

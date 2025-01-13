@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Logros extends NamedEntity{
-    @NotBlank
+    @NotBlank(message = "No puede estar vacia la descripción")
     private String descripcion;
 
     private String imagencita = "http://localhost:8080/resources/images/trofeos/trofeo1.jpg";
@@ -23,15 +23,12 @@ public class Logros extends NamedEntity{
     private Integer valor;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "La metrica no puede ser nula")
     Metrica metrica;
 
 
-    @NotNull
+    @NotNull(message = "Debe estar oculto o no, pero no null")
     Boolean oculto = false;
 
-    public String getActualDescription(){
-        return descripcion.replace("<VALOR>", String.valueOf(valor));
-    }
 
 }

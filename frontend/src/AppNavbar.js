@@ -3,7 +3,6 @@ import { NavLink, NavItem } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from 'jwt-decode';
-import logoChico from './static/images/logoChico.png';
 import LeavingGameModal from './components/LeavingGameModal';
 
 function AppNavbar() {
@@ -11,7 +10,7 @@ function AppNavbar() {
   const jwt = tokenService.getLocalAccessToken();
   const navigate = useNavigate();
   const [leavingModal, setLeavingModal] = useState(false);
-
+  const logoChico = "http://localhost:8080/resources/images/logoChico.png"
   useEffect(() => {
     if (jwt) {
       setRoles(jwt_decode(jwt).authorities);
