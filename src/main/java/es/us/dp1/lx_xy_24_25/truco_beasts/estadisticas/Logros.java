@@ -30,8 +30,5 @@ public class Logros extends NamedEntity{
     @NotNull(message = "Debe estar oculto o no, pero no null")
     Boolean oculto = false;
 
-    public String getActualDescription(){
-        return descripcion.replace("<VALOR>", String.valueOf(valor));
-    }
 
 }
