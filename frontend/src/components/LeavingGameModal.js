@@ -34,17 +34,19 @@ const LeavingGameModal = forwardRef((props, ref) => {
         content: {
             top: '50%',
             left: '50%',
+            border: "2px solid rgb(255, 170, 66)",
+            backgroundColor:"rgba(255, 214, 187, 0.678)",
+            borderRadius: "30px",
             right: 'auto',
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
             width: '400px',
             padding: '20px',
-            borderRadius: '10px',
+            borderRadius: '20px',
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
             textAlign: 'center',
-            border: 'none',
-            zIndex: 1000
+            zIndex: 1003242343240
 
         },
         overlay: {
@@ -54,7 +56,7 @@ const LeavingGameModal = forwardRef((props, ref) => {
             right: 0,
             bottom: 0,
             backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            zIndex: 1000 
+            zIndex: 10423432432400 
         }
     };
 
@@ -67,41 +69,31 @@ const LeavingGameModal = forwardRef((props, ref) => {
             style={customModalStyles}
             ariaHideApp={false}
         >
-            <h2 style={{ marginBottom: '20px', color: '#333' }}>¿Quieres abandonar la partida?</h2>
+            <h2 className="loginText" style={{ marginBottom: '20px' }}>¿Quieres abandonar la partida?</h2>
             <img src="https://c.tenor.com/vkvU9Fi4uOsAAAAC/tenor.gif" alt="Mono GIF" style={{ width: '100%', height: 'auto', marginBottom: '20px' }} />
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <button
                     onClick={leaveGame}
+                    className='dangerButton2'
                     style={{
                         padding: '10px 20px',
-                        backgroundColor: '#ff4d4d',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
                         cursor: 'pointer',
                         fontSize: '16px',
-                        transition: 'background-color 0.3s ease',
                         marginRight: '10px'
                     }}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = '#ff3333')}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#ff4d4d')}
+                
                 >
                     Sí, abandonar partida
                 </button>
                 <button
+                className='heavenButton'
                     onClick={closeModal}
                     style={{
                         padding: '10px 20px',
-                        backgroundColor: '#4CAF50',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
                         cursor: 'pointer',
                         fontSize: '16px',
-                        transition: 'background-color 0.3s ease'
                     }}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = '#45a049')}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#4CAF50')}
+                    
                 >
                     No, me quedo
                 </button>
