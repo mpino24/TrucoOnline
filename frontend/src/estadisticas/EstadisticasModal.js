@@ -140,6 +140,8 @@ const EstadisticasModal = forwardRef((props, ref) => {
                     height: '100%',
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                     borderRadius: '10px',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none'
                 }}>
                     <RenderizarLogros jwt={jwt} setMessage={setMessage} setVisible={setVisible} />
                 </div>

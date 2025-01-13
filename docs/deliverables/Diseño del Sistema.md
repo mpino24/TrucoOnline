@@ -77,9 +77,9 @@ Por ejemplo, para la pantalla de visualización de métricas del usuario en un h
     
 
 ## Documentación de las APIs
-Se considerará parte del documento de diseño del sistema la documentación generada para las APIs, que debe incluir como mínimo, una descripción general de las distintas APIs/tags  proporcionadas. Una descripción de los distintos endpoints y operaciones soportadas. Y la especificación de las políticas de seguridad especificadas para cada endpoint y operación. Por ejemplo: “la operación POST sobre el endpoint /api/v1/game, debe realizarse por parte de un usuario autenticado como Player”.
+Para visualizar de una manera intuitiva, dinamica e interactiva como se utiliza la API de Truco Beast: Bardo en la Jungla lo mejor es iniciar la app como se explica en el README y abrir [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html), ya que de esta forma se pueden hacer llamadas en tiempo real a la API y ver lo que responde.
 
-Si lo desea puede aplicar la aproximación descrita en https://vmaks.github.io/2020/02/09/how-to-export-swagger-specification-as-html-or-word-document/ para generar una versión en formato Word de la especificación de la API generada por OpenAPI, colgarla en el propio repositorio y enlazarla en esta sección del documento.  En caso contrario debe asegurarse de que la interfaz de la documentación open-api de su aplicación está accesible, funciona correctamente, y está especificada conforme a las directrices descritas arriba.
+Por otro lado, si no se desea tener que descargar e iniciar la app completa para poder ver el funcionamiento de la API, brindamos este archivo html que permite visualizar todas las opciones y que permite: [Descargar documentación completa de la API](/docs/API/api_de_truco_beast_bardo_en_la_jungla.html)
 
 ## Patrones de diseño y arquitectónicos aplicados
 En esta sección especificamos el conjunto de patrones de diseño y arquitectónicos aplicados durante el proyecto:
