@@ -22,7 +22,6 @@ const ExpeledModal = forwardRef((props, ref) => {
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
             textAlign: 'center',
             border: 'none',
-
         },
         overlay: {
             position: 'fixed',
