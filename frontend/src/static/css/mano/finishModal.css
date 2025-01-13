@@ -1,50 +1,136 @@
+/* ------------------------------ */
+/* CSS for Finished Modal         */
+/* ------------------------------ */
+
+/* Fullscreen modal container */
 .finish-modal-container {
-    position: fixed; /* Ensures the modal overlays the entire viewport */
-    top: 0;
-    left: 0;
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Prevents overflow within the modal */
-    background-color: rgba(0, 0, 0, 0); /* Semi-transparent background */
-    z-index: -2; /* Ensures the modal is above other content */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: transparent;
+  z-index: -2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal background image */
+.finish-modal-background {
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Headings */
 
 
-  .finish-button-container {
-    width: 220px;
-    height: 75px;
-    margin: 5px;
-    left: 49%;
-    position: absolute;
-    transform: translateX(-50%);
-    top: 40%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
- 
-  /* Truco Buttons */
-  .finish-button-container button {
-    padding: 10px;
-    border: 3px solid rgb(212, 113, 0);
-    border-radius: 5px;
-    font-size: 50px;
-    text-shadow:
-    -0.5px -0.5px 0 rgb(143, 43, 0), 
-        0.5px -0.5px 0 rgb(143, 43, 0), 
-        -0.5px 0.5px 0 rgb(143, 43, 0), 
-        0.5px 0.5px 0 rgb(143, 43, 0);
-    background-color: rgba(255, 166, 0,  1);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-    animation: dropShadowGlowContainer 3s ease-in-out infinite;
-  }
+/* The spinner-wrapper is centered and does not rotate */
+.spinner-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;   /* Overall diameter of the orbit path */
+  height: 300px;
+  transform: translate(-50%, -50%);
+}
 
-  
+/* Each orbit-item is positioned at the center and animated */
+.orbit-item {
+  position: absolute;
+  top: 45%;
+  left: 43%;
+  /* Offset the item so that its center coincides with the spinner center */
+  transform: translate(-50%, -50%);
+  width: 200px;   /* Adjust the orbiting GIF size as needed */
+  height: 200px;
+  /* Apply the orbit animation:
+       - First, rotate the item by an animated angle.
+       - Then, translate it outward along the X-axis (orbit radius).
+       - Finally, rotate it back (counter-rotate) so the GIF stays vertical.
+  */
+  animation: orbitAnimation 6s linear infinite;
+}
+
+/* The orbiting GIF fills the orbit-item */
+.orbiting-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The fixed center image (does not spin) */
+.center-image {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  width: 100px;    /* Adjust as needed */
+  height: 100px;   /* Adjust as needed */
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+/* Orbit keyframes:
+   The animation rotates the container from 0 to 360 degrees,
+   translates it by a fixed radius, then counter-rotates so that
+   the image remains vertical.
+   (Here, the keyframe applies a composite transform.)
+*/
+@keyframes orbitAnimation {
+  from {
+    /* Start with 0 rotation, then translateX(120px) for orbit radius */
+    transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg);
+  }
+  to {
+    /* At 360°, the inner rotation cancels the rotation so the GIF stays upright */
+    transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg);
+  }
+}
+
+/* Finish button container */
+.finish-button-container {
+  width: 220px;
+  height: 75px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  top: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+}
+
+/* Finish button styling */
+.finish-button-container button {
+  padding: 10px;
+  border: 3px solid rgb(212, 113, 0);
+  border-radius: 5px;
+  font-size: 50px;
+  text-shadow: -0.5px -0.5px 0 rgb(143, 43, 0),
+               0.5px -0.5px 0 rgb(143, 43, 0),
+               -0.5px 0.5px 0 rgb(143, 43, 0),
+               0.5px 0.5px 0 rgb(143, 43, 0);
+  background-color: rgba(255, 166, 0, 1);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  z-index: 11;
+  animation: dropShadowGlowContainer 3s ease-in-out infinite;
+}
+
+.finish-button-container button:hover {
+  background-color: #444;
+}
+
+/* Button drop-shadow animation */
+@keyframes dropShadowGlowContainer {
+  0% { box-shadow: 0 0 5px rgb(212, 113, 0); }
+  50% { box-shadow: 0 0 20px rgb(212, 113, 0); }
+  100% { box-shadow: 0 0 5px rgb(212, 113, 0); }
+}

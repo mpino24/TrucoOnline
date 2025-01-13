@@ -211,7 +211,7 @@ export default function Game() {
                             backgroundSize: 'cover',
                             backgroundRepeat: 'no-repeat',
                             boxShadow: '-2px 0 5px rgba(0,0,0,0.5)',
-                            zIndex: 1500,
+                            zIndex: 15232300,
                             display: 'flex',
                             flexDirection: 'column',
                         }}>
