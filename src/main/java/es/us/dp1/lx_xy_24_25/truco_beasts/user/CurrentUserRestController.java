@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +23,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
@@ -46,8 +48,8 @@ public class CurrentUserRestController {
 
     @Operation(summary = "Obtener el perfil del usuario actual")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Perfil obtenido con éxito"),
-        @ApiResponse(responseCode = "401", description = "No autorizado")
+        @ApiResponse(responseCode = "200", description = "Perfil obtenido con éxito", content = @Content(schema = @Schema(implementation = PerfilJugadorUsuario.class))),
+        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
     })
     @GetMapping
     public ResponseEntity<PerfilJugadorUsuario> getProfile(Principal principal) {
@@ -59,24 +61,26 @@ public class CurrentUserRestController {
         perfil.setUser(user);
         
         return ResponseEntity.ok(perfil);
-    }
+        }
 
-    @Operation(summary = "Actualizar el perfil del usuario actual")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Perfil actualizado con éxito"),
-        @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
-        @ApiResponse(responseCode = "401", description = "No autorizado")
-    })
-    @PutMapping("/edit")
-    public ResponseEntity<?> updateProfile(@RequestBody @Valid PerfilJugadorUsuario perfil, Principal principal) {
+        @Operation(summary = "Actualizar el perfil del usuario actual")
+        @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Perfil actualizado con éxito", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content),
+        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+        })
+        @PutMapping("/edit")
+        public ResponseEntity<?> updateProfile(
+         @Valid @RequestBody(description = "Perfil del usuario a actualizar", required = true, content = @Content(schema = @Schema(implementation = PerfilJugadorUsuario.class))) PerfilJugadorUsuario perfil, 
+        Principal principal) {
         User user = perfil.getUser();
         Jugador jugador = perfil.getJugador();
-    
+        
         User currentUser = userService.findCurrentUser();
-    
+        
         Boolean mismoUsername = user.getUsername().equals(currentUser.getUsername());
         Boolean mismaContraseña = (user.getPassword() == null || user.getPassword().isEmpty());
-    
+        
         jugadorService.updateJugador(jugador, currentUser);
         userService.updateCurrentUser(user);
 
@@ -85,16 +89,16 @@ public class CurrentUserRestController {
         } else {
             return ResponseEntity.ok(home);
         }
-    }
+        }
 
-    @Operation(summary = "Borrar la cuenta del usuario actual")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cuenta borrada con éxito"),
-        @ApiResponse(responseCode = "401", description = "No autorizado")
-    })
-    @DeleteMapping("/borrarMiCuenta")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<MessageResponse> borrarMiCuenta() {
+        @Operation(summary = "Borrar la cuenta del usuario actual")
+        @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cuenta borrada con éxito", content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+        })
+        @DeleteMapping("/borrarMiCuenta")
+        @ResponseStatus(HttpStatus.OK)
+        public ResponseEntity<MessageResponse> borrarMiCuenta() {
         Integer userId = userService.findCurrentUser().getId();
         jugadorService.deleteJugadorByUserId(userId);
         return ResponseEntity.ok(new MessageResponse("¡Tu cuenta fue borrada con éxito!"));
@@ -102,8 +106,8 @@ public class CurrentUserRestController {
 
     @Operation(summary = "Actualizar la conexión del usuario actual")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Conexión actualizada con éxito"),
-        @ApiResponse(responseCode = "401", description = "No autorizado")
+        @ApiResponse(responseCode = "200", description = "Conexión actualizada con éxito", content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
     })
     @PatchMapping("/updateConnection")
     public ResponseEntity<MessageResponse> updateConnection() {

@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -45,6 +48,7 @@ class UserRestController {
 	}
 
 	@Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista de todos los usuarios. Se puede filtrar por autoridad.")
+	@ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@GetMapping
 	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
 		List<User> res;
@@ -56,12 +60,14 @@ class UserRestController {
 	}
 
 	@Operation(summary = "Obtener usuarios paginados", description = "Devuelve una lista paginada de usuarios.")
+	@ApiResponse(responseCode = "200", description = "Lista paginada de usuarios obtenida", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class)))
 	@GetMapping("/paginados")
 	public ResponseEntity<Page<User>> findUsuariosPaginados(Pageable pageable) {
 		return new ResponseEntity<>(userService.findUsuariosPaginacion(pageable), HttpStatus.OK);
 	}
 
 	@Operation(summary = "Obtener todas las autoridades", description = "Devuelve una lista de todas las autoridades.")
+	@ApiResponse(responseCode = "200", description = "Lista de autoridades obtenida", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Authorities.class)))
 	@GetMapping("/authorities")
 	public ResponseEntity<List<Authorities>> findAllAuths() {
 		List<Authorities> res = (List<Authorities>) authService.findAll();
@@ -69,12 +75,14 @@ class UserRestController {
 	}
 
 	@Operation(summary = "Obtener usuario por ID", description = "Devuelve un usuario por su ID.")
+	@ApiResponse(responseCode = "200", description = "Usuario obtenido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@GetMapping(value = "{id}")
 	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
 	@Operation(summary = "Crear un nuevo usuario", description = "Crea un nuevo usuario.")
+	@ApiResponse(responseCode = "201", description = "Usuario creado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<User> create(@RequestBody @Valid User user) {
@@ -83,6 +91,7 @@ class UserRestController {
 	}
 
 	@Operation(summary = "Actualizar un usuario", description = "Actualiza un usuario existente por su ID.")
+	@ApiResponse(responseCode = "200", description = "Usuario actualizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody User user) {
@@ -91,6 +100,7 @@ class UserRestController {
 	}
 
 	@Operation(summary = "Eliminar un usuario", description = "Elimina un usuario por su ID.")
+	@ApiResponse(responseCode = "200", description = "Usuario eliminado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)))
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {

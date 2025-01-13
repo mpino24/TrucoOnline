@@ -75,6 +75,8 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/manos/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/fotos/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/profile/**")).authenticated()
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/logros/**")).authenticated()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/api/v1/logros")).hasAuthority(ADMIN)
 			.requestMatchers("/ws").permitAll()
 			.requestMatchers("/app/mensaje").permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/chat/**")).permitAll()

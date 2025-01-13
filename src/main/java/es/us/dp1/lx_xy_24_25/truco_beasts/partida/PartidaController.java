@@ -25,6 +25,8 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorService;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,14 +48,14 @@ public class PartidaController {
 	}
 
 	@Operation(summary = "Obtener todas las partidas")
-	@ApiResponse(responseCode = "200", description = "Lista de partidas obtenida con éxito")
+	@ApiResponse(responseCode = "200", description = "Lista de partidas obtenida con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Partida.class)))
 	@GetMapping("/partidas")
 	public ResponseEntity<List<Partida>> findAll() {
 		return new ResponseEntity<>(partidaService.findAllPartidas(), HttpStatus.OK);
 	}
 
 	@Operation(summary = "Obtener el historial de partidas del usuario actual")
-	@ApiResponse(responseCode = "200", description = "Historial de partidas obtenido con éxito")
+	@ApiResponse(responseCode = "200", description = "Historial de partidas obtenido con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartidaDTO.class)))
 	@GetMapping("/partidas/historial")
 	public ResponseEntity<Page<PartidaDTO>> findHistorialPartidas(Pageable pageable) {
 		User usuarioActual = partidaService.findUsuarioDelJugadorActual();
@@ -61,21 +63,21 @@ public class PartidaController {
 	}
 
 	@Operation(summary = "Obtener partidas activas públicas")
-	@ApiResponse(responseCode = "200", description = "Lista de partidas activas públicas obtenida con éxito")
+	@ApiResponse(responseCode = "200", description = "Lista de partidas activas públicas obtenida con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Partida.class)))
 	@GetMapping("/partidas/accesibles")
 	public ResponseEntity<Page<Partida>> findPartidasActivasPublicas(Pageable pageable) {
 		return new ResponseEntity<>(partidaService.findAllPartidasActivas(pageable), HttpStatus.OK);
 	}
 
 	@Operation(summary = "Obtener partidas con participantes")
-	@ApiResponse(responseCode = "200", description = "Lista de partidas con participantes obtenida con éxito")
+	@ApiResponse(responseCode = "200", description = "Lista de partidas con participantes obtenida con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartidaDTO.class)))
 	@GetMapping("/partidas/paginadas")
 	public ResponseEntity<Page<PartidaDTO>> findPartidasConParticipantes(Pageable pageable) {
 		return new ResponseEntity<>(partidaService.findPartidasYParticipantes(pageable), HttpStatus.OK);
 	}
 
 	@Operation(summary = "Crear una nueva partida")
-	@ApiResponse(responseCode = "201", description = "Partida creada con éxito")
+	@ApiResponse(responseCode = "201", description = "Partida creada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Partida.class)))
 	@PostMapping
 	public ResponseEntity<Partida> createPartida(@RequestBody @Valid Partida Partida, @RequestParam(required = true) Integer userId) throws AlreadyInGameException {
 		PartidaJugador partidaJugador = partJugService.getPartidaJugadorUsuarioActual();
@@ -93,7 +95,7 @@ public class PartidaController {
 	}
 
 	@Operation(summary = "Obtener una partida por ID")
-	@ApiResponse(responseCode = "200", description = "Partida obtenida con éxito")
+	@ApiResponse(responseCode = "200", description = "Partida obtenida con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Partida.class)))
 	@GetMapping(value = "{id}")
 	public ResponseEntity<Partida> findPartidaById(@PathVariable("id") int id) {
 		return new ResponseEntity<>(partidaService.findPartidaById(id), HttpStatus.OK);
@@ -112,7 +114,7 @@ public class PartidaController {
 	}
 
 	@Operation(summary = "Buscar una partida por código")
-	@ApiResponse(responseCode = "200", description = "Partida encontrada con éxito")
+	@ApiResponse(responseCode = "200", description = "Partida encontrada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Partida.class)))
 	@GetMapping("/search")
 	public ResponseEntity<Partida> findPartidaByCodigo(@RequestParam(required = true) String codigo) {
 		Partida partida = partidaService.findPartidaByCodigo(codigo);

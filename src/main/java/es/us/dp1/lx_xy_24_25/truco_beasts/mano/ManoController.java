@@ -17,6 +17,9 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.FlorException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.TrucoException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -33,7 +36,11 @@ public class ManoController {
         this.manoService = manoService;
     }
 
-    @Operation(summary = "Actualizar mano", description = "Obtiene la información de la mano actual.")
+    @Operation(summary = "Actualizar mano", description = "Obtiene la información de la mano actual.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Mano actualizada", content = @Content(schema = @Schema(implementation = Mano.class))),
+            @ApiResponse(responseCode = "404", description = "Mano no encontrada")
+        })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Mano> actualizarMano(@Parameter(description = "Código de la mano") @PathVariable String codigo){
@@ -41,7 +48,11 @@ public class ManoController {
         return new ResponseEntity<>(mano, HttpStatus.OK);
     }
 
-    @Operation(summary = "Tirar carta", description = "Permite a un jugador tirar una carta.")
+    @Operation(summary = "Tirar carta", description = "Permite a un jugador tirar una carta.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Carta tirada", content = @Content(schema = @Schema(implementation = Carta.class))),
+            @ApiResponse(responseCode = "400", description = "Error al tirar la carta")
+        })
     @PatchMapping("/tirarCarta/{cartaId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Carta> patchTirarCarta(
@@ -51,7 +62,11 @@ public class ManoController {
         return new ResponseEntity<>(carta, HttpStatus.OK);
     }
 
-    @Operation(summary = "Cantar truco", description = "Permite a un jugador cantar truco.")
+    @Operation(summary = "Cantar truco", description = "Permite a un jugador cantar truco.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Truco cantado", content = @Content(schema = @Schema(implementation = Cantos.class))),
+            @ApiResponse(responseCode = "400", description = "Error al cantar truco")
+        })
     @PatchMapping("/cantarTruco/{cantoTruco}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cantos> patchCantarTruco(
@@ -61,7 +76,11 @@ public class ManoController {
         return new ResponseEntity<>(cantoTruco, HttpStatus.OK);
     }
 
-    @Operation(summary = "Responder truco", description = "Permite a un jugador responder a un truco.")
+    @Operation(summary = "Responder truco", description = "Permite a un jugador responder a un truco.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Truco respondido", content = @Content(schema = @Schema(implementation = Integer.class))),
+            @ApiResponse(responseCode = "400", description = "Error al responder truco")
+        })
     @PatchMapping("/responderTruco/{respuestasTruco}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Integer> patchResponderTruco(
@@ -72,7 +91,11 @@ public class ManoController {
         return new ResponseEntity<>(puntosActualesTruco, HttpStatus.OK);
     }
 
-    @Operation(summary = "Cantar envido", description = "Permite a un jugador cantar envido.")
+    @Operation(summary = "Cantar envido", description = "Permite a un jugador cantar envido.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Envido cantado", content = @Content(schema = @Schema(implementation = Cantos.class))),
+            @ApiResponse(responseCode = "400", description = "Error al cantar envido")
+        })
     @PatchMapping("/cantarEnvido/{cantoEnvido}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cantos> patchCantarEnvido(
@@ -82,7 +105,11 @@ public class ManoController {
         return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
     }
 
-    @Operation(summary = "Responder envido", description = "Permite a un jugador responder a un envido.")
+    @Operation(summary = "Responder envido", description = "Permite a un jugador responder a un envido.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Envido respondido", content = @Content(schema = @Schema(implementation = Cantos.class))),
+            @ApiResponse(responseCode = "400", description = "Error al responder envido")
+        })
     @PatchMapping("/responderEnvido/{cantoEnvido}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cantos> patchResponderEnvido(
@@ -92,7 +119,11 @@ public class ManoController {
         return new ResponseEntity<>(cantoEnvido, HttpStatus.OK);
     }
 
-    @Operation(summary = "Cantar flor", description = "Permite a un jugador cantar flor.")
+    @Operation(summary = "Cantar flor", description = "Permite a un jugador cantar flor.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Flor cantada", content = @Content(schema = @Schema(implementation = Cantos.class))),
+            @ApiResponse(responseCode = "400", description = "Error al cantar flor")
+        })
     @PatchMapping("/cantarFlor/{cantoFlor}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cantos> patchCantarFlor(
@@ -102,7 +133,11 @@ public class ManoController {
         return new ResponseEntity<>(cantoFlor, HttpStatus.OK);
     }
 
-    @Operation(summary = "Responder flor", description = "Permite a un jugador responder a una flor.")
+    @Operation(summary = "Responder flor", description = "Permite a un jugador responder a una flor.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Flor respondida", content = @Content(schema = @Schema(implementation = Cantos.class))),
+            @ApiResponse(responseCode = "400", description = "Error al responder flor")
+        })
     @PatchMapping("/responderFlor/{cantoFlor}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cantos> patchResponderFlor(
