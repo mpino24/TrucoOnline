@@ -23,8 +23,10 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.JwtResponse;
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
 import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.jwt.JwtUtils;
 import es.us.dp1.lx_xy_24_25.truco_beasts.configuration.services.UserDetailsImpl;
+import es.us.dp1.lx_xy_24_25.truco_beasts.estadisticas.Logros;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -51,7 +53,11 @@ public class AuthController {
 		this.authService = authService;
 	}
 
-	@Operation(summary = "Iniciar sesión", description = "Autentica al usuario y devuelve un token JWT")
+	@Operation(summary = "Iniciar sesión", description = "Autentica al usuario y devuelve un token JWT",requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = LoginRequest.class)
+        )
+    ))
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Autenticación exitosa", content = @Content(schema = @Schema(implementation = JwtResponse.class))),
 		@ApiResponse(responseCode = "400", description = "Credenciales incorrectas", content = @Content(schema = @Schema(implementation = String.class)))
@@ -74,7 +80,12 @@ public class AuthController {
 		}
 	}
 
-	@Operation(summary = "Validar token", description = "Valida un token JWT")
+	@Operation(summary = "Validar token", description = "Valida un token JWT", parameters = @Parameter(
+        name = "token",
+        description = "El token JWT que será validado",
+        required = true,
+        example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    ))
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Token válido", content = @Content(schema = @Schema(implementation = Boolean.class))),
 		@ApiResponse(responseCode = "400", description = "Token inválido", content = @Content(schema = @Schema(implementation = Boolean.class)))
@@ -85,7 +96,11 @@ public class AuthController {
 		return ResponseEntity.ok(isValid);
 	}
 
-	@Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario")
+	@Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = SignupRequest.class)
+        )
+    ))
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Usuario registrado exitosamente", content = @Content(schema = @Schema(implementation = MessageResponse.class))),
 		@ApiResponse(responseCode = "400", description = "Nombre de usuario ya existe", content = @Content(schema = @Schema(implementation = MessageResponse.class)))

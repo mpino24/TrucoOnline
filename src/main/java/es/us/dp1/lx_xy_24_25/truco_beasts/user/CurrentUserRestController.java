@@ -63,7 +63,7 @@ public class CurrentUserRestController {
         return ResponseEntity.ok(perfil);
         }
 
-        @Operation(summary = "Actualizar el perfil del usuario actual")
+        @Operation(summary = "Actualizar el perfil del usuario actual", requestBody = @RequestBody(description = "Perfil del usuario a actualizar", required = true, content = @Content(schema = @Schema(implementation = PerfilJugadorUsuario.class))))
         @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Perfil actualizado con éxito", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content),
@@ -71,7 +71,7 @@ public class CurrentUserRestController {
         })
         @PutMapping("/edit")
         public ResponseEntity<?> updateProfile(
-         @Valid @RequestBody(description = "Perfil del usuario a actualizar", required = true, content = @Content(schema = @Schema(implementation = PerfilJugadorUsuario.class))) PerfilJugadorUsuario perfil, 
+         @Valid @org.springframework.web.bind.annotation.RequestBody PerfilJugadorUsuario perfil, 
         Principal principal) {
         User user = perfil.getUser();
         Jugador jugador = perfil.getJugador();

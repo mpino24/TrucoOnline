@@ -20,9 +20,9 @@ import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugador;
 import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorRepository;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.User;
 import es.us.dp1.lx_xy_24_25.truco_beasts.user.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
+
 
 @Service
 public class JugadorService {
@@ -79,7 +79,7 @@ public class JugadorService {
     }
 
     @Transactional(rollbackFor = {EntityNotFoundException.class, DataAccessException.class})
-    public Jugador updateJugador(@RequestBody @Valid Jugador jugador, User user) {
+    public Jugador updateJugador( Jugador jugador, User user) {
         Optional<Jugador> j = jugadorRepository.findByUserId(user.getId());
         if (j.isEmpty()) {
             throw new ResourceNotFoundException("El jugador de ID " + user.getId() + " no fue encontrado");

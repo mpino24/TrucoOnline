@@ -16,6 +16,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +48,7 @@ public class LogrosControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-	private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @MockBean
     private LogrosService logrosService;
@@ -179,17 +180,51 @@ public class LogrosControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void createLogro() throws Exception {
-        when(userService.findCurrentUser()).thenReturn(adminUser);
-        when(logrosService.save(logro)).thenReturn(logro);
+    void createLogroConValidacion() throws Exception {
+        nuevoLogro.setDescripcion(""); // Descripción vacía para provocar error de validación
 
         mockMvc.perform(post(BASE_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(nuevoLogro)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void updateLogroConValidacion() throws Exception {
+        nuevoLogro.setDescripcion(""); // Descripción vacía para provocar error de validación
+
+        mockMvc.perform(put(BASE_URL + "/{logroId}", logro.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevoLogro)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createLogroConMetricaNula() throws Exception {
+        nuevoLogro.setMetrica(null); // Metrica nula para provocar error de validación
+
+        mockMvc.perform(post(BASE_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevoLogro)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void updateLogroConMetricaNula() throws Exception {
+        nuevoLogro.setMetrica(null); // Metrica nula para provocar error de validación
+
+        mockMvc.perform(put(BASE_URL + "/{logroId}", logro.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevoLogro)))
+                .andExpect(status().isBadRequest());
+    }
    
     @Test
     void createLogroSinAutorizacion() throws Exception {
@@ -248,5 +283,34 @@ public class LogrosControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(nuevoLogro)))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createLogro() throws Exception {
+        when(userService.findCurrentUser()).thenReturn(adminUser);
+        when(logrosService.save(nuevoLogro)).thenReturn(nuevoLogro);
+
+        mockMvc.perform(post(BASE_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevoLogro)))
+                .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void updateLogroExitoso() throws Exception {
+        when(userService.findCurrentUser()).thenReturn(adminUser);
+        when(logrosService.updateLogro(nuevoLogro, nuevoLogro.getId())).thenReturn(nuevoLogro);
+
+        mockMvc.perform(put(BASE_URL + "/{logroId}", nuevoLogro.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevoLogro)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Nuevo Logro"))
+                .andExpect(jsonPath("$.descripcion").value("Este es un nuevo logro"));
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.NotAuthorizedException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.ResourceNotFoundException;
 import es.us.dp1.lx_xy_24_25.truco_beasts.jugador.JugadorService;
@@ -78,12 +80,16 @@ public class LogrosController {
         return new ResponseEntity<>(logrosService.logrosConseguidos(jugadorId), HttpStatus.OK);
     }
 
-    @Operation(summary = "Crear un nuevo logro", responses = {
+    @Operation(summary = "Crear un nuevo logro", requestBody = @RequestBody(
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Logros.class)
+        )
+    ), responses = {
         @ApiResponse(description = "Logro creado", responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logros.class))),
         @ApiResponse(description = "No autorizado", responseCode = "403", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<Logros> createLogro( @Valid @RequestBody(content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logros.class))) Logros logro){
+    public ResponseEntity<Logros> createLogro( @org.springframework.web.bind.annotation.RequestBody @Valid Logros logro){
         User currentUser = userService.findCurrentUser();
         if(currentUser.hasAuthority("ADMIN")){
             Logros newLogro = new Logros();
@@ -113,12 +119,16 @@ public class LogrosController {
         }
     }
 
-    @Operation(summary = "Actualizar un logro", responses = {
+    @Operation(summary = "Actualizar un logro", requestBody = @RequestBody(
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Logros.class)
+        )
+    ), responses = {
         @ApiResponse(description = "Logro actualizado", responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logros.class))),
         @ApiResponse(description = "No autorizado", responseCode = "403", content = @Content)
     })
     @PutMapping("/{logroId}")
-    public ResponseEntity<Logros> updateLogro(@Valid @RequestBody(content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logros.class))) Logros logro, @PathVariable("logroId") Integer logroId){
+    public ResponseEntity<Logros> updateLogro( @Valid @org.springframework.web.bind.annotation.RequestBody Logros logro, @PathVariable("logroId") Integer logroId){
         User currentUser = userService.findCurrentUser();
         if(currentUser.hasAuthority("ADMIN")){
             return new ResponseEntity<>(logrosService.updateLogro(logro, logroId), HttpStatus.CREATED);

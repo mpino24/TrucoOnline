@@ -22,7 +22,11 @@ public class PartidaJugadorWebSocketController {
 
     @Operation(
         summary = "Enviar partida jugador",
-        description = "Envía información de la partida del jugador a un tópico específico",
+        description = "Envía información de la partida del jugador a un tópico específico", requestBody = @RequestBody(
+            description = "Información de la partida del jugador",
+            required = true,
+            content = @Content(schema = @Schema(implementation = PartidaJugadorView.class))
+        ),
         responses = {
             @ApiResponse(
                 responseCode = "200",
@@ -38,11 +42,7 @@ public class PartidaJugadorWebSocketController {
     )
     @MessageMapping("/partjugador")
     public void enviarPartidaJugador(
-        @RequestBody(
-            description = "Información de la partida del jugador",
-            required = true,
-            content = @Content(schema = @Schema(implementation = PartidaJugadorView.class))
-        )
+        
         @Payload @Valid PartidaJugadorView partJug
     ) {
         messagingTemplate.convertAndSend("/topic/partida/" + partJug.getPartidaId(), partJug);

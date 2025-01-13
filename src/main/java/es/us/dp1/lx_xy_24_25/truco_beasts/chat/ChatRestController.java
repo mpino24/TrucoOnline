@@ -87,7 +87,11 @@ public class ChatRestController {
         return new ChatDTO(chatService.findChatWith(userId));
     }
 
-    @Operation(summary = "Enviar un nuevo mensaje a un usuario específico")
+    @Operation(summary = "Enviar un nuevo mensaje a un usuario específico",requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Mensaje.class)
+        )
+    ))
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Mensaje enviado correctamente",
             content = { @Content(mediaType = "application/json", 

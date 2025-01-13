@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.exceptions.AccessDeniedException;
+import es.us.dp1.lx_xy_24_25.truco_beasts.partidajugador.PartidaJugadorView;
 import es.us.dp1.lx_xy_24_25.truco_beasts.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.us.dp1.lx_xy_24_25.truco_beasts.auth.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,7 +49,9 @@ class UserRestController {
 		this.authService = authService;
 	}
 
-	@Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista de todos los usuarios. Se puede filtrar por autoridad.")
+	@Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista de todos los usuarios. Se puede filtrar por autoridad.", parameters = {
+		@Parameter(name = "auth", description = "Nombre de la autenticacion", required = true)
+	})
 	@ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@GetMapping
 	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
@@ -81,7 +85,11 @@ class UserRestController {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
-	@Operation(summary = "Crear un nuevo usuario", description = "Crea un nuevo usuario.")
+	@Operation(summary = "Crear un nuevo usuario", description = "Crea un nuevo usuario.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+			description = "Usuario valido a crear.",
+			required = true,
+			content = @Content(schema = @Schema(implementation = PartidaJugadorView.class))
+		))
 	@ApiResponse(responseCode = "201", description = "Usuario creado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -90,7 +98,11 @@ class UserRestController {
 		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	}
 
-	@Operation(summary = "Actualizar un usuario", description = "Actualiza un usuario existente por su ID.")
+	@Operation(summary = "Actualizar un usuario", description = "Actualiza un usuario existente por su ID.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+		description = "Usuario valido a actualizar.",
+		required = true,
+		content = @Content(schema = @Schema(implementation = PartidaJugadorView.class))
+	))
 	@ApiResponse(responseCode = "200", description = "Usuario actualizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
