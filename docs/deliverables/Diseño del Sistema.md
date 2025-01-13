@@ -160,7 +160,7 @@ Como se ha mencionado antes, este patrón se aplica en casi todas las entidades.
 - PartidaJugador
 - User
 
-El uso de domain model nos ha permitido tener un control total sobre todos los objetos, sobre todo en cuanto a relaciones y herencias, algo que nos ha permitido implementar una lógica de negocio más compleja (y poder así aplicar el patrón Service Layer) que lo que nos permitiría otro patrón como lo es Table Module.
+El uso de domain model nos ha permitido tener un control total sobre todos los objetos, sobre todo en cuanto a relaciones y herencias, algo que nos ha permitido implementar una lógica de negocio más compleja (y poder así aplicar el patrón Service Layer) que no nos permitiría otro patrón como lo es Table Module.
 
 ### Patrón: Service Layer
 *Tipo*: Arquitectónico | de Diseño
