@@ -305,7 +305,7 @@ export default function Profile() {
                                 >
           <div
             className="cuadro-creacion"
-            style={{marginLeft:"0%", position:"absolute", }}
+            style={{marginLeft:"0%", position:"absolute", alignItems:'center', textAlign:'center' }}
           >
             <h3>
               ¿Estás seguro de que querés borrar tu cuenta?
@@ -342,8 +342,7 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Right side: Image selection preview */}
-      <div className="profile-image-selection">
+      {!mostrarConfirmarBorrado && <div className="profile-image-selection">
         {perfil.photo && (
           <img
             src={perfil.photo}
@@ -365,7 +364,7 @@ export default function Profile() {
         >
           Seleccionar Imagen
         </button>
-      </div>
+      </div>}
     </div>
   );
 }

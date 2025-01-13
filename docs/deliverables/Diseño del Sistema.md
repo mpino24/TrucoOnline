@@ -440,9 +440,9 @@ Nos decantamos por la alternativa 2 ya que preferimos que, para el caso del chat
 
 ### Decisión 9: Integración de las invitaciones en el chat
 #### Descripción del problema:
-El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que va a jugar
+El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que va a jugar.
 #### Alternativas de solución evaluadas:
-*Alternativa 1*: Crear nuevas entidades y representaciones en frontend para las invitaciones
+*Alternativa 1*: Crear nuevas entidades y representaciones en frontend para las invitaciones.
 *Ventajas:*
 • Mayor flexibilidad a la hora de crear invitaciones, sus restricciones, datos asociados y representación.
 
@@ -450,7 +450,7 @@ El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que
 • Supone incrementar el código del proyecto, aumentando así la complejidad del código final.
 • Necesitaríamos realizar nuevas llamadas al backend para obtener las invitaciones, lo que supone en un peor rendimiento del servidor.
 
-*Alternativa 2*: Integrar las invitaciones en el chat
+*Alternativa 2*: Integrar las invitaciones en el chat.
 
 *Ventajas:*
 • Aprovechamos la infraestructura ya creada para los mensajes, fomentando la reutilización del código sin aumentar su complejidad.
@@ -464,6 +464,62 @@ El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que
 
 #### Justificación de la solución adoptada
 Nos decantamos por la alternativa 2 ya que hemos priorizado la reutilización del código y su simplicidad siempre que la funcionalidad se cumpla. Además, la alternativa 2 nos ofrece una interfaz mucho más clara para los usuarios finales, ya que las invitaciones no suponen nuevos módulos o pantallas, reduciendo así el tiempo de aprendizaje de un nuevo jugador.
+
+### Decisión 10: Obtener estadísticas a partir de Queries
+#### Descripción del problema:
+Para obtener las estadísticas de un jugador había que decidir como obtenerlas.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Crear una entidad nueva en la base de datos con la información de cada jugador.
+*Ventajas:*
+• Una forma intuitiva de tener toda la información necesaria en todo momento.
+• Con una sola Query se obtiene toda la información de un jugador en particular.
+• Las Querys serían mucho más sencillas.
+
+*Inconvenientes:*
+• Habría muchos datos repetidos en la base de datos, lo que escalado a muchos jugadores puede resultar de peso.
+• Tendríamos que agregar que los datos se vayan guardando para la estadistica a la vez que en las otras entidades.
+
+*Alternativa 2*: Agregar un Component estadisticas y algunos datos en la entidad PartidaJugador, pudiendo sacar todas las estadisticas a partir de Queries.
+
+*Ventajas:*
+• Se pueden obtener todos los datos de un jugador aprovechando lo que ya se guarda en la base de datos, haciendo que no haya datos repetidos.
+• Haciendo uso de las Queries podemos obtener datos en particular sin tener que revisar toda la base de datos completa.
+
+*Inconvenientes:*
+• La complejidad de algunas llamadas como la de Victorias es bastante alta.
+• Si hay que cargar muchos datos puede llegar a tardar, pero depende de la magnitud de lo pedido y los datos que haya guardados.
+
+
+#### Justificación de la solución adoptada
+Optamos por la alternativa 2 porque, aunque la implementación de las llamadas en el EstadisticasRepository incrementa la complejidad inicial, esto se justifica por las ventajas obtenidas. Una vez en funcionamiento, estas llamadas agilizan la búsqueda de datos y eliminan la necesidad de mantener una entidad adicional. Además, si en el futuro se desea añadir un dato relacionado exclusivamente con las partidas, los jugadores, o ambos, es posible hacerlo simplemente creando una nueva query. La complejidad de obtener estos datos será equivalente a la de la llamada que deseemos realizar, la cual generalmente es baja, salvo en casos particulares donde la optimización de propiedades podría dificultar las consultas
+
+### Decisión 11: Quien responde flor
+#### Descripción del problema:
+Como obtener el que responde la flor es más complejo que en los otros cantos, ya que si solo un jugador de un equipo la tiene, sigue siendo su turno. En cambio si otro tiene esta, si pertenece al otro equipo, debe tener la posibilidad de responder a esta con un canto. Nuevamente, después de que haya respondido, el turno vuelve al que la canto inicialmente. La complejidad radica en que en las partidas de 4 y 6, al depender del azar, pueden no ser los inmediatamente siguientes los que tengan flor.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Adaptar la función de Mano quienResponde para que cumpla el caso de la flor.
+*Ventajas:*
+• Se generalizaría la función para que siempre cumpla correctamente, sin importar el contexto de la partida.
+• Basta con llamar a quienResponde en cada caso que haya que responder y listo, de estar bien implementada cumpliría en cualquier caso.
+
+*Inconvenientes:*
+• La función al hacer muchas funciones (valga la redundancia) no seguiría las buenas prácticas.
+• Hace mucho más dificil mantenerla, debido a que su complejidad y longitud aumenta.
+• Al ser una función más compleja, puede tardar más y dado que quienResponde se llama en todos los cantos es importante su velocidad de ejecución. Además que en las partidas sin flor directamente nunca se usaría la parte encargada de la flor.
+
+*Alternativa 2*: Crear una nueva función exclusiva llamada quienRespondeFlor que contemple los casos particulares de las respuestas en la flor.
+
+*Ventajas:*
+• Fácil de mantener ya que está separada de la otra función.
+• Se crean tests independientes para los casos de la flor ya que está totalmente separada (bajo acoplamiento con las otras funciones).
+• La función quienResponde queda con su funcionalidad simplificada, sin agregarle coste de trabajo adicional siempre que se use.
+
+*Inconvenientes:*
+• Hay que añadir un método más en la clase Mano que ya de por si es muy grande.
+• Si por alguna rázon se quisieran cambiar las reglas del juego y el orden de respuesta habría que cambiar el quienResponde y quienRespondeFlor.
+
+#### Justificación de la solución adoptada
+Elegimos la alternativa 2, creamos el quienRespondeFlor en la clase Mano ya que la lógica que requería el cambio de turno en la flor no podía ser contemplado a la ligera y la mejor forma de atacarlo fue separandolo del caso general de los otros cantos, dejando que quienResponde y quienRespondeFlor mantengan su funcionalidad más simple y optimizada.
 
 
 ## Refactorizaciones aplicadas
@@ -1793,4 +1849,3 @@ Al tener el chat integrado tanto en la página principal como en la partida, se 
 #### Ventajas que presenta la nueva versión del código respecto de la versión original
 Con este componente ahora cada vez que queremos mostrar mensajes solo tenemos que pasar los mensajes a MessageList para que los muestre con el estilo que creamos. Con esto el código queda más legible además de que es muy reutilizable.
  
-
