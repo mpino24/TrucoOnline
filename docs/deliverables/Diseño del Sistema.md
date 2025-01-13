@@ -412,6 +412,59 @@ Antes de empezar una partida se tiene la opción de invitar a tus amigos para qu
 #### Justificación de la solución adoptada
 Nos decantamos por la alternativa 2 ya que preferimos que haya más rango posible de diferentes partidas sin tantas limitaciones.
 
+### Decisión 8: Uso de Websocket para los mensajes y los gestos
+#### Descripción del problema:
+Tanto en el envío de mensajes como para mostrar los gestos durante una partida, necesitamos un tiempo de respuesta rápido del sistema, es decir, necesitamos que los gestos y mensajes se vean en tiempo real sin además consumir demasiados recursos al sistema.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Utilizar la técnica de Polling
+*Ventajas:*
+• Facilidad de implementación.
+• Mayor control sobre cuándo se realizan las llamadas al Backend.
+
+*Inconvenientes:*
+• Consume más recursos y pueden llegarse a realizar llamadas innecesarias.
+• La actualización de los datos en el cliente no es en tiempo real, dependerá de la frecuencia de las llamadas.
+
+*Alternativa 2*: Utilizar tecnología WebSocket
+
+*Ventajas:*
+• Permite una comunicación casi directa entre clientes, reduciendo la carga del servidor.
+• Permite la comunicación en tiempo real entre clientes, reduciendo considerablemente el tiempo de procesamiento del servidor.
+*Inconvenientes:*
+• Implementación más compleja dado que el equipo no conoce cómo implementar la tecnología.
+• Menor control sobre cuando se actualizan los datos en el cliente.
+
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 2 ya que preferimos que, para el caso del chat y los gestos, estamos más interesados en tener una comunicación en tiempo real sin forzar a una sobrecarga continua al servidor.
+
+### Decisión 9: Integración de las invitaciones en el chat
+#### Descripción del problema:
+El jugador debe de tener la posibilidad de invitar a sus amigos a la partida que va a jugar
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Crear nuevas entidades y representaciones en frontend para las invitaciones
+*Ventajas:*
+• Mayor flexibilidad a la hora de crear invitaciones, sus restricciones, datos asociados y representación.
+
+*Inconvenientes:*
+• Supone incrementar el código del proyecto, aumentando así la complejidad del código final.
+• Necesitaríamos realizar nuevas llamadas al backend para obtener las invitaciones, lo que supone en un peor rendimiento del servidor.
+
+*Alternativa 2*: Integrar las invitaciones en el chat
+
+*Ventajas:*
+• Aprovechamos la infraestructura ya creada para los mensajes, fomentando la reutilización del código sin aumentar su complejidad.
+• Facilidad de implementación, al tener sólamente que renderizar una serie de mensajes "especiales".
+• Evitamos añadir nuevo código al proyecto que sería mayoritariamente igual al de los chats entre jugadores.
+
+*Inconvenientes:*
+• Limitada la forma de recibir invitaciones, ya que estas siempre aparecerían en los chats privados entre jugadores.
+• Las modificaciones sobre el chat y los mensajes pueden llevar a fallos en las invitaciones.
+
+
+#### Justificación de la solución adoptada
+Nos decantamos por la alternativa 2 ya que hemos priorizado la reutilización del código y su simplicidad siempre que la funcionalidad se cumpla. Además, la alternativa 2 nos ofrece una interfaz mucho más clara para los usuarios finales, ya que las invitaciones no suponen nuevos módulos o pantallas, reduciendo así el tiempo de aprendizaje de un nuevo jugador.
+
 
 ## Refactorizaciones aplicadas
 
