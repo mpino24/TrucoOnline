@@ -78,7 +78,7 @@ const FinishedModal = forwardRef((props, ref) => {
 
         {/* Button to go home */}
         <div >
-          <button className='auth-button' style={{position:"absolute", top:"75%", left:"45%"}}>
+          <button className='auth-button' style={{position:"absolute", top:"80%", left:"45%"}}>
             <Link
               to="/home"
               style={{ textDecoration: "none", color: "Black" }}
