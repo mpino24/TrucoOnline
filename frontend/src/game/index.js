@@ -9,6 +9,9 @@ import InputContainer from "../components/InputContainer.js";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { IoCloseCircle } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
+import shuiDef from '../static/audios/shuiDef.mp3';
+import shiuDef from '../static/audios/shiuDef.mp3';
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -159,7 +162,14 @@ export default function Game() {
             console.error("STOMP aún no está listo o no está conectado");
         }
     };
-
+    const playEntrySound = () => {
+        const audio = new Audio(shuiDef); // path to your audio file
+        audio.play().catch(err => console.error("Audio play error:", err));
+      };
+      const playExitSound = () => {
+        const audio = new Audio(shiuDef); // path to your audio file
+        audio.play().catch(err => console.error("Audio play error:", err));
+      };
     return (
         <div>
             {game && game.estado === "WAITING" && <WaitingModal game={game} />}
@@ -170,7 +180,7 @@ export default function Game() {
                     <IoChatboxEllipsesOutline
                         style={{
                             position: 'fixed',
-                            bottom: '20px',
+                            bottom: '20%',
                             right: '20px',
                             zIndex: 998,
                             color: 'yellow',
@@ -180,7 +190,16 @@ export default function Game() {
                         onClick={() => setChatView(!chatView)}
                     />
 
-                    {chatView &&
+                      <CSSTransition
+                                in={chatView}               // controls when it is shown
+                                timeout={300}                  // duration in ms (adjust as needed)
+                                classNames="slide-right"       // base name for our CSS classes
+                                unmountOnExit   
+                                onEntered={playEntrySound}
+                                onExited={playExitSound}       // play sound when done exiting
+                                // This plays the sound once the modal has fully entered
+                                // unmount the modal once hidden
+                                >
                         <div style={{
                             position: 'fixed',
                             top: 0,
@@ -203,9 +222,10 @@ export default function Game() {
                                     position: 'absolute',
                                     top: '12px',
                                     left: '10px',
+                                    color: "rgb(123, 27, 0)"
                                 }}
                                 onClick={() => setChatView(!chatView)} />
-                            <h1 style={{ textAlign: 'center',fontSize:'30px', marginTop:'10px' }}>Chat de la partida</h1>
+                            <h1 className="loginText" style={{ textAlign: 'center',fontSize:'40px', marginTop:'10px' }}>Chat de la partida</h1>
                             <div style={{ flex: 1, overflowY: 'auto' }}>
                                 <MessageList mensajes={mensajes} userId={tokenService.getUser().id} />
                             </div>
@@ -217,7 +237,7 @@ export default function Game() {
                                 />
                             </div>
                         </div>
-                    }
+                </CSSTransition>
                 </>
             )}
                     </div>

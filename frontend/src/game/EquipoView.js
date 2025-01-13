@@ -62,7 +62,7 @@ const EquipoView = forwardRef((props, ref) => {
             return (
                 <div key={getPlayerKey(player)} style={{ marginBottom: 5, textAlign: 'left', display: 'flex', alignItems: 'center', }}>
                     {props.gameCreator && props.gameCreator.id === usuario.id && player.id !== usuario.id &&
-                        <AiOutlineUserDelete style={{ width: 40, height: 40, cursor: "pointer" }} onClick={()=> handleExpelPlayer(player.id)} />
+                        <AiOutlineUserDelete style={{ width: 40, height: 40, cursor: "pointer", color:"black"}} onClick={()=> handleExpelPlayer(player.id)} />
                     }
                     {props.gameCreator && props.gameCreator.id === player.id && player.id !== usuario.id &&
                         <FaCrown style={{ width: 40, height: 40,color:'black' }} />

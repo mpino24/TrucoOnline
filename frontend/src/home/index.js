@@ -11,7 +11,8 @@ import jwt_decode from 'jwt-decode';
 
 import { RiArrowRightDoubleLine, RiArrowLeftDoubleLine } from 'react-icons/ri';
 import { FaUserFriends } from 'react-icons/fa';
-
+import shuiDef from '../static/audios/shuiDef.mp3';
+import shiuDef from '../static/audios/shiuDef.mp3';
 import trofeo from '../static/images/Trofeo.png';
 import amistad from '../static/images/amigos.png';
 
@@ -52,7 +53,14 @@ export default function Home() {
         setMessage,
         setVisible
     );
-
+    const playEntrySound = () => {
+        const audio = new Audio(shuiDef); // path to your audio file
+        audio.play().catch(err => console.error("Audio play error:", err));
+      };
+      const playExitSound = () => {
+        const audio = new Audio(shiuDef); // path to your audio file
+        audio.play().catch(err => console.error("Audio play error:", err));
+      };
     // Fetch roles on mount
     useEffect(() => {
         if (jwt) {
@@ -194,10 +202,11 @@ export default function Home() {
         <>
             {/* If NOT showing estadisticasView, show admin button if user is ADMIN */}
             {!estadisticasView && (
-                <div expand="md" style={{ float: 'left' }}>
+                <div>
                     {roles.includes('ADMIN') && (
                         <button
                             className="button-admin"
+                            style={{marginLeft:"15%", position:"absolute"}}
                             onClick={() => {
                                 navigate('/admin');
                             }}
@@ -432,7 +441,7 @@ export default function Home() {
                                                 backgroundColor: 'orange',
                                                 borderRadius: '50%',
                                                 position: 'absolute',
-                                                top: '-10px',
+                                                top: '50px',
                                                 right: '0px',
                                                 width: '30px',
                                                 height: '30px',
@@ -450,7 +459,15 @@ export default function Home() {
                         )}
 
                         {/* FRIENDS MODAL */}
-                        {friendsView && (
+                        <CSSTransition
+                                in={friendsView}               // controls when it is shown
+                                timeout={300}                  // duration in ms (adjust as needed)
+                                classNames="slide-right"       // base name for our CSS classes
+                                unmountOnExit   
+                                onEntered={playEntrySound}
+                                onExited={playExitSound}
+                                             // unmount the modal once hidden
+                                >
                             <div
                                 style={{
                                     position: 'fixed',
@@ -465,7 +482,7 @@ export default function Home() {
                                     modalVisible={friendsView}
                                 />
                             </div>
-                        )}
+                        </CSSTransition>
                     </>
                 )}
 

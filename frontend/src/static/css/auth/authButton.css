@@ -14,7 +14,55 @@
   cursor: pointer;
   outline: none;
 }
-
+.auth-buttonLogin {
+  padding: 1.3em 3em;
+  font-size: 12px;
+  margin-top: 2%;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #000;
+  background-color: #ffa600b9;
+  border: solid 2px var(--main-green-color);
+  border-color: #ffa600;;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+.dangerButton2 {
+  padding: 1.3em 3em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #edb2b2;
+  background-color: #ff5e5eb0;
+  border: solid 2px var(--main-green-color);
+  border-color: #ffa1a1;;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+.heavenButton {
+  padding: 1.3em 3em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #b2e8ed;
+  background-color: #5ed4ffb0;
+  border: solid 2px var(--main-green-color);
+  border-color: #a1ebff;;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
 .saveRegister-button {
   padding: 1.3em 3em;
   font-size: 12px;
@@ -38,7 +86,22 @@
   color: #000;
   transform: translateY(-5px);
 }
-
+.auth-buttonLogin:hover {
+  background-color:  rgb(255, 211, 0);
+  box-shadow: 0px 15px 20px rgba(255, 136, 0, 0.4);
+  color: #000;
+  transform: translateY(-5px);
+}
+.dangerButton2:hover {
+  background-color:  rgb(255, 91, 50);
+  box-shadow: 0px 15px 20px rgba(255, 4, 0, 0.4);
+  color: #000;
+}
+.heavenButton:hover {
+  background-color:  rgb(50, 224, 255);
+  box-shadow: 0px 15px 20px rgba(0, 110, 255, 0.4);
+  color: #000;
+}
 .saveRegister-button:hover {
   background-color: var(--main-green-color);
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);

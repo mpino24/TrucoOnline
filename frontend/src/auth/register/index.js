@@ -76,6 +76,7 @@ export default function Register() {
     return (
       <div 
         style={{ 
+          paddingTop: '1px',
           backgroundImage: 'url(/fondos/fondoRegistrarse.jpg)', 
           backgroundSize: 'cover', 
           backgroundRepeat: 'no-repeat', 
@@ -120,6 +121,7 @@ export default function Register() {
     return (
       <div 
         style={{ 
+          paddingTop: '1px',
           backgroundImage: 'url(/fondos/fondoRegistrarse.jpg)', 
           backgroundSize: 'cover', 
           backgroundRepeat: 'no-repeat', 
