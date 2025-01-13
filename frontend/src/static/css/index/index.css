@@ -58,7 +58,32 @@
     */
     overflow-y: hidden;
   }
-  
+  /* Initial state when entering: positioned fully to the right */
+.slide-right-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* Transition to the entered state */
+.slide-right-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
+}
+
+/* When exiting: start from normal position */
+.slide-right-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Transition to the exited state */
+.slide-right-exit-active {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
+}
+
   /* Container that holds the entire background + content */
   .profile-page-container {
     /* Instead of 100vw, use 100% or no width at all */

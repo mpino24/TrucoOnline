@@ -11,7 +11,19 @@ import SolicitudList from './SolicitudList';
 import { FaRegEnvelopeOpen } from "react-icons/fa6";
 import { BsEnvelopePaper } from "react-icons/bs";
 import Chat from "./showChat.js";
+import shuiDef from '../static/audios/shuiDef.mp3';
+import shiuDef from '../static/audios/shiuDef.mp3';
 
+
+
+ const playEntrySound = () => {
+        const audio = new Audio(shuiDef); // path to your audio file
+        audio.play().catch(err => console.error("Audio play error:", err));
+      };
+      const playExitSound = () => {
+        const audio = new Audio(shiuDef); // path to your audio file
+        audio.play().catch(err => console.error("Audio play error:", err));
+      };
 const GetFriendsModal = forwardRef((props, ref) => {
     const [player, setPlayer] = useState(null);
     const [userName, setUsername] = useState("");
@@ -180,8 +192,8 @@ const GetFriendsModal = forwardRef((props, ref) => {
                 {!chatVisible &&
                     <>
 
-                        <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 }} onClick={() => closeModal()} />
-                        <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>Amigos</h1>
+                        <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 ,color: "rgb(123, 27, 0)"}} onClick={() => closeModal()} />
+                        <h1 className='loginText' style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>Amigos</h1>
 
                     
                         <hr></hr>
