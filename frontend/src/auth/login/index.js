@@ -44,16 +44,17 @@ export default function Login() {
 
 
   return (
-    <div style={{ backgroundImage: 'url(/fondos/fondologin.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
-      <div className="auth-page-container">
+    <div style={{paddingTop: '120px', // Enough space for the 90px nav plus some breathing room
+      backgroundImage: 'url(/fondos/fondologin.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
+      <div className="auth-page-container" style={{marginTop:"-1%"}}>
         {message ? (
           <Alert color="primary">{message}</Alert>
         ) : (
           <></>
         )}
         <img src={logo} alt='Logo del juego' style={{ height: '130%' }} />
-        <div className="auth-form-container">
-          <h1 className="loginText">Login</h1>
+        <div className="auth-form-container" >
+          <h1 className="loginText" style={{marginBottom:"4%"}}>Login</h1>
           <FormGenerator
             ref={loginFormRef}
             inputs={loginFormInputs}
@@ -61,10 +62,10 @@ export default function Login() {
             numberOfColumns={1}
             listenEnterKey
             buttonText="Login"
-            buttonClassName="auth-button"
+            buttonClassName="auth-buttonLogin"
           />
           <div style={{ marginLeft: '35%' }}>
-            <p className="noCuentaText" style={{ marginTop: 60}}> ¿No tienes cuenta?</p>
+            <p className="noCuentaText" style={{ marginTop: 70}}> ¿No tienes cuenta?</p>
             <Link
               to={`/register`}
               style={{ textDecoration: "none" }}

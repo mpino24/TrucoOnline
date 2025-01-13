@@ -20,7 +20,7 @@ const Logout = () => {
   return (
     <div className="auth-page-container">
       <div className="auth-form-container">
-        <h2 className="text-center text-md">
+        <h2 className="loginText" style={{color: "black"}}>
           ¿Seguro que querés cerrar sesión?
         </h2>
         <div className="options-row">

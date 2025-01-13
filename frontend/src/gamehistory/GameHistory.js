@@ -92,7 +92,7 @@ export default function GameHistory() {
         width: "100vw",
       }}
     >
-      <div expand='md' style={{ float: 'left' }}>
+      <div expand='md' style={{ marginLeft: '80%'}}>
         <button className="button-admin" onClick={() => { navigate("/home") }}>
           VOLVER
         </button>

@@ -1,27 +1,30 @@
-// TheaterTransition.js
+// src/TheaterTransition.js
 import React, { useEffect, useState } from 'react';
-import './TheaterTransition.css'; // We'll define styles here
+import './TheaterTransition.css';
 
-export default function TheaterTransition({ children }) {
-  // Whether curtains are open or closed
+export default function TheaterTransition({ children, openWhen }) {
+  // Whether curtains are fully open or not
   const [curtainsOpen, setCurtainsOpen] = useState(false);
 
   useEffect(() => {
-    // Wait ~300ms to ensure the <Game /> is mounted behind the curtains
-    const timer = setTimeout(() => {
-      // Then animate curtains open
-      setCurtainsOpen(true);
-    }, 150);
-
-    return () => clearTimeout(timer);
-  }, []);
+    if (openWhen) {
+      // After a short delay, open the curtains
+      const timer = setTimeout(() => {
+        setCurtainsOpen(true);
+      }, 300); // adjust delay as needed
+      return () => clearTimeout(timer);
+    } else {
+      // If openWhen is false, keep them closed
+      setCurtainsOpen(false);
+    }
+  }, [openWhen]);
 
   return (
     <div className="theater-container">
-      {/* Render whatever you wrap inside TheaterTransition (e.g., <Game />) */}
+      {/* The content we want to show (the loading screen, login, or child route) */}
       {children}
 
-      {/* The absolute overlay that covers the entire screen until curtainsOpen=true */}
+      {/* Our curtain overlay on top; it opens if curtainsOpen === true */}
       <div className={`curtains ${curtainsOpen ? 'open' : ''}`}>
         <div className="curtain curtain-left" />
         <div className="curtain curtain-right" />

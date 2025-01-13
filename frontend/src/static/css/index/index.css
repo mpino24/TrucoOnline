@@ -45,3 +45,57 @@
     -1px 1px 0 rgb(255, 121, 49), 
     1px 1px 0 rgb(255, 121, 49);
 }
+
+/* src/profile/Profile.css */
+
+/* Reset body & html margins to avoid horizontal scroll 
+   if you haven't done so globally. Optional but recommended. */
+   html, body {
+    margin: 0;
+    padding: 0;
+    /* If you want to absolutely prevent horizontal scroll:
+       overflow-x: hidden; 
+    */
+    overflow-y: hidden;
+  }
+  
+  /* Container that holds the entire background + content */
+  .profile-page-container {
+    /* Instead of 100vw, use 100% or no width at all */
+    width: 100%;
+    min-height: 100vh; /* Ensures it covers full vertical height */
+  
+    background-image: url('../../images/fondologin.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Use flex to place left side + right side horizontally */
+    display: flex;
+    box-sizing: border-box;
+  }
+  
+  /* Left side: the form container */
+  .profile-form-container {
+    flex: 1;               /* Takes available space (left side) */
+    max-width: 600px;      /* Limit how wide the form can grow */
+    padding: 50px;         /* Some internal spacing */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* If you had margin-left: 10% inline, remove that or set margin-left: 0 */
+  }
+  
+  /* Right side: the image selection container */
+  .profile-image-selection {
+    /* If 700px is too wide for small screens, reduce or make it more responsive */
+    width: 600px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    /* Hide content overflow if needed. 
+       But typically, you'd let it scroll if content is large. */
+    overflow: hidden;
+  }
+  

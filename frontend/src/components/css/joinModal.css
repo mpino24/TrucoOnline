@@ -47,9 +47,9 @@
   display: flex;
   width:60%;
   margin-top: 7%;
-  margin-left: 15%;
-  border: 2px solid rgb(255, 170, 66); 
-  background-color: rgba(255, 214, 187, 0.678);
+  margin-left: 19%;
+  border: 3px solid rgb(253, 159, 44); 
+  background-color: rgba(255, 214, 187, 0.847);
   border-radius: 30px;
   color: rgb(255, 229, 100);
   text-shadow: 
@@ -71,9 +71,10 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  
 
   /* The background image you want to show. Adjust path if necessary. */
-  background: url('../../static/images/home_background.jpg') center center no-repeat;
+  background: url('../../static/images/fortuna.png') center center no-repeat;
   background-size: cover;
 
   /* If you want some overlay tint, you can do:

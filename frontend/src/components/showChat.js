@@ -165,7 +165,7 @@ const Chat = forwardRef((props, ref) => {
   return (
     <>
     <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 }} onClick={() => props.setChatVisible(false)} />
-      <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
+    <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
         {props.player?.userName || "Cargando..."}
         {true && (
           <button

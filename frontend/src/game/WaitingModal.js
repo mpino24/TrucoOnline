@@ -5,7 +5,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
 import { Client } from "@stomp/stompjs";
 import { useNavigate } from 'react-router-dom';
-
+import { CSSTransition } from 'react-transition-group'; // <-- NEW IMPORT
 import tokenService from "../services/token.service.js";
 import EquipoView from '../game/EquipoView.js';
 import LeavingGameModal from '../components/LeavingGameModal';
@@ -210,12 +210,17 @@ const WaitingModal = forwardRef((props, ref) => {
         */}
         <div className="cuadro-unionEquipos">
           <FaUserFriends
-            style={{ position: 'absolute', right: '27%', width: '30px', height: '30px', cursor: 'pointer', color:"black" }}
+            style={{ position: 'absolute', right: '23%', width: '30px', height: '30px', cursor: 'pointer', color:"black" }}
             onClick={getFriends}
           />
-
-          {friendList && (
-            <div style={{ backgroundColor: 'gray', position: 'absolute', right: '10px', top: '165px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}>
+          <CSSTransition
+                            in={friendList}
+                            timeout={300}
+                            classNames="join-modal"
+                            unmountOnExit
+                        >
+        
+            <div className="cuadro-creacion" style={{position: 'absolute', right: '10px', top: '165px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}>
               <div style={{ overflowY: 'auto', height: '200px', width: '200px' }}>
                 <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Invitar amigos</p>
                 {friends.map((friend) => (
@@ -231,8 +236,7 @@ const WaitingModal = forwardRef((props, ref) => {
                 ))}
               </div>
             </div>
-          )}
-
+          </CSSTransition>
           <IoCloseCircle
             style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', color: "rgb(123, 27, 0)" }}
             onClick={() => setLeavingModal(true)} />

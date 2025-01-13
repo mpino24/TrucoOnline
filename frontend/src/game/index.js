@@ -173,7 +173,7 @@ export default function Game() {
                             bottom: '20px',
                             right: '20px',
                             zIndex: 998,
-                            color: 'yellow',
+                            color: 'lightyellow',
                             cursor: 'pointer',
                             fontSize: '48px',
                         }}

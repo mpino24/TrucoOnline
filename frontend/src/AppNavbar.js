@@ -1,89 +1,107 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, NavItem} from 'reactstrap';
+import { NavLink, NavItem } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import tokenService from './services/token.service';
-import jwt_decode from "jwt-decode";
-import logoChico from './/static/images/logoChico.png';
+import jwt_decode from 'jwt-decode';
+import logoChico from './static/images/logoChico.png';
 import LeavingGameModal from './components/LeavingGameModal';
 
 function AppNavbar() {
-    const [roles, setRoles] = useState([]);
-    const jwt = tokenService.getLocalAccessToken();
-    const navigate = useNavigate();
-    const [leavingModal,setLeavingModal] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const jwt = tokenService.getLocalAccessToken();
+  const navigate = useNavigate();
+  const [leavingModal, setLeavingModal] = useState(false);
 
-
-
-    useEffect(() => {
-        if (jwt) {
-            setRoles(jwt_decode(jwt).authorities);
-        }
-    }, [jwt])
-
-    let adminLinks = <></>;
-    let userLinks = <></>;
-    roles.forEach((role) => {
-        if (role === "ADMIN") {
-            adminLinks = (
-                <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/users">Users</NavLink>
-                    </NavItem>
-
-                </>
-            )
-        }
-    })
-
-
-
-    function handleClick() {
-        if (jwt) {
-            fetch(
-                "/api/v1/partidajugador/partidaJugadorActual",
-                {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                      },
-                }
-            )
-            .then((response) => {
-                if (response.status === 202) { 
-                    return null; 
-                }
-                return response.json(); 
-            })
-            .then((data) => {
-                if (data !== null) {
-                    console.log(data); 
-                    
-                    if (data.game && data.game.estado !== "FINALIZADA") {
-                        setLeavingModal(true);
-                    } else {
-                        navigate("/home");
-                    }
-                } else {
-                    navigate("/home");
-                }
-            })
-                .catch((message) => alert(message));
-        } else {
-            navigate("/");
-        }
-
+  useEffect(() => {
+    if (jwt) {
+      setRoles(jwt_decode(jwt).authorities);
     }
+  }, [jwt]);
 
+  let adminLinks = <></>;
+  let userLinks = <></>;
 
-    return (
-        <div expand="md" dark style={{ float: 'left' }}>
-            <img alt="logo" src={logoChico} onClick={() => handleClick()} style={{ height: 90, width: 90, borderRadius: 500, margin: 10, cursor: 'pointer' }} />
-            <LeavingGameModal
+  roles.forEach((role) => {
+    if (role === 'ADMIN') {
+      adminLinks = (
+        <>
+          <NavItem>
+            <NavLink style={{ color: 'white' }} tag={Link} to="/users">
+              Users
+            </NavLink>
+          </NavItem>
+        </>
+      );
+    }
+  });
 
-            modalIsOpen={leavingModal}
-            setIsOpen={setLeavingModal}/>
-        </div>
-    );
+  function handleClick() {
+    if (jwt) {
+      fetch('/api/v1/partidajugador/partidaJugadorActual', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+        .then((response) => {
+          if (response.status === 202) {
+            return null;
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data !== null && data.game && data.game.estado !== 'FINALIZADA') {
+            setLeavingModal(true);
+          } else {
+            navigate('/home');
+          }
+        })
+        .catch((message) => alert(message));
+    } else {
+      navigate('/');
+    }
+  }
+
+  return (
+    <div
+      expand="md"
+      dark
+      style={{
+        float: 'left',
+        overflow: 'hidden',
+        background: 'transparent',   // <-- Transparent instead of white
+        top: 0,
+        position:"fixed",
+        left: 0,
+        width: '20%',
+        zIndex: 9999,                // <-- Ensures it stays above other elements
+      }}
+    >
+      <img
+        alt="logo"
+        src={logoChico}
+        onClick={handleClick}
+        style={{
+          height: 90,
+          width: 90,
+          borderRadius: 500,
+          margin: 10,
+          cursor: 'pointer',
+        }}
+      />
+      <LeavingGameModal
+        modalIsOpen={leavingModal}
+        setIsOpen={setLeavingModal}
+      />
+      {/* 
+        If you need your adminLinks or userLinks, place them here, 
+        for example in a 'nav' or other container.
+        
+        {adminLinks}
+        {userLinks}
+      */}
+    </div>
+  );
 }
 
 export default AppNavbar;

@@ -194,10 +194,11 @@ export default function Home() {
         <>
             {/* If NOT showing estadisticasView, show admin button if user is ADMIN */}
             {!estadisticasView && (
-                <div expand="md" style={{ float: 'left' }}>
+                <div>
                     {roles.includes('ADMIN') && (
                         <button
                             className="button-admin"
+                            style={{marginLeft:"15%", position:"absolute"}}
                             onClick={() => {
                                 navigate('/admin');
                             }}
