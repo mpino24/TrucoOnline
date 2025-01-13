@@ -441,7 +441,7 @@ export default function Home() {
                                                 backgroundColor: 'orange',
                                                 borderRadius: '50%',
                                                 position: 'absolute',
-                                                top: '-10px',
+                                                top: '50px',
                                                 right: '0px',
                                                 width: '30px',
                                                 height: '30px',

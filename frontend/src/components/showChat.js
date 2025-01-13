@@ -4,6 +4,7 @@ import { Client } from "@stomp/stompjs";
 import "./Chat.css";
 import MessageList from "./MessageList";
 import { IoCloseCircle } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import InputContainer from "./InputContainer";
 const Chat = forwardRef((props, ref) => {
   const jwt = tokenService.getLocalAccessToken();
@@ -164,22 +165,22 @@ const Chat = forwardRef((props, ref) => {
 
   return (
     <>
-    <IoCloseCircle style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000 }} onClick={() => props.setChatVisible(false)} />
-    <h1 style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
+    <IoArrowBack style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute',top:10,left:10, zIndex:1000, color: "rgb(123, 27, 0)"}} onClick={() => props.setChatVisible(false)} />
+    <h1 className="loginText" style={{ fontSize: 30, textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px",marginTop: "10px",position: "relative" }}>
         {props.player?.userName || "Cargando..."}
         {true && (
           <button
+          className="dangerButton2"
             style={{
-              background: "#ff4d4f",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
               padding: "5px 10px",
               cursor: "pointer",
+              borderRadius:"1px",
               fontSize: "14px",
               position: "absolute",
               right: "0", 
-              marginRight: "10px",
+              width:"25%",
+              height:"120%",
+              marginRight: "30px",
             }}
             onClick={() => setShowConfirmModal(true)}
           >

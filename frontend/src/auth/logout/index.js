@@ -18,20 +18,22 @@ const Logout = () => {
   }
 
   return (
+    <div style={{paddingTop:"1px",backgroundImage: 'url(https://www.pukaarnews.com/wp-content/uploads/2016/03/Bonobo-14.jpg)', backgroundSize: 'cover',height: '100vh', width: '100vw' }}>
     <div className="auth-page-container">
       <div className="auth-form-container">
-        <h2 className="loginText" style={{color: "black"}}>
+        <h2 className="loginText" style={{width:"120%"}}>
           ¿Seguro que querés cerrar sesión?
         </h2>
         <div className="options-row">
-          <Link className="auth-button" to="/home" style={{ textDecoration: "none" }}>
+          <Link className="heavenButton" to="/home" style={{ textDecoration: "none" }}>
             No
           </Link>
-          <button className="auth-button" onClick={() => sendLogoutRequest()}>
-            Yes
+          <button className="dangerButton2" onClick={() => sendLogoutRequest()}>
+            Sí
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };
