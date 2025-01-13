@@ -17,7 +17,7 @@ public class Logros extends NamedEntity{
     @NotBlank(message = "No puede estar vacia la descripción")
     private String descripcion;
 
-    private String imagencita = "http://localhost:8080/resources/images/trofeos/trofeo1.jpg";
+    private String imagencita = "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/trofeo1.jpg";
 
     @Min(0)
     private Integer valor;

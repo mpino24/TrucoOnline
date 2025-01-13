@@ -1,11 +1,11 @@
 // src/components/CartasVolteadas/cartasVolteadasUtils/cvUtils.js
 
 export const listaUrlCartasVacias = [
-  "http://localhost:8080/resources/images/cartas/1carta.jpg", //0
-  "http://localhost:8080/resources/images/cartas/2cartas.jpg", //1
-  "http://localhost:8080/resources/images/cartas/3cartas.jpg", //2
-  "http://localhost:8080/resources/images/cartas/mazo.png",     //3
-  "http://localhost:8080/resources/images/cartas/SinCartas.jpg",//4
+  "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/cartas/1carta.jpg", //0
+  "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/cartas/2cartas.jpg", //1
+  "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/cartas/3cartas.jpg", //2
+  "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/cartas/mazo.png",     //3
+  "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/cartas/SinCartas.jpg",//4
 ];
 
 // Enumerations for seat distances

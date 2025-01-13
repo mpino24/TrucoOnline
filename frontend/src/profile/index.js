@@ -41,7 +41,7 @@ export default function Profile() {
   const handleImageSelect = (imageName) => {
     setPerfil({
       ...perfil,
-      photo: `http://localhost:8080/resources/images/perfiles/${imageName}`,
+      photo: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/${imageName}`,
     });
     setImageModalOpen(false);
   };

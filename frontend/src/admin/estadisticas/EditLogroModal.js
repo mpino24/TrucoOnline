@@ -16,7 +16,7 @@ const EditLogroModal = forwardRef((props, ref) => {
     valor: 10,
     metrica: "PARTIDAS_A_2",
     descripcion: "",
-    imagencita: "http://localhost:8080/resources/images/trofeos/trofeo1.jpg",
+    imagencita: "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -26,7 +26,7 @@ const EditLogroModal = forwardRef((props, ref) => {
   const handleImageSelect = (imageName) => {
     setFormData({
       ...formData,
-      imagencita: `http://localhost:8080/resources/images/trofeos/${imageName}`,
+      imagencita: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/${imageName}`,
     });
     setImageModalOpen(false);
   };

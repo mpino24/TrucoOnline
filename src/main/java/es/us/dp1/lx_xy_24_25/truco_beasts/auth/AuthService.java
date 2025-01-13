@@ -43,7 +43,7 @@ public class AuthService {
 		user.setPassword(encoder.encode(request.getPassword()));
 		String strRoles = request.getAuthority();
 		Authorities role;
-		String fotoDefault = "http://localhost:8080/resources/images/perfiles/robot.jpg";
+		String fotoDefault = "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/robot.jpg";
 		switch (strRoles.toLowerCase()) {
 		case "admin":
 			role = authoritiesService.findByAuthority("ADMIN");

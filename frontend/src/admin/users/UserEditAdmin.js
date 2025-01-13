@@ -22,7 +22,7 @@ export default function UserEditAdmin() {
     firstName: "",
     lastName: "",
     email: "",
-    photo: "http://localhost:8080/resources/images/perfiles/robot.jpg"
+    photo: "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/robot.jpg"
   }
   const [newPassword, setNewPassword] = useState();
   const id = getIdFromUrl(2);
@@ -59,7 +59,7 @@ const [imageModalOpen, setImageModalOpen] = useState(false);
   const handleImageSelect = (imageName) => {
     setPlayer({
       ...player,
-      photo: `http://localhost:8080/resources/images/perfiles/${imageName}`,
+      photo: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/${imageName}`,
     });
     setImageModalOpen(false);
   };
