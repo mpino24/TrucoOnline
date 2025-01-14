@@ -205,13 +205,13 @@ const Chat = forwardRef((props, ref) => {
       </div>
       {showConfirmModal && (
         <div
+        className="cuadro-creacion"
           style={{
             position: "fixed",
             top: "0",
             left: "0",
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -219,8 +219,8 @@ const Chat = forwardRef((props, ref) => {
           }}
         >
           <div
+            className="cuadro-creacion"
             style={{
-              backgroundColor: "white",
               padding: "20px",
               borderRadius: "8px",
               textAlign: "center",
@@ -229,15 +229,12 @@ const Chat = forwardRef((props, ref) => {
           >
             <p>¿Estás seguro de que quieres eliminar este amigo?</p>
             <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-              <button
+              <button className="dangerButton2" 
                 onClick={() => {
                   handleRemoveFriend(props.player.id);
                   setShowConfirmModal(false);
                 }}
                 style={{
-                  background: "#ff4d4f",
-                  color: "white",
-                  border: "none",
                   padding: "10px 20px",
                   borderRadius: "5px",
                   cursor: "pointer",
@@ -245,11 +242,9 @@ const Chat = forwardRef((props, ref) => {
               >
                 Sí
               </button>
-              <button
+              <button className="heavenButton"
                 onClick={() => setShowConfirmModal(false)}
                 style={{
-                  background: "#ccc",
-                  color: "black",
                   border: "none",
                   padding: "10px 20px",
                   borderRadius: "5px",
