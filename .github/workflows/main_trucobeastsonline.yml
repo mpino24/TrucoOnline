@@ -21,9 +21,9 @@ jobs:
       - name: npm install, build, and test
         run: |
           cd frontend
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm install --no-warnings
+          npm run build --if-present --no-warnings
+          npm run test --if-present --no-warnings
 
       - name: Zip artifact for deployment
         run: |
@@ -68,4 +68,3 @@ jobs:
           app-name: 'trucoBeastsOnline'
           slot-name: 'Production'
           package: .
-          
