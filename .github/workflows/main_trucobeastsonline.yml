@@ -25,6 +25,12 @@ jobs:
           npm run build --if-present --no-warnings
           npm run test --if-present --no-warnings
 
+      - name: List files for debugging
+        run: |
+          cd frontend
+          ls -la
+          ls -la build
+
       - name: Zip artifact for deployment
         run: |
           cd frontend
@@ -54,6 +60,9 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
+      - name: List files for debugging
+        run: ls -la
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
