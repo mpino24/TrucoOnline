@@ -127,7 +127,7 @@ export default function Home() {
     // Fetch unread messages
     function fetchNotReadMessages() {
         
-        
+        /*
         fetch('https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/chat/unread', {
             method: 'GET',
             headers: {
@@ -147,7 +147,7 @@ export default function Home() {
                 }
                 setNumMessages(data);
             })
-            .catch((message) => alert(message));
+            .catch((message) => alert(message));*/
         
     }
 
@@ -192,7 +192,6 @@ export default function Home() {
         const timer = setInterval(() => {
             if(!creationModalView && !joinModalView){
             fetchNotReadMessages();
-            console.log("Soy yo muajaja")
             }
         }, 2000);
 

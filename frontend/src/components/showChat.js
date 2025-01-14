@@ -36,6 +36,7 @@ const Chat = forwardRef((props, ref) => {
   }
 
   function updateChatLastConnection(){
+    /*
     fetch('api/v1/chat/' + props.idChat + '/updatetime', {
       method: 'PATCH',
       headers: {
@@ -52,7 +53,7 @@ const Chat = forwardRef((props, ref) => {
       .catch((error) => {
         console.error(error);
         alert("Hubo un problema al actualizar la conexión.");
-      });
+      });*/
   }
 
   useEffect(() => {

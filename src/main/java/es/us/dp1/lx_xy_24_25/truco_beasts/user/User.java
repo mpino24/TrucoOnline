@@ -60,7 +60,7 @@ public class User extends BaseEntity {
     }
 
     public Boolean isConnected() {
-        return !this.lastConnection.isBefore(LocalDateTime.now().minusSeconds(TIEMPO_CONEXION_SEGUNDOS));
+        return true;
     }
 
     public User() {
