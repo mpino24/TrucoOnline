@@ -30,3 +30,4 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_CALM_SAND_0795CC110 }}
           app_location: "./frontend"
           output_location: "build"
+          action: "deploy"

@@ -10,7 +10,7 @@ function AppNavbar() {
   const jwt = tokenService.getLocalAccessToken();
   const navigate = useNavigate();
   const [leavingModal, setLeavingModal] = useState(false);
-  const logoChico = "http://localhost:8080/resources/images/logoChico.png"
+  const logoChico = "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/logoChico.png"
   useEffect(() => {
     if (jwt) {
       setRoles(jwt_decode(jwt).authorities);
