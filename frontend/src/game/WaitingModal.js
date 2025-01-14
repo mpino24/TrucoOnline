@@ -300,7 +300,7 @@ const WaitingModal = forwardRef((props, ref) => {
             onClick={getFriends}
           />
           <CSSTransition in={friendList} timeout={300} classNames="join-modal" unmountOnExit>
-            <div className="cuadro-creacion" style={{ position: 'absolute', right: '10px', top: '165px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}>
+            <div className="cuadro-creacion" style={{ position: 'absolute', right: '23%', top: '20%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}>
               <div style={{ overflowY: 'auto', height: '200px', width: '200px' }}>
                 <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Invitar amigos</p>
                 {friends.map((friend) => (

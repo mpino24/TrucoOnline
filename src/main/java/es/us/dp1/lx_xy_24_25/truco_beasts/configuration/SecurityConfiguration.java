@@ -71,7 +71,7 @@ public class SecurityConfiguration {
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partida/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/jugador/**")).authenticated() 
-			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).authenticated() 
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/partidajugador/**")).permitAll() 
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/manos/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/fotos/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/profile/**")).authenticated()

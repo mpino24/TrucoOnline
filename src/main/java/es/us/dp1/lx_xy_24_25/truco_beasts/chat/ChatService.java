@@ -45,7 +45,7 @@ public class ChatService {
     }
 
     public List<MensajeDTO> getMensajesDe(Integer chatId) throws NotYourChatException{
-        perteneceAChat(chatId);
+        //perteneceAChat(chatId);
         List<Mensaje> mensajes=mensajeRepository.findMessagesFrom(chatId);
         List<MensajeDTO> mensajesDTO= mensajes.stream().map(MensajeDTO::new).toList();
         return mensajesDTO;
