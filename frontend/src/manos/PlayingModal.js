@@ -9,6 +9,7 @@ import backgroundMusic from '../static/audios/musicaPartida2.mp3';
 import PuntosComponente from './PuntosComponente';
 
 const jwt = tokenService.getLocalAccessToken();
+const usuario = tokenService.getUser();
 
 const PlayingModal = forwardRef((props, ref) => {
     const game = props.game;
@@ -37,7 +38,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [florTrigger, setFlorTrigger] = useState(0);
 
     const [posicion, setPosicion] = useFetchState(
-        {}, `/api/v1/partidajugador/miposicion/${game.id}`, jwt, setMessage, setVisible
+        {}, `/api/v1/partidajugador/miposicion/${game.id}/${usuario.id}`, jwt, setMessage, setVisible
     );
 
     const [nombresJugadores, setNombresJugadores] = useState([]);

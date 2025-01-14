@@ -53,9 +53,8 @@ public class PartidaJugadorController {
         @ApiResponse(responseCode = "200", description = "Posición obtenida", content = @Content(schema = @Schema(implementation = Integer.class))),
         @ApiResponse(responseCode = "404", description = "Partida no encontrada", content = @Content)
     })
-    @GetMapping("/miposicion/{partidaId}")
-    public Integer getMiPosicion(@PathVariable("partidaId") Integer partidaId) throws ResourceNotFoundException {
-        Integer userId = userService.findCurrentUser().getId();
+    @GetMapping("/miposicion/{partidaId}/{userId}")
+    public Integer getMiPosicion(@PathVariable("partidaId") Integer partidaId,@PathVariable("userId") Integer userId) throws ResourceNotFoundException {
         return pjService.getMiPosicion(userId, partidaId);
     }
 

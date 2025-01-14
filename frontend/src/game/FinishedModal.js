@@ -15,6 +15,7 @@ import winnerMusic from "../static/audios/ganasteBuenardo.mp3";
 import loserMusic from "../static/audios/perdisteAlpiste.mp3";
 
 const jwt = tokenService.getLocalAccessToken();
+const usuario = tokenService.getUser();
 
 const FinishedModal = forwardRef((props, ref) => {
   const [message, setMessage] = useState(null);
@@ -23,7 +24,7 @@ const FinishedModal = forwardRef((props, ref) => {
 
   const [posicion, setPosicion] = useFetchState(
     {},
-    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/miposicion/${props.game.id}`,
+    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/miposicion/${props.game.id}/${usuario.id}`,
     jwt,
     setMessage,
     setVisible
