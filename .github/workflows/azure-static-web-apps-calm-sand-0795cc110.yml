@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set CI environment variable
+        run: echo "CI=false" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: |
           cd ./frontend

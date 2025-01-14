@@ -3,8 +3,6 @@ import Modal from 'react-modal';
 import tokenService from '../services/token.service.js';
 import { useNavigate } from 'react-router-dom'
 
-
-
 const LeavingGameModal = forwardRef((props, ref) => {
     const navigate = useNavigate();
     const jwt = tokenService.getLocalAccessToken();
