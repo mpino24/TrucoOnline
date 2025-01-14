@@ -83,8 +83,8 @@ public class CurrentUserRestController {
         Boolean mismoUsername = user.getUsername().equals(currentUser.getUsername());
         Boolean mismaContraseña = (user.getPassword() == null || user.getPassword().isEmpty());
         
-        jugadorService.updateJugador(jugador, currentUser);
         userService.updateCurrentUser(user);
+        jugadorService.updateJugador(jugador, currentUser);
 
         if (!mismoUsername || !mismaContraseña) {    
             return ResponseEntity.ok(relog);

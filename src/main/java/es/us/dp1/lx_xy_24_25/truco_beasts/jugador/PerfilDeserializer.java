@@ -38,7 +38,7 @@ public class PerfilDeserializer extends JsonDeserializer<PerfilJugadorUsuario>{
         String email = arbol.get("email").asText();
         String photo = arbol.get("photo").asText();
         String password = arbol.get("password")!=null ? arbol.get("password").asText() : null;
-        User usuario = null;
+        User usuario = null; // Importante que este usuario no sea el mismo que el otro, ya que sino no veriamos los cambios
     try{
 
         jugadorService.existsJugador(jugadorId);
@@ -50,7 +50,6 @@ public class PerfilDeserializer extends JsonDeserializer<PerfilJugadorUsuario>{
         throw new IOException("Algo anduvo mal");
     }
     
-
     jugador.setFirstName(firstName);
     jugador.setLastName(lastName);
     jugador.setLastName(lastName);
@@ -63,7 +62,6 @@ public class PerfilDeserializer extends JsonDeserializer<PerfilJugadorUsuario>{
     resultado.setJugador(jugador);
     resultado.setUser(user);
     
-   
     return resultado;
         
     }
