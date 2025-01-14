@@ -21,7 +21,7 @@ const EditLogroModal = forwardRef((props, ref) => {
   });
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
-  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "https://prod.liveshare.vsengsaas.visualstudio.com/join?28A62B20EB0907180FC1568D483BD36FB36D/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
 
   const handleImageSelect = (imageName) => {
     setFormData({
@@ -79,7 +79,7 @@ const EditLogroModal = forwardRef((props, ref) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`https://prod.liveshare.vsengsaas.visualstudio.com/join?28A62B20EB0907180FC1568D483BD36FB36D/api/v1/logros/${logro.id}`, {
+    fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros/${logro.id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,

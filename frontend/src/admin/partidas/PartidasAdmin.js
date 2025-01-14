@@ -47,7 +47,7 @@ export default function PartidasAdmin() {
   };
 
   const fetchPartidasPaginadas = (pagina) => {
-    fetch(`https://prod.liveshare.vsengsaas.visualstudio.com/join?28A62B20EB0907180FC1568D483BD36FB36D/partida/partidas/paginadas?page=${pagina}&size=${partidasPorPagina}`, {
+    fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/partida/partidas/paginadas?page=${pagina}&size=${partidasPorPagina}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
