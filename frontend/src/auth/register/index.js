@@ -148,14 +148,14 @@ export default function Register() {
           <div className="options-row">
             <button
               className="auth-button"
-              value="Owner"
+              value="PLAYER"
               onClick={handleButtonClick}
             >
               Usuario
             </button>
             <button
               className="auth-button"
-              value="Vet"
+              value="ADMIN"
               onClick={handleButtonClick}
             >
               Administrador

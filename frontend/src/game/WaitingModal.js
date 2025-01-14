@@ -1,19 +1,21 @@
-import React, { useState, forwardRef, useEffect } from 'react';
+import React, { useState, forwardRef, useEffect, useRef } from 'react';
 import { IoCloseCircle } from "react-icons/io5";
 import { TbFlower, TbFlowerOff } from "react-icons/tb";
 import { FaUserFriends } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
 import { Client } from "@stomp/stompjs";
 import { useNavigate } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group'; // <-- NEW IMPORT
+import { CSSTransition } from 'react-transition-group';
 import tokenService from "../services/token.service.js";
 import EquipoView from '../game/EquipoView.js';
 import LeavingGameModal from '../components/LeavingGameModal';
 import ExpeledModal from './ExpeledModal';
 
+// <<--- Import the background music for the music controls --->
+import backgroundMusic from '../static/audios/musicaDeFondo.mp3';
+
 const WaitingModal = forwardRef((props, ref) => {
   const { game } = props;
-
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [jugadores, setJugadores] = useState([]);
   const [leavingModal, setLeavingModal] = useState(false);
@@ -22,6 +24,49 @@ const WaitingModal = forwardRef((props, ref) => {
   const [friends, setFriends] = useState([]);
   const [numDesconectados, setNumDesconectados] = useState(0);
   const [stompClient, setStompClient] = useState(null);
+
+  // <<--- ADD: Music Controls State and Handlers --->
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volumeVisible, setVolumeVisible] = useState(false);
+  const [volume, setVolume] = useState(50); // default volume is 50%
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+    }
+  }, [volume]);
+
+  const handlePlayMusic = () => {
+    if (audioRef.current) {
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          setVolumeVisible(true);
+        })
+        .catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+    }
+  };
+
+  const handlePauseMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleVolumeChange = (event) => {
+    const sliderValue = event.target.value;
+    setVolume(sliderValue);
+    if (audioRef.current) {
+      audioRef.current.volume = sliderValue / 100;
+    }
+  };
+
+  // ------------------------- Original WaitingModal logic -------------------------
 
   const usuario = tokenService.getUser();
   const jwt = tokenService.getLocalAccessToken();
@@ -52,7 +97,6 @@ const WaitingModal = forwardRef((props, ref) => {
           setNumDesconectados(data.filter(jugador => !jugador.player.isConnected).length);
         });
     }
-
     fetchPlayers();
     const timer = setInterval(fetchPlayers, 2000);
     return () => clearInterval(timer);
@@ -118,7 +162,6 @@ const WaitingModal = forwardRef((props, ref) => {
         }
       })
       .catch(message => alert(message));
-
     showFriendList(!friendList);
   }
 
@@ -199,39 +242,79 @@ const WaitingModal = forwardRef((props, ref) => {
     }
   };
 
+  // -------------------------- END Original WaitingModal logic --------------------------
+
   return (
     <>
-      {/* 
-          The waiting-modal-background covers the entire screen with a background image. 
-      */}
+      {/* Music Controls (positioned as in the first code) */}
+      <div
+        style={{
+          position: 'fixed',
+          right: '1%',
+          top: '2%',
+          zIndex: 1,
+        }}
+      >
+        <CSSTransition in={!isPlaying} timeout={300} classNames="join-modal" unmountOnExit>
+          <button onClick={handlePlayMusic} className="play-music-button">
+            <span className="swirl-glow-textMusica"> 🎵 </span>
+          </button>
+        </CSSTransition>
+        <CSSTransition in={isPlaying} timeout={300} classNames="join-modal" unmountOnExit>
+          <div style={{ position: 'relative' }}>
+            <button onClick={handlePauseMusic} className="play-music-button">
+              ⏸
+            </button>
+            <button
+              onClick={() => setVolumeVisible(!volumeVisible)}
+              className="play-music-button"
+              style={{ marginTop:"77px",marginRight:"17px" ,position: "fixed" }}
+            >
+              X
+            </button>
+            <CSSTransition in={volumeVisible} timeout={300} classNames="join-modal" unmountOnExit>
+              <div className="volume-slider-container">
+                <label htmlFor="volume-slider">Volume:</label>
+                <input
+                  type="range"
+                  id="volume-slider"
+                  min="0"
+                  max="100"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                />
+                <span>{volume}%</span>
+              </div>
+            </CSSTransition>
+          </div>
+        </CSSTransition>
+        {/* Hidden audio element */}
+        <audio ref={audioRef} src={backgroundMusic} loop style={{ display: 'none' }} />
+      </div>
+
+      {/* Waiting Modal Background and content */}
       <div className="waiting-modal-background">
-        {/* 
-            The .cuadro-unionEquipos contains your content, styled via CSS and limited in size.
-        */}
         <div className="cuadro-unionEquipos">
           <FaUserFriends
             style={{ position: 'absolute', right: '23%', width: '30px', height: '30px', cursor: 'pointer', color:"black" }}
             onClick={getFriends}
           />
-          <CSSTransition
-                            in={friendList}
-                            timeout={300}
-                            classNames="join-modal"
-                            unmountOnExit
-                        >
-        
-            <div className="cuadro-creacion" style={{position: 'absolute', right: '10px', top: '165px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}>
+          <CSSTransition in={friendList} timeout={300} classNames="join-modal" unmountOnExit>
+            <div className="cuadro-creacion" style={{ position: 'absolute', right: '10px', top: '165px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: '10px', padding: '10px', zIndex: 1000 }}>
               <div style={{ overflowY: 'auto', height: '200px', width: '200px' }}>
                 <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Invitar amigos</p>
                 {friends.map((friend) => (
                   <div key={friend.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <img style={{ height: '40px', width: '40px', borderRadius: '50%', marginRight: '10px' }}
+                    <img
+                      style={{ height: '40px', width: '40px', borderRadius: '50%', marginRight: '10px' }}
                       src={friend.photo}
-                      alt="Foto de perfil del usuario" />
+                      alt="Foto de perfil del usuario"
+                    />
                     <p style={{ margin: 0, flex: 1, textAlign: 'left' }}>{friend.userName}</p>
                     <IoIosSend
                       style={{ width: '20px', height: '20px', cursor: 'pointer', marginLeft: '10px', color: 'black' }}
-                      onClick={() => sendInvitation(friend.id)} />
+                      onClick={() => sendInvitation(friend.id)}
+                    />
                   </div>
                 ))}
               </div>
@@ -239,7 +322,8 @@ const WaitingModal = forwardRef((props, ref) => {
           </CSSTransition>
           <IoCloseCircle
             style={{ width: 30, height: 30, cursor: "pointer", position: 'absolute', color: "rgb(123, 27, 0)" }}
-            onClick={() => setLeavingModal(true)} />
+            onClick={() => setLeavingModal(true)}
+          />
 
           <div style={{ textAlign: 'center' }}>
             <h1>Partida {game.codigo}</h1>
@@ -278,7 +362,8 @@ const WaitingModal = forwardRef((props, ref) => {
                 <button
                   onClick={startGame}
                   className="button"
-                  style={{ color: 'black', width: '20%' }}>
+                  style={{ color: 'black', width: '20%' }}
+                >
                   Comenzar partida
                 </button>
               </div>
@@ -287,7 +372,7 @@ const WaitingModal = forwardRef((props, ref) => {
         </div>
       </div>
 
-      {/* Modals outside to overlay if necessary */}
+      {/* Modals (overlay if necessary) */}
       <LeavingGameModal modalIsOpen={leavingModal} setIsOpen={setLeavingModal} />
       <ExpeledModal modalIsOpen={expeledView} />
     </>

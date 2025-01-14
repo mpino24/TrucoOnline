@@ -93,12 +93,12 @@ export default function GameHistory() {
       }}
     >
       <div expand='md' style={{ marginLeft: '80%'}}>
-        <button className="button-admin" onClick={() => { navigate("/home") }}>
+        <button style={{marginTop:"20px"}}className="back-button" onClick={() => { navigate("/home") }}>
           VOLVER
         </button>
       </div>
         <div className="hero-div" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-          <h1 className="text-center">HISTORIAL DE PARTIDAS</h1>
+          <h1 className="loginText" style={{color: "rgb(255, 223, 65)"}}>HISTORIAL DE PARTIDAS</h1>
           {modal}
           <div>
             <Table aria-label="games" className="admin-table mt-4">

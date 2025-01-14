@@ -51,7 +51,7 @@ El informe de cobertura de pruebas es el siguiente:
 |---------------------|--------|-------------|--------|--------|
 | HU-1(NOISSUE): Poder loggearme | [UTB-1:AuthControllerTests](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/auth/AuthControllerTests.java) | Verifica que un usuario puede iniciar sesión con credenciales válidas. | Implementada | Unitaria en backend |
 | HU-2(NOISSUE): Poder borrar la cuenta | [UTB-4:TestJugadorService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/jugador/TestJugadorService.java) | Verifica que un usuario puede borrar su cuenta. | Implementada | Unitaria en backend |
-| HU-3(NOISSUE): Poder cerrar sesion |  | Verifica que un usuario puede cerrar su sesión | Implementada | Unitaria en frontend |
+| HU-3(NOISSUE): Poder cerrar sesion | [UTF-1:logout.test.js](/frontend/src/auth/logout/logout.test.js) | Verifica que un usuario puede cerrar su sesión y se le quita el JWT actual | Implementada | Unitaria en frontend |
 | HU-4(ISSUE#59): Crear partidas | [UTB-2:PartidaControllerTests](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partida\PartidaControllerTests.java) | Asegura que un usuario puede crear una partida. | Implementada | Unitaria en backend |
 | HU-5(ISSUE#60): Editar los puntos de la partida | [UTB-5:PartidaServiceTests](src\test\java\es\us\dp1\lx_xy_24_25\truco_beasts\partida\PartidaServiceTests.java) | Verifica que un usuario puede decidir los puntos de la partida antes de crearla. | Implementada | Unitaria en backend |
 | HU-6(ISSUE#61): Editar la flor en la partida | [UTB-3:TestManoService](/src/test/java/es/us/dp1/lx_xy_24_25/truco_beasts/mano/TestManoService.java) | Verifica que un usuario puede decidir jugar o no con flor en la partida antes de crearla. | Implementada | Unitaria en backend |
@@ -90,46 +90,46 @@ El informe de cobertura de pruebas es el siguiente:
 
 ### 5.3 Matriz de Trazabilidad entre Pruebas e Historias de Usuario
 
-| Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 | UTB-5 | UTB-6 | UTB-7 | UTB-8 |UTB-9 |UTB-10 |UTB-11 | 
-|--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
-| HU-1                |   X   |       |       |       |       |       |       |      |        |        |        |
-| HU-2                |       |      |       |    X   |        |       |       |      |        |        |        |
-| HU-3                |       |       |      |       |        |       |       |      |        |        |        |
-| HU-4                |       |   X   |       |      |        |       |       |      |        |        |        |
-| HU-5                |      |       |       |       |     X   |       |       |      |        |        |        |
-| HU-6                |       |      |    X   |       |        |       |       |      |        |        |        |
-| HU-7                |       |       |      |       |      X  |       |       |      |        |        |        |
-| HU-8                |       |       |       |      |        |       |       |      |     X   |        |        |
-| HU-9                |      |       |    X   |       |        |       |       |      |        |        |        |    
-| HU-10                |       |      |   X    |       |       |       |       |      |        |        |        | 
-| HU-11                |       |       |   X  |       |        |       |       |      |        |        |        |
-| HU-12                |       |       |    X   |      |        |       |       |      |        |        |        |
-| HU-13                |      |       |   X   |       |        |       |       |      |        |        |        |
-| HU-14                |       |      |       |       |        |   X    |       |      |        |        |        |
-| HU-15                |       |       |      |       |        |   X    |       |      |        |        |        |
-| HU-16                |       |       |   X   |      |        |       |       |      |        |        |        |
-| HU-17                |      |       |    X   |       |        |       |       |      |        |        |        |
-| HU-18                |       |      |   X   |       |        |       |       |      |        |        |        |
-| HU-19                |       |       |  X    |       |        |       |       |      |        |        |        |
-| HU-20                |       |       |       |   X   |        |       |       |      |        |        |        |
-| HU-21                |       |       |       |   X   |        |       |       |      |        |        |        |
-| HU-22                |       |       |       |      |        |       |   X    |      |        |        |        |
-| HU-23                |       |       |       |      |        |       |       |   X   |        |        |        |
-| HU-24                |       |       |       |      |        |       |       |   X   |        |        |        |
-| HU-25                |       |       |       |      |        |       |   X    |      |        |        |        |
-| HU-26                |       |       |       |      |     X   |       |       |      |        |        |        |
-| HU-27                |       |       |       |      |        |       |       |      |        |        |   X     |
-| HU-28                |       |       |       |      |        |       |       |      |        |        |    X    |
-| HU-29                |       |       |       |      |        |       |       |      |    X    |        |        |
-| HU-30                |       |       |       | X     |        |       |       |      |        |        |        |
-| HU-31                |       |       |       |  X    |        |       |       |      |        |        |        |
-| HU-32                |       |       |       |      |        |       |       |      |        |    X    |        |
-| HU-33                |       |       |       |      |        |       |       |      |        |    X    |        |
-| HU-34                |       |       |       |      |        |       |       |      |        |    X    |        |
-| HU-35                |       |       |       |  X    |        |       |       |      |        |        |        |
-| HU-36                |       |       |       |      |        |       |       |      |        |    X    |        |
-| HU-37                |       |       |       |      |         |       |       |      |   X     |        |        |
-| HU-38                |       |       |       |      |        |       |       |      |    X    |        |        |
+| Historias de usuario| UTB-1 | UTB-2 | UTB-3 | UTB-4 | UTB-5 | UTB-6 | UTB-7 | UTB-8 |UTB-9 |UTB-10 |UTB-11 | UTF-1 |
+|--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| HU-1                |   X   |       |       |       |       |       |       |      |        |        |        ||
+| HU-2                |       |      |       |    X   |        |       |       |      |        |        |        ||
+| HU-3                |       |       |      |       |        |       |       |      |        |        |        | X |
+| HU-4                |       |   X   |       |      |        |       |       |      |        |        |        ||
+| HU-5                |      |       |       |       |     X   |       |       |      |        |        |        ||
+| HU-6                |       |      |    X   |       |        |       |       |      |        |        |        ||
+| HU-7                |       |       |      |       |      X  |       |       |      |        |        |        ||
+| HU-8                |       |       |       |      |        |       |       |      |     X   |        |        ||
+| HU-9                |      |       |    X   |       |        |       |       |      |        |        |        | |   
+| HU-10                |       |      |   X    |       |       |       |       |      |        |        |        | |
+| HU-11                |       |       |   X  |       |        |       |       |      |        |        |        ||
+| HU-12                |       |       |    X   |      |        |       |       |      |        |        |        ||
+| HU-13                |      |       |   X   |       |        |       |       |      |        |        |        ||
+| HU-14                |       |      |       |       |        |   X    |       |      |        |        |        ||
+| HU-15                |       |       |      |       |        |   X    |       |      |        |        |        ||
+| HU-16                |       |       |   X   |      |        |       |       |      |        |        |        ||
+| HU-17                |      |       |    X   |       |        |       |       |      |        |        |        ||
+| HU-18                |       |      |   X   |       |        |       |       |      |        |        |        ||
+| HU-19                |       |       |  X    |       |        |       |       |      |        |        |        ||
+| HU-20                |       |       |       |   X   |        |       |       |      |        |        |        ||
+| HU-21                |       |       |       |   X   |        |       |       |      |        |        |        ||
+| HU-22                |       |       |       |      |        |       |   X    |      |        |        |        ||
+| HU-23                |       |       |       |      |        |       |       |   X   |        |        |        ||
+| HU-24                |       |       |       |      |        |       |       |   X   |        |        |        ||
+| HU-25                |       |       |       |      |        |       |   X    |      |        |        |        ||
+| HU-26                |       |       |       |      |     X   |       |       |      |        |        |        ||
+| HU-27                |       |       |       |      |        |       |       |      |        |        |   X     ||
+| HU-28                |       |       |       |      |        |       |       |      |        |        |    X    ||
+| HU-29                |       |       |       |      |        |       |       |      |    X    |        |        ||
+| HU-30                |       |       |       | X     |        |       |       |      |        |        |        ||
+| HU-31                |       |       |       |  X    |        |       |       |      |        |        |        ||
+| HU-32                |       |       |       |      |        |       |       |      |        |    X    |        ||
+| HU-33                |       |       |       |      |        |       |       |      |        |    X    |        ||
+| HU-34                |       |       |       |      |        |       |       |      |        |    X    |        ||
+| HU-35                |       |       |       |  X    |        |       |       |      |        |        |        ||
+| HU-36                |       |       |       |      |        |       |       |      |        |    X    |        ||
+| HU-37                |       |       |       |      |         |       |       |      |   X     |        |        ||
+| HU-38                |       |       |       |      |        |       |       |      |    X    |        |        ||
 
 ## 6. Criterios de Aceptación
 
