@@ -14,7 +14,6 @@ const jwt = tokenService.getLocalAccessToken()
 
 const GetJoinModal = forwardRef((props, ref) => {
 
-    const [message, setMessage] = useState(null);
     const [codigo, setCodigo] = useState("");
     const [partida, setPartida] = useState(null);
 
