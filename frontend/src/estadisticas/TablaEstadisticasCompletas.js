@@ -4,7 +4,7 @@ import useFetchState from '../util/useFetchState.js';
 import { calcularTiempo } from './calcularTiempo.js';
 
 const TablaEstadisticasCompleta = ({ jwt, setMessage, setVisible, setMostrarTablaEstadisticas, estadisticas }) => {
-    const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible);
+    const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible);
 
     const calcularEstadisticas = (data, key, global) => {
         let total = data[key];

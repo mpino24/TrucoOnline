@@ -142,7 +142,7 @@ const Chat = forwardRef((props, ref) => {
   };
 
   const handleRemoveFriend = (friendId) => {
-    fetch(`/api/v1/jugador/isFriend/${friendId}`, {
+    fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/isFriend/${friendId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,

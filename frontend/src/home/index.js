@@ -53,7 +53,7 @@ export default function Home() {
     // Fetch player data
     const [player, setPlayer] = useFetchState(
         [],
-        '/api/v1/jugador?userId=' + usuario.id,
+        'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador?userId=' + usuario.id,
         jwt,
         setMessage,
         setVisible
@@ -102,7 +102,7 @@ export default function Home() {
 
     // Fetch the current game on mount
     function fetchCurrentGame() {
-        fetch('/api/v1/partidajugador/partidaJugadorActual', {
+        fetch('https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/partidaJugadorActual', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -128,7 +128,7 @@ export default function Home() {
     function fetchNotReadMessages() {
         
         
-        fetch('/api/v1/chat/unread', {
+        fetch('https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/chat/unread', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${jwt}`,

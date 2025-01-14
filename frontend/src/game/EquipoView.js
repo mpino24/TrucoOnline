@@ -12,7 +12,7 @@ const EquipoView = forwardRef((props, ref) => {
 
     function changeTeam() {
         fetch(
-            "/api/v1/partidajugador/changeteam?userId=" + usuario.id,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/changeteam?userId=" + usuario.id,
             {
                 method: "PATCH",
                 headers: {
@@ -33,7 +33,7 @@ const EquipoView = forwardRef((props, ref) => {
 
     function handleExpelPlayer(playerId){
         fetch(
-            "/api/v1/partidajugador/eliminarJugador/"+playerId,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/eliminarJugador/"+playerId,
             {
                 method: "DELETE",
                 headers: {

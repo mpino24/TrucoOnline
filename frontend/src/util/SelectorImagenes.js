@@ -5,7 +5,7 @@ const SelectorImagenes = ({ imagenes, isOpen, toggle, onSelect , tipo}) => {
 
   
   function completarURL(nombre) {
-    let url = "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/"
+    let url = "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/"
     if(tipo==="trofeo"){
       url += "trofeos/"
     }else{

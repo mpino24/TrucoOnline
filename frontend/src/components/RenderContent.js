@@ -10,7 +10,7 @@ function RenderContent({ contenido }) {
   useEffect(() => {
     if (contenido.search(/{[A-Z0-9]{5}}/) !== -1 && !urlActual.includes("partidaCode=")) {
       let codigo = contenido.match(/{[A-Z0-9]{5}}/)[0].slice(1, -1);
-      fetch("/api/v1/partida/search?codigo=" + codigo, {
+      fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/search?codigo=" + codigo, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,

@@ -23,7 +23,7 @@ const FinishedModal = forwardRef((props, ref) => {
 
   const [posicion, setPosicion] = useFetchState(
     {},
-    `/api/v1/partidajugador/miposicion/${props.game.id}`,
+    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/miposicion/${props.game.id}`,
     jwt,
     setMessage,
     setVisible

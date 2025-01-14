@@ -12,7 +12,7 @@ const JugadorView = forwardRef((props, ref) => {
 
     function handleSubmit() {
         fetch(
-            "/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.id,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/" + user.id + "/isSolicitado/" + jugador.id,
             {
                 method: "PATCH",
                 headers: {

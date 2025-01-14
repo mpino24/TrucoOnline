@@ -6,7 +6,7 @@ import useFetchState from '../util/useFetchState';
 
 const GraficoGlobalAraña = ({ estadisticas, jwt,setMessage,setVisible }) => {
 
-const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible);
+const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/estadisticas/estadisticasGlobales', jwt, setMessage, setVisible);
  const graficoGlobalAraña = {
         chart: {
             polar: true,

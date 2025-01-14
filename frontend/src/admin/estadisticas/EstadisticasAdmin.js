@@ -19,7 +19,7 @@ export default function EstadisticasAdmin() {
     const [editLogroModal, setEditLogroModal] = useState(false);
     const [logroSeleccionado, setLogroSeleccionado] = useState(null);
     const [actualizarLista, setActualizarLista] = useState(0);
-    const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], "/api/v1/logros", jwt, setMessage, setVisible);
+    const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros", jwt, setMessage, setVisible);
     const toggleCreationLogroModal = useCallback(() => {
         setCreationLogroModal((current) => !current);
     }, []);
@@ -30,7 +30,7 @@ export default function EstadisticasAdmin() {
 
 
     function handleDelete(id) {
-        fetch("/api/v1/logros/" + id, {
+        fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros/" + id, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -49,7 +49,7 @@ export default function EstadisticasAdmin() {
     };
 
     useEffect(() => {
-        fetch("/api/v1/logros", {
+        fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${jwt}`,

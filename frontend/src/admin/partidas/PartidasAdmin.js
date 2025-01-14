@@ -13,7 +13,7 @@ export default function PartidasAdmin() {
   const [visible, setVisible] = useState(false);
   const [gamesData, setGamesData] = useFetchState(
       {},
-      `/api/v1/partida/partidas/paginadas?page=0&size=6`,
+      `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/partidas/paginadas?page=0&size=6`,
       jwt,
       setMessage,
       setVisible
@@ -47,7 +47,7 @@ export default function PartidasAdmin() {
   };
 
   const fetchPartidasPaginadas = (pagina) => {
-    fetch(`/api/v1/partida/partidas/paginadas?page=${pagina}&size=${partidasPorPagina}`, {
+    fetch(`https://prod.liveshare.vsengsaas.visualstudio.com/join?28A62B20EB0907180FC1568D483BD36FB36D/partida/partidas/paginadas?page=${pagina}&size=${partidasPorPagina}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },

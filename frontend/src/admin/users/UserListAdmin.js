@@ -14,7 +14,7 @@ export default function UserListAdmin() {
   const [visible, setVisible] = useState(false);
   const [usersData, setUsersData] = useFetchState(
     {},
-    `/api/v1/users/paginados?page=0&size=6`,
+    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/users/paginados?page=0&size=6`,
     jwt,
     setMessage,
     setVisible
@@ -50,7 +50,7 @@ export default function UserListAdmin() {
   };
 
   const fetchUsuariosPaginados = (pagina) => {
-    fetch(`/api/v1/users/paginados?page=${pagina}&size=${usuariosPorPagina}`, {
+    fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/users/paginados?page=${pagina}&size=${usuariosPorPagina}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -82,7 +82,7 @@ export default function UserListAdmin() {
               aria-label={"delete-" + user.id}
               onClick={() => {
                 deleteFromList(
-                  `/api/v1/jugador/${user.id}`,
+                  `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/${user.id}`,
                   user.id,
                   [users, setUsersData],
                   [alerts, setAlerts],

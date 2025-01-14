@@ -13,7 +13,7 @@ export default function GameHistory() {
   const [visible, setVisible] = useState(false);
   const [gamesData, setGamesData] = useFetchState(
       {},
-      `/api/v1/partida/partidas/historial?page=0&size=6`,
+      `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/partidas/historial?page=0&size=6`,
       jwt,
       setMessage,
       setVisible
@@ -47,7 +47,7 @@ export default function GameHistory() {
   };
 
   const fetchPartidasPaginadas = (pagina) => {
-    fetch(`/api/v1/partida/partidas/historial?page=${pagina}&size=${partidasPorPagina}`, {
+    fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/partidas/historial?page=${pagina}&size=${partidasPorPagina}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },

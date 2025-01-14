@@ -55,7 +55,7 @@ const PlayingModal = forwardRef((props, ref) => {
     const [volume, setVolume] = useState(50); // Default volume at 50%
 
     function fetchMano() {
-        fetch('/api/v1/manos/' + game.codigo, {
+        fetch('https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/' + game.codigo, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -127,7 +127,7 @@ const PlayingModal = forwardRef((props, ref) => {
         intervalId = setInterval(fetchMano, 1000);
 
         function fetchPlayerNames() {
-            fetch('/api/v1/partidajugador/players?partidaCode='+game.codigo, {
+            fetch('https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/players?partidaCode='+game.codigo, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${jwt}`,
@@ -241,7 +241,7 @@ const PlayingModal = forwardRef((props, ref) => {
     };
 
     function tirarCarta(cartaId) {
-        fetch(`/api/v1/manos/${game.codigo}/tirarCarta/${cartaId}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/tirarCarta/${cartaId}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -259,7 +259,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function cantarTruco(truco) {
-        fetch(`/api/v1/manos/${game.codigo}/cantarTruco/${truco}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/cantarTruco/${truco}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -277,7 +277,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function responderTruco(respuesta) {
-        fetch(`/api/v1/manos/${game.codigo}/responderTruco/${respuesta}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/responderTruco/${respuesta}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -295,7 +295,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function cantarEnvido(respuesta) {
-        fetch(`/api/v1/manos/${game.codigo}/cantarEnvido/${respuesta}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/cantarEnvido/${respuesta}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -313,7 +313,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function cantarFlor(respuesta) {
-        fetch(`/api/v1/manos/${game.codigo}/cantarFlor/${respuesta}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/cantarFlor/${respuesta}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -331,7 +331,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function responderEnvido(respuesta) {
-        fetch(`/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/responderEnvido/${respuesta}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,
@@ -349,7 +349,7 @@ const PlayingModal = forwardRef((props, ref) => {
     }
 
     function responderFlor(respuesta) {
-        fetch(`/api/v1/manos/${game.codigo}/responderFlor/${respuesta}`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/manos/${game.codigo}/responderFlor/${respuesta}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${jwt}`,

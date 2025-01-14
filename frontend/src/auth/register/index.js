@@ -28,7 +28,7 @@ export default function Register() {
     request["authority"] = authority;
     let state = "";
 
-    fetch("/api/v1/auth/signup", {
+    fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/auth/signup", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify(request),
@@ -40,7 +40,7 @@ export default function Register() {
             password: request.password,
           };
 
-          fetch("/api/v1/auth/signin", {
+          fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/auth/signin", {
             headers: { "Content-Type": "application/json" },
             method: "POST",
             body: JSON.stringify(loginRequest),

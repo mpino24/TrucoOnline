@@ -12,7 +12,7 @@ const LeavingGameModal = forwardRef((props, ref) => {
 
     function leaveGame() {
         fetch(
-            "/api/v1/partidajugador/salir",
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/salir",
             {
                 method: "DELETE",
                 headers: {

@@ -22,7 +22,7 @@ export default function UserEditAdmin() {
     firstName: "",
     lastName: "",
     email: "",
-    photo: "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/robot.jpg"
+    photo: "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/robot.jpg"
   }
   const [newPassword, setNewPassword] = useState();
   const id = getIdFromUrl(2);
@@ -30,7 +30,7 @@ export default function UserEditAdmin() {
   const [visible, setVisible] = useState(false);
   const [player, setPlayer] = useFetchState(
     emptyPlayer,
-    `/api/v1/jugador/edit/${id}`,
+    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/edit/${id}`,
     jwt,
     setMessage,
     setVisible,
@@ -38,7 +38,7 @@ export default function UserEditAdmin() {
   );
   const [authorities, setAuthorities] = useFetchState(
     [],
-    "/api/v1/users/authorities",
+    "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/users/authorities",
     jwt,
     setMessage,
     setVisible
@@ -46,7 +46,7 @@ export default function UserEditAdmin() {
   const navigate = useNavigate();
   const [user, setUser] = useFetchState(
     emptyUser,
-    `/api/v1/users/${id}`,
+    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/users/${id}`,
     jwt,
     setMessage,
     setVisible,
@@ -59,7 +59,7 @@ const [imageModalOpen, setImageModalOpen] = useState(false);
   const handleImageSelect = (imageName) => {
     setPlayer({
       ...player,
-      photo: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/${imageName}`,
+      photo: `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/${imageName}`,
     });
     setImageModalOpen(false);
   };

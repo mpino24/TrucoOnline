@@ -75,7 +75,7 @@ const WaitingModal = forwardRef((props, ref) => {
   useEffect(() => {
     let connected = null;
     function fetchPlayers() {
-      fetch(`/api/v1/partidajugador/players?partidaCode=${game.codigo}`, {
+      fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/players?partidaCode=${game.codigo}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -119,7 +119,7 @@ const WaitingModal = forwardRef((props, ref) => {
       alert(`No se puede comenzar la partida, hay jugadores desconectados. Considere expulsarlos: ${numDesconectados}`);
     } else {
       if (getJugadoresEquipo(1).length === game.numJugadores / 2 && getJugadoresEquipo(2).length === game.numJugadores / 2) {
-        fetch(`/api/v1/partida/${game.codigo}/start`, {
+        fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/${game.codigo}/start`, {
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -142,7 +142,7 @@ const WaitingModal = forwardRef((props, ref) => {
   }
 
   function getFriends() {
-    fetch(`/api/v1/jugador/amigos?userId=${usuario.id}`, {
+    fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/amigos?userId=${usuario.id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -167,7 +167,7 @@ const WaitingModal = forwardRef((props, ref) => {
 
   async function findChatId(friendId) {
     try {
-      const response = await fetch(`/api/v1/chat/with/${friendId}`, {
+      const response = await fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/chat/with/${friendId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,

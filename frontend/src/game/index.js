@@ -44,7 +44,7 @@ export default function Game() {
         async function fetchGame() {
             try {
                 const response = await fetch(
-                    `/api/v1/partida/search?codigo=${codigo}`,
+                    `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/search?codigo=${codigo}`,
                     {
                         method: "GET",
                         headers: {
