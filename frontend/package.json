@@ -1,5 +1,5 @@
 {
-  "proxy": "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net",
+  "proxy": "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net",
   "name": "dp1-game-template",
   "version": "0.1.0",
   "private": true,
