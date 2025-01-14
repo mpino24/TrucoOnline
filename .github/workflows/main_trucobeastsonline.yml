@@ -61,7 +61,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: List files before deployment
         run: |
           pwd
@@ -79,5 +79,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'trucoBeastsOnline'
-          slot-name: 'Production'
           package: release.zip
+          deployment-method: 'run-from-package' # Usar Run From Package para evitar conflictos
