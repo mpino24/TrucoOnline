@@ -521,6 +521,33 @@ Como obtener el que responde la flor es más complejo que en los otros cantos, y
 #### Justificación de la solución adoptada
 Elegimos la alternativa 2, creamos el quienRespondeFlor en la clase Mano ya que la lógica que requería el cambio de turno en la flor no podía ser contemplado a la ligera y la mejor forma de atacarlo fue separandolo del caso general de los otros cantos, dejando que quienResponde y quienRespondeFlor mantengan su funcionalidad más simple y optimizada.
 
+### Decisión 12: Calculo del envido al inicio de la mano
+#### Descripción del problema:
+El envido puede ser cantado solo en la primer ronda, y dependiendo los valores de los "tantos" (su valor de envido) no todos dicen cuanto es el suyo. Empieza diciendo sus tantos el jugador mano y a partir de ahí lo dicen los siguientes solo si tienen más que el que lo canto anteriormente. El problema viene de que en las partidas de a 4 o 6, como el envido debe ser cantado por los últimos jugadores (a excepción de que otro cante "Truco" y se aplique que el envido va primero), es muy probable que ya hayan tirado sus cartas, las cuales son necesarias para el calculo del envido por más que estén en la mesa.
+#### Alternativas de solución evaluadas:
+*Alternativa 1*: Pre-calcular al inicio de la partida los tantos de cada jugador.
+*Ventajas:*
+• Es fácil de implementar añadiendo una lista con los valores de cada jugador.
+• A la hora de hacer que cada jugador diga o no su envido, se puede poner en su posición de la lista null y comprender esto como que dice "Son buenas".
+
+*Inconvenientes:*
+• Hay que añadir un atributo más en Mano e inicializarlo correctamente al crearla.
+• Puede retrasar la creación de la nueva mano, además de que si no se canta envido es un dato innecesario.
+
+*Alternativa 2*: Cambiar los atributos de Mano para que se puedan recuperar las cartas ya lanzadas a la hora de calcular el envido.
+
+*Ventajas:*
+• Se calcula el envido en el momento que se canta, sin tener que guardar datos innecesarios desde el inicio.
+• Usando la lista de cartasLanzadas y cartasDisp se puede obtener las cartas de un jugador, sin necesidad de poner la lista de envidos.
+
+*Inconvenientes:*
+• La complejidad de una función que busque todas las cartas lanzadas de cada jugador y las una a sus cartas disponibles para calcular sus tantos es altamente compleja y de ser implementada sería complicada de mantener.
+• El espacio que nos ahorramos por guardar el atributo de tantos y la velocidad que se ganaría al iniciar la partida tampoco representan una cantidad significativa dado lo pequeños que son los datos.
+• Cuando se cante envido, seguira habiendo el mismo tiempo de espera que podriamos haber ganado o incluso más si no está suficientemente optimizada la función.
+
+#### Justificación de la solución adoptada
+Terminamos por usar la alternativa 1, ya que aunque se pueda perder milesimas de segundos por precalcular el envido y que haya manos en las que no se envie el dato pero no se cante no es comparable a la complejidad de una función que tenga que recorrer todas las cartas de cada jugador y cada carta que tiro cada uno. Además, casi siempre se suele cantar envido, y al estar precalculado no hay tiempos de espera entre que se dice el "Quiero" y se muestra la resolución del mismo.
+
 
 ## Refactorizaciones aplicadas
 
