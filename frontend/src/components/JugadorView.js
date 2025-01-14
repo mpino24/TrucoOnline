@@ -76,20 +76,6 @@ const JugadorView = forwardRef((props, ref) => {
                             Solicitud amistad
                         </button>
                     }
-                    {jugador.mensajesSinLeer > 0 &&
-                        <span style={{
-                            backgroundColor: 'orange',
-                            color: 'white',
-                            borderRadius: '50%',
-                            padding: '5px 10px',
-                            display: 'inline-block',
-                            textAlign: 'center',
-                            marginLeft: 'auto',
-                            marginRight: 30
-                        }}>
-                            {jugador.mensajesSinLeer}
-                        </span>
-                    }
                 </div>
             </div>
         </div>
