@@ -25,7 +25,7 @@ const [estadisticasGlobales, setEstadisticasGlobales] = useFetchState({}, '/api/
             categories: [
                 'Victorias', 'Derrotas',
                 'Flores cantadas', 'Partidas a 2',
-                'Partidas a 4', 'Partidas a 6', 'Tiempo jugado'
+                'Partidas a 4', 'Partidas a 6'
             ],
             tickmarkPlacement: 'on',
             lineWidth: 0,
