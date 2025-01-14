@@ -14,7 +14,7 @@ const PartidaView = forwardRef((props, ref) => {
     useEffect(() => {
         if (game.estado === 'WAITING') {
             fetch(
-                "/api/v1/partidajugador/numjugadores?partidaId=" + game.id,
+                "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/numjugadores?partidaId=" + game.id,
                 {
                     method: "GET",
                     headers: {
@@ -36,7 +36,7 @@ const PartidaView = forwardRef((props, ref) => {
 
     function handleSubmit() {
         fetch(
-            "/api/v1/partidajugador/" + game.id,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/" + game.id,
             {
                 method: "POST",
                 headers: {

@@ -11,7 +11,7 @@ const GameList= forwardRef((props, ref) => {
 
     useEffect(() => {
         fetch(
-            `/api/v1/partida/partidas/accesibles?page=${props.pagina}&size=4`,
+            `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/partidas/accesibles?page=${props.pagina}&size=4`,
             {
                 method: "GET",
                 headers: {

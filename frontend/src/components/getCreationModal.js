@@ -29,7 +29,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
     const [visible, setVisible] = useState(false);
     const [partidaVaciaParse, setPartidaVaciaParse] = useFetchState(
         [],
-        '/api/v1/partida/0',
+        'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/0',
         jwt,
         setMessage,
         setVisible,
@@ -83,7 +83,7 @@ const GetCreationModal=forwardRef((props,ref) =>{
                                          
     console.log(partidaParseada)
     event.preventDefault();
-    fetch("/api/v1/partida?userId="+user.id, {
+    fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida?userId="+user.id, {
       method:  "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,

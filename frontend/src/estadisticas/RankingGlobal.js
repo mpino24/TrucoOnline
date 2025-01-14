@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import useFetchState from '../util/useFetchState.js';
 
 const RankingGlobal = ({ jwt, setMessage, setVisible, setMostrarRanking }) => {
-    const [ranking, setRanking] = useFetchState([], "/api/v1/estadisticas/ranking", jwt, setMessage, setVisible);
+    const [ranking, setRanking] = useFetchState([], "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/estadisticas/ranking", jwt, setMessage, setVisible);
 
     const rankingOrdenado = ranking.sort((a, b) => b.victorias - a.victorias);
     

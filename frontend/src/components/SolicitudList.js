@@ -16,7 +16,7 @@ const SolicitudList = forwardRef((props, ref) => {
 
     function handleDeleteRequest(player) {
         fetch(
-            "/api/v1/jugador/isSolicitado/" + player.id,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/isSolicitado/" + player.id,
             {
                 method: "DELETE",
                 headers: {
@@ -42,7 +42,7 @@ const SolicitudList = forwardRef((props, ref) => {
 
     function handleAddFriend(player) {
         fetch(
-            "/api/v1/jugador/isFriend/" + player.id,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/isFriend/" + player.id,
             {
                 method: "PATCH",
                 headers: {

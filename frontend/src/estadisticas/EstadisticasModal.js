@@ -30,8 +30,8 @@ const EstadisticasModal = forwardRef((props, ref) => {
     };
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [estadisticas, setEstadisticas] = useFetchState({}, '/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible);
-    const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], '/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
+    const [estadisticas, setEstadisticas] = useFetchState({}, 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/estadisticas/misEstadisticas', jwt, setMessage, setVisible);
+    const [estadisticasAvanzadas, setEstadisticasAvanzadas] = useFetchState([], 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/estadisticas/misEstadisticas/datosPorPartida', jwt, setMessage, setVisible);
     const navigate = useNavigate();
 
     const [mostrarRanking, setMostrarRanking] = useState(false)

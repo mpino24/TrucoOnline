@@ -10,7 +10,7 @@ function AppNavbar() {
   const jwt = tokenService.getLocalAccessToken();
   const navigate = useNavigate();
   const [leavingModal, setLeavingModal] = useState(false);
-  const logoChico = "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/logoChico.png"
+  const logoChico = "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/logoChico.png"
   useEffect(() => {
     if (jwt) {
       setRoles(jwt_decode(jwt).authorities);
@@ -36,7 +36,7 @@ function AppNavbar() {
 
   function handleClick() {
     if (jwt) {
-      fetch('/api/v1/partidajugador/partidaJugadorActual', {
+      fetch('https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partidajugador/partidaJugadorActual', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${jwt}`,

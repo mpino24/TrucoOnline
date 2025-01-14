@@ -16,17 +16,17 @@ const EditLogroModal = forwardRef((props, ref) => {
     valor: 10,
     metrica: "PARTIDAS_A_2",
     descripcion: "",
-    imagencita: "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/trofeo1.jpg",
+    imagencita: "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
-  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([], "https://prod.liveshare.vsengsaas.visualstudio.com/join?28A62B20EB0907180FC1568D483BD36FB36D/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
 
   const handleImageSelect = (imageName) => {
     setFormData({
       ...formData,
-      imagencita: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/${imageName}`,
+      imagencita: `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/${imageName}`,
     });
     setImageModalOpen(false);
   };
@@ -79,7 +79,7 @@ const EditLogroModal = forwardRef((props, ref) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`/api/v1/logros/${logro.id}`, {
+    fetch(`https://prod.liveshare.vsengsaas.visualstudio.com/join?28A62B20EB0907180FC1568D483BD36FB36D/api/v1/logros/${logro.id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,

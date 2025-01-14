@@ -21,7 +21,7 @@ export default function Profile() {
 
   const [perfil, setPerfil] = useFetchState(
     {},
-    "/api/v1/profile",
+    "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/profile",
     jwt,
     setMessage,
     setVisible
@@ -30,7 +30,7 @@ export default function Profile() {
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [imagenesDisponibles, setImagenesDisponibles] = useFetchState(
     [],
-    "/api/v1/fotos/perfiles",
+    "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/fotos/perfiles",
     jwt,
     setMessage,
     setVisible
@@ -41,13 +41,13 @@ export default function Profile() {
   const handleImageSelect = (imageName) => {
     setPerfil({
       ...perfil,
-      photo: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/${imageName}`,
+      photo: `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/perfiles/${imageName}`,
     });
     setImageModalOpen(false);
   };
 
   function borrarMiCuenta() {
-    fetch("/api/v1/profile/borrarMiCuenta", {
+    fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/profile/borrarMiCuenta", {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -85,7 +85,7 @@ export default function Profile() {
       password: newPassword || undefined,
     };
 
-    fetch("/api/v1/profile/edit", {
+    fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/profile/edit", {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,

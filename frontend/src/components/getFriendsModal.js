@@ -55,7 +55,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
     function fetchFriends() {
         fetch(
-            `/api/v1/jugador/amigos?userId=` + user.id,
+            `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/amigos?userId=` + user.id,
             {
                 method: "GET",
                 headers: {
@@ -81,7 +81,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
         event.preventDefault();
         fetch(
-            "/api/v1/jugador/" + userName,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/" + userName,
             {
                 method: "GET",
                 headers: {
@@ -124,7 +124,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
     function fetchFriendsRequest() {
         fetch(
-            `/api/v1/jugador/solicitudes?userId=` + user.id,
+            `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador/solicitudes?userId=` + user.id,
             {
                 method: "GET",
                 headers: {
@@ -147,7 +147,7 @@ const GetFriendsModal = forwardRef((props, ref) => {
 
     function mostrarChat(player) {
         fetch(
-            `/api/v1/chat/with/` + player.id,
+            `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/chat/with/` + player.id,
             {
                 method: "GET",
                 headers: {

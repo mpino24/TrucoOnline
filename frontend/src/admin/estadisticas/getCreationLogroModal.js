@@ -18,7 +18,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
     valor: 10,
     metrica: "VICTORIAS",
     descripcion: "",
-    imagencita: "http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/trofeo1.jpg",
+    imagencita: "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/trofeo1.jpg",
     oculto: false,
   });
 
@@ -39,7 +39,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   ];
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
-  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([],"/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
+  const [imagenesDisponibles, setImagenesDisponibles] = useFetchState([],"https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/fotos/trofeos", jwt, setMessage, setVisible);
 
   const handleChange = (e) => {
     const target = e.target;
@@ -57,7 +57,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   const handleImageSelect = (imageName) => {
     setFormData({
       ...formData,
-      imagencita: `http://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/${imageName}`,
+      imagencita: `https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/resources/images/trofeos/${imageName}`,
     });
     setImageModalOpen(false);
   };
@@ -65,7 +65,7 @@ const GetCreationLogroModal = forwardRef((props, ref) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch("/api/v1/logros", {
+    fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,

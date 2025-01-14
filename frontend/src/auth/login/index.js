@@ -23,7 +23,7 @@ export default function Login() {
 
     const reqBody = values;
     setMessage(null);
-    await fetch("/api/v1/auth/signin", {
+    await fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/auth/signin", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify(reqBody),

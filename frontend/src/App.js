@@ -61,7 +61,7 @@ function App() {
 
   // Updates user's "last connection" time
   function updateConnectionTime() {
-    fetch("/api/v1/profile/updateConnection", {
+/*    fetch("https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/profile/updateConnection", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -73,14 +73,14 @@ function App() {
       } else {
         console.log("Tiempo de conexión actualizado");
       }
-    });
+    });*/
   }
 
   // Check token validity on mount
   useEffect(() => {
     if (jwt) {
       // Validate token by calling /api/v1/jugador
-      fetch(`/api/v1/jugador?userId=${usuario.id}`, {
+      fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/jugador?userId=${usuario.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

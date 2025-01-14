@@ -30,7 +30,7 @@ const GetJoinModal = forwardRef((props, ref) => {
 
         event.preventDefault();
         fetch(
-            "/api/v1/partida/search?codigo=" + codigo,
+            "https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/partida/search?codigo=" + codigo,
             {
                 method: "GET",
                 headers: {

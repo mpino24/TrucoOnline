@@ -22,7 +22,7 @@ const PrivateRoute = ({ children }) => {
       setIsLoading(false);
     } else {
       // Validate by calling your backend
-      fetch(`/api/v1/auth/validate?token=${jwt}`, {
+      fetch(`https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/auth/validate?token=${jwt}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',

@@ -6,9 +6,9 @@ import useFetchState from '../util/useFetchState.js';
 const RenderizarLogros = ({ jwt, setMessage, setVisible }) => {
     const [roles, setRoles] = useState([]);
     const [logrosMios, setLogrosMios] = useState(true);
-    const [totalLogros, setTotalLogros] = useFetchState(0, '/api/v1/logros/total', jwt, setMessage, setVisible);
-    const [listaMisLogros, setListaMisLogros] = useFetchState([], '/api/v1/logros/misLogros', jwt, setMessage, setVisible);
-    const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], '/api/v1/logros', jwt, setMessage, setVisible);
+    const [totalLogros, setTotalLogros] = useFetchState(0, 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros/total', jwt, setMessage, setVisible);
+    const [listaMisLogros, setListaMisLogros] = useFetchState([], 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros/misLogros', jwt, setMessage, setVisible);
+    const [listaLogrosGlobales, setListaLogrosGlobales] = useFetchState([], 'https://trucobeasts-e0dxg3dvccd5dvb5.centralus-01.azurewebsites.net/api/v1/logros', jwt, setMessage, setVisible);
 
     useEffect(() => {
         if (jwt) {
