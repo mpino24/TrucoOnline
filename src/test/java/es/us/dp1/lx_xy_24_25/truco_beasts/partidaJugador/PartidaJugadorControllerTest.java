@@ -382,7 +382,7 @@ public class PartidaJugadorControllerTest {
         List<PartidaJugadorView> listaJugadoresEnPartida = List.of(partidaJugadorView1, partidaJugadorView2);
         when(partidaJugadorService.getAllJugadoresPartida(partida1.getCodigo())).thenReturn(listaJugadoresEnPartida);
 
-        mockMvc.perform(get(BASE_URL+ "//jugadores/codigoPartida/{codigo}", partida1.getCodigo()))
+        mockMvc.perform(get(BASE_URL+ "/jugadores/codigoPartida/{codigo}", partida1.getCodigo()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].userName").value("player1"))
@@ -398,7 +398,7 @@ public class PartidaJugadorControllerTest {
     @WithMockUser(username = "player", roles = {"PLAYER"})
     void errorObtencionListaJugadoresPartida() throws Exception{
         when(partidaJugadorService.getAllJugadoresPartida(partida1.getCodigo())).thenThrow(new ResourceNotFoundException("No se encontro"));
-        mockMvc.perform(get(BASE_URL+ "//jugadores/codigoPartida/{codigo}", partida1.getCodigo()))
+        mockMvc.perform(get(BASE_URL+ "/jugadores/codigoPartida/{codigo}", partida1.getCodigo()))
             .andExpect(status().isNotFound());
             verify(partidaJugadorService).getAllJugadoresPartida(partida1.getCodigo());
     }
