@@ -5,5 +5,8 @@
     "react-native-web": "^0.19.12",
     "react-transition-group": "^4.4.5",
     "sockjs-client": "^1.6.1"
-  }
+  },
+  "homepage": "/"
+  
 }
+
