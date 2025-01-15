@@ -35,8 +35,8 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cd frontend
-          zip -r ../release.zip .
+          cd frontend/build
+          zip -r ../../release.zip .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -51,7 +51,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write
 
     steps:
       - name: Download artifact from build job
@@ -61,9 +61,11 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
-      - name: List files for debugging
-        run: ls -la
+
+      - name: List files before deployment
+        run: |
+          pwd
+          ls -la
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -77,5 +79,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'trucoBeastsOnline'
-          slot-name: 'Production'
-          package: .
+          package: release.zip
+          deployment-method: 'run-from-package' # Usar Run From Package para evitar conflictos
